@@ -1,0 +1,14 @@
+- id: 9324128a-3bc8-5510-89c3-ee519f40eb26
+  name: "Simulate T1087 - Supply Chain Compromise \u2013 Trojanized Software Update\
+    \ (SolarWinds Pattern)"
+  description: Automated simulation ability for MITRE technique T1087
+  tactic: execution
+  technique_id: T1087
+  technique_name: "Supply Chain Compromise \u2013 Trojanized Software Update (SolarWinds\
+    \ Pattern)"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1087: Supply Chain Compromise\
+      \ \u2013 Trojanized Software Update (SolarWinds Pattern)'"
+    timeout: 30

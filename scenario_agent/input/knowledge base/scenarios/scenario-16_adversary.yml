@@ -1,0 +1,13 @@
+id: 081ea872-93eb-5d94-91e9-d19b407813f3
+name: '[SCENARIO-16] Scheduled Task – Persistence và Lateral Movement'
+description: Sau khi đã có foothold trên một máy trạm hoặc có được credential quản
+  trị cục bộ, kẻ tấn công tạo một scheduled task ngụy trang dưới tên có vẻ hợp lệ
+  như `Updater`, `OneDrive Sync`, hoặc đặt trong namespace gần giống tác vụ hệ thống.
+  Điều kiện tiên quyết thường là quyền tạo task cục bộ hoặc quyền quản trị từ xa qua
+  SMB/RPC. Kết quả mong muốn là payload được kích hoạt lại khi login, startup hoặc
+  theo
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 40161ad0-75bd-11e9-b475-0800200c9a66
+- 563ef92e-3802-5109-bf71-a19c6e6f1fa5
+- fec27f65-db86-4c2d-b66c-61945aee87c2

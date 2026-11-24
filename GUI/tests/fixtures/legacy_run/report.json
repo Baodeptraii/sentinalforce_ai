@@ -1,0 +1,17 @@
+{
+  "status": "completed_with_unknowns",
+  "mode": "ai",
+  "model": "gemini-3.5-flash-lite",
+  "steps": 4,
+  "stop_reason": "model_finished",
+  "finished_at": "2026-11-12T02:49:46.152382+00:00",
+  "scope": [
+    "endpoint",
+    "web"
+  ],
+  "missing_information": [],
+  "warnings": [
+    "Phiên DVWA, nguồn log và Wazuh ingestion chưa được kiểm chứng; giữ null."
+  ],
+  "detection_result": "not_evaluated"
+}

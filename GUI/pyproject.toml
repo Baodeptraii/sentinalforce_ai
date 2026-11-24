@@ -1,0 +1,12 @@
+[project]
+name = "soc-survey-console"
+version = "0.2.0"
+description = "Evidence-grounded Survey Agent with CALDERA tools"
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph>=1,<2",
+    "pydantic>=2.10,<3",
+]
+
+[tool.uv]
+package = false

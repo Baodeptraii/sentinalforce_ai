@@ -1,0 +1,53 @@
+id: SCENARIO-30
+name: PrintNightmare (CVE-2021-34527) – Windows Spooler RCE
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 30 – PrintNightmare (CVE-2021-34527) – Windows Spooler RCE**\n\
+  \n**Giới thiệu chung**\n\nDù là một lỗ hổng đã biết từ giai đoạn trước, PrintNightmare\
+  \ vẫn có giá trị diễn tập lớn trong các môi trường legacy hoặc nơi dịch vụ Print\
+  \ Spooler còn bật rộng rãi trên các máy không thực sự cần in ấn. Nó là ví dụ điển\
+  \ hình cho một known vulnerability có thể vừa dẫn tới leo quyền cục bộ vừa hỗ trợ\
+  \ lateral movement nếu bề mặt triển khai không được thu hẹp.\n\n**Mô tả kịch bản**\n\
+  \nKẻ tấn công đã có khả năng tiếp cận mạng nội bộ hoặc foothold trên một host Windows,\
+  \ sau đó nhắm vào hệ thống còn bật Print Spooler và chưa được harden / vá phù hợp.\
+  \ Actor phù hợp là tác nhân hậu khai thác đang tìm đường leo lên `SYSTEM` hoặc mở\
+  \ rộng từ máy này sang máy khác qua bề mặt dịch vụ in ấn. Điều kiện tiên quyết là\
+  \ dịch vụ spooler tồn tại và host đích còn ở trạng thái dễ bị lạm dụng. Kết quả\
+  \ mong muốn là đạt thực thi đặc quyền cao, từ đó cài persistence hoặc di chuyển\
+  \ ngang.\n\n**Dòng tấn công end-to-end**\n\n```text\nTiếp cận host có Print Spooler\n\
+  → Kích hoạt hành vi lạm dụng Spooler / cài driver bất thường\n→ spoolsv.exe tải\
+  \ thành phần không mong muốn\n→ Mã chạy với quyền cao\n→ Leo quyền hoặc di chuyển\
+  \ ngang qua bề mặt in ấn\n```\n\n1. **Xác định bề mặt spooler:** Máy trạm, print\
+  \ server hoặc server nội bộ có dịch vụ in đang bật.\n2. **Lợi dụng luồng driver\
+  \ / spooler:** Chuỗi xử lý in ấn bị dùng sai mục đích.\n3. **Thực thi dưới ngữ cảnh\
+  \ dịch vụ:** `spoolsv.exe` tải thành phần hoặc hành xử bất thường.\n4. **Đạt quyền\
+  \ SYSTEM:** Host chuyển sang trạng thái đặc quyền cao hơn.\n5. **Mở rộng hậu khai\
+  \ thác:** Persistence, dump cred hoặc lateral movement có thể theo sau.\n\n**MITRE\
+  \ ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Privilege Escalation | T1068 | Exploitation for Privilege Escalation |\n| Lateral\
+  \ Movement | T1210 | Exploitation of Remote Services |\n| Defense Evasion | T1036\
+  \ | Binary / driver path có thể bị ngụy trang để giảm chú ý |\n\n**Log / Telemetry\
+  \ / Observable**\n\n- **Microsoft-Windows-PrintService/Operational:** Sự kiện liên\
+  \ quan cài driver, đổi cấu hình hoặc lỗi spooler bất thường.\n- **Process telemetry:**\
+  \ `spoolsv.exe` tải DLL / driver lạ, mở network connection ngoài baseline, hoặc\
+  \ sinh tiến trình không phù hợp.\n- **File telemetry:** Driver / file in ấn mới\
+  \ xuất hiện ở đường dẫn không mong đợi.\n- **EDR:** Hành vi privilege escalation\
+  \ gắn với dịch vụ spooler hoặc ngay sau sự kiện print subsystem.\n- **Change hygiene:**\
+  \ Máy chủ không cần in nhưng vẫn bật Print Spooler là một dấu hiệu rủi ro cấu hình\
+  \ trước cả khi khai thác xảy ra.\n\n**Gợi ý Detection / Hunting**\n\n```text\nprocess.name\
+  \ = \"spoolsv.exe\"\nAND (\n  image_load.path IN (user_writable_path, temp_like_path)\n\
+  \  OR network.connection = true\n  OR child_process IN (\"cmd.exe\", \"powershell.exe\"\
+  , \"rundll32.exe\")\n)\n```\n\n- **Alert:** Máy chủ không thuộc nhóm print server\
+  \ nhưng dịch vụ spooler vẫn hoạt động hoặc vừa được bật lại.\n- **Hunt:** Sự kiện\
+  \ print service lạ đi kèm tiến trình / DLL load từ đường dẫn bất thường.\n- **Alert:**\
+  \ `spoolsv.exe` phát sinh hoạt động network hoặc thực thi tiến trình con ngoài baseline.\n\
+  - **Hardening:** Tắt Print Spooler ở Domain Controller, server ứng dụng và mọi host\
+  \ không thật sự cần chức năng in ấn.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nDù\
+  \ không còn là kỹ thuật “mới”, PrintNightmare vẫn là mẫu scenario rất tốt cho bài\
+  \ toán quản lý bề mặt tấn công, hardening dịch vụ, và giám sát hành vi hậu khai\
+  \ thác liên quan tới dịch vụ hệ thống. Nó giúp đội phòng thủ nhìn rõ mối liên hệ\
+  \ giữa hygiene nền tảng, quản trị vá lỗi, và detection ở tầng process / service.\n\
+  \n**Độ tin cậy:** Cao – phù hợp cho diễn tập cấu hình phòng thủ và phát hiện hành\
+  \ vi leo quyền trên Windows.\n\n**Tài liệu tham khảo**\n- CISA\n- Microsoft\n- MITRE\
+  \ ATT&CK T1068, T1210"

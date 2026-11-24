@@ -1,0 +1,107 @@
+id: SCENARIO-10
+name: Supply Chain – Gói Độc Hại npm/PyPI (Dependency Confusion)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 10 – Supply Chain – Gói Độc Hại npm/PyPI (Dependency Confusion)
+
+
+  **Giới thiệu chung**
+
+
+  Kẻ tấn công tải lên các gói độc hại lên npm/PyPI với tên giống gói nội bộ của tổ
+  chức (dependency confusion) hoặc typosquatting tên phổ biến. CI/CD pipeline tự động
+  tải và thực thi gói khi build, dẫn đến RCE trong môi trường development/production.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công phát hiện tổ chức dùng gói nội bộ có tên `company-utils` (không publish
+  lên public registry). Tải lên npm gói tên `company-utils` với version cao hơn và
+  preinstall script độc hại. Khi developer hoặc CI/CD chạy `npm install`, gói public
+  được tải về thay vì gói nội bộ, script độc hại thực thi.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Reconnaissance: Tìm tên gói nội bộ (qua error messages, job postings)
+
+  → Upload gói độc hại lên npm/PyPI với tên giống
+
+  → CI/CD tự động install → Preinstall script thực thi
+
+  → Data exfiltration (env vars, cloud creds) hoặc backdoor cài
+
+  ```
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1195 | T1195.001 – Supply Chain: Compromise Software Dependencies
+  |
+
+  | Execution | T1059 | T1059.007 – JavaScript |
+
+  | Credential Access | T1552 | T1552.007 – Container API (cloud creds in env) |
+
+  | Exfiltration | T1048 | Exfiltration Over Alternative Protocol |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **CI/CD logs:** Unexpected package install, unusual preinstall/postinstall script
+  execution
+
+  - **Network:** Outbound connection từ build server đến external IP (không phải registry)
+
+  - **EDR trên build agent:** Node.js/Python spawning network tools, shell commands
+
+  - **Package registry audit:** Alerts khi package với tên tương tự internal package
+  xuất hiện trên public registry
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Dependency pinning:** Pin version cụ thể, dùng lockfile (package-lock.json,
+  requirements.txt)
+
+  - **Private registry:** Proxy npm/PyPI qua internal registry, block direct access
+
+  - **SBOM monitoring:** So sánh SBOM giữa các build để phát hiện dependency mới
+
+  - **Alert:** Preinstall/postinstall script trong gói mới chưa được review
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Sonatype 2024: 245,000+ malicious packages phát hiện trên npm/PyPI trong 2023. Checkmarx
+  2024 báo cáo dependency confusion attacks tăng 700% YoY. CI/CD security trở thành
+  priority cao sau các vụ OpenSSL, XZ Utils.
+
+
+  **Độ tin cậy:** Cao – Sonatype, Checkmarx, multiple incident reports.
+
+
+  **Tài liệu tham khảo**
+
+  - Alex Birsan: "Dependency Confusion: How I Hacked Into Apple, Microsoft and Dozens
+  of Other Companies"
+
+  - Sonatype: "State of the Software Supply Chain 2024"
+
+  - Checkmarx: "Malicious Package Analysis 2024"
+
+
+  ---'

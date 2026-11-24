@@ -1,0 +1,13 @@
+id: c9588a1f-bb1c-5124-8634-b034203e5504
+name: '[SCENARIO-65] FIN7 – Spearphishing → RaaS Partnership'
+description: Trong kịch bản này, tác nhân dùng spearphishing nhắm vào nhân sự cấp
+  cao, tài chính, vận hành hoặc người có quyền truy cập hệ thống trọng yếu, sau đó
+  thu thập credential, leo thang quyền và xác định tài nguyên có giá trị. Actor có
+  thể là FIN7-like cybercrime operator hoặc initial access broker có liên hệ với RaaS;
+  điều kiện tiên quyết là nạn nhân tương tác với nội dung lừa đảo hoặc bị compromise
+  tài khoản; kết
+atomic_ordering:
+- 96345bfc-8ae7-4b6a-80b7-223200f24ef9
+- 649349c7-9abf-493b-a7a2-b1aa4d141528
+- 37a36163-f420-5d50-a719-41da1a55c3c7
+- 114ccff9-ae6d-4547-9ead-4cd69f687306

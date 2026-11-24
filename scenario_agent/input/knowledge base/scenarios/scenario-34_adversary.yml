@@ -1,0 +1,11 @@
+id: a0955dca-9794-550f-9ee9-fad80f9ba5bc
+name: '[SCENARIO-34] Process Injection – DLL Injection vào tiến trình hợp lệ'
+description: Trong kịch bản này, tác nhân hậu khai thác đã có foothold trên endpoint
+  và thực hiện chèn DLL hoặc vùng mã nhớ vào một tiến trình hợp lệ đang chạy để ẩn
+  quá trình thực thi kế tiếp. Actor thường là loader, implant hậu xâm nhập hoặc operator
+  cần giảm khả năng bị người dùng và EDR chú ý; điều kiện tiên quyết là đã có quyền
+  truy cập tiến trình đích ở mức đủ để ghi bộ nhớ
+atomic_ordering:
+- 1c91e740-1729-4329-b779-feba6e71d048
+- c9f2c7ae-0092-4ea0-b9ae-92014eba7ce7
+- 578025d5-faa9-4f6d-8390-aae739d503e1

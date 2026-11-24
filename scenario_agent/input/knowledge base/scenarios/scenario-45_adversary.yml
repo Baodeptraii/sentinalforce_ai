@@ -1,0 +1,14 @@
+id: 9adf4c8f-5d4a-557d-a5ad-17f67b532833
+name: '[SCENARIO-45] Active Directory Enumeration – BloodHound / SharpHound'
+description: Trong kịch bản này, tác nhân đã có ít nhất một tài khoản domain mức thấp
+  và bắt đầu thu thập có hệ thống cấu trúc AD để dựng đồ thị quan hệ đặc quyền. Actor
+  thường là operator hậu khai thác, red team hoặc adversary nhắm tới privilege escalation
+  trong domain; điều kiện tiên quyết là có domain foothold và khả năng truy vấn LDAP/ADWS/SMB
+  ở mức người dùng hợp lệ; kết quả mong muốn là xác định được
+atomic_ordering:
+- 0360ede1-3c28-48d3-a6ef-6e98f562c5af
+- 4508da11-2b93-5840-8e7d-547a09d92806
+- 2afae782-6d0a-4fbd-a6b6-d1ce90090eac
+- aaf34d82-aea9-4278-8ec4-789653e4f5d9
+- 364ea817-bbb9-4083-87dd-94b9dba45f6f
+- 6131397e-7765-424e-a594-3d7fb2d93a6a

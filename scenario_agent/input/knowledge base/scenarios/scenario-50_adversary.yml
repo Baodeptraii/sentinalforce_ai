@@ -1,0 +1,13 @@
+id: 865cf8b9-68f9-5794-a305-df27a0d4590a
+name: '[SCENARIO-50] Domain Fronting – C2 ẩn sau CDN hợp lệ'
+description: Trong kịch bản này, implant trên host bị compromise hướng lưu lượng HTTPS
+  qua một CDN hoặc edge provider phổ biến, dùng cấu hình request sao cho kết nối trông
+  giống truy cập tới dịch vụ hợp lệ nhưng thực chất điều hướng vào hạ tầng điều khiển
+  do đối phương chuẩn bị. Actor thường là nhóm cần vượt egress control theo domain
+  hoặc hoạt động trong mạng chỉ cho phép số ít CDN/cloud lớn; điều kiện tiên quyết
+  là
+atomic_ordering:
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- 81c13829-f6c9-45b8-85a6-053366d55297
+- 28b10d9e-ebc5-5d9a-b0dd-b5a6ba8b3693
+- 28b10d9e-ebc5-5d9a-b0dd-b5a6ba8b3693

@@ -1,0 +1,14 @@
+id: 9619977d-fde3-5005-b9a0-e2792786ce85
+name: '[SCENARIO-47] Cobalt Strike – HTTPS Beacon C2'
+description: Trong kịch bản này, một implant hậu khai thác trên endpoint hoặc server
+  thiết lập beacon qua HTTPS ra hạ tầng điều khiển từ xa, với profile được tinh chỉnh
+  để làm lưu lượng trông gần giống traffic web bình thường. Actor thường là intrusion
+  operator sau initial access hoặc nhóm ransomware trong giai đoạn hậu xâm nhập; điều
+  kiện tiên quyết là host đã bị compromise và egress filtering chưa đủ chặt để chặn
+  lưu lượng phù hợp mẫu
+atomic_ordering:
+- b933ad98-6f2e-518d-a42e-6bac418b2b66
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- 81c13829-f6c9-45b8-85a6-053366d55297
+- 21caf58e-87ad-440c-a6b8-3ac259964003
+- 21caf58e-87ad-440c-a6b8-3ac259964003

@@ -1,0 +1,58 @@
+id: SCENARIO-56
+name: Kubernetes Escape – Container Breakout
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 56 – Kubernetes Escape – Container Breakout**\n\n**Giới thiệu\
+  \ chung**\n\nContainer breakout và Kubernetes escape là các scenario trọng yếu trong\
+  \ môi trường cloud-native vì điểm bám ban đầu trong một container có thể dẫn tới\
+  \ node compromise, kiểm soát kube API hoặc lạm dụng credential service account.\
+  \ Giá trị phòng thủ của kịch bản này nằm ở việc kiểm tra xem tổ chức có thực sự\
+  \ quan sát được runtime behavior trong cluster hay không.\n\n**Mô tả kịch bản**\n\
+  \nTrong kịch bản này, tác nhân đã compromise một container hoặc pod và lợi dụng\
+  \ cấu hình nguy hiểm như privileged container, hostPath mount, capability quá rộng,\
+  \ runtime exposure hoặc cơ chế liên đới của node để thoát ra ngoài phạm vi container,\
+  \ tiếp cận host hoặc API điều khiển cluster. Actor thường là cloud-native intruder,\
+  \ nhóm nhắm vào CI/CD hoặc đối thủ tận dụng sai cấu hình container; điều kiện tiên\
+  \ quyết là pod có sai cấu hình hoặc node/cluster có bề mặt cho phép leo khỏi container;\
+  \ kết quả mong muốn là nâng quyền từ mức workload đơn lẻ lên quyền trên node, namespace\
+  \ khác hoặc toàn cluster.\n\n**Dòng tấn công end-to-end**\n\n```text\nCompromise\
+  \ một container / pod\n→ Khảo sát quyền và cấu hình runtime\n→ Lợi dụng privileged\
+  \ setting / hostPath / runtime exposure\n→ Thoát phạm vi container hiện tại\n→ Truy\
+  \ cập node host hoặc cluster API\n→ Mở rộng quyền và lateral movement trong Kubernetes\n\
+  ```\n\n1. **Có foothold trong container:** Tác nhân đã chạy được code bên trong\
+  \ một pod.\n2. **Đánh giá bề mặt breakout:** Capability, mount, runtime socket,\
+  \ namespace và service account được kiểm tra.\n3. **Thực hiện escape:** Ranh giới\
+  \ container bị vượt qua hoặc host-level access được đạt tới.\n4. **Khai thác hậu\
+  \ breakout:** Node host, kubelet, API server hoặc credential liên quan trở thành\
+  \ mục tiêu tiếp theo.\n5. **Lan rộng trong cluster:** Từ một pod compromise ban\
+  \ đầu, quyền truy cập lan sang các namespace hoặc tài nguyên khác.\n\n**MITRE ATT&CK\
+  \ Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Privilege Escalation | T1611 | Escape to Host |\n| Lateral Movement | T1610 |\
+  \ Deploy Container / lạm dụng khả năng điều phối container để lan rộng |\n| Credential\
+  \ Access | T1552 | T1552.005 – Cloud Instance Metadata API hoặc credential cloud\
+  \ liên đới sau breakout |\n\n**Log / Telemetry / Observable**\n\n- **Kubernetes\
+  \ audit logs:** Tạo pod đặc quyền, `exec` vào pod, thay đổi security context hoặc\
+  \ hành vi cluster management bất thường.\n- **Falco / runtime telemetry:** Truy\
+  \ cập runtime socket, mount host filesystem, thao tác namespace, `nsenter`-like\
+  \ behavior hoặc dùng capability nguy hiểm.\n- **Container runtime logs:** Pod vốn\
+  \ không nên có quyền quản trị nhưng bắt đầu chạm vào host paths hoặc tài nguyên\
+  \ node.\n- **Service account / cloud clue:** Sau breakout xuất hiện truy cập metadata,\
+  \ kube API hoặc credential cloud từ một pod không phù hợp.\n- **Node behavior anomaly:**\
+  \ Process từ container dẫn đến network connection hoặc file access trên host ngoài\
+  \ phạm vi bình thường.\n\n**Gợi ý Detection / Hunting**\n\n```text\nContainerEvent\
+  \ = true\nAND (\n  PrivilegedContainerStarted = true\n  OR HostPathMounted = true\n\
+  \  OR RuntimeSocketAccessed = true\n  OR NamespaceEscapeIndicator = true\n  OR UnexpectedMetadataAccess\
+  \ = true\n)\n```\n\n- **Alert:** Pod mới hoặc pod sẵn có bắt đầu truy cập tài nguyên\
+  \ host-level ngoài mô hình deployment chuẩn.\n- **Hunt:** Ghép `pod compromise indicator\
+  \ → runtime escalation → kube API / node artifact access`.\n- **Alert:** Workload\
+  \ bình thường đột nhiên dùng capability đặc quyền hoặc chạm tới runtime socket.\n\
+  - **Hardening:** Kiểm tra Pod Security, seccomp/AppArmor, hostPath restrictions,\
+  \ admission control và scope của service account.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nKubernetes đã trở thành nền tảng vận hành cốt lõi của nhiều doanh nghiệp, nhưng\
+  \ visibility runtime lại thường chưa tương xứng. Scenario này là bài kiểm tra rất\
+  \ phù hợp cho đội cloud security và platform engineering vì nó đụng đúng ranh giới\
+  \ giữa “ứng dụng”, “container”, “node” và “cluster control plane”.\n\n**Độ tin cậy:**\
+  \ Trung bình đến cao – giá trị phòng thủ lớn, nhưng độ phát hiện phụ thuộc mạnh\
+  \ vào runtime visibility và audit cấu hình.\n\n**Tài liệu tham khảo**\n- CNCF\n\
+  - Palo Alto Unit 42\n- Aqua Security\n- MITRE ATT&CK T1611, T1610, T1552.005"

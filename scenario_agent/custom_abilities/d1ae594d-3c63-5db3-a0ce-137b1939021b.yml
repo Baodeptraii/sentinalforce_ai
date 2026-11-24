@@ -1,0 +1,13 @@
+- id: d1ae594d-3c63-5db3-a0ce-137b1939021b
+  name: "Simulate T1565 - OT/ICS Pivot \u2013 T\u1EEB IT Network sang Operational\
+    \ Technology"
+  description: Automated simulation ability for MITRE technique T1565
+  tactic: execution
+  technique_id: T1565
+  technique_name: "OT/ICS Pivot \u2013 T\u1EEB IT Network sang Operational Technology"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1565: OT/ICS Pivot \u2013\
+      \ T\u1EEB IT Network sang Operational Technology'"
+    timeout: 30

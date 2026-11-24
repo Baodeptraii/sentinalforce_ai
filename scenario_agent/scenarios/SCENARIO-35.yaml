@@ -1,0 +1,57 @@
+id: SCENARIO-35
+name: Process Hollowing – Ngụy trang payload trong tiến trình hợp lệ
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 35 – Process Hollowing – Ngụy trang payload trong tiến trình\
+  \ hợp lệ**\n\n**Giới thiệu chung**\n\nProcess hollowing là biến thể né tránh phát\
+  \ hiện trong đó kẻ tấn công khởi tạo một tiến trình hợp lệ ở trạng thái tạm dừng,\
+  \ sau đó thay thế nội dung thực thi của nó bằng payload khác trước khi cho tiến\
+  \ trình tiếp tục chạy. Kết quả là tên process trên đĩa và thông tin lineage có vẻ\
+  \ hợp lệ, nhưng image thực trong bộ nhớ thì đã bị thay đổi.\n\n**Mô tả kịch bản**\n\
+  \nTrong kịch bản này, tác nhân đã có khả năng chạy code cục bộ và chọn một executable\
+  \ hợp lệ, quen thuộc để tạo process mới trong trạng thái suspended. Actor thường\
+  \ là loader malware, trojan hoặc implant hậu khai thác tìm cách chạy lâu hơn mà\
+  \ ít gây chú ý; điều kiện tiên quyết là có thể tạo process mới và can thiệp giai\
+  \ đoạn đầu của vòng đời tiến trình; kết quả mong muốn là payload độc hại thực thi\
+  \ dưới vỏ bọc của một tiến trình hợp lệ, làm lệch nhận thức của người dùng và các\
+  \ kiểm soát dựa chủ yếu vào tên file hoặc parent process. fileciteturn1file0L62-L62\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nFoothold trên host\n→ Tạo tiến trình\
+  \ hợp lệ ở trạng thái suspended\n→ Thay đổi image / vùng nhớ khởi tạo của process\n\
+  → Resume process\n→ Payload chạy dưới tên tiến trình đáng tin cậy\n→ Defense evasion\
+  \ + execution\n```\n\n1. **Chọn tiến trình vỏ bọc:** Một binary Windows hoặc ứng\
+  \ dụng doanh nghiệp quen thuộc được chọn làm vật chứa.\n2. **Khởi tạo suspended\
+  \ process:** Tiến trình đích được tạo nhưng chưa thực sự bắt đầu luồng hành vi bình\
+  \ thường.\n3. **Thay phần thực thi trong bộ nhớ:** Nội dung process bị “rỗng hóa”\
+  \ và thay bằng payload khác.\n4. **Tiếp tục tiến trình:** Process resume và bắt\
+  \ đầu chạy payload trong hình hài hợp lệ.\n5. **Lợi dụng lớp vỏ hợp pháp:** Các\
+  \ bước hậu khai thác tiếp tục diễn ra dưới tên process vốn ít gây nghi ngờ.\n\n\
+  **MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Defense Evasion | T1055 | T1055.012 – Process Hollowing |\n| Execution | T1055\
+  \ | Kỹ thuật đồng thời cung cấp cơ chế thực thi payload sau khi resume process |\n\
+  | Defense Evasion | T1036 | Hành vi ngụy trang dựa trên tên tiến trình và lineage\
+  \ bề ngoài hợp lệ |\n\n**Log / Telemetry / Observable**\n\n- **EDR process lifecycle\
+  \ telemetry:** New process được tạo ở trạng thái suspended, sau đó có hành vi memory\
+  \ tampering trước khi resume.\n- **Image mismatch:** Hash hoặc PE metadata trên\
+  \ đĩa không phù hợp với vùng nhớ thực đang chạy.\n- **Parent-child anomaly:** Parent\
+  \ process không phải installer/updater nhưng lại tạo một tiến trình quen thuộc rồi\
+  \ nhanh chóng can thiệp vào nó.\n- **Memory telemetry:** Unmap/remap, section replacement,\
+  \ entry point bất thường hoặc in-memory executable không khớp disk image.\n- **Behavior\
+  \ drift sau resume:** Tiến trình “hợp lệ” vừa resume đã mở network connection, injection,\
+  \ hoặc script execution không giống mẫu thông thường.\n\n**Gợi ý Detection / Hunting**\n\
+  \n```text\nProcessCreatedSuspended = true\nAND (\n  ImageTamperDetected = true\n\
+  \  OR MemorySectionMismatch = true\n  OR EntryPointAnomaly = true\n)\nAND ParentProcess\
+  \ NOT IN approved_installers_updaters\n```\n\n- **Alert:** Tiến trình tạo ở trạng\
+  \ thái suspended nhưng sau đó không tiếp tục theo mẫu khởi chạy bình thường.\n-\
+  \ **Hunt:** So sánh image trên đĩa với hàm băm / memory image của process đang chạy\
+  \ để phát hiện lệch.\n- **Alert:** Signed binary quen thuộc resume xong lập tức\
+  \ có hành vi mạng hoặc child process bất thường.\n- **Baseline:** Xây dựng danh\
+  \ sách các ứng dụng thực sự hợp lệ có create-suspended behavior để tách khỏi hollowing\
+  \ giả mạo.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nProcess hollowing vẫn là một\
+  \ trong những kỹ thuật có giá trị cao nhất cho diễn tập vì nó kiểm tra đúng vùng\
+  \ giao thoa giữa process creation, memory telemetry và behavioral drift. Nếu SOC\
+  \ chỉ nhìn vào tên file hoặc parent-child cơ bản mà không có visibility vào memory\
+  \ tampering, kỹ thuật này thường đi qua khá êm.\n\n**Độ tin cậy:** Cao – mẫu hành\
+  \ vi tương đối rõ với EDR hiện đại và rất hữu ích cho các bài tập memory-focused\
+  \ hunting.\n\n**Tài liệu tham khảo**\n- CrowdStrike Falcon\n- SentinelOne\n- MITRE\
+  \ ATT&CK T1055.012"

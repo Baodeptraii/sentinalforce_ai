@@ -1,0 +1,58 @@
+id: SCENARIO-58
+name: Ransomware Deployment – Akira/LockBit 3.0 Pattern
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 58 – Ransomware Deployment – Akira/LockBit 3.0 Pattern**\n\n\
+  **Giới thiệu chung**\n\nRansomware deployment ở giai đoạn cuối chuỗi tấn công không\
+  \ còn là một biến cố đơn lẻ, mà là điểm hội tụ của nhiều dấu hiệu đã xuất hiện trước\
+  \ đó: dwell time, credential abuse, lateral movement, staging và thường cả exfiltration.\
+  \ Kịch bản này có giá trị diễn tập cực cao vì một rule đơn lẻ sẽ không đủ; chỉ tương\
+  \ quan chuỗi hành vi mới phản ánh được giai đoạn “chuẩn bị bùng nổ” trước mã hóa\
+  \ hàng loạt.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, sau khi đã có quyền trên\
+  \ nhiều host và thường đã hoàn tất một phần data theft, tác nhân triển khai ransomware\
+  \ theo mô hình phổ biến của các nhóm như Akira hoặc LockBit 3.0: làm suy yếu khôi\
+  \ phục, vô hiệu một số dịch vụ cản trở, rồi kích hoạt quá trình mã hóa trên diện\
+  \ rộng. Actor thường là ransomware affiliate hoạt động có điều phối; điều kiện tiên\
+  \ quyết là đã có quyền triển khai trên nhiều host hoặc ít nhất trên các host chiến\
+  \ lược; kết quả mong muốn là gây gián đoạn vận hành ở quy mô lớn, đồng thời tạo\
+  \ đòn bẩy cho tống tiền nhờ vừa impact vừa có thể đã exfil trước đó.\n\n**Dòng tấn\
+  \ công end-to-end**\n\n```text\nDwell time và chiếm nhiều host nội bộ\n→ Chuẩn bị\
+  \ triển khai ransomware\n→ Làm suy yếu backup / recovery / dịch vụ cản trở\n→ Kích\
+  \ hoạt mã hóa hàng loạt trên endpoint và server\n→ Tạo ransom note và gián đoạn\
+  \ vận hành\n→ Ép nạn nhân vào giai đoạn ứng phó khủng hoảng\n```\n\n1. **Hoàn tất\
+  \ điều kiện tiền mã hóa:** Tác nhân đã có đủ quyền và độ phủ trong mạng.\n2. **Tác\
+  \ động vào khả năng phục hồi:** Shadow copy, backup agent hoặc dịch vụ liên quan\
+  \ bị ảnh hưởng.\n3. **Phân phối thành phần impact:** Nhiều host nhận cùng một pattern\
+  \ thực thi hoặc binary/command line tương tự.\n4. **Mã hóa hàng loạt:** Một lượng\
+  \ lớn file bị đổi đuôi, đổi entropy hoặc thay đổi nội dung với tốc độ cao.\n5. **Bộc\
+  \ lộ impact:** Ransom note, service outage và gián đoạn nghiệp vụ xuất hiện đồng\
+  \ thời.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Impact | T1486 | Data Encrypted for Impact |\n| Impact | T1490 | Inhibit System\
+  \ Recovery |\n| Impact | T1485 | Data Destruction hoặc phá hoại một phần dữ liệu\
+  \ / dịch vụ phụ trợ |\n| Exfiltration | T1567 | Dữ liệu thường đã được chuyển ra\
+  \ ngoài trước hoặc trong chuỗi extortion |\n\n**Log / Telemetry / Observable**\n\
+  \n- **EDR / file telemetry:** Số lượng lớn file bị sửa đổi, đổi đuôi hoặc ghi lại\
+  \ trong thời gian rất ngắn.\n- **Windows / backup telemetry:** Xóa shadow copies,\
+  \ vô hiệu backup agent, dừng service bảo vệ hoặc phục hồi.\n- **Multi-host correlation:**\
+  \ Nhiều endpoint và server đồng loạt xuất hiện cùng mẫu process, note file, extension\
+  \ hoặc command line.\n- **Network / admin activity:** Just before impact, có thể\
+  \ thấy GPO abuse, PsExec-like movement, RDP admin activity hoặc share-based propagation.\n\
+  - **Operational clue:** Hệ thống tệp, ứng dụng line-of-business và lưu lượng helpdesk/monitoring\
+  \ bùng nổ cùng lúc.\n\n**Gợi ý Detection / Hunting**\n\n```text\n(\n  MassFileRenameOrModify\
+  \ = true\n  AND ExtensionEntropySpike = true\n)\nAND (\n  ShadowCopyDeletion = true\n\
+  \  OR BackupServiceStopped = true\n  OR RansomNoteCreated = true\n  OR SameBinaryPatternOnManyHosts\
+  \ = true\n)\n```\n\n- **Alert:** Bất kỳ host nào đồng thời có high-velocity file\
+  \ modification và dấu hiệu recovery tampering.\n- **Hunt:** So sánh các host xuất\
+  \ hiện cùng extension mới, ransom note template hoặc mô hình service stop trong\
+  \ cùng cửa sổ thời gian.\n- **Alert:** Một workload quản trị hoặc tài khoản đặc\
+  \ quyền thực hiện activity diện rộng ngay trước khi nhiều host đồng loạt bị impact.\n\
+  - **Readiness:** Kiểm tra khả năng cô lập host hàng loạt, ngắt SMB lateral paths\
+  \ và khôi phục telemetry khi endpoint bắt đầu mã hóa.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nRansomware vẫn là một trong những rủi ro vận hành lớn nhất. Scenario này giúp\
+  \ tổ chức không chỉ đo “phát hiện lúc file bị mã hóa”, mà còn đo khả năng nhận ra\
+  \ **các chỉ báo tiền impact** để can thiệp sớm hơn vài chục phút hoặc vài giờ –\
+  \ khoảng thời gian có thể quyết định quy mô thiệt hại.\n\n**Độ tin cậy:** Cao –\
+  \ mô hình impact và recovery tampering rất rõ, đặc biệt khi có khả năng tương quan\
+  \ nhiều host.\n\n**Tài liệu tham khảo**\n- CISA Akira advisory 2024\n- FBI LockBit\n\
+  - MITRE ATT&CK T1486, T1490, T1485, T1567"

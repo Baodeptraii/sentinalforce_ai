@@ -1,0 +1,103 @@
+id: SCENARIO-11
+name: Phishing qua QR Code (Quishing)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 11 – Phishing qua QR Code (Quishing)
+
+
+  **Giới thiệu chung**
+
+
+  Quishing (QR Code phishing) là kỹ thuật nhúng QR code vào email thay vì hyperlink
+  để bypass email security gateway. Phần lớn email security tools scan URL nhưng không
+  phân tích nội dung trong QR code image. Người dùng scan bằng điện thoại cá nhân
+  (thường không có enterprise MDM/AV) và được dẫn đến trang phishing.
+
+
+  **Mô tả kịch bản**
+
+
+  Email chứa QR code (thường giả mạo Microsoft MFA reset, DocuSign, HR notification).
+  Người dùng scan bằng điện thoại cá nhân → truy cập trang phishing trông giống Microsoft
+  365 login → nhập thông tin xác thực và hoàn tất MFA → session cookie hoặc credential
+  bị đánh cắp.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Email với embedded QR code → Người dùng scan bằng phone cá nhân
+
+  → Browser điện thoại mở URL phishing → Nhập credential + MFA
+
+  → Credential/Cookie đánh cắp → Account takeover trên desktop
+
+  ```
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1566 | T1566.001 – Phishing: Spearphishing Attachment |
+
+  | Credential Access | T1598 | T1598.003 – Phishing for Information |
+
+  | Credential Access | T1557 | T1557.002 – AiTM |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Email gateway:** Image-only email content, email không có text URL, có QR code
+  trong attachment/inline image (cần OCR hoặc ML detection)
+
+  - **Mobile MDM:** Truy cập phishing URL từ thiết bị di động đăng ký
+
+  - **Entra ID / IdP:** Sign-in thành công từ mobile device, sau đó từ desktop trong
+  thời gian ngắn
+
+  - **Proxy (if mobile goes through corporate):** URL decode từ QR code
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Email security:** Enable QR code analysis (OCR + URL extraction + URL scan trong
+  QR)
+
+  - **Policy:** Train users về quishing, không scan QR trong email bằng personal phone
+
+  - **Conditional Access:** Block sign-in từ unmanaged device hoặc require Compliant
+  Device
+
+  - **Hunt:** Sign-in events từ mobile user agent sau nhận email có image-only content
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Proofpoint Q3 2024 báo cáo quishing tăng 2,400% YoY. Microsoft TI 2024 ghi nhận
+  Storm-0835 sử dụng quishing kết hợp với AiTM (EvilProxy). Đây là attack vector phát
+  triển nhanh nhất trong 2024 vì bypass hiệu quả email security.
+
+
+  **Độ tin cậy:** Cao – Proofpoint, Microsoft TI 2024.
+
+
+  **Tài liệu tham khảo**
+
+  - Proofpoint: "QR Code Phishing Statistics" (2024)
+
+  - Microsoft: "Threat intelligence on QR code phishing" (2024)
+
+  - SANS: "Quishing – QR Code Phishing" (2024)
+
+
+  ---'

@@ -1,0 +1,14 @@
+- id: cd0fe01c-7bdc-54a1-9e59-333088b4d71a
+  name: "Simulate T1204 - Spearphishing v\u1EDBi T\u1EC7p \u0110\xEDnh K\xE8m \u0110\
+    \u1ED9c H\u1EA1i (Office Macro)"
+  description: Automated simulation ability for MITRE technique T1204
+  tactic: execution
+  technique_id: T1204
+  technique_name: "Spearphishing v\u1EDBi T\u1EC7p \u0110\xEDnh K\xE8m \u0110\u1ED9\
+    c H\u1EA1i (Office Macro)"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1204: Spearphishing v\u1EDB\
+      i T\u1EC7p \u0110\xEDnh K\xE8m \u0110\u1ED9c H\u1EA1i (Office Macro)'"
+    timeout: 30

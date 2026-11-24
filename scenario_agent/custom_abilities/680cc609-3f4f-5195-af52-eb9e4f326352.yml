@@ -1,0 +1,14 @@
+- id: 680cc609-3f4f-5195-af52-eb9e4f326352
+  name: "Simulate T1550 - Pass-the-Hash \u2013 Lateral Movement kh\xF4ng c\u1EA7n\
+    \ m\u1EADt kh\u1EA9u"
+  description: Automated simulation ability for MITRE technique T1550
+  tactic: execution
+  technique_id: T1550
+  technique_name: "Pass-the-Hash \u2013 Lateral Movement kh\xF4ng c\u1EA7n m\u1EAD\
+    t kh\u1EA9u"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1550: Pass-the-Hash \u2013\
+      \ Lateral Movement kh\xF4ng c\u1EA7n m\u1EADt kh\u1EA9u'"
+    timeout: 30

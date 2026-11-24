@@ -1,0 +1,14 @@
+id: e3ae809b-3f91-5867-a352-4c0c8800024a
+name: '[SCENARIO-08] Khai Thác VPN/SSL Gateway (Ivanti/Citrix/Pulse Secure)'
+description: Kẻ tấn công quét internet tìm VPN gateway lộ ra public. Khai thác lỗ
+  hổng authentication bypass (ví dụ CVE-2023-46805, CVE-2024-21887 trên Ivanti) để
+  thực thi lệnh không cần xác thực. Upload web shell để duy trì truy cập, sau đó pivot
+  vào mạng nội bộ.
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 4c8db261-a58b-42a6-a866-0a294deedde4
+- a1b2c3d4-dvwa-0005-sqli-000000000005
+- c3583749-4ca1-50cf-8a80-546566dcaf61
+- 0a2ce662-1efa-496f-a472-2fe7b080db16
+- f9c3d0ab-479b-4019-945f-22ace2b1731a
+- 0e56bf29-ff49-4ea5-9af4-3b81283fd513

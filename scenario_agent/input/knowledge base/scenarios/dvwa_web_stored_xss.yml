@@ -1,0 +1,7 @@
+id: e5f6a7b8-dvwa-0009-xss-stored
+name: DVWA Web Stored Cross-Site Scripting (XSS)
+description: Mô phỏng chèn dữ liệu chứa mã kịch bản XSS lưu trữ vào guestbook của
+  DVWA.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0009-xsss-000000000009

@@ -1,0 +1,57 @@
+id: SCENARIO-51
+name: Exfiltration qua Cloud Storage (OneDrive/Dropbox/MEGA)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 51 – Exfiltration qua Cloud Storage (OneDrive/Dropbox/MEGA)**\n\
+  \n**Giới thiệu chung**\n\nExfiltration sang cloud storage hợp lệ là một trong những\
+  \ kỹ thuật thực tế nhất để đưa dữ liệu ra ngoài doanh nghiệp mà không làm lưu lượng\
+  \ trông “xấu” theo nghĩa truyền thống. Nếu tổ chức đã cho phép OneDrive, Dropbox,\
+  \ Google Drive hoặc thậm chí các dịch vụ ít dùng hơn như MEGA, việc phát hiện thường\
+  \ không còn là chặn domain, mà là hiểu ai đang upload cái gì, từ đâu, bằng ứng dụng\
+  \ nào và ở ngữ cảnh nào.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, sau khi đã\
+  \ có tập dữ liệu staging, tác nhân upload các archive hoặc file nhạy cảm lên cloud\
+  \ storage hợp lệ bằng trình duyệt, ứng dụng đồng bộ, API client hoặc công cụ chuyên\
+  \ dụng được ngụy trang như thao tác người dùng bình thường. Actor thường là nhóm\
+  \ đánh cắp dữ liệu, ransomware affiliate hoặc operator muốn chuyển dữ liệu ra ngoài\
+  \ trước khi impact; điều kiện tiên quyết là đã có dữ liệu thu thập được và đường\
+  \ ra tới dịch vụ lưu trữ được cho phép; kết quả mong muốn là dữ liệu thoát khỏi\
+  \ môi trường doanh nghiệp dưới lớp vỏ traffic cloud hợp lệ, làm giảm hiệu quả của\
+  \ DLP hoặc outbound blocklist đơn giản.\n\n**Dòng tấn công end-to-end**\n\n```text\n\
+  Thu thập và staging dữ liệu nội bộ\n→ Chọn dịch vụ cloud storage hợp lệ\n→ Tạo hoặc\
+  \ dùng sẵn phiên upload\n→ Đẩy archive / tài liệu đã chọn lên cloud\n→ Xác nhận\
+  \ dữ liệu đã ra ngoài môi trường doanh nghiệp\n→ Dọn bớt artifact staging nếu cần\n\
+  ```\n\n1. **Có dữ liệu cần đưa ra ngoài:** Dữ liệu đã được gom và nén ở giai đoạn\
+  \ trước.\n2. **Chọn dịch vụ lưu trữ:** Một nền tảng cloud storage phù hợp với chính\
+  \ sách mạng hiện có được tận dụng.\n3. **Mở phiên upload:** Trình duyệt, sync client\
+  \ hoặc API path được sử dụng để tải dữ liệu.\n4. **Đưa dữ liệu ra ngoài:** Các file\
+  \ lớn hoặc archive nhiều phần được tải lên theo một hoặc nhiều nhịp.\n5. **Che giấu\
+  \ hậu quả:** Staging local có thể bị xóa hoặc giảm quy mô sau khi xác nhận exfil\
+  \ thành công.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Exfiltration | T1567 | T1567.002 – Exfiltration to Cloud Storage |\n| Exfiltration\
+  \ | T1048 | T1048.002 – Exfiltration Over Alternate Protocol |\n| Collection | T1560\
+  \ | Archive Collected Data trước khi upload |\n\n**Log / Telemetry / Observable**\n\
+  \n- **Proxy / CASB / DLP:** Lượng upload lớn tới OneDrive, Dropbox, MEGA hoặc dịch\
+  \ vụ cloud storage khác từ host không nằm trong baseline.\n- **Endpoint file telemetry:**\
+  \ Archive mới được tạo ngay trước phiên upload, đặc biệt trong thư mục người dùng\
+  \ hoặc staging tạm.\n- **Client anomaly:** Upload phát sinh từ CLI, utility lạ,\
+  \ browser automation hoặc sync client không nằm trong danh sách cho phép.\n- **Content\
+  \ sensitivity clue:** File gắn nhãn nhạy cảm, file dự án, tài chính, hợp đồng hoặc\
+  \ data dump rời doanh nghiệp trong thời gian ngắn.\n- **User-behavior mismatch:**\
+  \ Tài khoản hoặc host trước đó hiếm khi dùng cloud storage nhưng đột nhiên upload\
+  \ khối lượng lớn ngoài giờ.\n\n**Gợi ý Detection / Hunting**\n\n```text\nLargeUploadToCloudStorage\
+  \ = true\nAND DestinationService IN (OneDrive, Dropbox, MEGA)\nAND SourceHost NOT\
+  \ IN approved_sync_hosts\nAND (\n  ArchiveCreatedRecently = true\n  OR SensitiveFileTypesExceedBaseline\
+  \ = true\n  OR ClientAppMismatch = true\n)\n```\n\n- **Alert:** Upload lớn tới cloud\
+  \ storage từ server hoặc workstation không thuộc nhóm làm việc với sync service\
+  \ đó.\n- **Hunt:** Ghép `archive creation → cloud upload → local cleanup` trên cùng\
+  \ host.\n- **Alert:** Dữ liệu gắn nhãn nhạy cảm hoặc tập hợp file mạnh về giá trị\
+  \ business được đẩy ra cloud cá nhân.\n- **Baseline:** Phân tách rõ OneDrive doanh\
+  \ nghiệp hợp lệ với cloud storage cá nhân hoặc dịch vụ ít được dùng trong doanh\
+  \ nghiệp.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nScenario này phản ánh đúng xu\
+  \ hướng “living off approved cloud services” trong exfiltration hiện đại. Nó buộc\
+  \ phòng thủ phải phối hợp giữa endpoint, proxy, CASB, DLP và context người dùng\
+  \ thay vì chỉ trông vào IOC mạng.\n\n**Độ tin cậy:** Cao – mô hình upload lớn đi\
+  \ kèm archive/staging mang lại tín hiệu rõ nếu tổ chức có CASB hoặc proxy đủ sâu.\n\
+  \n**Tài liệu tham khảo**\n- Microsoft DART\n- Mandiant 2024\n- MITRE ATT&CK T1567.002,\
+  \ T1048.002, T1560"

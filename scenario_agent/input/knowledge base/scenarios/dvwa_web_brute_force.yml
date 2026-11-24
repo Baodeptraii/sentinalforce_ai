@@ -1,0 +1,7 @@
+id: e5f6a7b8-dvwa-0002-brute-force-campaign
+name: DVWA Web Authentication Brute Force
+description: Mô phỏng tấn công dò quét mật khẩu (Credential Stuffing / Password Guessing)
+  qua endpoint login của DVWA.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0002-brut-000000000002

@@ -1,0 +1,12 @@
+- id: 7ba84893-605f-5a10-9214-7cfef1a12dfc
+  name: Simulate T1598 - Phishing qua QR Code (Quishing)
+  description: Automated simulation ability for MITRE technique T1598
+  tactic: execution
+  technique_id: T1598
+  technique_name: Phishing qua QR Code (Quishing)
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1598: Phishing qua QR Code
+      (Quishing)'''
+    timeout: 30

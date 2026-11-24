@@ -1,0 +1,12 @@
+id: 29de6496-99fb-52a6-a1b2-5d59cf50baf5
+name: '[SCENARIO-31] Credential Stuffing / Password Spraying'
+description: Trong kịch bản này, tác nhân đe doạ sử dụng danh sách tài khoản bị lộ
+  từ breach cũ hoặc chọn một nhóm mật khẩu phổ biến để thử theo kiểu low-and-slow
+  lên Entra ID, VPN, OWA, cổng SSO hoặc bề mặt xác thực AD được publish ra ngoài.
+  Actor thường là các nhóm intrusion ban đầu hoặc cybercrime operators muốn lấy initial
+  access rẻ và khó bị chú ý; điều kiện tiên quyết là tồn tại bề mặt xác
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- bdffbca4-dabb-57e2-9628-99f842a8f3df
+- 90bc2e54-6c84-47a5-9439-0a2a92b4b175
+- 4852c630-87a9-409b-bb5e-5dc12c9ebcde

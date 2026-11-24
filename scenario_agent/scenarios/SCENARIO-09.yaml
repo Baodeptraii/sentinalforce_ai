@@ -1,0 +1,115 @@
+id: SCENARIO-09
+name: Supply Chain Compromise – Trojanized Software Update (SolarWinds Pattern)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 09 – Supply Chain Compromise – Trojanized Software Update (SolarWinds
+  Pattern)
+
+
+  **Giới thiệu chung**
+
+
+  Supply chain attack qua trojanized software update là một trong các kỹ thuật tinh
+  vi và nguy hiểm nhất. Vụ SolarWinds SUNBURST (2020) đã định nghĩa lại mối đe doạ
+  này. Mặc dù đây là vụ tấn công từ 2020, pattern này tiếp tục được APT sử dụng và
+  phòng thủ chống lại nó vẫn là thách thức lớn trong 2024–2026.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công (APT29/Cozy Bear trong trường hợp SolarWinds) xâm nhập vào build pipeline
+  của vendor phần mềm, inject backdoor (SUNBURST) vào bản cập nhật hợp lệ. Bản cập
+  nhật được ký bởi code signing certificate thật của vendor, phát tán đến 18,000+
+  tổ chức. Backdoor nằm im (dormant) 2 tuần trước khi activate để tránh sandbox detection.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Xâm nhập build environment của vendor → Inject backdoor vào source
+
+  → Ký code với legitimate cert → Phân phối qua update server hợp pháp
+
+  → 18,000+ tổ chức cài update → Beacon activate sau 2 tuần dormancy
+
+  → Selective targeting các tổ chức quan trọng → Lateral movement → Espionage
+
+  ```
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1195 | T1195.002 – Supply Chain Compromise: Software |
+
+  | Persistence | T1543 | T1543.003 – Create/Modify System Process: Windows Service
+  |
+
+  | Defense Evasion | T1036 | T1036.005 – Masquerading |
+
+  | C2 | T1071 | T1071.001 – Web Protocols |
+
+  | Discovery | T1087 | T1087.002 – Account Discovery: Domain Account |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **EDR:** SolarWinds Orion process tạo network connection đến avsvmcloud.com (IoC
+  cụ thể)
+
+  - **DNS:** Beacon DNS query với encoded victim info
+
+  - **Network:** Outbound HTTPS từ management server đến bất thường CDN/cloud endpoint
+
+  - **Code signing:** Verify software hash với known-good baseline sau mỗi update
+
+  - **SIEM:** SolarWinds service account thực hiện thay đổi AD/user account
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Software inventory:** Maintain SBOM (Software Bill of Materials) để detect unexpected
+  dependency
+
+  - **Code signing policy:** Verify hash bên ngoài vendor-provided hash
+
+  - **Network segmentation:** Management software không được phép kết nối trực tiếp
+  internet
+
+  - **Behavioral:** Phát hiện software management process tạo outbound connection
+  lạ
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Pattern SolarWinds vẫn relevant: 3CX supply chain attack (2023), XZ Utils backdoor
+  (CVE-2024-3094, 2024), PyPI malware packages. CISA và NSA ban hành hướng dẫn software
+  supply chain security. Đây là mối đe doạ đang escalate.
+
+
+  **Độ tin cậy:** Rất cao – CISA, Microsoft, Mandiant (UNC2452/APT29).
+
+
+  **Tài liệu tham khảo**
+
+  - CISA: "SolarWinds Compromise Emergency Directive"
+
+  - Mandiant: "UNC2452/APT29 Supply Chain Intrusion" (2020/2021)
+
+  - Microsoft: "SUNBURST backdoor analysis"
+
+  - CISA: "Software Supply Chain Security Guidance" (2022–2024)
+
+
+  ---'

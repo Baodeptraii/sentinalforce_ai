@@ -1,0 +1,121 @@
+id: SCENARIO-05
+name: Watering Hole (Drive-by Compromise)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 05 – Watering Hole (Drive-by Compromise)
+
+
+  **Giới thiệu chung**
+
+
+  Watering hole là kỹ thuật tấn công trong đó kẻ tấn công xâm nhập vào website mà
+  nhóm mục tiêu thường xuyên truy cập, cài mã khai thác trình duyệt/plugin để lây
+  nhiễm khách truy cập. Đây là kỹ thuật phổ biến của APT nhắm vào ngành công nghiệp
+  cụ thể hoặc cộng đồng có liên hệ với target.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công (thường là APT nation-state) xác định website thường được nhóm mục tiêu
+  (ví dụ: cán bộ chính phủ, nhà nghiên cứu hạt nhân) truy cập. Website bị compromise
+  bằng cách khai thác CMS, inject JavaScript độc hại. Khi nạn nhân truy cập, trình
+  duyệt bị khai thác hoặc được phục vụ file độc hại.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Xác định website mục tiêu → Khai thác website (CMS vuln/credential)
+
+  → Inject JavaScript/iframe độc hại → Nạn nhân truy cập website
+
+  → Browser exploit / malicious download → Payload execution → C2
+
+  ```
+
+
+  1. **Reconnaissance:** Xác định website phổ biến của nhóm mục tiêu.
+
+  2. **Compromise website (T1584.006):** Khai thác WordPress/Drupal/Joomla vuln hoặc
+  dùng stolen creds.
+
+  3. **Cài mã khai thác (T1189):** Inject JS redirect hoặc exploit kit (Angler, Magnitude).
+
+  4. **Fingerprint visitor (T1592):** JS kiểm tra OS, browser, plugin để phục vụ exploit
+  phù hợp.
+
+  5. **Browser exploit hoặc drive-by download (T1203):** Khai thác lỗ hổng trình duyệt
+  hoặc plugin.
+
+  6. **Payload execution → C2 (T1204.001):** Malware thực thi, beacon về C2.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1189 | Drive-by Compromise |
+
+  | Execution | T1203 | Exploitation for Client Execution |
+
+  | Execution | T1204 | T1204.001 – User Execution: Malicious Link |
+
+  | Resource Dev | T1584 | T1584.006 – Compromise Infrastructure: Web Services |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Web proxy/browser:** HTTP redirect đến domain lạ từ website hợp pháp; download
+  file bất ngờ từ website
+
+  - **EDR:** Browser spawning child process (cmd, powershell, wscript) sau khi truy
+  cập URL cụ thể
+
+  - **DNS:** DNS query đến domain không có lịch sử ngay sau khi truy cập website bị
+  compromise
+
+  - **Network IDS:** Exploit kit traffic signatures (Angler, Magnitude, RIG patterns)
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** Browser process tạo child process lạ sau truy cập URL cụ thể
+
+  - **Hunt:** Tìm users truy cập cùng một URL trong cùng khoảng thời gian, sau đó
+  có EDR alert
+
+  - **Threat Intel:** Subscribe threat intel feed để nhận IoC về compromised websites
+
+  - **Browser isolation:** Triển khai browser isolation cho người dùng có rủi ro cao
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Google TAG 2024 báo cáo nhiều chiến dịch watering hole nhắm vào nhà báo, NGO, và
+  chính phủ. APT nhắm vào ngành năng lượng, quốc phòng, và tài chính tiếp tục sử dụng
+  kỹ thuật này để tránh spearphishing (vì target có awareness cao).
+
+
+  **Độ tin cậy:** Cao – Google TAG, CrowdStrike IR reports.
+
+
+  **Tài liệu tham khảo**
+
+  - Google TAG: "Watering hole campaigns" (2023–2024)
+
+  - CrowdStrike: "Watering Hole Attack Analysis"
+
+  - MITRE ATT&CK T1189
+
+
+  ---'

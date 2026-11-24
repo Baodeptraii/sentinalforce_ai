@@ -1,0 +1,108 @@
+id: SCENARIO-12
+name: MFA Fatigue / Push Bombing
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 12 – MFA Fatigue / Push Bombing
+
+
+  **Giới thiệu chung**
+
+
+  MFA Fatigue (hay Push Bombing) là kỹ thuật kẻ tấn công sử dụng credential hợp lệ
+  đã bị đánh cắp để liên tục gửi push notification MFA đến điện thoại nạn nhân, hy
+  vọng nạn nhân chấp nhận do nhầm lẫn, mệt mỏi, hoặc bị social engineering thêm bởi
+  call giả mạo IT support. Scattered Spider (UNC3944) là nhóm nổi tiếng nhất dùng
+  kỹ thuật này.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công có được credential (password) hợp lệ qua phishing hoặc data breach.
+  Liên tục thử đăng nhập → trigger hàng chục push MFA. Đồng thời, kẻ tấn công gọi
+  điện giả vờ IT helpdesk, giải thích rằng có sự cố hệ thống và yêu cầu chấp nhận
+  notification. Nạn nhân chấp nhận → kẻ tấn công vào được account.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Credential từ breach/phishing → Nhiều lần login attempt
+
+  → Trigger push MFA notification liên tục
+
+  → Vishing (giả IT support) → Nạn nhân chấp nhận push
+
+  → Account takeover → Lateral movement (Scattered Spider TTPs)
+
+  ```
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Credential Access | T1621 | Multi-Factor Authentication Request Generation |
+
+  | Credential Access | T1078 | Valid Accounts |
+
+  | Initial Access | T1566 | T1566.003 – Phishing: Vishing (kết hợp) |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **IdP (Okta/Entra ID/Duo):** Nhiều MFA push request bị denied liên tiếp từ cùng
+  credential
+
+  - **Okta System Log:** `user.mfa.factor.deactivate`, `user.session.start` sau nhiều
+  failed attempts
+
+  - **Entra ID:** Sign-in risk: "MFA fatigue pattern" (built-in risk detection)
+
+  - **Phone call CDR:** Incoming call từ spoofed number ngay trước khi MFA được accept
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Policy:** Giới hạn số push request trong một khoảng thời gian (Okta: max 3 push/10
+  phút)
+
+  - **Number matching MFA:** Bật tính năng number matching trong Microsoft Authenticator
+  (require nhập số hiển thị trên screen)
+
+  - **Alert:** >3 MFA push denied trong 10 phút → tạm khoá tài khoản
+
+  - **Additional context:** Yêu cầu user xác nhận "Did you initiate this login?" khi
+  có bất thường địa lý
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Scattered Spider/UNC3944 (2022–2024) đã tấn công MGM Resorts, Caesars, Okta, Twilio
+  bằng kỹ thuật này. CISA và FBI ban hành advisory về Scattered Spider TTPs năm 2023.
+  Microsoft, Okta, và Duo đã bổ sung các biện pháp chống MFA fatigue nhưng nhiều tổ
+  chức chưa bật.
+
+
+  **Độ tin cậy:** Rất cao – CISA, FBI advisory, Mandiant (Scattered Spider).
+
+
+  **Tài liệu tham khảo**
+
+  - CISA/FBI: "Scattered Spider Cybersecurity Advisory" (AA23-320A, 2023)
+
+  - Mandiant: "UNC3944 (Scattered Spider) TTPs" (2024)
+
+  - Microsoft: "Protecting against MFA fatigue attacks" (2023)
+
+
+  ---'

@@ -1,0 +1,14 @@
+- id: 9d1fcfa3-c3d9-58cc-816c-957a34f111dd
+  name: "Simulate T1114 - Phishing AiTM (Adversary-in-the-Middle) \u0110\xE1nh C\u1EAF\
+    p Session Cookie"
+  description: Automated simulation ability for MITRE technique T1114
+  tactic: execution
+  technique_id: T1114
+  technique_name: "Phishing AiTM (Adversary-in-the-Middle) \u0110\xE1nh C\u1EAFp Session\
+    \ Cookie"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1114: Phishing AiTM (Adversary-in-the-Middle)\
+      \ \u0110\xE1nh C\u1EAFp Session Cookie'"
+    timeout: 30

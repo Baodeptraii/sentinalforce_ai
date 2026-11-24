@@ -1,0 +1,61 @@
+id: SCENARIO-63
+name: Volt Typhoon – Living-off-the-Land trên Critical Infrastructure
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 63 – Volt Typhoon – Living-off-the-Land trên Critical Infrastructure**\n\
+  \n**Giới thiệu chung**\n\nVolt Typhoon là mẫu tiêu biểu cho cách một threat actor\
+  \ cấp quốc gia có thể giảm dấu vết malware bằng cách ưu tiên công cụ hợp lệ, tài\
+  \ khoản hợp lệ và hoạt động quản trị có sẵn trong môi trường. Trong hạ tầng trọng\
+  \ yếu, kiểu living-off-the-land này đặc biệt nguy hiểm vì traffic và lệnh quản trị\
+  \ có thể hòa vào vận hành bình thường, khiến việc phát hiện phụ thuộc nhiều vào\
+  \ baseline hành vi, identity telemetry và network correlation hơn là IOC truyền\
+  \ thống.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, tác nhân đã có quyền truy\
+  \ cập ban đầu vào một môi trường IT hoặc thiết bị edge, sau đó dùng tài khoản hợp\
+  \ lệ, remote access, công cụ dòng lệnh và tiện ích quản trị sẵn có để khám phá mạng,\
+  \ xác định hệ thống quan trọng, di chuyển ngang và duy trì kênh điều khiển kín đáo.\
+  \ Actor là nation-state hoặc nhóm có mức OPSEC cao; điều kiện tiên quyết là có credential\
+  \ hoặc access vào thiết bị/hệ thống nội bộ; kết quả mong muốn là duy trì hiện diện\
+  \ lâu dài trong hạ tầng trọng yếu mà không cần triển khai nhiều malware dễ bị phát\
+  \ hiện.\n\n**Dòng tấn công end-to-end**\n\n```text\nCó quyền truy cập ban đầu vào\
+  \ edge device / VPN / host nội bộ\n→ Dùng tài khoản hợp lệ để truy cập hệ thống\n\
+  → Khám phá network interface, route, connection và AD context\n→ Di chuyển ngang\
+  \ qua remote services hợp lệ\n→ Hạn chế triển khai malware, ưu tiên công cụ hệ thống\n\
+  → Duy trì hiện diện và chuẩn bị khả năng tác động khi cần\n```\n\n1. **Thiết lập\
+  \ quyền truy cập hợp lệ:** Đối thủ dùng credential, session hoặc thiết bị trung\
+  \ gian đã bị chiếm.\n2. **Khảo sát môi trường:** Lệnh hệ thống được dùng để liệt\
+  \ kê network, user, host, share, route và dịch vụ.\n3. **Di chuyển ngang kín đáo:**\
+  \ Remote services hợp lệ như RDP/SMB/WinRM/VPN được ưu tiên thay vì malware tùy\
+  \ biến.\n4. **Giảm dấu vết:** Activity được phân tán, tốc độ thấp và trông giống\
+  \ quản trị hệ thống.\n5. **Duy trì mục tiêu chiến lược:** Actor cố giữ quyền truy\
+  \ cập lâu dài vào mạng trọng yếu để phục vụ gián điệp hoặc khả năng gây gián đoạn\
+  \ trong tương lai.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n\
+  |--------|-----------|-------|\n| Defense Evasion / Initial Access | T1078 | Valid\
+  \ Accounts |\n| Lateral Movement | T1021 | Remote Services |\n| Discovery | T1049\
+  \ | System Network Connections Discovery |\n| Discovery | T1016 | System Network\
+  \ Configuration Discovery |\n| Defense Evasion | T1562 | Impair Defenses hoặc làm\
+  \ suy yếu khả năng quan sát/phát hiện |\n\n**Log / Telemetry / Observable**\n\n\
+  - **CLI command telemetry:** Chuỗi lệnh khám phá mạng, route, user, share, process\
+  \ hoặc service từ tài khoản không thường dùng.\n- **VPN / remote access logs:**\
+  \ Đăng nhập thành công từ thiết bị, địa lý, ASN hoặc thời điểm bất thường.\n- **AD\
+  \ / identity logs:** Tài khoản hợp lệ truy cập nhiều host, nhiều subnet hoặc nhiều\
+  \ tài nguyên hơn baseline.\n- **Network flow:** Kết nối lateral east-west tăng nhẹ\
+  \ nhưng kéo dài, đặc biệt giữa vùng IT, management và sensitive segment.\n- **EDR:**\
+  \ Ít malware artifact nhưng nhiều living-off-the-land command và remote service\
+  \ usage bất thường.\n\n**Gợi ý Detection / Hunting**\n\n```text\nValidAccountUsage\
+  \ = true\nAND (\n  UnusualRemoteServiceFanOut = true\n  OR AdminCommandSequenceDetected\
+  \ = true\n  OR VPNLoginAnomaly = true\n  OR EastWestTrafficToSensitiveSegment =\
+  \ true\n)\nAND MalwareArtifactCountLow = true\n```\n\n- **Alert:** Tài khoản hợp\
+  \ lệ đột nhiên truy cập nhiều host bằng remote services ngoài baseline.\n- **Hunt:**\
+  \ Ghép `VPN login anomaly → discovery command burst → lateral remote service use`.\n\
+  - **Alert:** Lệnh khám phá mạng xuất hiện từ host không phải jump server hoặc không\
+  \ phải máy quản trị.\n- **Baseline:** Xây dựng baseline riêng cho admin thật, automation\
+  \ thật và tài khoản dịch vụ để giảm nhiễu.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nKịch bản này phản ánh xu hướng rất quan trọng: threat actor tinh vi giảm phụ thuộc\
+  \ vào malware và lạm dụng chính công cụ quản trị của doanh nghiệp. Với hạ tầng trọng\
+  \ yếu, năng lực phát hiện living-off-the-land có ý nghĩa chiến lược vì IOC-based\
+  \ detection đơn lẻ thường không đủ.\n\n**Độ tin cậy:** Cao – nguồn công khai và\
+  \ advisory chính thống đã mô tả rõ pattern living-off-the-land, nhưng phát hiện\
+  \ thực tế phụ thuộc mạnh vào logging và baseline nội bộ.\n\n**Tài liệu tham khảo**\n\
+  - CISA AA24-038A\n- Microsoft Threat Intelligence\n- MITRE ATT&CK T1078, T1021,\
+  \ T1049, T1016, T1562"

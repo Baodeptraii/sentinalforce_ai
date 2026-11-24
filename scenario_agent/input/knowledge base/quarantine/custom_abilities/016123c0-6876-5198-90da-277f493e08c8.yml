@@ -1,0 +1,12 @@
+- id: 016123c0-6876-5198-90da-277f493e08c8
+  name: Simulate T1203 - Watering Hole (Drive-by Compromise)
+  description: Automated simulation ability for MITRE technique T1203
+  tactic: execution
+  technique_id: T1203
+  technique_name: Watering Hole (Drive-by Compromise)
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1203: Watering Hole (Drive-by
+      Compromise)'''
+    timeout: 30

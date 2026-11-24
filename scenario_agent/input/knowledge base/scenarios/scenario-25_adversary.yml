@@ -1,0 +1,13 @@
+id: 4e5299fc-add7-581b-b41e-ab7cb5de1a93
+name: '[SCENARIO-25] Pass-the-Hash – Lateral Movement không cần mật khẩu'
+description: Sau khi thu được NTLM hash từ LSASS, SAM hoặc nguồn lưu trữ khác, kẻ
+  tấn công dùng hash đó để xác thực tới máy chủ hoặc máy trạm khác qua SMB, WinRM,
+  WMI hoặc các dịch vụ tương đương. Actor thường là tác nhân nội bộ đã kiểm soát ít
+  nhất một host. Điều kiện tiên quyết là hash hợp lệ và giao thức đích cho phép xác
+  thực phù hợp. Kết quả mong muốn là di chuyển ngang
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 355d4632-8cb9-449d-91ce-b566d0253d3e
+- 40161ad0-75bd-11e9-b475-0800200c9a66
+- 680cc609-3f4f-5195-af52-eb9e4f326352
+- ec23cef9-27d9-46e4-a68d-6f75f7b86908

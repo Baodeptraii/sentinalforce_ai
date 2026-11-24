@@ -1,0 +1,57 @@
+id: SCENARIO-37
+name: Timestomping & Log Xóa – Xóa dấu vết tấn công
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 37 – Timestomping & Log Xóa – Xóa dấu vết tấn công**\n\n**Giới\
+  \ thiệu chung**\n\nSau khi đã đạt được một số mục tiêu trên endpoint hoặc trong\
+  \ domain, nhiều tác nhân sẽ chuyển sang giai đoạn dọn dấu vết để làm giảm hiệu quả\
+  \ điều tra. Hai kỹ thuật rất điển hình trong giai đoạn này là xóa event log và sửa\
+  \ timestamp của file/artifact nhằm gây nhầm lẫn cho DFIR timeline và làm hỏng khả\
+  \ năng tương quan sự kiện theo thứ tự thời gian.\n\n**Mô tả kịch bản**\n\nTrong\
+  \ kịch bản này, tác nhân hậu khai thác đã có quyền đủ cao trên host và chủ động\
+  \ làm suy yếu khả năng truy vết bằng cách xóa các nhật ký sự kiện then chốt, sửa\
+  \ mốc thời gian của file mới tạo, hoặc làm mờ dấu nối giữa payload, persistence\
+  \ và hoạt động tương tác. Actor thường là ransomware affiliate, operator dùng hands-on-keyboard,\
+  \ hoặc malware muốn kéo dài dwell time; điều kiện tiên quyết là có đặc quyền hệ\
+  \ thống hoặc đặc quyền đủ để thao tác log / metadata; kết quả mong muốn là timeline\
+  \ điều tra bị méo, alert correlation kém chính xác, và nhóm phòng thủ khó xác định\
+  \ điểm vào cũng như chuỗi hành vi thật. fileciteturn1file0L64-L64\n\n**Dòng\
+  \ tấn công end-to-end**\n\n```text\nHậu khai thác trên host\n→ Xóa / làm trống event\
+  \ log liên quan\n→ Chỉnh timestamp artifact mới tạo\n→ Xóa hoặc làm mờ dấu vết trung\
+  \ gian\n→ Làm suy yếu DFIR timeline\n→ Tạo khoảng trống điều tra cho giai đoạn tiếp\
+  \ theo\n```\n\n1. **Đạt đủ đặc quyền:** Kẻ tấn công đã có quyền đủ để thao tác event\
+  \ log và metadata file.\n2. **Làm trống dấu vết hệ thống:** Nhật ký bảo mật, vận\
+  \ hành hoặc PowerShell bị xóa / reset / rút gọn.\n3. **Chỉnh sửa mốc thời gian:**\
+  \ File mới tạo hoặc đã sửa được ép mang timestamp có vẻ cũ hoặc hợp lệ hơn.\n4.\
+  \ **Che lớp trung gian:** Artifact staging, script, file tạm hoặc log vận hành liên\
+  \ quan bị dọn bỏ.\n5. **Giảm hiệu quả điều tra:** SOC và IR team mất bối cảnh về\
+  \ chuỗi thật sự đã diễn ra.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique\
+  \ | Mô tả |\n|--------|-----------|-------|\n| Defense Evasion | T1070 | T1070.001\
+  \ – Clear Windows Event Logs |\n| Defense Evasion | T1070 | T1070.006 – Timestomp\
+  \ |\n| Defense Evasion | T1027 | Có thể phối hợp với kỹ thuật làm mờ / ẩn artifact\
+  \ để giảm khả năng phân tích |\n\n**Log / Telemetry / Observable**\n\n- **Windows\
+  \ Event 1102 / 104:** Nhật ký Security hoặc log ứng dụng/hệ thống bị xóa hay reset.\n\
+  - **Process telemetry:** `wevtutil`, PowerShell, cmd hoặc utility khác chạy quanh\
+  \ thời điểm log bị làm trống.\n- **File system forensics:** MAC times của file lệch\
+  \ logic, mâu thuẫn với MFT/USN hoặc không khớp chuỗi sự kiện trước đó.\n- **DFIR\
+  \ anomaly:** Payload xuất hiện trên đĩa nhưng không có chuỗi tạo/chạy tương xứng,\
+  \ hoặc thời điểm tạo file “cũ bất thường”.\n- **Sequence break:** Nhiều sự kiện\
+  \ follow-on rõ ràng xuất hiện sau một khoảng trống log đột ngột.\n\n**Gợi ý Detection\
+  \ / Hunting**\n\n```text\nEventID IN (1102, 104)\nOR (\n  FileTimestampChanged =\
+  \ true\n  AND TimestampSequenceAnomaly = true\n)\nOR (\n  LogClearUtilityExecuted\
+  \ = true\n  AND HighPrivilegeContext = true\n)\n```\n\n- **Alert:** Bất kỳ thao\
+  \ tác xóa log nào trên workstation quản trị, server trọng yếu hoặc host nghi ngờ\
+  \ bị compromise.\n- **Hunt:** So sánh timestomping suspicion với MFT/USN, EDR file\
+  \ timeline và network activity để phát hiện timeline bị bẻ.\n- **Alert:** Sau sự\
+  \ kiện 1102/104, host ngay lập tức có thêm process/network activity bất thường.\n\
+  - **Retention strategy:** Đẩy log lên WEF/SIEM càng sớm càng tốt để việc xóa cục\
+  \ bộ không phá hỏng toàn bộ bức tranh điều tra.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nKịch bản này đặc biệt quan trọng vì nó kiểm tra khả năng “không bị mù” của tổ\
+  \ chức trong giai đoạn hậu khai thác. Một SOC mạnh không chỉ phát hiện hành vi xâm\
+  \ nhập, mà còn phải phát hiện được nỗ lực xóa dấu vết. Đây là scenario rất phù hợp\
+  \ để đo chất lượng log forwarding, forensic readiness, retention policy và khả năng\
+  \ dựng lại timeline khi dữ liệu cục bộ đã bị thao túng.\n\n**Độ tin cậy:** Cao –\
+  \ các tín hiệu log clear và timestamp anomaly đủ rõ, đặc biệt khi có telemetry tập\
+  \ trung ngoài host.\n\n**Tài liệu tham khảo**\n- MITRE ATT&CK\n- Mandiant\n- MITRE\
+  \ ATT&CK T1070.001, T1070.006, T1027"

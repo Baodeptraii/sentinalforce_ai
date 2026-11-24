@@ -1,0 +1,13 @@
+id: 66c37c56-a6b0-5f4b-9604-7a84e8f3f8a9
+name: '[SCENARIO-07] Khai Thác Log4Shell (CVE-2021-44228) Còn Tồn Tại Đến 2024'
+description: Kẻ tấn công quét internet tìm ứng dụng Java/Spring Boot public-facing
+  có Log4j dễ bị tấn công. Gửi JNDI lookup string trong HTTP header (User-Agent, X-Forwarded-For,
+  etc.). Server ghi log request → Log4j xử lý JNDI → kết nối đến server của kẻ tấn
+  công → tải class Java độc hại → thực thi mã.
+atomic_ordering:
+- ea713bc4-63f0-491c-9a6f-0b01d560b87e
+- a9b93f17-31cb-435d-a462-5e838a2a6026
+- a1b2c3d4-dvwa-0003-cmdi-000000000003
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- dc6fe391-69e6-4506-bd06-ea5eeb4082f8
+- a1b2c3d4-dvwa-0005-sqli-000000000005

@@ -1,0 +1,12 @@
+- id: 563ef92e-3802-5109-bf71-a19c6e6f1fa5
+  name: "Simulate T1053 - Scheduled Task \u2013 Persistence v\xE0 Lateral Movement"
+  description: Automated simulation ability for MITRE technique T1053
+  tactic: execution
+  technique_id: T1053
+  technique_name: "Scheduled Task \u2013 Persistence v\xE0 Lateral Movement"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1053: Scheduled Task \u2013\
+      \ Persistence v\xE0 Lateral Movement'"
+    timeout: 30

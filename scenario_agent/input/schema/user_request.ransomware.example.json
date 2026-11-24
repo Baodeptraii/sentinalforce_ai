@@ -1,0 +1,26 @@
+{
+  "id": "REQ-002",
+  "text": "tôi muốn tạo kịch bản ransomware để đánh giá hệ thống soc.",
+  "target_id": "win10-dvwa-lab",
+  "objective": "Tạo kịch bản ransomware để đánh giá hệ thống SOC.",
+  "requested_techniques": [],
+  "scope": [],
+  "max_tests": null,
+  "mode": "plan_only",
+  "constraints": {
+    "baseline_required": null,
+    "cleanup_required": null,
+    "rollback_required": null,
+    "health_check_required": null,
+    "avoid_service_disruption": null,
+    "service_changes_require_separate_approval": null,
+    "variants_require_approval": null,
+    "setup_cleanup_count_toward_max_tests": null,
+    "exploitation_success_required": null,
+    "detection_evaluation_requested": true,
+    "additional_constraints": []
+  },
+  "clarifications_needed": [
+    "Bạn muốn đánh giá các hành vi tiền mã hóa, mô phỏng mã hóa trên dữ liệu thử nghiệm hay cả chuỗi hành vi ransomware?"
+  ]
+}

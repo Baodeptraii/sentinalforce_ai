@@ -1,0 +1,15 @@
+id: 6d99f98d-8048-59c0-a7a1-a167f2383c49
+name: '[SCENARIO-62] Trojanized Installer – Giả mạo phần mềm hợp lệ'
+description: Trong kịch bản này, đối thủ đóng gói lại một phần mềm phổ biến hoặc công
+  cụ quản trị thường dùng, gắn thêm loader, backdoor hoặc script độc hại, rồi phân
+  phối qua quảng cáo, torrent, mirror giả, forum kỹ thuật hoặc trang download không
+  chính thức. Actor thường là cybercrime, malware distribution network hoặc initial
+  access broker; điều kiện tiên quyết là người dùng có quyền cài đặt hoặc chạy file
+  tải từ Internet; kết quả mong muốn là
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- 35eb8d16-9820-4423-a2a1-90c4f5edd9ca
+- 82a9f001-94c5-495e-9ed5-f530dbded5e2
+- a9604672-cd46-493b-b58f-fd4124c22dd3
+- cd0fe01c-7bdc-54a1-9e59-333088b4d71a
+- 8bebc690-18c7-4549-bc98-210f7019efff

@@ -1,0 +1,143 @@
+id: SCENARIO-18
+name: Web Shell – Persistence trên Web Server
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 18 – Web Shell – Persistence trên Web Server**
+
+
+  **Giới thiệu chung**
+
+
+  Web shell là một trong những cơ chế persistence kinh điển trên hệ thống web bị compromise.
+  Sau khi có được thực thi ban đầu qua lỗ hổng ứng dụng hoặc xác thực yếu, tác nhân
+  đe dọa thường ưu tiên một web shell nhỏ, khó thấy, dễ gọi qua HTTP/HTTPS và có thể
+  dùng để thao tác file, chạy lệnh hệ điều hành, hoặc làm bàn đạp vào mạng nội bộ.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công khai thác thành công một ứng dụng công khai hoặc dùng credential quản
+  trị web để tải lên một file `.aspx`, `.php`, `.jsp`, `.ashx` hoặc biến thể tương
+  tự vào webroot. Actor phù hợp cho scenario này là tác nhân đã có initial access
+  trên web tier và muốn duy trì truy cập ngay cả khi session ban đầu mất đi. Điều
+  kiện tiên quyết là quyền upload file, write file sau RCE, hoặc đường dẫn deployment
+  bị lộ/ghi được. Kết quả mong muốn là có một endpoint bí mật nhận tham số lệnh, thao
+  tác nội dung server và hỗ trợ giai đoạn C2 nhẹ.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Khai thác ứng dụng công khai hoặc chiếm credential web admin
+
+  → Ghi file web shell vào webroot
+
+  → Gọi endpoint shell qua HTTP/HTTPS
+
+  → Chạy lệnh hệ điều hành / upload thêm công cụ
+
+  → Duy trì truy cập + pivot nội bộ
+
+  ```
+
+
+  1. **Giành quyền ghi trên web tier:** Từ lỗ hổng upload, RCE, hoặc tài khoản quản
+  trị nội dung bị chiếm.
+
+  2. **Đặt web shell:** File nhỏ được lưu vào thư mục phục vụ HTTP hoặc một path có
+  thể gọi gián tiếp.
+
+  3. **Kích hoạt truy cập:** HTTP request với tham số đặc thù được dùng để xác nhận
+  shell hoạt động.
+
+  4. **Mở rộng hậu khai thác:** Shell được dùng để đọc config, kết nối tới DB, tải
+  công cụ quản trị hoặc pivot.
+
+  5. **Ẩn dấu vết:** Tên file, path và timestamp có thể bị ngụy trang để trông giống
+  asset hợp lệ.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Persistence | T1505 | T1505.003 – Web Shell |
+
+  | Initial Access | T1190 | Khai thác ứng dụng public-facing làm điểm vào |
+
+  | Execution | T1059 | Thực thi lệnh thông qua server-side scripting / command wrapper
+  |
+
+  | Command and Control | T1071 | Lưu lượng qua HTTP/HTTPS hòa lẫn traffic ứng dụng
+  |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Web server logs:** Request lặp đi lặp lại tới file lạ, path hiếm dùng, query
+  string có tham số giống lệnh, mã hóa hoặc base64.
+
+  - **File telemetry:** Tệp script mới xuất hiện trong webroot ngoài chu trình triển
+  khai chuẩn.
+
+  - **EDR:** `w3wp.exe`, `php-cgi.exe`, `httpd`, `tomcat`, `nginx` gọi shell hệ điều
+  hành hoặc tiến trình phụ bất thường.
+
+  - **Network:** Web server phát sinh outbound connection bất thường tới host ngoài,
+  hoặc kết nối nội bộ sang server khác không phù hợp chức năng.
+
+  - **Response anomaly:** Kích thước phản hồi, user-agent, nhịp truy cập và thời điểm
+  truy cập bất thường.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  ```text
+
+  ParentImage IN ("w3wp.exe", "php-cgi.exe", "httpd.exe", "tomcat.exe")
+
+  AND ChildImage IN ("cmd.exe", "powershell.exe", "sh", "bash", "cscript.exe", "wscript.exe")
+
+  ```
+
+
+  - **Alert:** File script mới xuất hiện trong webroot nhưng không gắn với pipeline
+  triển khai.
+
+  - **Hunt:** Tìm các endpoint web có ít lượt truy cập nhưng lại được gọi lặp đi lặp
+  lại từ một nhóm IP cố định.
+
+  - **Alert:** Web server process mở shell hoặc công cụ nén / tải file.
+
+  - **Baseline:** Lập danh sách file ứng dụng hợp lệ theo phiên bản để phát hiện drift.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Web shell vẫn là lựa chọn persistence có hiệu quả cao sau nhiều kiểu khai thác web
+  khác nhau. Scenario này đặc biệt hữu ích cho blue team vì kết hợp được WAF/web logs,
+  file integrity monitoring, EDR process lineage, và theo dõi egress từ web server
+  trong cùng một bài tập phòng thủ.
+
+
+  **Độ tin cậy:** Cao – mô hình hành vi rõ ràng, giàu observable và phù hợp bài toán
+  hunting trên web tier.
+
+
+  **Tài liệu tham khảo**
+
+  - CISA AA24
+
+  - NSA advisory
+
+  - MITRE ATT&CK T1505.003, T1190'

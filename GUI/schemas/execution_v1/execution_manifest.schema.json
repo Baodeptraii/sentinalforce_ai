@@ -1,0 +1,5 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema","type":"object",
+ "required":["schema_version","execution_id","plan_sha256","survey","artifacts","mapping","adversary_id","source_id","target","planner","transport"],
+ "properties":{"schema_version":{"const":"caldera_execution_v1"},"execution_id":{"type":"string","pattern":"^[a-f0-9]{32}$"},"mapping":{"type":"array","minItems":1,"items":{"type":"object","required":["index","source_ability_id","source","execution_ability_id","command_sha256"]}}}
+}

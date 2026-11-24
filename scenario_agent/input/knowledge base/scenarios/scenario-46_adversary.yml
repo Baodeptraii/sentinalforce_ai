@@ -1,0 +1,14 @@
+id: e2f44c45-e9da-553e-82e4-d88a4a49576b
+name: '[SCENARIO-46] Network Share Enumeration và Staging Dữ liệu'
+description: Trong kịch bản này, tác nhân đã có foothold trong mạng nội bộ với ít
+  nhất một tài khoản người dùng hợp lệ hoặc một host bị compromise, sau đó liệt kê
+  các network share có thể truy cập, xác định thư mục chứa tài liệu nhạy cảm và sao
+  chép dữ liệu về một vị trí staging cục bộ hoặc share trung gian trước khi nén lại.
+  Actor thường là post-exploitation operator, ransomware affiliate hoặc nhóm đánh
+  cắp dữ
+atomic_ordering:
+- 749a12cd-6994-5511-b489-db1fdac79517
+- 4e97e699-93d7-4040-b5a3-2e906a58199e
+- 530e47c6-8592-42bf-91df-c59ffbd8541b
+- 41410c60-614d-4b9d-b66e-b0192dd9c597
+- 2f90d4de-2612-4468-9251-b220e3727452

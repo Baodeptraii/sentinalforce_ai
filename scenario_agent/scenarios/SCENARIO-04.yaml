@@ -1,0 +1,117 @@
+id: SCENARIO-04
+name: Callback Phishing (TOAD – Telephone-Oriented Attack Delivery)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 04 – Callback Phishing (TOAD – Telephone-Oriented Attack Delivery)
+
+
+  **Giới thiệu chung**
+
+
+  TOAD là kỹ thuật phishing lai giữa email và social engineering qua điện thoại. Kẻ
+  tấn công gửi email thông báo về đăng ký dịch vụ/hoá đơn giả mạo, kèm số điện thoại
+  để "hủy đăng ký". Khi nạn nhân gọi đến, nhân viên giả mạo của "support team" hướng
+  dẫn nạn nhân cài phần mềm điều khiển từ xa (RMM tool).
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công gửi email giả mạo thông báo đăng ký dịch vụ (ví dụ: Norton Antivirus,
+  McAfee, Microsoft) với số tiền lớn và yêu cầu gọi điện nếu không đồng ý. Nạn nhân
+  hoảng loạn và gọi điện. Call center giả mạo hướng dẫn cài AnyDesk/TeamViewer/ScreenConnect.
+  Qua đó, kẻ tấn công chiếm quyền điều khiển máy tính.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Email giả mạo (hóa đơn/subscription) → Nạn nhân gọi số điện thoại
+
+  → Social engineering qua điện thoại → Hướng dẫn cài RMM tool
+
+  → Kẻ tấn công điều khiển máy → Credential theft / Ransomware
+
+  ```
+
+
+  1. **Email giả mạo (T1566.003):** Email thuyết phục với logo hợp lệ, số tiền lớn.
+
+  2. **Nạn nhân gọi điện:** Social engineering qua giọng nói.
+
+  3. **Cài RMM (T1219):** AnyDesk, ScreenConnect, Splashtop được cài thủ công.
+
+  4. **Credential harvest:** Kẻ tấn công truy cập browser saved passwords, files.
+
+  5. **Ransomware hoặc fraud:** Triển khai ransomware hoặc thực hiện gian lận tài
+  chính.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1566.003 | Phishing: Voice Phishing (Vishing) |
+
+  | Execution | T1204.002 | User Execution: Malicious File (RMM installer) |
+
+  | C2 | T1219 | Remote Access Software |
+
+  | Credential Access | T1555 | Credentials from Password Stores |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Email gateway:** Email với số điện thoại trong body, không có attachment, không
+  có link nguy hiểm (qua được nhiều AV)
+
+  - **EDR:** Cài đặt AnyDesk, TeamViewer, ScreenConnect từ user context, không phải
+  IT
+
+  - **Network:** Kết nối ra ngoài đến anydesk.com, teamviewer.com, screenconnect.com
+  từ non-standard user
+
+  - **MDM/CASB:** RMM tools không thuộc whitelist được phát hiện
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** AnyDesk/TeamViewer/ScreenConnect được cài bởi tài khoản user thông
+  thường (không phải IT)
+
+  - **Alert:** Email chứa số điện thoại (regex pattern) nhưng không có hyperlink (bypass
+  URL filtering)
+
+  - **Hunt:** Process tree: browser → download → installer execution → RMM connection
+
+  - **Behavioral:** User cài phần mềm lạ sau nhận email giả mạo subscription
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Proofpoint báo cáo TOAD là một trong các vector phát triển nhanh nhất 2023–2024,
+  với hàng triệu email mỗi ngày. BazaCall (TA800) và các nhóm liên quan đã dùng TOAD
+  để phân phối ransomware (Conti, Cuba). Xu hướng 2024: TOAD kết hợp với AI voice
+  để thuyết phục hơn.
+
+
+  **Độ tin cậy:** Cao – Proofpoint TOAD research 2023/2024.
+
+
+  **Tài liệu tham khảo**
+
+  - Proofpoint: "BazaCall: Phishing With a Side of Callback Fraud" (2023)
+
+  - Proofpoint: "TOAD – Telephone Oriented Attack Delivery" (2024)
+
+
+  ---'

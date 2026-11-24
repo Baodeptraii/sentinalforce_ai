@@ -1,0 +1,124 @@
+id: SCENARIO-19
+name: Registry Run Key – Autostart Persistence
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 19 – Registry Run Key – Autostart Persistence**
+
+
+  **Giới thiệu chung**
+
+
+  Registry Run Key là một kỹ thuật autostart rất phổ biến trên Windows. So với các
+  cơ chế persistence phức tạp hơn, Run Key có ưu điểm là đơn giản, ít phụ thuộc thành
+  phần ngoài, và thường tồn tại tốt trong môi trường doanh nghiệp khi registry monitoring
+  chưa được cấu hình đủ sâu.
+
+
+  **Mô tả kịch bản**
+
+
+  Sau khi đã chạy được code trên endpoint, kẻ tấn công ghi một giá trị vào `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`,
+  `RunOnce`, hoặc biến thể trong `HKLM`. Actor thường là malware loader, stealer,
+  hoặc tác nhân hậu khai thác muốn bảo đảm payload quay lại sau đăng nhập. Điều kiện
+  tiên quyết là quyền ghi registry tại hive tương ứng. Kết quả mong muốn là một binary,
+  script hoặc LOLBin được gọi lại khi người dùng đăng nhập hoặc máy khởi động lại.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Foothold trên endpoint → Ghi giá trị Run/RunOnce
+
+  → User logon hoặc system startup
+
+  → Payload tự khởi chạy lại
+
+  → Persistence bền vững trên cùng host
+
+  ```
+
+
+  1. **Giành quyền ghi registry:** Thông qua tiến trình đã compromise hoặc script
+  chạy dưới tài khoản người dùng.
+
+  2. **Thiết lập key:** Value trỏ tới executable, shortcut, DLL loader, script interpreter
+  hoặc command line ngắn.
+
+  3. **Chờ trigger:** Đăng nhập người dùng hoặc chu trình khởi động kích hoạt entry.
+
+  4. **Tái thực thi payload:** Loader hoặc implant được gọi lại từ cơ chế autostart.
+
+  5. **Duy trì hiện diện:** Kẻ tấn công tiếp tục hoạt động mà không cần initial vector
+  ban đầu.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Persistence | T1547 | T1547.001 – Registry Run Keys / Startup Folder |
+
+  | Defense Evasion | T1036 | Tên value có thể ngụy trang giống thành phần hệ thống
+  hoặc phần mềm hợp lệ |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Sysmon Event 13:** Registry value set trên các path autostart nhạy cảm.
+
+  - **Registry auditing:** Ghi nhận thay đổi ở Run, RunOnce, Policies\Explorer\Run
+  hoặc khóa tương tự.
+
+  - **EDR process telemetry:** Payload được khởi chạy ngay sau logon, với parent là
+  `explorer.exe`, `userinit.exe` hoặc shell liên quan.
+
+  - **Path anomaly:** Value trỏ tới `%TEMP%`, `%APPDATA%`, `ProgramData`, thư mục
+  download hoặc command line dùng LOLBin.
+
+  - **Autoruns drift:** Value mới xuất hiện nhưng không có trong baseline phần mềm
+  đã phê duyệt.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** Mọi thay đổi mới ở Run / RunOnce nếu command line chứa `powershell`,
+  `rundll32`, `wscript`, `mshta`, hoặc đường dẫn người dùng ghi được.
+
+  - **Hunt:** So sánh inventory autoruns giữa image vàng và endpoint thật để phát
+  hiện sai lệch.
+
+  - **Alert:** Registry value có tên giống `Windows Update`, `Security Health`, `OneDrive`,
+  nhưng publisher / path thực thi không khớp.
+
+  - **Validation:** Kết hợp registry modification với process execution sau lần logon
+  kế tiếp để giảm false positive.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Run Key là kỹ thuật đơn giản nhưng vẫn có giá trị phòng thủ rất lớn vì nó chạm đúng
+  vấn đề mà nhiều tổ chức còn yếu: giám sát thay đổi registry nhạy cảm, hiểu baseline
+  autostart thật sự cần thiết, và tương quan được thay đổi registry với tiến trình
+  thực thi sau logon.
+
+
+  **Độ tin cậy:** Cao – dấu vết dễ xác định, phù hợp cả bài toán mô phỏng lẫn cải
+  thiện kiểm soát nền tảng Windows.
+
+
+  **Tài liệu tham khảo**
+
+  - MITRE ATT&CK T1547.001
+
+  - SentinelOne
+
+  - Sysmon / Windows Registry Auditing Guidance'

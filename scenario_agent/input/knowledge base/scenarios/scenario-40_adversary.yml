@@ -1,0 +1,11 @@
+id: 849c8173-6852-52a2-ad76-3fc82e89e31a
+name: '[SCENARIO-40] Masquerading – Đặt tên file giả mạo tiến trình hệ thống'
+description: Trong kịch bản này, malware hoặc operator đưa một file độc hại lên host
+  với tên trùng hoặc gần giống tiến trình hệ thống quen thuộc, đồng thời đặt nó ở
+  thư mục mà người dùng hoặc một số công cụ kiểm soát dễ bỏ qua nếu chỉ nhìn tên file.
+  Actor thường là commodity malware, trojan hoặc implant hậu khai thác muốn tăng cơ
+  hội tồn tại ở giai đoạn sớm; điều kiện tiên quyết là có khả năng
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- e5f9de8f-3df1-4e78-ad92-a784e3f6770d
+- 35eb8d16-9820-4423-a2a1-90c4f5edd9ca

@@ -1,0 +1,55 @@
+id: SCENARIO-52
+name: Exfiltration qua Email – Email Forwarding Rule ẩn
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 52 – Exfiltration qua Email – Email Forwarding Rule ẩn**\n\n\
+  **Giới thiệu chung**\n\nAuto-forwarding và inbox rule abuse là một trong những kỹ\
+  \ thuật exfiltration bền vững nhất trong môi trường email doanh nghiệp. Điểm nguy\
+  \ hiểm nằm ở chỗ một rule nhỏ, gần như vô hình đối với người dùng, có thể lặng lẽ\
+  \ chuyển mọi thư quan trọng ra ngoài trong thời gian dài mà không cần tương tác\
+  \ thêm từ tác nhân.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, sau khi chiếm được\
+  \ quyền truy cập vào mailbox doanh nghiệp, kẻ tấn công tạo rule hoặc cấu hình forwarding\
+  \ ẩn để tự động chuyển email, tệp đính kèm hoặc thư khớp điều kiện nhất định tới\
+  \ một địa chỉ ngoài tổ chức. Actor thường là BEC operator, espionage actor hoặc\
+  \ nhóm muốn thu thập thông tin liên tục mà tránh tải toàn bộ mailbox; điều kiện\
+  \ tiên quyết là đã có quyền thao tác mailbox hoặc tenant mail settings tương ứng;\
+  \ kết quả mong muốn là luồng thư nhạy cảm tiếp tục chảy ra ngoài ngay cả khi phiên\
+  \ đăng nhập ban đầu không còn.\n\n**Dòng tấn công end-to-end**\n\n```text\nChiếm\
+  \ quyền truy cập mailbox\n→ Khảo sát cấu trúc thư mục và thói quen người dùng\n\
+  → Tạo inbox rule / forwarding rule ẩn\n→ Email nhạy cảm được tự động chuyển ra ngoài\n\
+  → Rule tiếp tục tồn tại sau khi phiên ban đầu kết thúc\n→ Duy trì collection và\
+  \ exfiltration bền vững\n```\n\n1. **Có quyền trên mailbox:** Tài khoản người dùng\
+  \ hoặc hộp thư quản lý đã bị compromise.\n2. **Quan sát quy trình email:** Tác nhân\
+  \ tìm các luồng thư có giá trị như tài chính, pháp lý, lãnh đạo hoặc dự án.\n3.\
+  \ **Thiết lập forwarding:** Rule được tạo để chuyển tiếp toàn bộ hoặc một tập điều\
+  \ kiện hẹp hơn.\n4. **Thu thập liên tục:** Email mới tự động bị chuyển đến địa chỉ\
+  \ ngoài hoặc hộp thư trung gian do đối phương kiểm soát.\n5. **Duy trì kín đáo:**\
+  \ Rule có thể đồng thời đánh dấu đã đọc, di chuyển thư hoặc ẩn trong cấu hình khó\
+  \ thấy.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Collection | T1114 | T1114.003 – Email Forwarding Rule |\n| Collection | T1114\
+  \ | T1114.001 – Local Email Collection |\n| Exfiltration | T1114 | T1114.003 đồng\
+  \ thời đóng vai trò kênh chuyển dữ liệu ra ngoài |\n\n**Log / Telemetry / Observable**\n\
+  \n- **Microsoft 365 / O365 audit logs:** `New-InboxRule`, `Set-InboxRule`, `ForwardTo`,\
+  \ `RedirectTo`, `Set-Mailbox` hoặc thay đổi forwarding SMTP.\n- **Mail flow logs:**\
+  \ Tăng đột biến thư outbound tới địa chỉ cá nhân hoặc domain ngoài hiếm gặp.\n-\
+  \ **Mailbox behavior anomaly:** Rule mới xuất hiện với điều kiện rất rộng, hoặc\
+  \ đánh dấu thư đã đọc/di chuyển bất thường.\n- **Defender / cloud security telemetry:**\
+  \ Thay đổi mailbox được thực hiện sau sign-in đáng ngờ, từ IP/thiết bị mới hoặc\
+  \ qua client lạ.\n- **Long-tail persistence clue:** Dữ liệu tiếp tục rò rỉ sau khi\
+  \ người dùng ngừng hoạt động hoặc ngoài giờ làm việc.\n\n**Gợi ý Detection / Hunting**\n\
+  \n```text\nMailboxRuleCreated = true\nAND (\n  ForwardToExternal = true\n  OR RedirectToExternal\
+  \ = true\n  OR HiddenMoveOrMarkAsReadBehavior = true\n)\nAND UserRole NOT IN approved_executive_assistant_workflows\n\
+  ```\n\n- **Alert:** Bất kỳ inbox rule mới nào forward hoặc redirect thư ra domain\
+  \ ngoài không nằm trong allowlist.\n- **Hunt:** Chuỗi `risky sign-in → mailbox rule\
+  \ change → mail flow outbound tăng` trên cùng người dùng.\n- **Alert:** Rule có\
+  \ điều kiện “mọi thư đến” hoặc tác động tới tệp đính kèm, từ khóa tài chính, lãnh\
+  \ đạo hay domain đối tác trọng yếu.\n- **Baseline:** Lập danh sách ngoại lệ forwarding\
+  \ hợp lệ cấp phòng ban hoặc theo quy trình trợ lý điều hành để giảm nhiễu.\n\n**Vì\
+  \ sao đáng ưu tiên 2024–2026**\n\nĐây là một trong những kịch bản giá trị nhất cho\
+  \ phòng thủ email vì nó đo đúng khả năng phát hiện persistence ở lớp ứng dụng đám\
+  \ mây. Không cần malware, không cần lateral movement sâu, một inbox rule ẩn vẫn\
+  \ có thể tạo ra rò rỉ dữ liệu kéo dài nhiều tuần hoặc nhiều tháng.\n\n**Độ tin cậy:**\
+  \ Cao – mailbox audit và mail flow thường đủ mạnh để xây dựng use case có độ chính\
+  \ xác tốt.\n\n**Tài liệu tham khảo**\n- CISA\n- Microsoft\n- Proofpoint\n- MITRE\
+  \ ATT&CK T1114.003, T1114.001"

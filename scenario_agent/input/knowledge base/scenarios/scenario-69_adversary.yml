@@ -1,0 +1,12 @@
+id: 2c38dd01-46ec-5759-aa25-03d3dab98d31
+name: '[SCENARIO-69] AI-Assisted Phishing – Deepfake Voice/Video Social Engineering'
+description: Trong kịch bản này, đối thủ dùng dữ liệu công khai như video, ảnh, bài
+  phát biểu, email style hoặc thông tin mạng xã hội để tạo nội dung giả mạo lãnh đạo,
+  đối tác hoặc nhân sự có thẩm quyền. Nội dung có thể là email, tin nhắn, cuộc gọi
+  thoại, video meeting hoặc chỉ đạo chuyển tiền/cung cấp quyền truy cập. Actor thường
+  là BEC operator, social engineering crew hoặc nhóm lừa đảo tài chính; điều kiện
+  tiên
+atomic_ordering:
+- 37a36163-f420-5d50-a719-41da1a55c3c7
+- 7ba84893-605f-5a10-9214-7cfef1a12dfc
+- dde0a1f4-5657-54f2-b022-e1673ba11b8c

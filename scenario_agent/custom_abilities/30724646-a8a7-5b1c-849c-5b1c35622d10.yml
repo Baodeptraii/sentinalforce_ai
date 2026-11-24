@@ -1,0 +1,12 @@
+- id: 30724646-a8a7-5b1c-849c-5b1c35622d10
+  name: Simulate T1567 - Exfiltration qua Cloud Storage (OneDrive/Dropbox/MEGA)
+  description: Automated simulation ability for MITRE technique T1567
+  tactic: execution
+  technique_id: T1567
+  technique_name: Exfiltration qua Cloud Storage (OneDrive/Dropbox/MEGA)
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1567: Exfiltration qua
+      Cloud Storage (OneDrive/Dropbox/MEGA)'''
+    timeout: 30

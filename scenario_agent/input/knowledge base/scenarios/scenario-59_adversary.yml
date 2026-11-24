@@ -1,0 +1,13 @@
+id: 729329ae-db80-59f8-805f-2c0f3d7a533b
+name: '[SCENARIO-59] Double Extortion Ransomware – BlackCat/ALPHV'
+description: Trong kịch bản này, tác nhân sau khi thu thập và chuyển một phần dữ liệu
+  ra ngoài mới kích hoạt mã hóa diện rộng, đồng thời sử dụng việc công khai hoặc đe
+  dọa công khai dữ liệu làm đòn ép bổ sung. Actor thường là ransomware affiliate hoặc
+  extortion crew; điều kiện tiên quyết là đã có dwell time đủ dài để thu thập dữ liệu
+  giá trị và có đường exfil phù hợp; kết quả mong muốn
+atomic_ordering:
+- ea713bc4-63f0-491c-9a6f-0b01d560b87e
+- 649349c7-9abf-493b-a7a2-b1aa4d141528
+- 30724646-a8a7-5b1c-849c-5b1c35622d10
+- 3ce95a28-25fc-4a7e-a0cd-0fdb190e2081
+- 80e87c59-ceb3-5d6e-ba10-d9f95d7f9e66

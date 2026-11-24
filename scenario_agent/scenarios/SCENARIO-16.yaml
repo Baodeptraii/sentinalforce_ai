@@ -1,0 +1,54 @@
+id: SCENARIO-16
+name: Scheduled Task – Persistence và Lateral Movement
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 16 – Scheduled Task – Persistence và Lateral Movement**\n\n**Giới\
+  \ thiệu chung**\n\nScheduled Task là một cơ chế quản trị hợp lệ của Windows nhưng\
+  \ rất thường bị lạm dụng để duy trì thực thi, kích hoạt payload theo lịch, hoặc\
+  \ mở rộng sang máy khác mà không cần cài đặt thêm thành phần lạ. Đây là kỹ thuật\
+  \ có độ bền cao, chi phí thấp, và đặc biệt hiệu quả khi tổ chức chưa baseline đầy\
+  \ đủ các tác vụ hợp lệ trên endpoint.\n\n**Mô tả kịch bản**\n\nSau khi đã có foothold\
+  \ trên một máy trạm hoặc có được credential quản trị cục bộ, kẻ tấn công tạo một\
+  \ scheduled task ngụy trang dưới tên có vẻ hợp lệ như `Updater`, `OneDrive Sync`,\
+  \ hoặc đặt trong namespace gần giống tác vụ hệ thống. Điều kiện tiên quyết thường\
+  \ là quyền tạo task cục bộ hoặc quyền quản trị từ xa qua SMB/RPC. Kết quả mong muốn\
+  \ là payload được kích hoạt lại khi login, startup hoặc theo chu kỳ, đồng thời có\
+  \ thể sao chép cùng cơ chế sang các host lân cận.\n\n**Dòng tấn công end-to-end**\n\
+  \n```\nFoothold ban đầu → Tạo scheduled task local\n→ Payload chạy theo login/startup/lịch\
+  \ định kỳ\n→ Remote task creation trên host khác\n→ Persistence ổn định + mở rộng\
+  \ vùng kiểm soát\n```\n\n1. **Thiết lập foothold:** Kẻ tấn công đã có quyền người\
+  \ dùng hoặc quyền local admin trên máy đầu tiên.\n2. **Tạo tác vụ cục bộ:** Một\
+  \ task mới được tạo để gọi `powershell`, `cmd`, script, hoặc binary đã staging sẵn.\n\
+  3. **Kích hoạt lần đầu:** Task chạy ngay hoặc chờ trigger như startup, logon, idle,\
+  \ hay mốc thời gian cụ thể.\n4. **Mở rộng sang host khác:** Nếu có admin credential,\
+  \ task tương tự được đẩy sang máy đích từ xa.\n5. **Duy trì hiện diện:** Payload\
+  \ được gọi lại định kỳ ngay cả khi người dùng đăng xuất hoặc máy khởi động lại.\n\
+  \n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Persistence | T1053 | T1053.005 – Scheduled Task/Job |\n| Execution | T1053 |\
+  \ Tác vụ được dùng làm cơ chế thực thi lặp lại |\n| Lateral Movement | T1021 | T1021.002\
+  \ – SMB/Admin Shares trong bối cảnh tạo task từ xa |\n\n**Log / Telemetry / Observable**\n\
+  \n- **Windows Security Event 4698 / 4702 / 4699:** Tạo mới, sửa đổi hoặc xóa scheduled\
+  \ task.\n- **Microsoft-Windows-TaskScheduler/Operational:** Event liên quan tới\
+  \ registration, update, launch, disable hoặc trigger thay đổi.\n- **Sysmon / EDR\
+  \ process lineage:** `schtasks.exe`, `taskeng.exe`, `taskhostw.exe`, hoặc `svchost.exe`\
+  \ sinh tiến trình con lạ.\n- **File telemetry:** Task trỏ tới binary hoặc script\
+  \ trong `%APPDATA%`, `%TEMP%`, `C:\\ProgramData\\`, hoặc UNC path.\n- **Lateral\
+  \ telemetry:** Nhiều máy cùng xuất hiện một task name, một command line, hoặc cùng\
+  \ một path thực thi trong thời gian ngắn.\n\n**Gợi ý Detection / Hunting**\n\n```text\n\
+  EventID IN (4698, 4702)\nAND (\n  TaskContent CONTAINS \"powershell\"\n  OR TaskContent\
+  \ CONTAINS \"cmd /c\"\n  OR TaskContent CONTAINS \"\\\\\\\\\"\n  OR TaskContent\
+  \ CONTAINS \"%APPDATA%\"\n  OR TaskContent CONTAINS \"ProgramData\"\n)\n```\n\n\
+  - **Alert:** Task mới được tạo dưới thư mục nhìn giống hệ thống nhưng không nằm\
+  \ trong baseline chuẩn.\n- **Hunt:** Cùng một `TaskName` hoặc cùng `Action` xuất\
+  \ hiện trên nhiều endpoint trong một cửa sổ thời gian hẹp.\n- **Alert:** Task được\
+  \ tạo bởi tài khoản người dùng thông thường nhưng chạy với quyền cao hoặc chạy khi\
+  \ khởi động.\n- **Baseline:** Lập inventory tác vụ mặc định theo image chuẩn của\
+  \ doanh nghiệp và cảnh báo mọi chênh lệch mới.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nĐây là một kỹ thuật vừa dễ mô phỏng trong diễn tập, vừa giàu giá trị phòng thủ\
+  \ vì kiểm thử được nhiều lớp cùng lúc: log Windows gốc, process telemetry, file\
+  \ path hygiene, và khả năng baseline task hợp lệ. Scheduled Task cũng thường xuất\
+  \ hiện như một bước nối giữa foothold ban đầu và persistence ổn định, nên rất phù\
+  \ hợp cho bài tập hunting theo chuỗi hành vi.\n\n**Độ tin cậy:** Cao – kỹ thuật\
+  \ phổ biến, quan sát được rõ qua telemetry hệ điều hành và EDR.\n\n**Tài liệu tham\
+  \ khảo**\n- CISA\n- Microsoft Incident Response\n- MITRE ATT&CK T1053.005, T1021.002"

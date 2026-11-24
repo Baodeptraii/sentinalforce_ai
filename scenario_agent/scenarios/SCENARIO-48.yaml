@@ -1,0 +1,55 @@
+id: SCENARIO-48
+name: DNS Tunneling – C2 và Exfiltration qua DNS
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 48 – DNS Tunneling – C2 và Exfiltration qua DNS**\n\n**Giới thiệu\
+  \ chung**\n\nDNS tunneling đặc biệt đáng chú ý vì nó lợi dụng một giao thức gần\
+  \ như luôn được phép đi qua firewall và thường được xem là “dịch vụ nền tảng”. Khi\
+  \ dữ liệu và lệnh được gói trong query/response DNS, tác nhân có thể vừa duy trì\
+  \ C2 vừa chuyển một phần dữ liệu ra ngoài với mức độ ẩn mình cao hơn so với HTTP\
+  \ thông thường.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, malware hoặc implant\
+  \ trên máy nạn nhân mã hóa chuỗi điều khiển hoặc dữ liệu thành các nhãn phụ của\
+  \ truy vấn DNS, sau đó gửi ra một authoritative domain do kẻ tấn công kiểm soát\
+  \ và nhận phản hồi chỉ đạo thông qua DNS response. Actor thường là nhóm cần kênh\
+  \ C2 phụ, hoạt động trong môi trường egress bị siết chặt hoặc muốn diễn giải lưu\
+  \ lượng của mình như DNS bình thường; điều kiện tiên quyết là host bị compromise\
+  \ và DNS outbound chưa bị kiểm soát chặt theo độ dài, entropy hoặc mô hình truy\
+  \ vấn; kết quả mong muốn là vừa điều khiển từ xa vừa bí mật đưa dữ liệu ra ngoài\
+  \ mà không cần mở thêm cổng rõ ràng.\n\n**Dòng tấn công end-to-end**\n\n```text\n\
+  Foothold trên endpoint\n→ Cài implant dùng DNS như kênh giao tiếp\n→ Mã hóa dữ liệu\
+  \ hoặc lệnh vào DNS query\n→ Gửi truy vấn ra authoritative domain do đối phương\
+  \ kiểm soát\n→ Nhận phản hồi điều khiển qua DNS response\n→ Duy trì C2 hoặc exfiltration\
+  \ mức nhẹ\n```\n\n1. **Thiết lập implant:** Host đã có malware hoặc agent hậu khai\
+  \ thác đang chạy.\n2. **Khởi động kênh DNS:** Implant bắt đầu sinh ra các truy vấn\
+  \ domain con với nhãn dài hoặc entropy cao.\n3. **Đưa dữ liệu ra ngoài theo lát\
+  \ cắt nhỏ:** Dữ liệu được chia nhỏ thành nhiều label hoặc nhiều truy vấn.\n4. **Nhận\
+  \ chỉ thị điều khiển:** Phản hồi TXT, A, AAAA hoặc NXDOMAIN pattern được dùng như\
+  \ tín hiệu điều khiển.\n5. **Duy trì stealth:** Lưu lượng được pha vào noise DNS\
+  \ nền để tránh bị chú ý.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô\
+  \ tả |\n|--------|-----------|-------|\n| Command and Control | T1071 | T1071.004\
+  \ – DNS |\n| Exfiltration | T1048 | T1048.003 – Exfiltration Over Unencrypted Non-C2\
+  \ Protocol |\n| Command and Control | T1132 | T1132.001 – Data Encoding |\n\n**Log\
+  \ / Telemetry / Observable**\n\n- **DNS logs:** Truy vấn tới các domain con dài\
+  \ bất thường, entropy cao, hoặc có số lượng unique subdomain tăng đột biến.\n- **NDR\
+  \ / anomaly detection:** Tỷ lệ NXDOMAIN, TXT query hoặc query size tăng rõ trên\
+  \ một host hoặc một phân đoạn mạng.\n- **Endpoint correlation:** Process không bình\
+  \ thường là nguồn phát sinh chuỗi DNS dày đặc hoặc định kỳ.\n- **Resolver pattern:**\
+  \ Một host tạo nhiều truy vấn ngắn hạn tới cùng một base domain nhưng label thay\
+  \ đổi liên tục.\n- **Follow-on clue:** Sau phase tunneling xuất hiện thêm dấu hiệu\
+  \ collection/exfil hoặc activity hậu khai thác khác trên cùng host.\n\n**Gợi ý Detection\
+  \ / Hunting**\n\n```text\nDnsQueryLengthAvg > baseline\nAND UniqueSubdomainsPerDomain\
+  \ > threshold\nAND (\n  LabelEntropyHigh = true\n  OR NXDOMAINRateHigh = true\n\
+  \  OR TXTQueryBurst = true\n  OR SameHostPeriodicDnsPattern = true\n)\n```\n\n-\
+  \ **Alert:** Host phát sinh nhiều truy vấn tới một base domain hiếm gặp với nhãn\
+  \ phụ có entropy cao.\n- **Hunt:** Ghép `DNS anomaly` với `process lineage` và `archive/staging\
+  \ activity` để nâng độ tin cậy.\n- **Alert:** DNS query burst xuất hiện từ server\
+  \ hoặc workstation không có nhu cầu kỹ thuật đặc thù liên quan tới DNS-heavy applications.\n\
+  - **Baseline:** Tách rõ CDN, telemetry agent, bảo mật DNS và các ứng dụng nội bộ\
+  \ hợp lệ vốn tạo nhiều subdomain khỏi lưu lượng tunneling thật sự.\n\n**Vì sao đáng\
+  \ ưu tiên 2024–2026**\n\nDNS vẫn là một trong những lớp mạng bị xem nhẹ trong nhiều\
+  \ chương trình SOC. Scenario này giúp kiểm tra đầy đủ từ DNS logging, NDR, endpoint-process\
+  \ correlation đến khả năng đo entropy và hành vi phân bố theo thời gian của truy\
+  \ vấn.\n\n**Độ tin cậy:** Cao – nếu có DNS logging đủ tốt, mẫu hình tunneling thường\
+  \ để lại dấu hiệu rất thực dụng.\n\n**Tài liệu tham khảo**\n- Palo Alto Unit 42\n\
+  - Infoblox\n- MITRE ATT&CK T1071.004, T1048.003, T1132.001"

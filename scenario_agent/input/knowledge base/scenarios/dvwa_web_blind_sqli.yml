@@ -1,0 +1,7 @@
+id: e5f6a7b8-dvwa-0006-blind-sqli
+name: DVWA Web Blind SQL Injection Probe
+description: Mô phỏng kiểm thử Blind SQL Injection (Boolean & Time-based sleep) trên
+  DVWA.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0006-bsql-000000000006

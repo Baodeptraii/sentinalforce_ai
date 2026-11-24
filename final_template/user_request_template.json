@@ -1,0 +1,11 @@
+{
+  "id": "REQ-TEMPLATE-001",
+  "text": "Kiểm tra năng lực giám sát tiến trình và kết nối mạng của SOC trên máy Windows 10 có cài đặt DVWA và Sandcat.",
+  "target_id": "win10-dvwa-lab",
+  "scope": [
+    "endpoint",
+    "web"
+  ],
+  "max_steps": 4,
+  "mode": "plan_only"
+}

@@ -1,0 +1,332 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+title: Scenario plan — adversary CALDERA và metadata
+description: >-
+  JSON Schema Draft 2020-12 biểu diễn bằng YAML. Phần gốc giữ format adversary
+  CALDERA; metadata dành cho Scenario Agent và người duyệt. CALDERA hiện tại
+  bỏ qua metadata, không tự áp dụng tham số, điều kiện, cleanup hoặc telemetry
+  trong đó. Kế hoạch này chỉ phục vụ lập kế hoạch, không cấp quyền thực thi.
+type: object
+additionalProperties: false
+required: [id, name, description, atomic_ordering, metadata]
+properties:
+  id:
+    $ref: '#/$defs/text'
+    description: ID riêng của adversary đầu ra, nên dùng UUID; không ghi đè adversary nguồn.
+  name:
+    $ref: '#/$defs/text'
+  description:
+    $ref: '#/$defs/text'
+    description: Mô tả ngắn mục tiêu và chuỗi hành vi thực sự được chọn.
+  atomic_ordering:
+    type: array
+    minItems: 1
+    items:
+      $ref: '#/$defs/text'
+    description: >-
+      Nguồn duy nhất xác định thứ tự ability đề xuất. Mỗi ID phải có trong catalog.
+      Cho phép lặp ID; thứ tự chạy thực tế phụ thuộc planner và operation.
+      Không chèn ID giả cho hành vi chưa ánh xạ được.
+  objective:
+    $ref: '#/$defs/text'
+    description: ID objective CALDERA có thật, không phải mô tả mục tiêu bằng văn bản.
+  tags:
+    type: [array, 'null']
+    items:
+      type: string
+  metadata:
+    type: object
+    additionalProperties: false
+    required:
+      - schema_version
+      - request_id
+      - target_id
+      - mode
+      - goal
+      - selection
+      - readiness
+      - blockers
+      - assumptions
+      - steps
+      - execution_context
+      - limitations
+    properties:
+      schema_version:
+        const: '1.0'
+      request_id:
+        $ref: '#/$defs/text'
+      target_id:
+        $ref: '#/$defs/text'
+      mode:
+        const: plan_only
+      goal:
+        $ref: '#/$defs/text'
+        description: Mục tiêu kiểm thử được rút ra từ yêu cầu người dùng.
+      selection:
+        type: object
+        additionalProperties: false
+        required: [strategy, reason, sources]
+        properties:
+          strategy:
+            enum: [reuse_adversary, adapt_adversary, compose_abilities]
+            description: Dùng nguyên chuỗi có sẵn, điều chỉnh chuỗi, hoặc ghép từ ability.
+          reason:
+            $ref: '#/$defs/text'
+            description: Giải thích lựa chọn dựa trên yêu cầu, target và nguồn đã truy hồi.
+          sources:
+            type: array
+            minItems: 1
+            items:
+              $ref: '#/$defs/source'
+            description: Nguồn adversary/kịch bản hoặc ability đã dùng để lập kế hoạch.
+      readiness:
+        enum: [needs_information, blocked, ready_for_review]
+        description: >-
+          needs_information khi thiếu dữ kiện; blocked khi có điều kiện đã biết
+          ngăn việc sử dụng; ready_for_review khi đủ điều kiện trình người duyệt.
+          Không giá trị nào đồng nghĩa đã được duyệt hoặc đã thực thi.
+      blockers:
+        $ref: '#/$defs/textList'
+        description: Điều kiện chưa giải quyết, mâu thuẫn hoặc hành vi chưa ánh xạ được.
+      assumptions:
+        $ref: '#/$defs/textList'
+        description: Giả định phải xác minh; không coi giả định là bằng chứng đã kiểm tra.
+      steps:
+        type: array
+        minItems: 1
+        items:
+          $ref: '#/$defs/step'
+        description: >-
+          Một mục cho mỗi lần xuất hiện trong atomic_ordering. step_index bắt đầu
+          từ 1 và ability_id phải khớp ID ở vị trí tương ứng. Không chứa lệnh mới
+          do LLM tự sinh. Các việc setup/cleanup được ghi ở trường tương ứng.
+      execution_context:
+        type: object
+        additionalProperties: false
+        required: [planner, agent_group, agent_paw, requirements]
+        properties:
+          planner:
+            $ref: '#/$defs/nullableText'
+            description: Planner CALDERA dự kiến; null nếu chưa xác định.
+          agent_group:
+            $ref: '#/$defs/nullableText'
+          agent_paw:
+            $ref: '#/$defs/nullableText'
+            description: Agent dự kiến; cần xác minh lại khi tạo operation.
+          requirements:
+            $ref: '#/$defs/textList'
+            description: Cấu hình operation/facts cần chuẩn bị; CALDERA không tự đọc từ metadata.
+      limitations:
+        $ref: '#/$defs/textList'
+        description: Phạm vi chưa bao phủ, giới hạn quan sát và điều chưa thể kết luận.
+    allOf:
+      - if:
+          properties:
+            readiness:
+              const: ready_for_review
+          required: [readiness]
+        then:
+          properties:
+            blockers:
+              maxItems: 0
+            assumptions:
+              maxItems: 0
+            steps:
+              items:
+                properties:
+                  readiness:
+                    const: ready_for_review
+        else:
+          properties:
+            blockers:
+              minItems: 1
+
+$defs:
+  text:
+    type: string
+    minLength: 1
+    pattern: '\S'
+  nullableText:
+    type: [string, 'null']
+    minLength: 1
+    pattern: '\S'
+  textList:
+    type: array
+    items:
+      $ref: '#/$defs/text'
+  source:
+    type: object
+    additionalProperties: false
+    required: [kind, id, location, revision]
+    properties:
+      kind:
+        enum: [caldera_ability, converted_atomic, caldera_adversary, scenario]
+      id:
+        $ref: '#/$defs/text'
+      location:
+        $ref: '#/$defs/text'
+        description: Đường dẫn file hoặc URI để lấy lại đúng bản ghi gốc.
+      revision:
+        $ref: '#/$defs/nullableText'
+        description: Commit, phiên bản hoặc hash nội dung; null nếu nguồn chưa có thông tin này.
+  check:
+    type: object
+    additionalProperties: false
+    required: [condition, status, evidence]
+    properties:
+      condition:
+        $ref: '#/$defs/text'
+      status:
+        enum: [verified, assumed, unknown, unmet]
+      evidence:
+        $ref: '#/$defs/nullableText'
+        description: Tham chiếu bằng chứng thực tế; null khi chưa có.
+    allOf:
+      - if:
+          properties:
+            status:
+              const: verified
+          required: [status]
+        then:
+          properties:
+            evidence:
+              $ref: '#/$defs/text'
+  step:
+    type: object
+    additionalProperties: false
+    required:
+      - step_index
+      - ability_id
+      - name
+      - role
+      - technique_ids
+      - reason
+      - executor
+      - parameters
+      - prerequisites
+      - readiness
+      - behavior_verification
+      - expected_telemetry
+      - baseline
+      - cleanup_and_rollback
+      - health_checks
+      - sources
+    properties:
+      step_index:
+        type: integer
+        minimum: 1
+      ability_id:
+        $ref: '#/$defs/text'
+      name:
+        $ref: '#/$defs/text'
+      role:
+        enum: [test, setup, cleanup]
+        description: Phân biệt test với ability chỉ chuẩn bị/dọn dẹp khi tính giới hạn số test.
+      technique_ids:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          pattern: '^T[0-9]{4}(\.[0-9]{3})?$'
+        description: Technique xác nhận từ nguồn; [] nếu chưa xác định, không tự tạo mã.
+      reason:
+        $ref: '#/$defs/text'
+      executor:
+        type: object
+        additionalProperties: false
+        required: [platform, name, privilege]
+        properties:
+          platform:
+            $ref: '#/$defs/nullableText'
+          name:
+            $ref: '#/$defs/nullableText'
+          privilege:
+            $ref: '#/$defs/nullableText'
+            description: Quyền cần thiết lấy từ nguồn hoặc đã kiểm tra; null nếu chưa biết.
+      parameters:
+        type: object
+        additionalProperties:
+          $ref: '#/$defs/nullableText'
+        description: >-
+          Tên fact/input và giá trị dự kiến, null nếu chưa giải quyết; {} nếu
+          không cần. Chỉ tham chiếu secret bằng định danh, không chứa mật khẩu,
+          token hoặc cookie. Đây chưa phải cấu hình facts tự động của CALDERA.
+      prerequisites:
+        type: array
+        items:
+          $ref: '#/$defs/check'
+      readiness:
+        enum: [needs_information, blocked, ready_for_review]
+      behavior_verification:
+        type: array
+        minItems: 1
+        items:
+          $ref: '#/$defs/text'
+        description: Cách xác nhận hành vi thực sự xảy ra; exit=0 không tự chứng minh điều đó.
+      expected_telemetry:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [source, observable, availability]
+          properties:
+            source:
+              $ref: '#/$defs/text'
+            observable:
+              $ref: '#/$defs/text'
+            availability:
+              enum: [verified, assumed, unknown, unavailable]
+        description: Dữ liệu quan sát dự kiến, không phải kết quả phát hiện hay cam kết có alert.
+      baseline:
+        $ref: '#/$defs/textList'
+      cleanup_and_rollback:
+        $ref: '#/$defs/textList'
+        description: >-
+          Mô tả cách dọn dẹp/khôi phục dựa trên catalog. Nếu không cần thay đổi,
+          ghi rõ lý do. Không dùng trường này làm lệnh thực thi tự động.
+      health_checks:
+        $ref: '#/$defs/textList'
+      sources:
+        type: array
+        minItems: 1
+        items:
+          $ref: '#/$defs/source'
+    allOf:
+      - if:
+          properties:
+            readiness:
+              const: ready_for_review
+          required: [readiness]
+        then:
+          properties:
+            executor:
+              properties:
+                platform:
+                  $ref: '#/$defs/text'
+                name:
+                  $ref: '#/$defs/text'
+            parameters:
+              additionalProperties:
+                $ref: '#/$defs/text'
+            prerequisites:
+              items:
+                properties:
+                  status:
+                    const: verified
+
+# Kiểm tra nghiệp vụ ngoài JSON Schema:
+# - steps có cùng độ dài với atomic_ordering; step_index liên tiếp từ 1;
+#   ability_id khớp từng vị trí. ID có thể lặp nên không chỉ ghép theo ID.
+# - ID ability/objective tồn tại trong CALDERA đã nạp; source và revision đúng;
+#   technique, executor, tham số lấy từ catalog, không từ suy đoán của LLM.
+# - request_id/target_id khớp đầu vào; mục tiêu, scope, quyền, giới hạn số test,
+#   phạm vi file/network, cleanup và ràng buộc khác đều được đáp ứng.
+# - ready_for_review phải dựa trên kiểm tra nghiệp vụ thực tế; một file đạt
+#   schema chưa chứng minh đã sẵn sàng chạy hoặc đã được duyệt.
+# - facts CALDERA có thể dùng chung giữa nhiều ability: nếu các bước cần giá trị
+#   khác nhau cho cùng fact, phải giải quyết xung đột trước khi tạo operation.
+# - metadata không phải hợp đồng thực thi của CALDERA. Lớp tích hợp phải chuẩn bị
+#   facts, chọn planner/agent và xử lý setup/cleanup qua cơ chế được hỗ trợ.
+# - Nếu không tìm được ability nào, trả kết quả cần làm rõ/không lập được plan
+#   ở workflow; không tạo scenario_plan với danh sách rỗng hoặc ID placeholder.
+# - Lưu bản plan đầy đủ ngoài CALDERA. Khi xuất adversary chuẩn, chỉ giữ các
+#   trường id, name, description, atomic_ordering, objective, tags và dùng .yml.

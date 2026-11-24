@@ -1,0 +1,122 @@
+id: SCENARIO-06
+name: Khai Thác Ứng Dụng Công Khai – SQL Injection → RCE → Web Shell
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 06 – Khai Thác Ứng Dụng Công Khai – SQL Injection → RCE → Web
+  Shell
+
+
+  **Giới thiệu chung**
+
+
+  Khai thác ứng dụng web công khai (SQL injection, IDOR, command injection, file upload
+  bypass) vẫn là vector tấn công phổ biến, đặc biệt nhắm vào tổ chức có ứng dụng web
+  không được vá hoặc cấu hình sai. SQL injection có thể dẫn đến Remote Code Execution
+  (RCE) thông qua `xp_cmdshell` (MSSQL) hoặc `INTO OUTFILE` (MySQL) để ghi web shell.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công quét ứng dụng web công khai, phát hiện SQL injection trong form đăng
+  nhập hoặc parameter. Sử dụng SQLMap hoặc manual để khai thác, leo thang đến xp_cmdshell
+  (MSSQL) hoặc ghi web shell. Từ web shell, thực thi lệnh, tải tool, và mở rộng vào
+  mạng nội bộ.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Scan ứng dụng web → Phát hiện SQLi/IDOR → Khai thác SQLi
+
+  → RCE qua xp_cmdshell hoặc file write → Upload web shell
+
+  → Lateral movement vào mạng nội bộ → Data exfiltration
+
+  ```
+
+
+  1. **Reconnaissance (T1595):** Scan với Shodan, FOFA, nuclei templates.
+
+  2. **SQLi exploitation (T1190):** Inject SQL payload vào parameter dễ bị tấn công.
+
+  3. **Database privilege abuse:** `xp_cmdshell` enable để thực thi OS command.
+
+  4. **Web shell upload (T1505.003):** Ghi .aspx/.php shell vào webroot.
+
+  5. **Internal reconnaissance (T1016, T1049):** Enum internal network từ web server.
+
+  6. **Lateral movement:** Sử dụng web server là bàn đạp vào mạng nội bộ.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1190 | Exploit Public-Facing Application |
+
+  | Execution | T1059 | T1059.004 – Unix Shell |
+
+  | Persistence | T1505 | T1505.003 – Server Software Component: Web Shell |
+
+  | Discovery | T1016 | System Network Configuration Discovery |
+
+  | Lateral Movement | T1021 | Remote Services |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **WAF:** SQL keywords trong HTTP request (UNION SELECT, SLEEP, WAITFOR DELAY),
+  HTTP 500/200 anomalies
+
+  - **Web server logs:** Bất thường về pattern request (nhiều 500 errors từ một IP,
+  parameter fuzzing)
+
+  - **DB audit logs:** `xp_cmdshell` execution, unusual stored proc calls
+
+  - **EDR trên web server:** `w3wp.exe`/`httpd` tạo child process (`cmd.exe`, `net.exe`,
+  `whoami`)
+
+  - **File creation:** Tệp .aspx/.php mới xuất hiện trong webroot
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **WAF rule:** Block SQL keywords trong URL parameters
+
+  - **Alert:** Web server process (w3wp.exe, httpd) spawn shell (cmd.exe, /bin/sh)
+
+  - **Hunt:** Tìm tệp .aspx/.php mới trong webroot chưa qua deployment pipeline
+
+  - **Alert:** HTTP request đến file .aspx/.php mới từ IP không phải developer/admin
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  OWASP Top 10 vẫn xếp Injection ở top. CISA KEV 2024 có nhiều CVE là injection-related.
+  Các nhóm như APT41, FIN7 vẫn khai thác SQLi vào tổ chức nhỏ, đặc biệt ở các quốc
+  gia đang phát triển nơi CNTT còn hạn chế.
+
+
+  **Độ tin cậy:** Rất cao – OWASP, CISA KEV.
+
+
+  **Tài liệu tham khảo**
+
+  - OWASP Top 10: A03:2021 – Injection
+
+  - CISA Known Exploited Vulnerabilities Catalog 2024
+
+  - MITRE ATT&CK T1190, T1505.003
+
+
+  ---'

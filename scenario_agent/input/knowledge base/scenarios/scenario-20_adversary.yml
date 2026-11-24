@@ -1,0 +1,12 @@
+id: 1fd015ca-25ba-5d44-b7d7-232f2ba7464f
+name: '[SCENARIO-20] Boot Sector / Bootkit Persistence (UEFI Implant)'
+description: Một tác nhân đã có quyền cao trên host hoặc quyền đủ để can thiệp vào
+  boot chain tiến hành sửa thành phần trong EFI System Partition hoặc firmware liên
+  quan, hoặc lợi dụng cơ chế cập nhật firmware / driver dễ bị lạm dụng. Điều kiện
+  tiên quyết là quyền thực thi ở mức rất cao và khả năng ghi vào vùng trước OS. Mục
+  tiêu cuối là tạo cơ chế tồn tại qua reboot, thậm chí qua cài
+atomic_ordering:
+- 30fe9dbe-ab1b-508e-9e7d-aab02af8e966
+- b8a49f03-e3c4-40f2-b7bb-9e8f8fdddbf1
+- 30fe9dbe-ab1b-508e-9e7d-aab02af8e966
+- 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b

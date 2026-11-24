@@ -1,0 +1,58 @@
+id: SCENARIO-68
+name: SIM Swapping dẫn đến chiếm quyền tài khoản quan trọng
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 68 – SIM Swapping dẫn đến chiếm quyền tài khoản quan trọng**\n\
+  \n**Giới thiệu chung**\n\nSIM swapping là kịch bản social engineering đánh vào điểm\
+  \ yếu của xác thực dựa trên số điện thoại. Khi số điện thoại của nạn nhân bị chuyển\
+  \ sang SIM do đối thủ kiểm soát, mã OTP SMS hoặc cuộc gọi xác thực có thể bị chặn,\
+  \ tạo điều kiện chiếm tài khoản email, ngân hàng, cloud, mạng xã hội hoặc hệ thống\
+  \ doanh nghiệp vẫn phụ thuộc vào SMS-based MFA. Đây là kịch bản cần được mô phỏng\
+  \ ở mức phòng thủ vì nó kết hợp telecom risk, identity risk và account recovery\
+  \ abuse.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, đối thủ dùng thông tin cá\
+  \ nhân bị rò rỉ, social engineering hoặc lạm dụng quy trình hỗ trợ để chiếm quyền\
+  \ kiểm soát số điện thoại của mục tiêu. Sau đó, đối thủ dùng số này để hoàn tất\
+  \ quy trình reset mật khẩu, nhận OTP hoặc vượt qua một lớp xác thực SMS. Actor thường\
+  \ là nhóm social engineering, cybercrime hoặc nhóm giống Scattered Spider; điều\
+  \ kiện tiên quyết là tài khoản quan trọng vẫn dùng SMS/phone làm yếu tố khôi phục\
+  \ hoặc MFA; kết quả mong muốn là chiếm tài khoản mà không cần trực tiếp xâm nhập\
+  \ endpoint của nạn nhân.\n\n**Dòng tấn công end-to-end**\n\n```text\nThu thập thông\
+  \ tin cá nhân / định danh của mục tiêu\n→ Lạm dụng quy trình telecom hoặc account\
+  \ recovery\n→ Số điện thoại bị chuyển sang SIM do đối thủ kiểm soát\n→ Đối thủ nhận\
+  \ OTP SMS / cuộc gọi xác thực\n→ Reset mật khẩu hoặc đăng nhập tài khoản quan trọng\n\
+  → Duy trì truy cập bằng thay đổi MFA / recovery options\n```\n\n1. **Thu thập thông\
+  \ tin nhận dạng:** Đối thủ có đủ thông tin để vượt qua câu hỏi hỗ trợ hoặc quy trình\
+  \ xác minh yếu.\n2. **Chiếm số điện thoại:** SIM hoặc eSIM của mục tiêu bị chuyển\
+  \ quyền kiểm soát.\n3. **Lạm dụng OTP/recovery:** SMS hoặc cuộc gọi xác thực được\
+  \ dùng để đăng nhập hoặc reset mật khẩu.\n4. **Chiếm tài khoản:** Email, IdP, cloud\
+  \ hoặc ứng dụng quan trọng bị truy cập.\n5. **Củng cố quyền truy cập:** Đối thủ\
+  \ thay đổi phương thức khôi phục, thêm MFA mới hoặc tạo session kéo dài.\n\n**MITRE\
+  \ ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Initial Access | T1078 | Valid Accounts sau khi chiếm được quyền đăng nhập |\n\
+  | Reconnaissance / Credential Access | T1598 | Phishing for Information / thu thập\
+  \ thông tin phục vụ social engineering |\n| Credential Access | T1621 | Multi-Factor\
+  \ Authentication Request Generation hoặc lạm dụng luồng MFA/recovery |\n\n**Log\
+  \ / Telemetry / Observable**\n\n- **IdP risk events:** Đăng nhập từ thiết bị/IP\
+  \ mới ngay sau thay đổi mật khẩu hoặc recovery.\n- **Account activity:** Reset mật\
+  \ khẩu, thay đổi MFA, thêm số điện thoại/email khôi phục hoặc tạo session mới.\n\
+  - **Telecom signal:** Mất sóng bất thường, SIM change event hoặc carrier notification\
+  \ nếu có tích hợp.\n- **Helpdesk logs:** Yêu cầu reset MFA/phone-based recovery\
+  \ với tín hiệu social engineering.\n- **High-value account monitoring:** Tài khoản\
+  \ quản trị, tài chính hoặc lãnh đạo dùng SMS MFA có hoạt động bất thường.\n\n**Gợi\
+  \ ý Detection / Hunting**\n\n```text\nPasswordResetOrMFAChange = true\nAND (\n \
+  \ NewDeviceLoginSoonAfter = true\n  OR PhoneNumberChangedRecently = true\n  OR SmsMfaUsedFromRiskyContext\
+  \ = true\n  OR HelpdeskRecoveryAnomaly = true\n)\n```\n\n- **Alert:** Tài khoản\
+  \ quan trọng reset mật khẩu bằng phone/SMS rồi đăng nhập từ thiết bị hoặc địa lý\
+  \ mới.\n- **Hunt:** Tìm chuỗi `phone/recovery change → password reset → MFA modification\
+  \ → cloud/email access`.\n- **Alert:** Helpdesk reset MFA cho tài khoản đặc quyền\
+  \ mà thiếu xác minh ngoài băng đủ mạnh.\n- **Hardening:** Ưu tiên phishing-resistant\
+  \ MFA, hạn chế SMS MFA cho tài khoản quan trọng và siết quy trình account recovery.\n\
+  \n**Vì sao đáng ưu tiên 2024–2026**\n\nNhiều tổ chức vẫn dùng SMS như cơ chế MFA\
+  \ hoặc khôi phục tài khoản, trong khi các nhóm social engineering ngày càng chuyên\
+  \ nghiệp. Kịch bản này kiểm tra khả năng phòng thủ ngoài endpoint: identity governance,\
+  \ helpdesk process, recovery controls và giám sát tài khoản giá trị cao.\n\n**Độ\
+  \ tin cậy:** Cao – SIM swapping và account recovery abuse là rủi ro thực tế, đặc\
+  \ biệt với tài khoản có giá trị cao hoặc chưa chuyển sang MFA chống phishing.\n\n\
+  **Tài liệu tham khảo**\n- FBI\n- CISA Scattered Spider guidance\n- MITRE ATT&CK\
+  \ T1078, T1598, T1621"

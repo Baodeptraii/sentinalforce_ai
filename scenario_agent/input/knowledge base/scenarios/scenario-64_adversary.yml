@@ -1,0 +1,13 @@
+id: aedaa300-12d0-55bd-bbaa-f38ad2a2ede4
+name: '[SCENARIO-64] APT29 / Midnight Blizzard – Cloud Lateral Movement'
+description: Trong kịch bản này, tác nhân đã có quyền truy cập vào một tài khoản,
+  ứng dụng, service principal hoặc chuỗi trust liên quan cloud, sau đó tận dụng quyền
+  đó để pivot sang mailbox, repository, tenant khác, hoặc hệ thống SaaS được liên
+  kết. Actor thường là nation-state intrusion operator; điều kiện tiên quyết là có
+  credential, token, OAuth permission hoặc trusted relationship bị lạm dụng; kết quả
+  mong muốn là mở rộng quyền truy cập trong môi trường
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- a4a122d4-f70b-5785-aba0-7cc131a6b8ce
+- 9a5352e4-56e5-45c2-9b3f-41a46d3b3a43

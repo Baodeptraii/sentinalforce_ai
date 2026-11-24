@@ -1,0 +1,57 @@
+id: SCENARIO-44
+name: GPO Abuse – Triển khai payload qua Group Policy
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 44 – GPO Abuse – Triển khai payload qua Group Policy**\n\n**Giới\
+  \ thiệu chung**\n\nGroup Policy là một cơ chế quản trị hàng loạt cực mạnh trong\
+  \ môi trường Active Directory. Chính vì vậy, khi nó bị lạm dụng, tác động có thể\
+  \ lan ra toàn domain chỉ trong một hoặc vài chu kỳ refresh policy. Đây là loại kịch\
+  \ bản có “blast radius” rất lớn dù tác nhân chỉ cần chiếm một tài khoản hoặc nhóm\
+  \ có quyền sửa GPO.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, tác nhân đã có\
+  \ quyền sửa hoặc liên kết GPO, hoặc chiếm một tài khoản được ủy quyền quản trị policy\
+  \ trong AD. Từ đó, họ thay đổi script khởi động, scheduled task, software deployment\
+  \ hoặc tham chiếu file trong SYSVOL để đẩy nội dung có kiểm soát tới số lượng lớn\
+  \ endpoint. Actor thường là intruder đã vào sâu trong AD, ransomware affiliate hoặc\
+  \ operator nhắm tới domain-wide execution; điều kiện tiên quyết là quyền trên GPO\
+  \ object/SYSVOL đủ để sửa cấu hình có hiệu lực; kết quả mong muốn là một cơ chế\
+  \ thực thi hoặc persistence rộng khắp domain mà không cần chạm tay vào từng endpoint\
+  \ riêng lẻ. fileciteturn1file0L71-L71\n\n**Dòng tấn công end-to-end**\n\n```text\n\
+  Chiếm tài khoản có quyền GPO\n→ Sửa GPO object / file trong SYSVOL\n→ Thêm script\
+  \ / scheduled task / policy action\n→ Máy thành viên nhận policy mới khi refresh\n\
+  → Payload / lệnh chạy trên nhiều endpoint\n→ Lateral movement + persistence quy\
+  \ mô lớn\n```\n\n1. **Chiếm quyền quản trị policy:** Tài khoản hoặc nhóm có khả\
+  \ năng chỉnh GPO bị compromise.\n2. **Thay đổi GPO hoặc SYSVOL:** Nội dung chính\
+  \ sách, script, scheduled task hoặc file liên quan bị sửa.\n3. **Phân phối policy\
+  \ mới:** Domain members nhận thay đổi trong chu kỳ refresh hoặc khi reboot/logon.\n\
+  4. **Thực thi diện rộng:** Nhiều endpoint cùng chạy nội dung được chèn vào chính\
+  \ sách.\n5. **Củng cố kiểm soát:** Kẻ tấn công dùng sự lan tỏa đó để persistence\
+  \ hoặc triển khai bước tiếp theo.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique\
+  \ | Mô tả |\n|--------|-----------|-------|\n| Lateral Movement | T1484 | T1484.001\
+  \ – Domain Policy Modification |\n| Persistence | T1053 | T1053.005 – Scheduled\
+  \ Task/Job trong trường hợp GPO phân phối task |\n| Execution | T1037 | Startup\
+  \ / logon scripts có thể là cơ chế follow-on execution được đẩy qua policy |\n\n\
+  **Log / Telemetry / Observable**\n\n- **AD audit logs 5136 / 5137:** Group Policy\
+  \ object hoặc thuộc tính liên quan bị sửa/thêm.\n- **SYSVOL file telemetry:** File\
+  \ script, XML scheduled task, `gpt.ini` hoặc thành phần policy bị đổi ngoài change\
+  \ window hợp lệ.\n- **Replication / timing clue:** Nhiều endpoint gần như cùng lúc\
+  \ tạo scheduled task, chạy script hoặc thay đổi registry sau policy refresh.\n-\
+  \ **Admin host anomaly:** Thay đổi GPO xuất phát từ workstation người dùng hoặc\
+  \ host không phải máy quản trị AD chuẩn.\n- **Endpoint correlation:** Cùng một command\
+  \ line, path thực thi hoặc file script xuất hiện hàng loạt sau một thay đổi GPO.\n\
+  \n**Gợi ý Detection / Hunting**\n\n```text\n(\n  EventID IN (5136, 5137)\n  AND\
+  \ ModifiedObjectClass = \"groupPolicyContainer\"\n)\nOR\n(\n  SYSVOLFileChange =\
+  \ true\n  AND ChangedByHost NOT IN approved_ad_admin_hosts\n)\nOR\n(\n  ManyEndpointsReceiveSameNewTaskOrScriptWithin\
+  \ = 30m\n)\n```\n\n- **Alert:** Mọi thay đổi GPO từ host không thuộc nhóm quản trị\
+  \ AD chuyên dụng.\n- **Hunt:** Liên kết thay đổi GPO với làn sóng scheduled task,\
+  \ script execution hoặc registry drift trên hàng loạt endpoint.\n- **Alert:** File\
+  \ mới xuất hiện trong SYSVOL nhưng không có change record tương ứng.\n- **Governance:**\
+  \ Theo dõi chặt delegated GPO admins, OU-scoped administrators và pipeline thay\
+  \ đổi policy trong môi trường lớn.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nScenario\
+  \ này đại diện cho giai đoạn “điều khiển doanh nghiệp ở quy mô lớn” sau khi AD bị\
+  \ xâm nhập đủ sâu. Giá trị của nó nằm ở blast radius và khả năng kiểm tra cùng lúc\
+  \ nhiều năng lực: AD auditing, SYSVOL integrity, endpoint correlation và change\
+  \ governance. Đây là một trong những scenario quan trọng nhất để mô phỏng domain-scale\
+  \ abuse.\n\n**Độ tin cậy:** Cao – hành vi có ngữ nghĩa rất rõ và đặc biệt phù hợp\
+  \ cho diễn tập AD security maturity.\n\n**Tài liệu tham khảo**\n- Mandiant\n- SpecterOps\n\
+  - MITRE ATT&CK T1484.001, T1053.005"

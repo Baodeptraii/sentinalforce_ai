@@ -1,0 +1,56 @@
+id: SCENARIO-65
+name: FIN7 – Spearphishing → RaaS Partnership
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 65 – FIN7 – Spearphishing → RaaS Partnership**\n\n**Giới thiệu\
+  \ chung**\n\nFIN7 là đại diện cho mô hình cybercrime trưởng thành: kết hợp social\
+  \ engineering, initial access, credential theft, post-exploitation và quan hệ với\
+  \ hệ sinh thái ransomware-as-a-service. Điểm đáng chú ý của kịch bản này không chỉ\
+  \ là một email phishing, mà là chuỗi chuyển hóa từ xâm nhập ban đầu thành quyền\
+  \ truy cập có giá trị, sau đó có thể được bán, chuyển giao hoặc dùng trong chiến\
+  \ dịch ransomware/extortion.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, tác nhân\
+  \ dùng spearphishing nhắm vào nhân sự cấp cao, tài chính, vận hành hoặc người có\
+  \ quyền truy cập hệ thống trọng yếu, sau đó thu thập credential, leo thang quyền\
+  \ và xác định tài nguyên có giá trị. Actor có thể là FIN7-like cybercrime operator\
+  \ hoặc initial access broker có liên hệ với RaaS; điều kiện tiên quyết là nạn nhân\
+  \ tương tác với nội dung lừa đảo hoặc bị compromise tài khoản; kết quả mong muốn\
+  \ là có quyền truy cập đủ giá trị để phục vụ ransomware, extortion hoặc bán lại\
+  \ access.\n\n**Dòng tấn công end-to-end**\n\n```text\nSpearphishing nhắm nhân sự\
+  \ giá trị cao\n→ Người dùng tương tác với nội dung lừa đảo\n→ Thu credential hoặc\
+  \ thiết lập foothold ban đầu\n→ Khảo sát AD, endpoint và tài nguyên giá trị\n→ Leo\
+  \ thang quyền hoặc mở rộng access\n→ Chuyển hóa access thành tiền qua RaaS / extortion\
+  \ chain\n```\n\n1. **Chọn mục tiêu có giá trị:** C-level, tài chính, IT hoặc vận\
+  \ hành được ưu tiên vì quyền truy cập cao.\n2. **Triển khai social engineering:**\
+  \ Nội dung phishing được cá nhân hóa để tăng khả năng tương tác.\n3. **Thu quyền\
+  \ truy cập:** Credential, session hoặc endpoint foothold được thiết lập.\n4. **Tăng\
+  \ giá trị access:** Actor tìm AD privilege, dữ liệu nhạy cảm, file server, backup\
+  \ hoặc hệ thống business-critical.\n5. **Chuyển sang monetization:** Quyền truy\
+  \ cập có thể được dùng cho ransomware hoặc bán cho affiliate khác.\n\n**MITRE ATT&CK\
+  \ Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Initial Access | T1566 | T1566.001 – Spearphishing Attachment |\n| Credential\
+  \ Access | T1003 | OS Credential Dumping trong giai đoạn tăng giá trị access |\n\
+  | Impact | T1486 | Data Encrypted for Impact nếu access được dùng cho ransomware\
+  \ |\n\n**Log / Telemetry / Observable**\n\n- **Email gateway:** Spearphishing nhắm\
+  \ nhóm nhỏ người dùng có giá trị cao, attachment/link có tính cá nhân hóa.\n- **EDR:**\
+  \ Sau tương tác email xuất hiện process chain bất thường hoặc truy cập credential\
+  \ material.\n- **AD telemetry:** Tài khoản người dùng bắt đầu truy vấn AD, truy\
+  \ cập share hoặc host ngoài vai trò.\n- **Privilege signal:** Attempt truy cập LSASS,\
+  \ credential store, admin share hoặc hệ thống quản trị.\n- **Ransomware precursor:**\
+  \ Staging, discovery, credential access và lateral movement xuất hiện trước impact.\n\
+  \n**Gợi ý Detection / Hunting**\n\n```text\nTargetedPhishingToHighValueUser = true\n\
+  AND (\n  PostEmailExecutionAnomaly = true\n  OR CredentialAccessIndicator = true\n\
+  \  OR ADDiscoveryAfterEmail = true\n  OR PrivilegeExpansionObserved = true\n)\n\
+  ```\n\n- **Alert:** Người dùng cấp cao nhận email rủi ro và trong vòng ngắn có process/identity\
+  \ anomaly.\n- **Hunt:** Dựng timeline từ email delivery đến endpoint execution,\
+  \ AD discovery và credential access.\n- **Alert:** Tài khoản không phải admin bắt\
+  \ đầu truy cập tài nguyên quản trị hoặc credential-related artifacts.\n- **Readiness:**\
+  \ Kết hợp playbook phishing IR với playbook ransomware precursor, thay vì xử lý\
+  \ email như sự cố riêng lẻ.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nCybercrime hiện\
+  \ đại vận hành như chuỗi cung ứng: initial access, privilege escalation và ransomware\
+  \ monetization có thể do nhiều bên phối hợp. Kịch bản này giúp tổ chức săn sớm tín\
+  \ hiệu trước khi access được chuyển hóa thành impact.\n\n**Độ tin cậy:** Trung bình\
+  \ đến cao – FIN7 và mô hình RaaS có nhiều nguồn mô tả, nhưng mối liên hệ cụ thể\
+  \ giữa từng campaign và affiliate cần được đánh giá theo nguồn điều tra cụ thể.\n\
+  \n**Tài liệu tham khảo**\n- Mandiant FIN7 profile\n- MITRE ATT&CK T1566.001, T1003,\
+  \ T1486\n- Ransomware-as-a-Service threat intelligence reports"

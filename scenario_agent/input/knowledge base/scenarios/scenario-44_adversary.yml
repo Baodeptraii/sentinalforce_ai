@@ -1,0 +1,14 @@
+id: 340bee33-bfad-518a-abb9-a8d79a7cc1a4
+name: '[SCENARIO-44] GPO Abuse – Triển khai payload qua Group Policy'
+description: Trong kịch bản này, tác nhân đã có quyền sửa hoặc liên kết GPO, hoặc
+  chiếm một tài khoản được ủy quyền quản trị policy trong AD. Từ đó, họ thay đổi script
+  khởi động, scheduled task, software deployment hoặc tham chiếu file trong SYSVOL
+  để đẩy nội dung có kiểm soát tới số lượng lớn endpoint. Actor thường là intruder
+  đã vào sâu trong AD, ransomware affiliate hoặc operator nhắm tới domain-wide execution;
+  điều kiện tiên quyết là quyền
+atomic_ordering:
+- e5ac6052-fd62-5724-92d5-3bd34e41a554
+- 563ef92e-3802-5109-bf71-a19c6e6f1fa5
+- fec27f65-db86-4c2d-b66c-61945aee87c2
+- 7818090c-4924-5d00-a1d2-79be40c7f7f4
+- 4adc428b-f60e-4c2c-9653-fb64457d3ad7

@@ -1,0 +1,54 @@
+id: SCENARIO-66
+name: Insider Threat – Data Exfiltration trước khi nghỉ việc
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 66 – Insider Threat – Data Exfiltration trước khi nghỉ việc**\n\
+  \n**Giới thiệu chung**\n\nInsider threat trước khi nhân viên nghỉ việc là một trong\
+  \ những kịch bản exfiltration thực tế nhất vì actor đã có quyền hợp lệ, hiểu hệ\
+  \ thống nội bộ và biết dữ liệu nào có giá trị. Khác với external attacker, hành\
+  \ vi ban đầu có thể giống công việc bình thường; điểm khác biệt nằm ở thời điểm,\
+  \ khối lượng, loại dữ liệu, đích đến và sự thay đổi hành vi so với baseline cá nhân.\n\
+  \n**Mô tả kịch bản**\n\nTrong kịch bản này, một nhân viên sắp nghỉ việc, chuyển\
+  \ bộ phận hoặc có dấu hiệu rủi ro sao chép tài liệu nội bộ, mã nguồn, danh sách\
+  \ khách hàng, hợp đồng hoặc dữ liệu dự án ra USB, cloud cá nhân hoặc email cá nhân.\
+  \ Actor là insider có quyền truy cập hợp lệ; điều kiện tiên quyết là có quyền đọc\
+  \ dữ liệu và kênh đưa dữ liệu ra ngoài chưa bị kiểm soát chặt; kết quả mong muốn\
+  \ là mang dữ liệu nhạy cảm ra khỏi tổ chức trước khi quyền truy cập bị thu hồi.\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nNgười dùng hợp lệ có quyền truy cập dữ\
+  \ liệu nội bộ\n→ Thời điểm nghỉ việc / chuyển vai trò đến gần\n→ Tăng truy cập vào\
+  \ file nhạy cảm hoặc repository\n→ Sao chép dữ liệu sang USB / cloud cá nhân / email\
+  \ cá nhân\n→ Xóa hoặc giảm dấu vết cục bộ nếu có\n→ Dữ liệu rời khỏi quyền kiểm\
+  \ soát của tổ chức\n```\n\n1. **Có quyền truy cập hợp lệ:** Insider không cần bypass\
+  \ xác thực ban đầu.\n2. **Thay đổi hành vi:** Khối lượng file read/download/copy\
+  \ tăng so với baseline cá nhân.\n3. **Tập trung vào dữ liệu giá trị:** Source code,\
+  \ tài liệu khách hàng, hợp đồng, kế hoạch kinh doanh hoặc R&D được ưu tiên.\n4.\
+  \ **Dùng kênh đưa dữ liệu ra ngoài:** USB, personal cloud, personal email hoặc unmanaged\
+  \ device.\n5. **Rời tổ chức:** Quyền truy cập bị thu hồi sau đó, nhưng dữ liệu có\
+  \ thể đã bị sao chép trước.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique\
+  \ | Mô tả |\n|--------|-----------|-------|\n| Collection | T1005 | Data from Local\
+  \ System |\n| Exfiltration | T1052 | T1052.001 – Exfiltration over USB / physical\
+  \ removable media |\n| Exfiltration | T1567 | Exfiltration Over Web Service / cloud\
+  \ storage cá nhân |\n\n**Log / Telemetry / Observable**\n\n- **DLP:** Copy, upload\
+  \ hoặc gửi dữ liệu có nhãn nhạy cảm ra kênh ngoài.\n- **USB events:** Thiết bị lưu\
+  \ trữ mới, dung lượng copy lớn hoặc file nhạy cảm được ghi ra removable media.\n\
+  - **CASB / proxy:** Upload bất thường tới cloud cá nhân hoặc dịch vụ không được\
+  \ phê duyệt.\n- **File access logs:** Tài khoản đọc hàng loạt thư mục hoặc repository\
+  \ không liên quan công việc thường ngày.\n- **HR / identity context:** Sự kiện nghỉ\
+  \ việc, chuyển vai trò hoặc thu hồi quyền sắp diễn ra trùng với tăng hoạt động dữ\
+  \ liệu.\n\n**Gợi ý Detection / Hunting**\n\n```text\nUserDepartureRiskContext =\
+  \ true\nAND (\n  SensitiveFileReadVolume > baseline\n  OR LargeUsbWrite = true\n\
+  \  OR PersonalCloudUpload = true\n  OR PersonalEmailAttachmentSpike = true\n)\n\
+  ```\n\n- **Alert:** Người dùng sắp nghỉ việc tải/copy lượng lớn dữ liệu nhạy cảm\
+  \ ngoài baseline cá nhân.\n- **Hunt:** Ghép HR event, DLP event, USB event và file\
+  \ access trong 30–60 ngày trước ngày nghỉ.\n- **Alert:** Upload tới cloud cá nhân\
+  \ ngay sau khi truy cập hàng loạt thư mục nhạy cảm.\n- **Governance:** Tăng monitoring\
+  \ dựa trên risk context, nhưng cần phối hợp pháp chế/HR để đảm bảo đúng chính sách\
+  \ và quyền riêng tư.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nDữ liệu doanh nghiệp\
+  \ ngày càng phân tán giữa endpoint, SaaS, Git, SharePoint và cloud storage. Insider\
+  \ exfiltration vì vậy không còn chỉ là “copy USB”, mà là bài toán tương quan DLP,\
+  \ CASB, identity và HR context. Đây là use case rất thực tế cho SOC doanh nghiệp.\n\
+  \n**Độ tin cậy:** Cao – hành vi exfil của insider thường có dấu vết rõ nếu tổ chức\
+  \ có DLP, file access logging, USB telemetry và cloud activity monitoring.\n\n**Tài\
+  \ liệu tham khảo**\n- CISA\n- CERT Insider Threat\n- MITRE ATT&CK T1052.001, T1567,\
+  \ T1005"

@@ -1,0 +1,47 @@
+# Secrets and local config
+.env
+.env.*
+!.env.example
+config.json
+host.txt
+*.key
+*.pem
+*token*
+*secret*
+
+# Environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# Runtime data
+outputs/
+runs/
+logs/
+reports/
+review/
+backups/
+*.log
+
+# Derived indexes and local databases
+*.sqlite
+*.sqlite3
+*.db
+*.faiss
+*.npy
+*.npz
+*.bin
+
+# Archives and OS files
+*.zip
+*.tar
+*.gz
+*.7z
+*.rar
+.DS_Store
+Thumbs.db

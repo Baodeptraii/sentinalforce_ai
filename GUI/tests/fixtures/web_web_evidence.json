@@ -1,0 +1,408 @@
+{
+  "format": "web_evidence_v2",
+  "requests": [
+    {
+      "url": "http://192.0.2.10/dashboard/",
+      "http_status": 200,
+      "server": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "Welcome to XAMPP",
+      "status": "observed",
+      "application_hint": null,
+      "requested_url": null,
+      "source": {
+        "file": "tool_02_probe_web.json",
+        "index": 0
+      },
+      "redirect_chain": null,
+      "error": null,
+      "tls_verified": null
+    },
+    {
+      "url": "http://192.0.2.10/dashboard/",
+      "http_status": 200,
+      "server": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "Welcome to XAMPP",
+      "status": "observed",
+      "application_hint": null,
+      "requested_url": null,
+      "source": {
+        "file": "tool_02_probe_web.json",
+        "index": 1
+      },
+      "redirect_chain": null,
+      "error": null,
+      "tls_verified": null
+    },
+    {
+      "url": "http://192.0.2.10/phpmyadmin/",
+      "http_status": 403,
+      "server": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "403 Forbidden",
+      "status": "observed",
+      "application_hint": null,
+      "requested_url": null,
+      "source": {
+        "file": "tool_02_probe_web.json",
+        "index": 2
+      },
+      "redirect_chain": null,
+      "error": null,
+      "tls_verified": null
+    },
+    {
+      "url": "http://192.0.2.10:443/",
+      "http_status": 400,
+      "server": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "400 Bad Request",
+      "status": "observed",
+      "application_hint": null,
+      "requested_url": null,
+      "source": {
+        "file": "tool_02_probe_web.json",
+        "index": 3
+      },
+      "redirect_chain": null,
+      "error": null,
+      "tls_verified": null
+    },
+    {
+      "url": "http://192.0.2.10/dvwa/login.php",
+      "http_status": 200,
+      "server": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "Login :: Damn Vulnerable Web Application (DVWA)",
+      "status": "observed",
+      "application_hint": "DVWA",
+      "requested_url": null,
+      "source": {
+        "file": "tool_03_probe_dvwa.json",
+        "index": 0
+      },
+      "redirect_chain": null,
+      "error": null,
+      "tls_verified": null
+    },
+    {
+      "url": "http://192.0.2.10/dvwa/login.php",
+      "http_status": 200,
+      "server": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "Login :: Damn Vulnerable Web Application (DVWA)",
+      "status": "observed",
+      "application_hint": "DVWA",
+      "requested_url": null,
+      "source": {
+        "file": "tool_03_probe_dvwa.json",
+        "index": 1
+      },
+      "redirect_chain": null,
+      "error": null,
+      "tls_verified": null
+    },
+    {
+      "url": "http://192.0.2.10:443/dvwa/",
+      "http_status": 400,
+      "server": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "400 Bad Request",
+      "status": "observed",
+      "application_hint": null,
+      "requested_url": null,
+      "source": {
+        "file": "tool_03_probe_dvwa.json",
+        "index": 2
+      },
+      "redirect_chain": null,
+      "error": null,
+      "tls_verified": null
+    },
+    {
+      "url": "http://192.0.2.10:443/dvwa/login.php",
+      "http_status": 400,
+      "server": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "400 Bad Request",
+      "status": "observed",
+      "application_hint": null,
+      "requested_url": null,
+      "source": {
+        "file": "tool_03_probe_dvwa.json",
+        "index": 3
+      },
+      "redirect_chain": null,
+      "error": null,
+      "tls_verified": null
+    },
+    {
+      "url": "https://192.0.2.10/",
+      "http_status": null,
+      "log_line": 15,
+      "error": {
+        "kind": "legacy_unknown",
+        "message": "Bản ghi cũ chỉ có URLError; không lưu nguyên nhân chi tiết hoặc chuỗi chuyển hướng."
+      },
+      "requested_url": null,
+      "source": {
+        "file": "execution.log",
+        "index": 0
+      },
+      "redirect_chain": null,
+      "tls_verified": null
+    },
+    {
+      "url": "https://192.0.2.10/dvwa/",
+      "http_status": null,
+      "log_line": 20,
+      "error": {
+        "kind": "legacy_unknown",
+        "message": "Bản ghi cũ chỉ có URLError; không lưu nguyên nhân chi tiết hoặc chuỗi chuyển hướng."
+      },
+      "requested_url": null,
+      "source": {
+        "file": "execution.log",
+        "index": 1
+      },
+      "redirect_chain": null,
+      "tls_verified": null
+    },
+    {
+      "url": "https://192.0.2.10/dvwa/login.php",
+      "http_status": null,
+      "log_line": 21,
+      "error": {
+        "kind": "legacy_unknown",
+        "message": "Bản ghi cũ chỉ có URLError; không lưu nguyên nhân chi tiết hoặc chuỗi chuyển hướng."
+      },
+      "requested_url": null,
+      "source": {
+        "file": "execution.log",
+        "index": 2
+      },
+      "redirect_chain": null,
+      "tls_verified": null
+    }
+  ],
+  "observations": [
+    {
+      "url": "http://192.0.2.10/dashboard/",
+      "http_status": 200,
+      "server_banner": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "Welcome to XAMPP",
+      "application_hint": null,
+      "error": null,
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "tool_02_probe_web.json",
+          "index": 0
+        },
+        {
+          "file": "tool_02_probe_web.json",
+          "index": 1
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    },
+    {
+      "url": "http://192.0.2.10/phpmyadmin/",
+      "http_status": 403,
+      "server_banner": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "403 Forbidden",
+      "application_hint": null,
+      "error": null,
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "tool_02_probe_web.json",
+          "index": 2
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    },
+    {
+      "url": "http://192.0.2.10:443/",
+      "http_status": 400,
+      "server_banner": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "400 Bad Request",
+      "application_hint": null,
+      "error": null,
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "tool_02_probe_web.json",
+          "index": 3
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    },
+    {
+      "url": "http://192.0.2.10/dvwa/login.php",
+      "http_status": 200,
+      "server_banner": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "Login :: Damn Vulnerable Web Application (DVWA)",
+      "application_hint": "DVWA",
+      "error": null,
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "tool_03_probe_dvwa.json",
+          "index": 0
+        },
+        {
+          "file": "tool_03_probe_dvwa.json",
+          "index": 1
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    },
+    {
+      "url": "http://192.0.2.10:443/dvwa/",
+      "http_status": 400,
+      "server_banner": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "400 Bad Request",
+      "application_hint": null,
+      "error": null,
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "tool_03_probe_dvwa.json",
+          "index": 2
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    },
+    {
+      "url": "http://192.0.2.10:443/dvwa/login.php",
+      "http_status": 400,
+      "server_banner": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+      "title": "400 Bad Request",
+      "application_hint": null,
+      "error": null,
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "tool_03_probe_dvwa.json",
+          "index": 3
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    },
+    {
+      "url": "https://192.0.2.10/",
+      "http_status": null,
+      "server_banner": null,
+      "title": null,
+      "application_hint": null,
+      "error": {
+        "kind": "legacy_unknown",
+        "message": "Bản ghi cũ chỉ có URLError; không lưu nguyên nhân chi tiết hoặc chuỗi chuyển hướng."
+      },
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "execution.log",
+          "index": 0
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    },
+    {
+      "url": "https://192.0.2.10/dvwa/",
+      "http_status": null,
+      "server_banner": null,
+      "title": null,
+      "application_hint": null,
+      "error": {
+        "kind": "legacy_unknown",
+        "message": "Bản ghi cũ chỉ có URLError; không lưu nguyên nhân chi tiết hoặc chuỗi chuyển hướng."
+      },
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "execution.log",
+          "index": 1
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    },
+    {
+      "url": "https://192.0.2.10/dvwa/login.php",
+      "http_status": null,
+      "server_banner": null,
+      "title": null,
+      "application_hint": null,
+      "error": {
+        "kind": "legacy_unknown",
+        "message": "Bản ghi cũ chỉ có URLError; không lưu nguyên nhân chi tiết hoặc chuỗi chuyển hướng."
+      },
+      "tls_verified": null,
+      "sources": [
+        {
+          "file": "execution.log",
+          "index": 2
+        }
+      ],
+      "requested_urls": [],
+      "redirect_chains": []
+    }
+  ],
+  "origins": [
+    {
+      "url": "http://192.0.2.10/",
+      "observations": [
+        0,
+        1,
+        3
+      ]
+    }
+  ],
+  "applications": [
+    {
+      "name": "XAMPP",
+      "base_url": "http://192.0.2.10/dashboard/",
+      "observations": [
+        0
+      ]
+    },
+    {
+      "name": "DVWA",
+      "base_url": "http://192.0.2.10/dvwa/",
+      "observations": [
+        3
+      ]
+    }
+  ],
+  "services": [
+    {
+      "kind": "web",
+      "name": "HTTP",
+      "url": "http://192.0.2.10/",
+      "status": "observed",
+      "evidence_ref": "web_evidence.json#/origins/0",
+      "applications": [
+        {
+          "name": "XAMPP",
+          "base_url": "http://192.0.2.10/dashboard/",
+          "application_identified": true,
+          "session_ready": null,
+          "current_security_level": null,
+          "version": null,
+          "evidence_ref": "web_evidence.json#/applications/0"
+        },
+        {
+          "name": "DVWA",
+          "base_url": "http://192.0.2.10/dvwa/",
+          "application_identified": true,
+          "session_ready": null,
+          "current_security_level": null,
+          "version": null,
+          "evidence_ref": "web_evidence.json#/applications/1"
+        }
+      ]
+    }
+  ]
+}

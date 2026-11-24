@@ -1,0 +1,9 @@
+id: d1e2f3a4-nckh-apt32-espionage-0006
+name: APT32 OceanLotus Espionage Campaign
+description: 'Mô phỏng chiến dịch gián điệp mạng APT32: thu thập tiến trình, ẩn giấu
+  file và trích xuất dữ liệu giả lập.'
+atomic_ordering:
+- 05cda6f6-2b1b-462e-bff1-845af94343f7
+- 1c353eb4-29ab-4dfe-88ed-f34f5a60848e
+- a50d5a97-2531-499e-a1de-5544c74432c6
+- 81c13829-f6c9-45b8-85a6-053366d55297

@@ -1,0 +1,13 @@
+- id: af703dae-feaa-51f3-9ab8-e337da316a3a
+  name: "Simulate T1608 - SEO Poisoning / Malvertising d\u1EABn \u0111\u1EBFn Malware\
+    \ Download"
+  description: Automated simulation ability for MITRE technique T1608
+  tactic: execution
+  technique_id: T1608
+  technique_name: "SEO Poisoning / Malvertising d\u1EABn \u0111\u1EBFn Malware Download"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1608: SEO Poisoning / Malvertising\
+      \ d\u1EABn \u0111\u1EBFn Malware Download'"
+    timeout: 30

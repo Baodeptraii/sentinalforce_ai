@@ -1,0 +1,57 @@
+id: SCENARIO-67
+name: OT/ICS Pivot – Từ IT Network sang Operational Technology
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 67 – OT/ICS Pivot – Từ IT Network sang Operational Technology**\n\
+  \n**Giới thiệu chung**\n\nOT/ICS pivot là kịch bản có tác động nghiêm trọng vì ranh\
+  \ giới giữa sự cố CNTT và gián đoạn vật lý có thể bị phá vỡ. Nhiều tổ chức vẫn có\
+  \ điểm kết nối giữa IT và OT phục vụ quản trị, historian, remote maintenance hoặc\
+  \ trao đổi dữ liệu. Nếu mạng IT bị compromise, đối thủ có thể dùng các điểm nối\
+  \ này để tiếp cận môi trường vận hành và gây ảnh hưởng tới quy trình sản xuất, năng\
+  \ lượng, logistics hoặc hạ tầng trọng yếu.\n\n**Mô tả kịch bản**\n\nTrong kịch bản\
+  \ này, tác nhân đã có foothold trong IT network, sau đó tìm các jump host, historian\
+  \ server, engineering workstation, tài khoản bảo trì hoặc firewall rule cho phép\
+  \ đi vào OT/ICS. Actor có thể là nation-state, destructive actor hoặc ransomware\
+  \ group nhắm vào vận hành; điều kiện tiên quyết là tồn tại kết nối IT-OT hoặc tài\
+  \ khoản/host trung gian có quyền truy cập OT; kết quả mong muốn là quan sát, gián\
+  \ đoạn hoặc thao túng hệ thống vận hành, từ dừng dịch vụ đến thay đổi dữ liệu/quy\
+  \ trình.\n\n**Dòng tấn công end-to-end**\n\n```text\nCompromise mạng IT\n→ Khám\
+  \ phá kết nối IT-OT, jump host, historian, tài khoản bảo trì\n→ Truy cập vùng trung\
+  \ gian hoặc host có quyền vào OT\n→ Quan sát asset, protocol và luồng vận hành\n\
+  → Tác động tới service, dữ liệu hoặc quy trình OT nếu có cơ hội\n→ Gây gián đoạn\
+  \ vận hành hoặc rủi ro an toàn\n```\n\n1. **Có foothold trong IT:** Endpoint, server\
+  \ hoặc tài khoản domain trong mạng doanh nghiệp đã bị chiếm.\n2. **Tìm đường nối\
+  \ OT:** Đối thủ xác định jump server, firewall path, VPN maintenance hoặc historian.\n\
+  3. **Tiếp cận vùng trung gian:** DMZ hoặc host có dual-access trở thành bàn đạp.\n\
+  4. **Khảo sát tài sản OT:** Asset, protocol, schedule, engineering tool và tài khoản\
+  \ vận hành được quan sát.\n5. **Tạo tác động:** Dịch vụ, dữ liệu hoặc quy trình\
+  \ có thể bị dừng, sửa đổi hoặc làm sai lệch.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic\
+  \ | Technique | Mô tả |\n|--------|-----------|-------|\n| Lateral Movement | T1021\
+  \ | Remote Services để pivot qua host trung gian |\n| Impact | T1489 | Service Stop\
+  \ ảnh hưởng hệ thống vận hành |\n| Impact | T1565 | Data Manipulation / làm sai\
+  \ lệch dữ liệu phục vụ vận hành |\n| ICS-specific | ICS ATT&CK | Mapping chi tiết\
+  \ cần bổ sung theo protocol, asset và ngành cụ thể |\n\n**Log / Telemetry / Observable**\n\
+  \n- **OT/IT firewall logs:** Kết nối mới hoặc bất thường từ IT sang OT/DMZ, đặc\
+  \ biệt ngoài lịch bảo trì.\n- **Historian logs:** Truy vấn dữ liệu, export hoặc\
+  \ access pattern bất thường từ tài khoản/host không quen thuộc.\n- **SCADA / engineering\
+  \ workstation logs:** Login, project access, configuration read/write hoặc tool\
+  \ usage lạ.\n- **Network monitoring:** Protocol OT xuất hiện từ host IT hoặc jump\
+  \ host không thuộc baseline.\n- **Identity / remote access:** Tài khoản bảo trì\
+  \ hoặc tài khoản dùng chung bị truy cập từ nguồn không hợp lệ.\n\n**Gợi ý Detection\
+  \ / Hunting**\n\n```text\nITtoOTConnection = true\nAND (\n  SourceHostNotApprovedJumpBox\
+  \ = true\n  OR AccessOutsideMaintenanceWindow = true\n  OR NewOTProtocolObserved\
+  \ = true\n  OR HistorianQuerySpike = true\n  OR EngineeringWorkstationAccessAnomaly\
+  \ = true\n)\n```\n\n- **Alert:** Bất kỳ kết nối IT-to-OT nào từ host không nằm trong\
+  \ danh sách jump host hợp lệ.\n- **Hunt:** Nối `IT compromise indicator → access\
+  \ to OT DMZ → historian/engineering access`.\n- **Alert:** Tài khoản bảo trì dùng\
+  \ ngoài khung thời gian bảo trì hoặc từ nguồn không quen thuộc.\n- **Segmentation\
+  \ review:** Kiểm tra lại firewall rule, shared account, remote vendor access và\
+  \ visibility giữa IT/OT.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nRủi ro OT/ICS không\
+  \ chỉ là mất dữ liệu mà có thể ảnh hưởng tới sản xuất, an toàn và dịch vụ thiết\
+  \ yếu. Kịch bản này giúp tổ chức đánh giá khả năng phát hiện pivot qua ranh giới\
+  \ IT-OT, vốn là một trong những điểm yếu phổ biến nhất trong môi trường công nghiệp.\n\
+  \n**Độ tin cậy:** Trung bình đến cao – pattern IT-to-OT pivot rất thực tế, nhưng\
+  \ mapping và detection cụ thể cần điều chỉnh theo từng ngành, topology, protocol\
+  \ và thiết bị OT.\n\n**Tài liệu tham khảo**\n- CISA ICS Advisories\n- Dragos 2024\n\
+  - MITRE ATT&CK T1021, T1489, T1565\n- MITRE ATT&CK for ICS"

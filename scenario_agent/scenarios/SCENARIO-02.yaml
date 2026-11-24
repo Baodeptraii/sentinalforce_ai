@@ -1,0 +1,129 @@
+id: SCENARIO-02
+name: Phishing AiTM (Adversary-in-the-Middle) Đánh Cắp Session Cookie
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 02 – Phishing AiTM (Adversary-in-the-Middle) Đánh Cắp Session
+  Cookie
+
+
+  **Giới thiệu chung**
+
+
+  AiTM (Adversary-in-the-Middle) phishing là kỹ thuật phishing tiên tiến sử dụng reverse
+  proxy (EvilProxy, Evilginx, Modlishka) để đứng giữa người dùng và trang web xác
+  thực hợp lệ, đánh cắp session cookie sau khi MFA đã được hoàn tất. Đây là phương
+  pháp hiệu quả bypass MFA mà không cần biết code OTP.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công gửi email phishing với link dẫn đến reverse proxy. Người dùng đăng nhập
+  và hoàn tất MFA thông qua proxy — proxy chuyển tiếp request đến server thật và nhận
+  session cookie hợp lệ. Kẻ tấn công sử dụng cookie này để đăng nhập vào tài khoản
+  mà không cần MFA.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Email phishing → Link đến AiTM Proxy → Người dùng đăng nhập + MFA
+
+  → Proxy nhận session cookie → Kẻ tấn công dùng cookie để truy cập
+
+  → Inbox rule tạo (persistence) → Data collection / BEC
+
+  ```
+
+
+  1. **Email phishing (T1566.002):** Link email dẫn đến subdomain hoặc domain giả.
+
+  2. **Reverse proxy intercept (T1557.002):** Người dùng thấy trang đăng nhập thật,
+  không biết có proxy ở giữa.
+
+  3. **Session cookie theft (T1539):** Cookie được trích xuất từ session đã xác thực.
+
+  4. **Account takeover:** Kẻ tấn công dùng cookie để truy cập mailbox, Teams, SharePoint.
+
+  5. **Persistence (T1114.003):** Tạo inbox forwarding rule ẩn để tiếp tục thu thập
+  email.
+
+  6. **BEC / Data collection (T1114):** Gửi email giả mạo, thu thập dữ liệu nhạy cảm.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Sub-technique | Mô tả |
+
+  |--------|-----------|---------------|-------|
+
+  | Initial Access | T1566 | T1566.002 | Spearphishing Link |
+
+  | Credential Access | T1557 | T1557.002 | AiTM |
+
+  | Credential Access | T1539 | – | Steal Web Session Cookie |
+
+  | Collection | T1114 | T1114.001/T1114.003 | Email Collection / Forwarding Rule
+  |
+
+  | Persistence | T1098 | T1098.001 | Account Manipulation |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Microsoft Entra ID:** Sign-in từ IP mới ngay sau MFA completion; sign-in với
+  unfamiliar client string; `tokenIssuedAt` < `sessionStartedAt` (anomalous token
+  timing)
+
+  - **O365 Unified Audit Log:** `New-InboxRule` được tạo trong vòng vài phút sau đăng
+  nhập lần đầu
+
+  - **Email gateway:** Link phishing trỏ đến hostname gần giống domain hợp lệ (typosquatting)
+
+  - **Proxy/CASB:** Redirect chain dài, đặc biệt với các redirector domain trẻ
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** Entra ID sign-in thành công ngay sau MFA từ IP khác với IP thông thường
+  của user
+
+  - **Alert:** `New-InboxRule` với `ForwardTo` external address được tạo trong <5
+  phút sau sign-in lần đầu
+
+  - **Hunt:** Tìm sign-in thành công với session token từ múi giờ/IP không khớp lịch
+  sử
+
+  - **Defender for Cloud Apps:** Policy "Suspicious inbox manipulation rule" (built-in)
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Microsoft báo cáo hàng triệu email AiTM phishing mỗi ngày trong 2024. Các dịch vụ
+  như EvilProxy được bán dưới dạng PhaaS (Phishing-as-a-Service). Storm-0835, Storm-0539,
+  và Scattered Spider đã sử dụng kỹ thuật này. Các tổ chức đã triển khai MFA nhưng
+  chưa bật Conditional Access đặc biệt dễ bị tấn công.
+
+
+  **Độ tin cậy:** Rất cao – Microsoft Threat Intelligence 2023–2024, Proofpoint EvilProxy
+  research.
+
+
+  **Tài liệu tham khảo**
+
+  - Microsoft: "From cookie theft to BEC: Attackers use AiTM phishing sites as entry
+  point to further financial fraud" (2022)
+
+  - Proofpoint: "EvilProxy Phishing Platform Analysis" (2023)
+
+  - Microsoft TI Blog: "AiTM attacks targeting financial services" (2024)
+
+
+  ---'

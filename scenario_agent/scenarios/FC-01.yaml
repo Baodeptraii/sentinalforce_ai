@@ -1,0 +1,175 @@
+id: FC-01
+name: 'LockBit 3.0: Ransomware Full Kill Chain'
+source: source-dataset/NCKH/69 kịch bản/full_attack_campaigns.md
+format: scenario_description
+executable: false
+content: "# FC-01 – LockBit 3.0: Ransomware Full Kill Chain\n## Chiến dịch Ransomware-as-a-Service\
+  \ đầy đủ nhất và phổ biến nhất 2022–2024\n\n---\n\n### Giới thiệu chung\n\nLockBit\
+  \ 3.0 (còn gọi là LockBit Black) là phiên bản nâng cấp của LockBit ransomware, hoạt\
+  \ động theo mô hình **Ransomware-as-a-Service (RaaS)** từ giữa 2022. Nhóm điều hành\
+  \ cung cấp mã ransomware và hạ tầng, còn các **affiliate** (đối tác) tự thực hiện\
+  \ xâm nhập và triển khai. LockBit 3.0 nổi bật với mô hình **double extortion** (mã\
+  \ hóa + đe doạ công bố dữ liệu), chương trình bug bounty cho chính mã độc của mình,\
+  \ và là ransomware bị dùng nhiều nhất thế giới trong 2022–2024 theo CISA, FBI, và\
+  \ Europol.\n\nCơ quan thực thi pháp luật quốc tế (FBI, Europol, NCA) đã disruption\
+  \ hạ tầng LockBit vào tháng 2/2024 (\"Operation Cronos\"), nhưng các affiliate nhanh\
+  \ chóng chuyển sang LockBit 3.0 biến thể mới hoặc RaaS khác. Tổng thiệt hại ước\
+  \ tính >$91 triệu tại Mỹ từ 2020–2023.\n\n**Ngành bị tấn công nhiều nhất:** Healthcare,\
+  \ Manufacturing, Government, Education, Financial Services.\n\n**Affiliate profile:**\
+  \ Có thể là individual hay nhóm với trình độ kỹ thuật trung bình đến cao; thường\
+  \ mua initial access từ IAB (Initial Access Brokers).\n\n---\n\n### Mô tả kịch bản\n\
+  \nMột affiliate của LockBit 3.0 mua quyền truy cập VPN bị compromise từ một Initial\
+  \ Access Broker trên dark web (credentials đánh cắp từ stealer malware). Từ đó,\
+  \ affiliate xâm nhập vào mạng nội bộ, leo thang đặc quyền qua khai thác Active Directory,\
+  \ thu thập và exfiltrate dữ liệu nhạy cảm lên cloud storage của kẻ tấn công, sau\
+  \ đó triển khai ransomware toàn bộ domain và xóa shadow copy. Toàn bộ quá trình\
+  \ từ initial access đến ransomware deployment thường diễn ra trong **5–25 ngày**.\n\
+  \nĐiều kiện tiên quyết: Tổ chức có VPN/RDP lộ ra internet, chưa bật MFA trên VPN,\
+  \ AD chưa được hardening, backup không được kiểm tra hoặc accessible từ domain-joined\
+  \ machine.\n\n---\n\n### Dòng tấn công end-to-end\n\n```\n[Giai đoạn 1 – Chuẩn bị]\n\
+  Mua credential từ IAB / Scan internet cho VPN endpoint lộ ra\n\n[Giai đoạn 2 – Initial\
+  \ Access]\nDùng credential stolen → Đăng nhập VPN/RDP → Foothold máy đầu tiên\n\n\
+  [Giai đoạn 3 – Execution & Discovery]\nPowerShell/cmd execution → Internal recon\
+  \ (AD, shares, backup systems)\n\n[Giai đoạn 4 – Persistence]\nTạo backdoor account\
+  \ / Scheduled task / Web shell trên máy chủ quan trọng\n\n[Giai đoạn 5 – Privilege\
+  \ Escalation]\nKerberoasting → Crack hash → Compromise Domain Admin\nHoặc: DCSync\
+  \ → Dump all hashes\n\n[Giai đoạn 6 – Defense Evasion]\nDisable AV/EDR → Xóa logs\
+  \ → AMSI bypass\n\n[Giai đoạn 7 – Lateral Movement]\nPsExec / WMI / RDP → Spread\
+  \ sang toàn domain\n→ Nhắm vào backup server, file server, domain controller\n\n\
+  [Giai đoạn 8 – Collection & Exfiltration]\nNén dữ liệu (7-Zip/WinRAR) → Upload lên\
+  \ Mega/rclone → SFTP\n\n[Giai đoạn 9 – Impact]\nXóa shadow copies (vssadmin) → Deploy\
+  \ LockBit 3.0 via GPO/PsExec\n→ Mã hóa toàn bộ domain → Ransom note → Đăng dữ liệu\
+  \ nếu không trả\n```\n\n**Timeline điển hình:**\n- Ngày 0: Mua credential / Initial\
+  \ access qua VPN\n- Ngày 1–3: Recon nội bộ, cài công cụ (Cobalt Strike beacon)\n\
+  - Ngày 3–7: Kerberoasting, credential dumping, lateral movement\n- Ngày 7–15: Data\
+  \ staging và exfiltration (thường chạy ban đêm)\n- Ngày 15–25: Trigger ransomware\
+  \ deployment (thường cuối tuần)\n\n---\n\n### MITRE ATT&CK Mapping – LockBit 3.0\n\
+  \n| # | Tactic | Technique ID | Sub-technique | Tên kỹ thuật | Giai đoạn trong chain\
+  \ |\n|---|--------|-------------|---------------|--------------|----------------------|\n\
+  | 1 | Reconnaissance | T1595 | T1595.002 | Active Scanning: Vulnerability Scanning\
+  \ | Giai đoạn 1 |\n| 2 | Resource Development | T1650 | – | Acquire Access (mua\
+  \ từ IAB) | Giai đoạn 1 |\n| 3 | Resource Development | T1583 | T1583.001 | Acquire\
+  \ Infrastructure: Domains (C2 domain) | Giai đoạn 1 |\n| 4 | Initial Access | T1078\
+  \ | T1078.002 | Valid Accounts: Domain Accounts (stolen creds) | Giai đoạn 2 |\n\
+  | 5 | Initial Access | T1133 | – | External Remote Services (VPN/RDP) | Giai đoạn\
+  \ 2 |\n| 6 | Execution | T1059 | T1059.001 | Command and Scripting: PowerShell |\
+  \ Giai đoạn 3 |\n| 7 | Execution | T1047 | – | Windows Management Instrumentation\
+  \ (WMI) | Giai đoạn 3/7 |\n| 8 | Persistence | T1547 | T1547.001 | Boot/Logon Autostart:\
+  \ Registry Run Keys | Giai đoạn 4 |\n| 9 | Persistence | T1136 | T1136.002 | Create\
+  \ Account: Domain Account (backdoor account) | Giai đoạn 4 |\n| 10 | Persistence\
+  \ | T1053 | T1053.005 | Scheduled Task/Job | Giai đoạn 4 |\n| 11 | Privilege Escalation\
+  \ | T1558 | T1558.003 | Kerberoasting | Giai đoạn 5 |\n| 12 | Privilege Escalation\
+  \ | T1003 | T1003.006 | OS Credential Dumping: DCSync | Giai đoạn 5 |\n| 13 | Privilege\
+  \ Escalation | T1068 | – | Exploitation for Privilege Escalation (nếu có vuln) |\
+  \ Giai đoạn 5 |\n| 14 | Defense Evasion | T1562 | T1562.001 | Impair Defenses: Disable\
+  \ or Modify Tools (AV/EDR) | Giai đoạn 6 |\n| 15 | Defense Evasion | T1070 | T1070.001\
+  \ | Indicator Removal: Clear Windows Event Logs | Giai đoạn 6 |\n| 16 | Defense\
+  \ Evasion | T1027 | T1027.010 | Obfuscated Files: Command Obfuscation | Giai đoạn\
+  \ 6 |\n| 17 | Defense Evasion | T1036 | T1036.005 | Masquerading: Match Legitimate\
+  \ Name/Location | Giai đoạn 6 |\n| 18 | Credential Access | T1003 | T1003.001 |\
+  \ OS Credential Dumping: LSASS Memory | Giai đoạn 5 |\n| 19 | Credential Access\
+  \ | T1110 | T1110.002 | Brute Force: Password Cracking (offline hash crack) | Giai\
+  \ đoạn 5 |\n| 20 | Discovery | T1082 | – | System Information Discovery | Giai đoạn\
+  \ 3 |\n| 21 | Discovery | T1135 | – | Network Share Enumeration | Giai đoạn 3 |\n\
+  | 22 | Discovery | T1069 | T1069.002 | Permission Groups Discovery: Domain Groups\
+  \ | Giai đoạn 3 |\n| 23 | Discovery | T1083 | – | File and Directory Discovery |\
+  \ Giai đoạn 3/8 |\n| 24 | Lateral Movement | T1021 | T1021.002 | Remote Services:\
+  \ SMB/Windows Admin Shares (PsExec) | Giai đoạn 7 |\n| 25 | Lateral Movement | T1484\
+  \ | T1484.001 | Domain Policy Modification: GPO (deploy via GPO) | Giai đoạn 7/9\
+  \ |\n| 26 | Collection | T1560 | T1560.001 | Archive Collected Data: Archive via\
+  \ Utility (7-Zip/WinRAR) | Giai đoạn 8 |\n| 27 | Exfiltration | T1567 | T1567.002\
+  \ | Exfiltration to Cloud Storage (Mega/rclone) | Giai đoạn 8 |\n| 28 | Impact |\
+  \ T1490 | – | Inhibit System Recovery (vssadmin delete shadows) | Giai đoạn 9 |\n\
+  | 29 | Impact | T1486 | – | Data Encrypted for Impact (LockBit 3.0 encryption) |\
+  \ Giai đoạn 9 |\n| 30 | Impact | T1657 | – | Financial Theft / Extortion (ransom\
+  \ demand + DLS) | Giai đoạn 9 |\n\n**Tổng: 30 techniques/sub-techniques | 10 tactics\
+  \ phủ**\n\n---\n\n### Log / Telemetry / Observable cần theo dõi\n\n**Giai đoạn Initial\
+  \ Access & Discovery:**\n- **VPN/Firewall logs:** Đăng nhập từ IP địa lý bất thường,\
+  \ giờ giấc lạ (03:00–05:00), Geo-velocity impossible travel\n- **Windows Security\
+  \ Event 4624 (Logon):** Type 10 (RemoteInteractive/RDP) hoặc Type 3 từ IP VPN nội\
+  \ bộ với tài khoản người dùng không thường xuyên dùng VPN\n- **Sysmon Event 1 (Process\
+  \ Create):** `whoami /all`, `net user /domain`, `nltest /dclist:`, `ipconfig /all`\
+  \ được gọi ngay sau khi đăng nhập\n- **Sysmon Event 3 (Network):** Kết nối port\
+  \ 445 (SMB), 5985/5986 (WinRM), 135/139 đến nhiều host trong mạng từ một máy\n-\
+  \ **EDR:** BloodHound/SharpHound (`AzureHound`, `SharpHound.exe`, `SharpHound.ps1`)\
+  \ chạy; LDAP query lớn từ non-DC machine\n- **DNS:** Query đến `_ldap._tcp.dc._msdcs.*`\
+  \ hàng loạt từ workstation\n\n**Giai đoạn Privilege Escalation:**\n- **Windows Security\
+  \ Event 4769:** Nhiều TGS request cho service accounts có SPN, đặc biệt từ một nguồn,\
+  \ trong thời gian ngắn (Kerberoasting indicator)\n- **Windows Security Event 4662:**\
+  \ Replication permission được access trên domain object (DCSync indicator — `1131f6aa-9c07-11d1-f79f-00c04fc2dcd2`)\n\
+  - **Sysmon Event 10 (Process Access):** `lsass.exe` bị access bởi process không\
+  \ phải antivirus/EDR (LSASS dump)\n- **EDR:** Mimikatz signatures (`sekurlsa::logonpasswords`,\
+  \ `lsadump::dcsync`); Generic credential dump tools\n\n**Giai đoạn Defense Evasion:**\n\
+  - **Windows Security Event 1102 / System Event 104:** Security log / System log\
+  \ bị xóa\n- **EDR:** `sc stop [AV service name]`, `reg add` để disable Defender,\
+  \ `bcdedit /set recoveryenabled No`\n- **Sysmon Event 13 (Registry):** Defender\
+  \ exclusion paths được thêm (`HKLM\\SOFTWARE\\Microsoft\\Windows Defender\\Exclusions\\\
+  Paths`)\n- **EDR behavioral:** PowerShell AMSI patch patterns, in-memory execution\
+  \ without disk artifact\n\n**Giai đoạn Lateral Movement:**\n- **Windows Security\
+  \ Event 7045:** Temporary service creation (PsExec pattern — service named random\
+  \ string)\n- **Windows Security Event 5140/5145:** SMB share access đến `ADMIN$`,\
+  \ `C$`, `IPC$` từ source IP không phải IT admin\n- **Sysmon Event 1:** `PsExec64.exe`,\
+  \ `psexesvc.exe` execution; WMI (`wmic /node: process call create`)\n- **EDR:**\
+  \ Cobalt Strike beacon patterns (named pipe: `\\pipe\\msagent_[random]`); beacon\
+  \ beaconing interval\n\n**Giai đoạn Collection & Exfiltration:**\n- **EDR file access:**\
+  \ `7z.exe a -p[password]` hoặc `WinRAR.exe` nén file từ nhiều share cùng lúc\n-\
+  \ **Network egress:** Upload lớn (GB) đến `mega.nz`, `upload.mega.io`; rclone traffic\
+  \ đến cloud storage\n- **DLP:** File copy volume bất thường từ file server ra external;\
+  \ document với keyword nhạy cảm xuất hiện trong staging folder\n- **Proxy/CASB:**\
+  \ Rclone user-agent, MEGASync process tạo kết nối HTTPS đến MEGA servers\n\n**Giai\
+  \ đoạn Impact:**\n- **EDR:** `vssadmin delete shadows /all`, `wmic shadowcopy delete`,\
+  \ `bcdedit /set {default} recoveryenabled No` — đây là pre-ransomware indicator\
+  \ cực kỳ quan trọng\n- **EDR:** LockBit 3.0 binary tạo file `.lockbit` extension\
+  \ trên nhiều volume cùng lúc; `ransom_note.txt` creation event\n- **Windows Security\
+  \ Event 4663:** Mass file modification/rename trong thời gian ngắn (>1000 file/phút)\n\
+  - **SIEM:** GPO change event (5136/5137) kết hợp với service installation (7045)\
+  \ trên nhiều machine\n\n---\n\n### Gợi ý Detection / Hunting\n\n**Priority 1 – Pre-ransomware\
+  \ indicators (golden window trước khi mã hóa):**\n\n```kql\n// KQL – Sentinel/Defender:\
+  \ Detect shadow copy deletion\nSecurityEvent\n| where EventID == 4688\n| where CommandLine\
+  \ has_any (\"vssadmin delete shadows\", \"wmic shadowcopy delete\", \n    \"bcdedit\
+  \ /set\", \"wbadmin delete catalog\", \"diskshadow\")\n| project TimeGenerated,\
+  \ Computer, Account, CommandLine\n| order by TimeGenerated desc\n```\n\n```kql\n\
+  // KQL – Detect LSASS dump via Sysmon\nEvent\n| where Source == \"Microsoft-Windows-Sysmon\"\
+  \ and EventID == 10\n| extend TargetImage = extract(\"TargetImage: (.*?)\\n\", 1,\
+  \ RenderedDescription)\n| where TargetImage has \"lsass.exe\"\n| where not(SourceImage\
+  \ has_any (\"MsMpEng\", \"SentinelOne\", \"CrowdStrike\", \"svchost\"))\n```\n\n\
+  ```kql\n// KQL – Kerberoasting detection (many TGS requests)\nSecurityEvent\n| where\
+  \ EventID == 4769\n| where TicketOptions == \"0x40810000\" and TicketEncryptionType\
+  \ == \"0x17\"\n| summarize count() by IpAddress, bin(TimeGenerated, 5m)\n| where\
+  \ count_ > 5\n```\n\n**Priority 2 – Lateral movement và mass file access:**\n\n\
+  ```kql\n// Detect PsExec-style service creation\nSecurityEvent\n| where EventID\
+  \ == 7045\n| where ServiceFileName has_any (\"\\\\ADMIN$\\\\\", \"\\\\C$\\\\\",\
+  \ \"PSEXESVC\")\n    or ServiceName matches regex @\"^[A-Za-z0-9]{4,8}$\"\n```\n\
+  \n```kql\n// Mass file modification (ransomware activity)\n// Sysmon Event 11 –\
+  \ File creation\nEvent\n| where Source == \"Microsoft-Windows-Sysmon\" and EventID\
+  \ == 11\n| where TargetFilename has_any (\".lockbit\", \".lock\", \".encrypted\"\
+  )\n| summarize file_count=count() by Computer, bin(TimeGenerated, 1m)\n| where file_count\
+  \ > 100\n```\n\n**Priority 3 – Exfiltration detection:**\n\n```\n// Network: Rclone\
+  \ hoặc MEGASync upload activity\n// Look for: process name rclone.exe, megacmd.exe\n\
+  // Large HTTPS upload to: mega.nz, api.mega.co.nz, storage.googleapis.com (rclone\
+  \ GCS)\n// Alert threshold: >500MB upload trong 10 phút\n```\n\n**Behavioral analytics\
+  \ quan trọng:**\n- Tài khoản đăng nhập VPN lần đầu từ IP nước ngoài → Alert immediately\n\
+  - VPN login ngoài giờ hành chính (23:00–05:00) từ non-IT user → Investigate\n- 1\
+  \ user account truy cập >20 host qua SMB trong 30 phút → Lateral movement alert\n\
+  - Defender exclusion path thêm vào registry → Immediate high-priority alert\n- VSS\
+  \ deletion bất kỳ → Critical alert (99% ransomware precursor)\n\n---\n\n### Vì sao\
+  \ đáng ưu tiên 2024–2026\n\nLockBit 3.0 là nhóm ransomware có số nạn nhân lớn nhất\
+  \ lịch sử — hơn 2,000 nạn nhân trong 2022–2023 (FBI). Dù Operation Cronos (2/2024)\
+  \ gián đoạn hoạt động, LockBit 3.0 builder đã bị leak và tiếp tục được dùng bởi\
+  \ nhiều nhóm khác nhau. Sau disruption, nhiều affiliate chuyển sang ALPHV/BlackCat,\
+  \ Akira, RansomHub — nhưng dùng **TTPs gần như giống hệt**: IAB access + Cobalt\
+  \ Strike + Kerberoasting + VSS deletion + double extortion. Hiểu pattern LockBit\
+  \ 3.0 = hiểu pattern của gần như toàn bộ RaaS hiện tại.\n\n**Kịch bản này đặc biệt\
+  \ có giá trị diễn tập vì:**\n- Phủ 10/14 ATT&CK tactics trong một chain liên tục\n\
+  - Mỗi giai đoạn đều có detection opportunity\n- Pattern được dùng lại bởi nhiều\
+  \ RaaS affiliate (Akira, RansomHub, BlackSuit, Hunters International)\n- Phù hợp\
+  \ cho cả tabletop exercise lẫn kỹ thuật detection rule validation\n\n**Độ tin cậy:**\
+  \ Rất cao – FBI Flash CU-000162-MW, CISA AA23-325A, Europol Operation Cronos 2024,\
+  \ multiple Mandiant/CrowdStrike incident reports.\n\n---\n\n### Tài liệu tham khảo\n\
+  \n- FBI/CISA/MS-ISAC: \"Advisory AA23-325A – LockBit 3.0 Ransomware Affiliates\"\
+  \ (November 2023)\n- FBI: \"LockBit Ransomware Indicators of Compromise\" (Flash\
+  \ CU-000162-MW)\n- Europol: \"Operation Cronos: Disruption of LockBit Ransomware\"\
+  \ (February 2024)\n- Mandiant: \"LockBit 3.0 Builder Leak Analysis\" (2022)\n- CISA:\
+  \ \"Known Ransomware IOCs and TTPs\" (2024 update)\n- MITRE ATT&CK: T1078, T1133,\
+  \ T1558.003, T1003.006, T1490, T1486, T1567.002\n- CrowdStrike: \"2024 Global Threat\
+  \ Report – Ransomware Trends\"\n\n---\n---"

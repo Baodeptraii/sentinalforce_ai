@@ -1,0 +1,12 @@
+- id: 4508da11-2b93-5840-8e7d-547a09d92806
+  name: "Simulate T1069 - Kerberoasting \u2013 T\u1EA5n c\xF4ng Service Account"
+  description: Automated simulation ability for MITRE technique T1069
+  tactic: execution
+  technique_id: T1069
+  technique_name: "Kerberoasting \u2013 T\u1EA5n c\xF4ng Service Account"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1069: Kerberoasting \u2013\
+      \ T\u1EA5n c\xF4ng Service Account'"
+    timeout: 30

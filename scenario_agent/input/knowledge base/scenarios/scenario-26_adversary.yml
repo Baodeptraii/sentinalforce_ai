@@ -1,0 +1,14 @@
+id: 9de90e5a-35e6-55ca-aaa7-b4bfe655be74
+name: '[SCENARIO-26] Pass-the-Ticket – Golden/Silver Ticket Attack'
+description: Tác nhân hậu khai thác đã có điều kiện thu được ticket hợp lệ, khóa tài
+  khoản dịch vụ, hoặc material đủ để tạo vé Kerberos giả mạo. Điều kiện tiên quyết
+  có thể là compromise tài khoản dịch vụ, KRBTGT hoặc dữ liệu AD nhạy cảm từ bước
+  trước như DCSync. Mục tiêu cuối là tạo truy cập lâu dài, vượt kiểm soát xác thực
+  thông thường, và truy cập tài nguyên AD hoặc dịch vụ cụ thể với
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 680cc609-3f4f-5195-af52-eb9e4f326352
+- dbf38128-7ba7-4776-bedf-cc2eed432098
+- f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb
+- 9726592a-dabc-4d4d-81cd-44070008b3af
+- 385e59aa-113e-4711-84d9-f637aef01f2c

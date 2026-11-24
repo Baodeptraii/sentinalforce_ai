@@ -1,0 +1,11 @@
+id: ef01aa67-f684-5f77-8e85-844ec4640ac7
+name: '[SCENARIO-30] PrintNightmare (CVE-2021-34527) – Windows Spooler RCE'
+description: Kẻ tấn công đã có khả năng tiếp cận mạng nội bộ hoặc foothold trên một
+  host Windows, sau đó nhắm vào hệ thống còn bật Print Spooler và chưa được harden
+  / vá phù hợp. Actor phù hợp là tác nhân hậu khai thác đang tìm đường leo lên `SYSTEM`
+  hoặc mở rộng từ máy này sang máy khác qua bề mặt dịch vụ in ấn. Điều kiện tiên quyết
+  là dịch vụ spooler tồn tại và host đích
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- 1c9ef3e6-bde6-402c-83bc-d89ea8bfd372
+- 51e03f83-7d11-58c0-aad3-eef98748b3a1

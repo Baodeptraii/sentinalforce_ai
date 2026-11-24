@@ -1,0 +1,8 @@
+id: d1e2f3a4-nckh-basic-lateral-0002
+name: Basic Lateral Movement Simulation
+description: Mô phỏng các kỹ thuật di chuyển ngang cơ bản qua chia sẻ mạng SMB và
+  WinRM.
+atomic_ordering:
+- 40161ad0-75bd-11e9-b475-0800200c9a66
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 94f21386-9547-43c4-99df-938ab05d45ce

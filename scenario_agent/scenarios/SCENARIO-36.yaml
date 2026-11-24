@@ -1,0 +1,59 @@
+id: SCENARIO-36
+name: AMSI Bypass – Vô hiệu hóa Antimalware Scan Interface
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 36 – AMSI Bypass – Vô hiệu hóa Antimalware Scan Interface**\n\
+  \n**Giới thiệu chung**\n\nAMSI là lớp quét trung gian quan trọng đối với script\
+  \ execution trên Windows, đặc biệt với PowerShell và nhiều kịch bản in-memory execution.\
+  \ Khi AMSI bị vô hiệu hóa hoặc bị qua mặt, toàn bộ lớp phát hiện dựa trên nội dung\
+  \ script có thể suy yếu đáng kể, khiến các hành vi thực thi sau đó khó bị phân tích\
+  \ hơn.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, tác nhân đã hiện diện trên host\
+  \ và chuẩn bị thực hiện hoặc tiếp tục một chuỗi script-based execution, nhưng trước\
+  \ đó tìm cách làm suy yếu AMSI ở mức process hoặc memory để giảm khả năng bị quét.\
+  \ Actor thường là operator hậu khai thác hoặc malware fileless phụ thuộc nhiều vào\
+  \ PowerShell/in-memory script; điều kiện tiên quyết là có code execution trên host\
+  \ và quyền thao tác đủ để làm thay đổi trạng thái scan của phiên thực thi; kết quả\
+  \ mong muốn là các script tiếp theo chạy ít bị soi nội dung hơn, qua đó hỗ trợ defense\
+  \ evasion và giữ nhịp hậu khai thác. fileciteturn1file0L63-L63\n\n**Dòng tấn\
+  \ công end-to-end**\n\n```text\nFoothold trên host\n→ Chuẩn bị script-based execution\n\
+  → Can thiệp trạng thái AMSI trong phiên thực thi\n→ Script / payload in-memory tiếp\
+  \ tục chạy\n→ Giảm khả năng bị scan nội dung\n→ Defense evasion cho giai đoạn kế\
+  \ tiếp\n```\n\n1. **Thiết lập ngữ cảnh script:** Implant hoặc operator đã có phiên\
+  \ PowerShell / script runner trên host.\n2. **Tìm cách làm suy yếu lớp scan:** AMSI\
+  \ trong process hoặc luồng thực thi bị can thiệp theo hướng giảm hiệu lực quét.\n\
+  3. **Chạy tiếp script / payload:** Giai đoạn in-memory execution hoặc hậu khai thác\
+  \ kế tiếp được kích hoạt.\n4. **Tạo khoảng trống telemetry:** Nội dung độc hại ít\
+  \ bị soi hơn hoặc tín hiệu AMSI trở nên bất thường.\n5. **Củng cố mức ẩn mình:**\
+  \ Tác nhân tận dụng cửa sổ này để mở rộng hoạt động.\n\n**MITRE ATT&CK Mapping**\n\
+  \n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n| Defense Evasion\
+  \ | T1562 | T1562.001 – Impair Defenses |\n| Execution | T1059 | T1059.001 – PowerShell\
+  \ trong bối cảnh script-based execution sau bypass |\n| Defense Evasion | T1027\
+  \ | Nội dung script có thể được mã hóa/che giấu nhằm phối hợp với việc suy yếu lớp\
+  \ scan |\n\n**Log / Telemetry / Observable**\n\n- **PowerShell Event 4104:** Script\
+  \ block có entropy cao, bị cắt ngắn bất thường, hoặc xuất hiện chùm hành vi đáng\
+  \ ngờ sau một khoảng trống scan.\n- **AMSI telemetry / Defender clue:** Lỗi khởi\
+  \ tạo, trạng thái scan bất thường, mất tương quan giữa script execution và AMSI\
+  \ event.\n- **EDR memory events:** Dấu hiệu can thiệp tới `amsi.dll` hoặc module\
+  \ quét liên quan trong quá trình PowerShell / script host đang hoạt động.\n- **Process\
+  \ anomaly:** `powershell.exe`, `pwsh.exe`, `wscript.exe` hoặc script host khác chạy\
+  \ nối tiếp các hành vi bất thường sau khi lớp scan có dấu hiệu suy yếu.\n- **Sequencing\
+  \ anomaly:** AMSI hoặc AV không phản ánh nội dung đáng lẽ phải bị quét, nhưng hậu\
+  \ quả thực thi vẫn xuất hiện rõ trong process/network telemetry.\n\n**Gợi ý Detection\
+  \ / Hunting**\n\n```text\nProcessName IN (\"powershell.exe\", \"pwsh.exe\", \"wscript.exe\"\
+  , \"cscript.exe\")\nAND (\n  AmsiTamperIndicator = true\n  OR AmsiInitializationFailure\
+  \ = true\n  OR ScriptBlockLoggingGap = true\n)\nAND SuspiciousFollowOnExecution\
+  \ = true\n```\n\n- **Alert:** Script host có dấu hiệu tamper AMSI rồi ngay sau đó\
+  \ chạy encoded content, in-memory load hoặc network beacon.\n- **Hunt:** Tìm host\
+  \ xuất hiện PowerShell 4104 đáng ngờ nhưng thiếu tương quan bình thường với AMSI/Defender\
+  \ findings.\n- **Alert:** `amsi.dll` hoặc module quét bị tác động trong các process\
+  \ vốn không nên sửa trạng thái scan.\n- **Control validation:** So đối chiếu giữa\
+  \ PowerShell logging, AMSI, Defender, và EDR memory telemetry để xem lớp phòng thủ\
+  \ nào bị “mù” khi AMSI suy yếu.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nAMSI bypass\
+  \ là một bài kiểm tra rất thực dụng cho các môi trường Windows phụ thuộc vào script\
+  \ telemetry. Nó không chỉ hỏi “script nào chạy”, mà hỏi sâu hơn “lớp scan có còn\
+  \ nhìn thấy script đó hay không”. Đây là câu hỏi rất quan trọng trong mọi bài tập\
+  \ fileless malware, PowerShell abuse và post-exploitation trên endpoint doanh nghiệp.\n\
+  \n**Độ tin cậy:** Cao – giá trị diễn tập lớn, nhất là cho các tổ chức đang dựa mạnh\
+  \ vào PowerShell logging và Defender-based analytics.\n\n**Tài liệu tham khảo**\n\
+  - Microsoft\n- CrowdStrike\n- MITRE ATT&CK T1562.001, T1059.001"

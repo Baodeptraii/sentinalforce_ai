@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Execution record v1",
+  "type":"object",
+  "required":["schema_version","id","scenario_job_id","state","created_at","target","plan_sha256","operation_id","steps","preflight","detection","behavior_evidence","command_status"],
+  "properties":{
+    "schema_version":{"const":"caldera_execution_v1"},
+    "id":{"type":"string","pattern":"^[a-f0-9]{32}$"},
+    "scenario_job_id":{"type":"string","pattern":"^[a-f0-9]{32}$"},
+    "state":{"enum":["ready","blocked","confirmed","registering","creating_operation","running","completed","failed","stop_requested","stopped","recovery_required"]},
+    "target":{"type":"object","required":["id","ip","host","paw"],"properties":{"id":{"type":"string"},"ip":{"type":"string"},"host":{"type":["string","null"]},"paw":{"type":["string","null"]}}},
+    "plan_sha256":{"type":"string"},"operation_id":{"type":["string","null"]},
+    "steps":{"type":"array","items":{"type":"object","required":["index","name","state"],"properties":{"index":{"type":"integer","minimum":1},"name":{"type":"string"},"state":{"enum":["not_run","pending","sent","dispatched","completed","error","skipped"]}}}},
+    "preflight":{"type":"object","required":["schema_version","ready","target","plan_sha256","binding_sha256","scope","blockers","steps","artifacts","policy"],"properties":{"schema_version":{"const":"caldera_execution_v1"},"ready":{"type":"boolean"}}},
+    "detection":{"const":"unknown"},"behavior_evidence":{"const":"not_evaluated"},"command_status":{"enum":["not_run","success","incomplete","stopped","unknown"]}
+  }
+}

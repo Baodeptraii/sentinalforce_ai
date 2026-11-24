@@ -1,0 +1,61 @@
+id: SCENARIO-01
+name: Spearphishing với Tệp Đính Kèm Độc Hại (Office Macro)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: "### Kịch bản 01 – Spearphishing với Tệp Đính Kèm Độc Hại (Office Macro)\n\
+  \n**Giới thiệu chung**\n\nSpearphishing qua tệp đính kèm Office chứa macro VBA vẫn\
+  \ là một trong các vector tấn công phổ biến và nguy hiểm nhất. Mặc dù Microsoft\
+  \ đã vô hiệu hóa macro từ internet theo mặc định từ năm 2022, các tác nhân đe doạ\
+  \ đã thích nghi bằng cách sử dụng các định dạng khác (XLAM, DOCM chuyển qua ISO/ZIP),\
+  \ lừa người dùng cho phép nội dung, hoặc sử dụng các định dạng ít bị chặn hơn.\n\
+  \n**Mô tả kịch bản**\n\nTác nhân đe doạ (thường là cybercrime groups như TA505,\
+  \ TA571, hoặc APT nhắm vào lĩnh vực tài chính/chính phủ) gửi email được thiết kế\
+  \ cẩn thận đến mục tiêu cụ thể. Nội dung email giả mạo là hoá đơn, hợp đồng, thông\
+  \ báo nhân sự, hoặc tài liệu quan trọng. Tệp đính kèm là file .docm, .xlsm, hoặc\
+  \ .xls cũ (Binary format) chứa macro VBA độc hại. Khi người dùng kích hoạt macro,\
+  \ một payload (thường là loader như Qakbot, IcedID, hoặc Gozi) được thực thi.\n\n\
+  **Dòng tấn công end-to-end**\n\n```\nEmail với attachment → Người dùng mở file →\
+  \ Macro bị kích hoạt\n→ Payload download (mshta/certutil/PowerShell) → Loader thực\
+  \ thi\n→ C2 beacon establish → Post-exploitation (credential theft/lateral movement)\n\
+  ```\n\n1. **Lựa chọn mục tiêu (Reconnaissance):** Kẻ tấn công thu thập email từ\
+  \ LinkedIn, website tổ chức, data breach.\n2. **Chuẩn bị email (Resource Development):**\
+  \ Spoofing hoặc đăng ký domain giả mạo đối tác, tạo tài liệu Office với embedded\
+  \ macro.\n3. **Gửi email (Initial Access - T1566.001):** Email được gửi đến target\
+  \ với tệp đính kèm .docm hoặc trong file ZIP/ISO.\n4. **Người dùng mở tệp và kích\
+  \ hoạt content (Execution - T1204.002):** Social engineering content (\"Enable Content\
+  \ to view document\").\n5. **Macro thực thi (Execution - T1059.005):** VBA macro\
+  \ gọi WScript, mshta, hoặc PowerShell để download stage-2.\n6. **Payload execution:**\
+  \ Loader (IcedID, Qakbot) thiết lập persistence, beacon về C2.\n7. **Post-exploitation:**\
+  \ Credential harvest, lateral movement, ransomware/data theft.\n\n**MITRE ATT&CK\
+  \ Mapping**\n\n| Tactic | Technique | Sub-technique | Mô tả |\n|--------|-----------|---------------|-------|\n\
+  | Initial Access | T1566 | T1566.001 | Spearphishing Attachment |\n| Execution |\
+  \ T1204 | T1204.002 | User Execution: Malicious File |\n| Execution | T1059 | T1059.005\
+  \ | Command and Scripting: VBA |\n| Defense Evasion | T1027 | T1027.013 | Obfuscated\
+  \ Files: Encrypted/Encoded File |\n| C2 | T1071 | T1071.001 | Application Layer\
+  \ Protocol: Web Protocols |\n| Persistence | T1547 | T1547.001 | Boot/Logon Autostart:\
+  \ Registry Run Keys |\n\n**Log / Telemetry / Observable cần theo dõi**\n\n- **Email\
+  \ gateway:** Tệp .docm, .xlsm, .xls từ domain mới đăng ký (<30 ngày), subject template\
+  \ phổ biến (\"Invoice\", \"Contract\", \"Payment\")\n- **EDR/Sysmon Event ID 1:**\
+  \ `WINWORD.EXE` hoặc `EXCEL.EXE` tạo child process là `cmd.exe`, `powershell.exe`,\
+  \ `mshta.exe`, `wscript.exe`\n- **Office telemetry:** Macro execution events, VBA\
+  \ project names, trusted document exceptions\n- **Network:** Kết nối HTTP/HTTPS\
+  \ từ office process đến external IP, đặc biệt IP trẻ (<7 ngày)\n- **DNS:** Query\
+  \ đến domain không có lịch sử (DGA-like hoặc typosquatting)\n- **AMSI logs:** Script\
+  \ execution attempts bị flag\n\n**Gợi ý Detection / Hunting**\n\n```\n# Sysmon -\
+  \ Office spawning suspicious child processes\nEventID=1 AND ParentImage=*WINWORD.EXE\
+  \ OR *EXCEL.EXE \nAND Image=(cmd.exe OR powershell.exe OR mshta.exe OR wscript.exe\
+  \ OR cscript.exe)\n\n# EDR - Macro enable + network connection\nprocess.name:(WINWORD.EXE\
+  \ OR EXCEL.EXE) \nAND event.type:network_connection \nAND NOT destination.ip:private_ip_range\n\
+  ```\n\n- Hunt: Office process tạo file trong `%TEMP%`, `%APPDATA%`\n- Hunt: Office\
+  \ process kết nối network trong vòng 60 giây sau khi mở\n- Alert: Email có đuôi\
+  \ `.docm`, `.xlsm` từ domain mới đăng ký (<30 ngày)\n- Alert: Macro execution +\
+  \ DNS query đến domain không có lịch sử\n\n**Vì sao đáng ưu tiên 2024–2026**\n\n\
+  TA571, TA505, và các nhóm ransomware tiếp tục phát tán qua macro-enabled documents.\
+  \ Mặc dù macro-blocking của Microsoft giảm hiệu quả attack vector này, các nhóm\
+  \ đã chuyển sang dùng file ISO/ZIP để bypass Mark-of-the-Web, hoặc nhắm vào tổ chức\
+  \ chưa bật policy mới. Proofpoint Q1 2024 vẫn ghi nhận đây là top 3 vector phân\
+  \ phối malware.\n\n**Độ tin cậy:** Cao – được xác nhận bởi nhiều nguồn (Proofpoint,\
+  \ CrowdStrike, Microsoft).\n\n**Tài liệu tham khảo**\n- Proofpoint: \"The Human\
+  \ Factor 2024\"\n- Microsoft: \"Macro blocking update\" (2022–2024)\n- CISA Alert\
+  \ AA24-038A\n- MITRE ATT&CK T1566.001, T1204.002\n\n---"

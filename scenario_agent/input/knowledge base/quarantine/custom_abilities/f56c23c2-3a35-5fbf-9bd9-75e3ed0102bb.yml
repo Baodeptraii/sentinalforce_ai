@@ -1,0 +1,12 @@
+- id: f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb
+  name: "Simulate T1558 - Kerberoasting \u2013 T\u1EA5n c\xF4ng Service Account"
+  description: Automated simulation ability for MITRE technique T1558
+  tactic: execution
+  technique_id: T1558
+  technique_name: "Kerberoasting \u2013 T\u1EA5n c\xF4ng Service Account"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1558: Kerberoasting \u2013\
+      \ T\u1EA5n c\xF4ng Service Account'"
+    timeout: 30

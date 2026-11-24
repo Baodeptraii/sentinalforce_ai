@@ -1,0 +1,12 @@
+- id: a4a122d4-f70b-5785-aba0-7cc131a6b8ce
+  name: "Simulate T1199 - APT29 / Midnight Blizzard \u2013 Cloud Lateral Movement"
+  description: Automated simulation ability for MITRE technique T1199
+  tactic: execution
+  technique_id: T1199
+  technique_name: "APT29 / Midnight Blizzard \u2013 Cloud Lateral Movement"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1199: APT29 / Midnight Blizzard\
+      \ \u2013 Cloud Lateral Movement'"
+    timeout: 30

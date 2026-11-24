@@ -1,0 +1,56 @@
+id: SCENARIO-47
+name: Cobalt Strike – HTTPS Beacon C2
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 47 – Cobalt Strike – HTTPS Beacon C2**\n\n**Giới thiệu chung**\n\
+  \nCobalt Strike Beacon qua HTTPS vẫn là một mẫu C2 đại diện cho rất nhiều chuỗi\
+  \ hậu khai thác hiện đại, kể cả khi tác nhân không dùng chính công cụ này mà mô\
+  \ phỏng hành vi tương tự. Giá trị phòng thủ của kịch bản nằm ở chỗ lưu lượng mạng\
+  \ bề ngoài rất “hợp pháp”: dùng HTTPS, có jitter, có sleep interval, và có thể được\
+  \ bọc bằng profile nhằm bắt chước trình duyệt hoặc ứng dụng quen thuộc.\n\n**Mô\
+  \ tả kịch bản**\n\nTrong kịch bản này, một implant hậu khai thác trên endpoint hoặc\
+  \ server thiết lập beacon qua HTTPS ra hạ tầng điều khiển từ xa, với profile được\
+  \ tinh chỉnh để làm lưu lượng trông gần giống traffic web bình thường. Actor thường\
+  \ là intrusion operator sau initial access hoặc nhóm ransomware trong giai đoạn\
+  \ hậu xâm nhập; điều kiện tiên quyết là host đã bị compromise và egress filtering\
+  \ chưa đủ chặt để chặn lưu lượng phù hợp mẫu beacon; kết quả mong muốn là duy trì\
+  \ kênh C2 ổn định, hỗ trợ nhận lệnh, đẩy thêm module hoặc thay đổi sang fallback\
+  \ channel khi đường chính gặp cản trở.\n\n**Dòng tấn công end-to-end**\n\n```text\n\
+  Foothold trên host\n→ Triển khai implant hậu khai thác\n→ Thiết lập HTTPS beacon\
+  \ ra hạ tầng C2\n→ Beacon sleep / check-in theo chu kỳ có jitter\n→ Nhận lệnh và\
+  \ điều phối hoạt động tiếp theo\n→ Duy trì command and control trong thời gian dài\n\
+  ```\n\n1. **Có điểm bám trên host:** Implant hoặc loader đã thực thi thành công\
+  \ ở bước trước đó.\n2. **Khởi tạo beacon:** Lưu lượng HTTPS đầu tiên được phát sinh\
+  \ từ process đã bị chiếm dụng hoặc implant chuyên biệt.\n3. **Duy trì nhịp check-in:**\
+  \ Host gửi request nhỏ, định kỳ, có jitter để giảm tính dễ thấy.\n4. **Nhận và phản\
+  \ hồi lệnh:** Beacon tương tác với máy chủ C2 để điều phối bước discovery, collection\
+  \ hoặc lateral movement.\n5. **Chuyển kênh khi cần:** Nếu kết nối chính bị suy yếu,\
+  \ implant có thể chuyển sang đường giao tiếp phụ.\n\n**MITRE ATT&CK Mapping**\n\n\
+  | Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n| Command and Control\
+  \ | T1071 | T1071.001 – Web Protocols |\n| Command and Control | T1573 | T1573.002\
+  \ – Encrypted Channel |\n| Command and Control | T1008 | Fallback Channels |\n\n\
+  **Log / Telemetry / Observable**\n\n- **Network flow / proxy logs:** Kết nối HTTPS\
+  \ nhỏ, lặp lại, khá đều theo thời gian từ cùng một host tới một nhóm đích rất hẹp.\n\
+  - **JA3 / JA3S / TLS fingerprint:** Mẫu TLS của process phát sinh lưu lượng không\
+  \ khớp trình duyệt hay ứng dụng enterprise chuẩn.\n- **DNS telemetry:** Tên miền\
+  \ mới, hiếm gặp hoặc chỉ một nhóm host nhỏ duy nhất truy vấn trước khi beacon bắt\
+  \ đầu.\n- **EDR process-network correlation:** Process không phải browser hoặc approved\
+  \ updater thực hiện outbound HTTPS định kỳ nhiều giờ hoặc nhiều ngày.\n- **Header\
+  \ / URI anomaly:** User-agent, path, kích thước request/response hoặc thời điểm\
+  \ beaconing lệch rõ khỏi workflow người dùng thật.\n\n**Gợi ý Detection / Hunting**\n\
+  \n```text\nProcessName NOT IN (approved_browsers, approved_updaters, approved_management_agents)\n\
+  AND HTTPSBeaconPattern = true\nAND (\n  JA3Outlier = true\n  OR RareDestination\
+  \ = true\n  OR SameDestinationPeriodicity = true\n  OR ProxyUriPatternRare = true\n\
+  )\n```\n\n- **Alert:** Một process ít gặp duy trì kết nối HTTPS định kỳ với cùng\
+  \ đích ngoài trong nhiều giờ.\n- **Hunt:** Nối `rare DNS lookup → HTTPS periodic\
+  \ flow → process lineage bất thường` trên cùng endpoint.\n- **Alert:** TLS fingerprint\
+  \ không khớp browser nhưng user-agent hoặc URI lại cố bắt chước lưu lượng web hợp\
+  \ lệ.\n- **Baseline:** Phân biệt rõ traffic định kỳ hợp lệ của EDR, update agent,\
+  \ backup agent và RMM với beacon hậu khai thác.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nKịch bản beaconing qua HTTPS vẫn là “chuẩn tham chiếu” cho rất nhiều hành vi C2\
+  \ hiện đại. Việc phát hiện nó đòi hỏi tổ chức phải làm tốt tương quan giữa process,\
+  \ DNS, proxy và fingerprint TLS, chứ không thể chỉ dựa vào chặn domain đơn lẻ.\n\
+  \n**Độ tin cậy:** Cao – dù công cụ cụ thể có thể thay đổi, mẫu hành vi beacon HTTPS\
+  \ vẫn ổn định và giàu giá trị phát hiện.\n\n**Tài liệu tham khảo**\n- CrowdStrike\n\
+  - Palo Alto Unit 42\n- Microsoft\n- MITRE ATT&CK T1071.001, T1573.002, T1008"

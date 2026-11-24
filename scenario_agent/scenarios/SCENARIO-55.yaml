@@ -1,0 +1,54 @@
+id: SCENARIO-55
+name: AWS Credential Theft qua IMDS
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 55 – AWS Credential Theft qua IMDS**\n\n**Giới thiệu chung**\n\
+  \nTrong môi trường AWS, thông tin xác thực tạm thời gắn với IAM role của EC2 là\
+  \ mục tiêu rất có giá trị vì chúng thường mở ra quyền truy cập rộng hơn so với ứng\
+  \ dụng ban đầu. Instance Metadata Service vì vậy trở thành một bề mặt đặc biệt quan\
+  \ trọng trong các kịch bản cloud compromise, nhất là khi tồn tại SSRF, workload\
+  \ compromise hoặc cấu hình cho phép truy cập metadata dễ dãi.\n\n**Mô tả kịch bản**\n\
+  \nTrong kịch bản này, tác nhân sau khi chiếm được ứng dụng hoặc host trong EC2 tận\
+  \ dụng SSRF, local foothold hoặc đường truy cập nội bộ tới IMDS để lấy temporary\
+  \ credential của IAM role gắn với instance, rồi dùng các credential đó truy cập\
+  \ AWS API. Actor thường là cloud intruder, post-exploitation operator hoặc nhóm\
+  \ muốn pivot trong tài khoản AWS; điều kiện tiên quyết là instance có role hữu ích\
+  \ và IMDS vẫn có thể bị gọi từ ngữ cảnh bị compromise; kết quả mong muốn là có được\
+  \ quyền AWS hợp lệ ở mức workload để enumerating, truy xuất dữ liệu, hoặc thao tác\
+  \ tài nguyên cloud khác.\n\n**Dòng tấn công end-to-end**\n\n```text\nChiếm ứng dụng\
+  \ hoặc workload trên EC2\n→ Truy cập Instance Metadata Service\n→ Lấy temporary\
+  \ IAM role credential\n→ Dùng credential để gọi STS / AWS API\n→ Liệt kê và truy\
+  \ cập tài nguyên cloud liên quan\n→ Mở rộng kiểm soát trong tài khoản AWS\n```\n\
+  \n1. **Có foothold trên workload:** Ứng dụng hoặc instance đã bị xâm nhập ở mức\
+  \ đủ để gửi yêu cầu tới metadata.\n2. **Đọc IMDS:** Temporary credentials hoặc thông\
+  \ tin role được truy vấn từ metadata service.\n3. **Xác thực tới AWS:** Credential\
+  \ mới lấy được được dùng cho các lệnh gọi API tiếp theo.\n4. **Khảo sát tài nguyên:**\
+  \ S3, IAM, EC2, Secrets Manager hoặc các dịch vụ liên quan được đánh giá theo quyền\
+  \ mới.\n5. **Pivot trong cloud account:** Workload compromise chuyển thành cloud\
+  \ account abuse nghiêm trọng hơn.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique\
+  \ | Mô tả |\n|--------|-----------|-------|\n| Credential Access | T1552 | T1552.005\
+  \ – Cloud Instance Metadata API |\n| Initial Access | T1190 | Exploit Public-Facing\
+  \ Application trong các chuỗi SSRF/RCE dẫn vào IMDS |\n\n**Log / Telemetry / Observable**\n\
+  \n- **VPC Flow / host telemetry:** Truy cập đến `169.254.169.254` từ ứng dụng hoặc\
+  \ process không nằm trong baseline workload.\n- **CloudTrail:** Temporary credentials\
+  \ của role instance được dùng cho các API bất thường hoặc từ ngữ cảnh không quen\
+  \ thuộc.\n- **GuardDuty:** Findings liên quan đến `InstanceCredentialExfiltration`\
+  \ hoặc hành vi role abuse sau compromise.\n- **STS / IAM pattern:** Tăng đột biến\
+  \ số lệnh gọi API sau một sự kiện ứng dụng/web đáng ngờ.\n- **Role-context mismatch:**\
+  \ Một workload vốn chỉ dùng hạn chế nay bắt đầu truy cập S3 bucket, enumerate IAM\
+  \ hoặc thao tác dịch vụ ngoài chức năng chính.\n\n**Gợi ý Detection / Hunting**\n\
+  \n```text\nMetadataServiceAccess = true\nAND SourceWorkload NOT IN approved_imds_callers\n\
+  AND (\n  SubsequentSTSOrIAMBurst = true\n  OR GuardDutyFindingPresent = true\n \
+  \ OR TemporaryCredsUsedInNewContext = true\n)\n```\n\n- **Alert:** Truy cập IMDS\
+  \ từ process hoặc service không có lý do business rõ ràng.\n- **Hunt:** Nối `web\
+  \ exploit / app anomaly → metadata access → CloudTrail API burst`.\n- **Alert:**\
+  \ Role credentials của instance bị dùng để truy cập tài nguyên ngoài phạm vi hành\
+  \ vi bình thường của ứng dụng.\n- **Hardening:** Đánh giá IMDSv2 enforcement, IAM\
+  \ least privilege và chặn outbound không cần thiết từ workload tới metadata khi\
+  \ khả thi.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nKịch bản này thể hiện rất rõ\
+  \ sự chuyển tiếp từ compromise ứng dụng sang compromise môi trường cloud. Nó đồng\
+  \ thời kiểm tra cả ba lớp: bảo vệ ứng dụng, bảo vệ workload và giám sát identity/API\
+  \ ở tầng AWS.\n\n**Độ tin cậy:** Cao – IMDS abuse để lại dấu vết tốt ở cả host,\
+  \ flow và CloudTrail nếu tổ chức thu thập đầy đủ.\n\n**Tài liệu tham khảo**\n- AWS\
+  \ Well-Architected\n- Palo Alto Unit 42\n- MITRE ATT&CK T1552.005, T1190"

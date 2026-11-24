@@ -1,0 +1,147 @@
+id: SCENARIO-29
+name: UAC Bypass – Thực thi đặc quyền cao không hiển thị dialog
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 29 – UAC Bypass – Thực thi đặc quyền cao không hiển thị dialog**
+
+
+  **Giới thiệu chung**
+
+
+  User Account Control được thiết kế để tạo rào cản trước khi một tiến trình từ ngữ
+  cảnh người dùng chuyển sang mức quyền cao hơn. Tuy nhiên, trong nhiều môi trường,
+  khi kẻ tấn công đã có local admin hoặc một trạng thái cận admin, các kỹ thuật bypass
+  UAC có thể giúp thực thi code ở high integrity mà không hiện prompt như dự kiến.
+  Đây là kỹ thuật vừa mang tính privilege escalation, vừa là defense evasion.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công đã hiện diện trên máy của người dùng có quyền admin cục bộ hoặc trong
+  một ngữ cảnh có thể tác động tới cơ chế auto-elevate. Actor thường là malware hoặc
+  operator muốn nâng tiến trình từ medium integrity lên high integrity một cách êm
+  hơn để tránh người dùng nghi ngờ. Điều kiện tiên quyết là máy đích sử dụng UAC và
+  có các đường auto-elevate / association / registry hijack tương ứng chưa được harden.
+  Kết quả mong muốn là một tiến trình đặc quyền cao chạy mà không lộ prompt đồng ý
+  trước mắt người dùng.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Foothold trong user context có điều kiện phù hợp
+
+  → Chuẩn bị hijack / auto-elevate path
+
+  → Gọi tiến trình tự nâng quyền
+
+  → Child process chạy với high integrity không hiện prompt rõ ràng
+
+  → Tiếp tục thao tác đặc quyền trên host
+
+  ```
+
+
+  1. **Đánh giá ngữ cảnh người dùng:** Máy đích có local admin hoặc cấu hình UAC cho
+  phép tấn công lợi dụng.
+
+  2. **Tác động cấu hình trung gian:** Registry / protocol / association liên quan
+  tới auto-elevate bị chuẩn bị.
+
+  3. **Gọi binary phù hợp:** Một tiến trình hợp lệ được kích hoạt để nhận auto-elevation.
+
+  4. **Nhận high integrity:** Tiến trình đích hoặc child process chạy với mức quyền
+  cao hơn mà không có chuỗi phê duyệt thông thường.
+
+  5. **Hậu leo quyền:** Payload tiếp tục persistence, sửa cấu hình hệ thống hoặc tắt
+  biện pháp bảo vệ.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Privilege Escalation | T1548 | T1548.002 – Bypass User Account Control |
+
+  | Defense Evasion | T1548 | Dùng cùng kỹ thuật để né lộ prompt / giảm sự chú ý của
+  người dùng |
+
+  | Defense Evasion | T1036 | Một số biến thể lợi dụng binary auto-elevated nhìn hoàn
+  toàn hợp lệ |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Process integrity telemetry:** Tiến trình medium integrity sinh child process
+  high integrity nhưng không có `consent.exe` trong chuỗi.
+
+  - **Registry telemetry:** Thay đổi key liên quan tới handler, shell open command
+  hoặc association ngay trước lúc auto-elevate binary chạy.
+
+  - **Process creation:** Các binary auto-elevated xuất hiện ngoài ngữ cảnh quản trị
+  chuẩn.
+
+  - **EDR correlation:** Registry modify → auto-elevated binary launch → privileged
+  child process trong vài giây.
+
+  - **User behavior gap:** Không có tương tác người dùng tương ứng với một hành động
+  quản trị đáng lẽ phải yêu cầu xác nhận.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  ```text
+
+  process.name IN ("fodhelper.exe", "computerdefaults.exe", "eventvwr.exe", "sdclt.exe")
+
+  AND process.integrity_level = "High"
+
+  AND parent.integrity_level = "Medium"
+
+  AND NOT ancestry CONTAINS "consent.exe"
+
+  ```
+
+
+  - **Alert:** Các binary auto-elevate xuất hiện từ user context không phải tác vụ
+  quản trị chuẩn.
+
+  - **Hunt:** Registry path nhạy cảm thay đổi ngay trước khi có tiến trình high integrity
+  mới.
+
+  - **Alert:** Tài khoản người dùng không phải kỹ thuật viên bỗng khởi chạy chuỗi
+  process đặc trưng cho UAC bypass.
+
+  - **Hardening:** Tăng giám sát registry hijack path và đánh giá cài đặt UAC / local
+  admin hygiene trên máy trạm.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  UAC bypass là scenario rất phù hợp để huấn luyện đội phòng thủ nhìn vào “sự chuyển
+  ngữ cảnh đặc quyền” thay vì chỉ nhìn có hoặc không có mã độc. Đây cũng là bài kiểm
+  tra tốt cho những môi trường đã đầu tư EDR nhưng vẫn chưa phân tích đủ sâu process
+  integrity, auto-elevate path, và chuỗi registry-to-process.
+
+
+  **Độ tin cậy:** Cao – mạnh về mặt detection engineering trên Windows desktop và
+  workstation quản trị.
+
+
+  **Tài liệu tham khảo**
+
+  - MITRE ATT&CK T1548.002
+
+  - LOLBAS
+
+  - Windows Privilege Escalation Monitoring Guidance'

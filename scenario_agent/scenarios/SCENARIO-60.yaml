@@ -1,0 +1,56 @@
+id: SCENARIO-60
+name: Wiper Malware – Phá hủy dữ liệu
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 60 – Wiper Malware – Phá hủy dữ liệu**\n\n**Giới thiệu chung**\n\
+  \nKhác với ransomware vốn vẫn giữ một logic “khôi phục nếu trả tiền” theo cách nào\
+  \ đó, wiper hướng thẳng tới phá hủy dữ liệu và làm tê liệt hệ thống ở mức không\
+  \ thể hoặc rất khó phục hồi. Đây là một scenario có giá trị diễn tập đặc biệt cao\
+  \ cho các tổ chức cần đánh giá readiness với các chiến dịch phá hoại, nơi mục tiêu\
+  \ của đối phương không phải tiền chuộc mà là gián đoạn hoặc hủy hoại.\n\n**Mô tả\
+  \ kịch bản**\n\nTrong kịch bản này, malware phá hủy dữ liệu bằng cách ghi đè file,\
+  \ xóa hoặc làm hỏng cấu trúc đĩa/partition, vô hiệu khả năng khôi phục và để hệ\
+  \ thống đi vào trạng thái boot failure hoặc data loss diện rộng. Actor thường là\
+  \ destructive operator, nhóm liên quan đến xung đột địa chính trị hoặc adversary\
+  \ có động cơ phá hoại; điều kiện tiên quyết là đã có quyền thực thi đủ sâu trên\
+  \ host hoặc nhiều host; kết quả mong muốn là làm tê liệt vận hành, xóa bỏ dữ liệu\
+  \ và kéo dài thời gian phục hồi vượt xa các sự cố mã hóa thông thường.\n\n**Dòng\
+  \ tấn công end-to-end**\n\n```text\nChiếm quyền thực thi trên host mục tiêu\n→ Làm\
+  \ suy yếu khôi phục và dịch vụ nền tảng liên quan\n→ Ghi đè hoặc phá hỏng cấu trúc\
+  \ dữ liệu / đĩa\n→ Hệ thống mất khả năng khởi động hoặc truy cập dữ liệu\n→ Mở rộng\
+  \ tác động sang nhiều host nếu có điều phối đồng thời\n→ Gây gián đoạn kéo dài và\
+  \ khó phục hồi\n```\n\n1. **Đạt quyền thực thi đủ sâu:** Tác nhân đã có đặc quyền\
+  \ cần thiết để tác động vào tầng dữ liệu/đĩa.\n2. **Giảm khả năng phục hồi:** Các\
+  \ cơ chế restore, backup hoặc recovery path bị vô hiệu hóa trước khi phá hủy chính.\n\
+  3. **Thực hiện phá hủy:** File, boot record, partition structure hoặc dữ liệu quan\
+  \ trọng bị ghi đè / làm hỏng.\n4. **Kích hoạt hậu quả vận hành:** Host rơi vào trạng\
+  \ thái mất boot, lỗi mount, mất dữ liệu hoặc dịch vụ chết diện rộng.\n5. **Mở rộng\
+  \ thiệt hại:** Nhiều host có thể cùng chịu hậu quả nếu chiến dịch được điều phối\
+  \ tập trung.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Impact | T1485 | Data Destruction |\n| Impact | T1561 | T1561.002 – Disk Structure\
+  \ Wipe |\n| Impact | T1490 | Inhibit System Recovery |\n\n**Log / Telemetry / Observable**\n\
+  \n- **EDR raw disk / low-level write telemetry:** Thao tác ghi bất thường vào cấu\
+  \ trúc đĩa hoặc vùng không phải luồng file I/O thông thường.\n- **System / boot\
+  \ clue:** Reboot failure, lỗi bootloader, lỗi partition, mount issue hoặc hàng loạt\
+  \ host không khởi động được.\n- **Service disruption pattern:** Dịch vụ nền tảng\
+  \ bị dừng hoặc lỗi đồng loạt trước khi outage xảy ra.\n- **Recovery tampering:**\
+  \ Shadow copy, backup catalog, restore service hoặc snapshot-related controls bị\
+  \ vô hiệu hóa.\n- **Blast-radius behavior:** Nhiều host trong cùng phân đoạn mạng\
+  \ xuất hiện dấu hiệu phá hủy gần như cùng thời điểm.\n\n**Gợi ý Detection / Hunting**\n\
+  \n```text\nRawDiskWriteDetected = true\nAND (\n  PartitionOrBootStructureModified\
+  \ = true\n  OR RecoveryInhibition = true\n  OR WidespreadServiceStop = true\n  OR\
+  \ SimultaneousHostFailurePattern = true\n)\n```\n\n- **Alert:** Mọi raw disk write\
+  \ hoặc low-level disk structure modification từ process không thuộc allowlist cực\
+  \ kỳ hạn chế.\n- **Hunt:** Liên kết `recovery tampering → raw disk access → boot/service\
+  \ failure` theo từng host và theo cụm host.\n- **Alert:** Sự cố mất boot hoặc lỗi\
+  \ storage xuất hiện đồng loạt sau một đợt activity quản trị bất thường.\n- **Preparedness:**\
+  \ Kiểm tra quy trình khôi phục ngoại tuyến, golden image, backup tách rời và phương\
+  \ án vận hành trong tình huống không thể thương lượng phục hồi.\n\n**Vì sao đáng\
+  \ ưu tiên 2024–2026**\n\nWiper không phải scenario tần suất cao nhất, nhưng là một\
+  \ trong những scenario có hậu quả nghiêm trọng nhất. Nó đặc biệt quan trọng với\
+  \ hạ tầng trọng yếu, sản xuất, logistics và môi trường có rủi ro phá hoại cao, nơi\
+  \ “khôi phục bằng đàm phán” không phải là một lựa chọn thực tế.\n\n**Độ tin cậy:**\
+  \ Cao – dù telemetry low-level không phải tổ chức nào cũng đủ sâu, mô hình phá hủy\
+  \ và recovery tampering vẫn là tín hiệu cực mạnh khi xuất hiện.\n\n**Tài liệu tham\
+  \ khảo**\n- ESET\n- Microsoft\n- MITRE ATT&CK T1485, T1561.002, T1490"

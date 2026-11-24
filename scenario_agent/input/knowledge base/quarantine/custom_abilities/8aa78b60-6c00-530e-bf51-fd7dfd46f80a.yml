@@ -1,0 +1,14 @@
+- id: 8aa78b60-6c00-530e-bf51-fd7dfd46f80a
+  name: "Simulate T1056 - Keylogging \u2013 Thu th\u1EADp th\xF4ng tin x\xE1c th\u1EF1\
+    c qua b\xE0n ph\xEDm"
+  description: Automated simulation ability for MITRE technique T1056
+  tactic: execution
+  technique_id: T1056
+  technique_name: "Keylogging \u2013 Thu th\u1EADp th\xF4ng tin x\xE1c th\u1EF1c qua\
+    \ b\xE0n ph\xEDm"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1056: Keylogging \u2013\
+      \ Thu th\u1EADp th\xF4ng tin x\xE1c th\u1EF1c qua b\xE0n ph\xEDm'"
+    timeout: 30

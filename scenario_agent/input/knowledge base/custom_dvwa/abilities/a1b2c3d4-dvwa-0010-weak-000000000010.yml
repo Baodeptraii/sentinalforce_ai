@@ -1,0 +1,28 @@
+- id: a1b2c3d4-dvwa-0010-weak-000000000010
+  name: DVWA - Weak Session ID Analysis (Low)
+  description: Probes DVWA endpoint for weak predictable session cookie generation
+  tactic: credential-access
+  technique_id: T1539
+  technique_name: Steal Web Session Cookie
+  repeatable: false
+  executors:
+    - name: sh
+      platform: linux
+      command: |
+        DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
+        COOKIE_FILE="/tmp/dvwa_cookie.txt"
+        curl -s -I -b "$COOKIE_FILE" -b "security=low" \
+          -X POST "$DVWA_URL/vulnerabilities/weak_id/" > /dev/null || true
+        echo "[+] Evaluated Weak Session ID endpoint"
+        exit 0
+      timeout: 30
+    - name: psh
+      platform: windows
+      command: |
+        $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
+        $CookieFile = "$env:TEMP\dvwa_cookie.txt"
+        curl.exe -s -I -b "$CookieFile" -b "security=low" `
+          -X POST "$DvwaUrl/vulnerabilities/weak_id/" | Out-Null
+        Write-Output "[+] Evaluated Weak Session ID endpoint"
+        exit 0
+      timeout: 30

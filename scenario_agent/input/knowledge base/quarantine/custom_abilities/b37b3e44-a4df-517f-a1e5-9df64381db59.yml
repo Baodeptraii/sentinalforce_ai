@@ -1,0 +1,14 @@
+- id: b37b3e44-a4df-517f-a1e5-9df64381db59
+  name: "Simulate T1557 - Phishing AiTM (Adversary-in-the-Middle) \u0110\xE1nh C\u1EAF\
+    p Session Cookie"
+  description: Automated simulation ability for MITRE technique T1557
+  tactic: execution
+  technique_id: T1557
+  technique_name: "Phishing AiTM (Adversary-in-the-Middle) \u0110\xE1nh C\u1EAFp Session\
+    \ Cookie"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1557: Phishing AiTM (Adversary-in-the-Middle)\
+      \ \u0110\xE1nh C\u1EAFp Session Cookie'"
+    timeout: 30

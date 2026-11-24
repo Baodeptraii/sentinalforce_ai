@@ -1,0 +1,12 @@
+id: c30d0a69-ea86-5de3-98dd-680e1d8bb4de
+name: '[SCENARIO-37] Timestomping & Log Xóa – Xóa dấu vết tấn công'
+description: Trong kịch bản này, tác nhân hậu khai thác đã có quyền đủ cao trên host
+  và chủ động làm suy yếu khả năng truy vết bằng cách xóa các nhật ký sự kiện then
+  chốt, sửa mốc thời gian của file mới tạo, hoặc làm mờ dấu nối giữa payload, persistence
+  và hoạt động tương tác. Actor thường là ransomware affiliate, operator dùng hands-on-keyboard,
+  hoặc malware muốn kéo dài dwell time; điều kiện tiên quyết là có đặc quyền
+atomic_ordering:
+- a50d5a97-2531-499e-a1de-5544c74432c6
+- b4115c7a-0e92-47f0-a61e-17e7218b2435
+- fcf71ee3-d1a9-4136-b919-9e5f6da43608
+- b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c

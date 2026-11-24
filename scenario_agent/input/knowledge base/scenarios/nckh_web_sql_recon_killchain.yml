@@ -1,0 +1,8 @@
+id: d1e2f3a4-nckh-web-sqli-recon-0004
+name: Web SQL Injection and Reconnaissance Chain
+description: Chuỗi tấn công SQLi kết hợp thu thập thông tin người dùng và quyền truy
+  cập.
+atomic_ordering:
+- a1b2c3d4-dvwa-0005-sqli-000000000005
+- 364ea817-bbb9-4083-87dd-94b9dba45f6f
+- 29451844-9b76-4e16-a9ee-d6feab4b24db

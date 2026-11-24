@@ -1,0 +1,11 @@
+id: 0b5636cf-f019-4ec9-aa7c-6e4f55505374
+name: 'Windows Worm #1
+
+  '
+description: Move laterally any way possible
+atomic_ordering:
+- 85341c8c-4ecb-4579-8f53-43e3e91d7617
+- fa4ed735-7006-4451-a578-b516f80e559f
+- deeac480-5c2a-42b5-90bb-41675ee53c7e
+- 65048ec1-f7ca-49d3-9410-10813e472b30
+- ece5dde3-d370-4c20-b213-a1f424aa8d03

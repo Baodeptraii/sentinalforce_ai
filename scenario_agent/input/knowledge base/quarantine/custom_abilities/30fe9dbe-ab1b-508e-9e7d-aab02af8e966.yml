@@ -1,0 +1,12 @@
+- id: 30fe9dbe-ab1b-508e-9e7d-aab02af8e966
+  name: Simulate T1542 - Boot Sector / Bootkit Persistence (UEFI Implant)
+  description: Automated simulation ability for MITRE technique T1542
+  tactic: execution
+  technique_id: T1542
+  technique_name: Boot Sector / Bootkit Persistence (UEFI Implant)
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1542: Boot Sector / Bootkit
+      Persistence (UEFI Implant)'''
+    timeout: 30

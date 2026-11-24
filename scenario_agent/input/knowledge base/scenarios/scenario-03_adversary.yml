@@ -1,0 +1,15 @@
+id: 97e37b13-7494-518c-a0ce-1c56a390c1ea
+name: '[SCENARIO-03] Business Email Compromise (BEC) – Wire Transfer Fraud'
+description: Kẻ tấn công chiếm tài khoản email hợp lệ của CEO/CFO/kế toán qua phishing,
+  sau đó giám sát hộp thư để tìm thời điểm thích hợp (giao dịch đang chờ xử lý). Khi
+  phát hiện cơ hội, kẻ tấn công gửi email yêu cầu thay đổi thông tin ngân hàng hưởng
+  thụ hoặc yêu cầu chuyển tiền khẩn.
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- 89a7dd26-e510-4c9f-9b15-f3bae333360f
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e
+- 9d1fcfa3-c3d9-58cc-816c-957a34f111dd
+- 3f1b5096-0139-4736-9b78-19bcb02bb1cb
+- 3234117e-151d-4254-9150-3d0bac41e38c
+- 37a36163-f420-5d50-a719-41da1a55c3c7

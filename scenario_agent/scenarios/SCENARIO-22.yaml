@@ -1,0 +1,143 @@
+id: SCENARIO-22
+name: Kerberoasting – Tấn công Service Account
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 22 – Kerberoasting – Tấn công Service Account**
+
+
+  **Giới thiệu chung**
+
+
+  Kerberoasting là kỹ thuật đánh vào service account trong Active Directory khi các
+  tài khoản có SPN được cấu hình với mật khẩu yếu hoặc vòng đời quản lý kém. Điểm
+  nguy hiểm của kỹ thuật này là phần “bẻ khóa” diễn ra offline, nên bề mặt quan sát
+  chủ yếu nằm ở giai đoạn yêu cầu ticket và hành vi bất thường quanh việc truy xuất
+  SPN.
+
+
+  **Mô tả kịch bản**
+
+
+  Một tác nhân đã có tài khoản domain người dùng thông thường tiến hành liệt kê service
+  account có SPN rồi yêu cầu Kerberos service ticket cho các tài khoản đó. Điều kiện
+  tiên quyết chỉ là quyền xác thực miền ở mức thấp. Mục tiêu cuối là lấy được ticket
+  material để brute-force offline, từ đó thu mật khẩu của service account và đổi lợi
+  thế này thành đặc quyền cao hơn hoặc truy cập dịch vụ nhạy cảm.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Có tài khoản domain mức thấp
+
+  → Liệt kê service account có SPN
+
+  → Yêu cầu TGS ticket cho nhiều service account
+
+  → Xử lý offline để tìm mật khẩu yếu
+
+  → Dùng service account thu được cho hậu khai thác
+
+  ```
+
+
+  1. **Xác thực vào domain:** Kẻ tấn công có ít nhất một tài khoản hợp lệ.
+
+  2. **Khảo sát SPN:** Các service account tiềm năng được liệt kê để chọn mục tiêu
+  có giá trị.
+
+  3. **Yêu cầu TGS:** Nhiều service ticket được phát cho host hoặc người dùng đáng
+  ngờ.
+
+  4. **Bẻ khóa offline:** Ticket được xử lý ngoài hệ thống nạn nhân.
+
+  5. **Tái sử dụng service account:** Nếu thành công, tài khoản dịch vụ bị lạm dụng
+  cho truy cập tiếp theo.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Credential Access | T1558 | T1558.003 – Kerberoasting |
+
+  | Discovery | T1069 | Liệt kê tài khoản / dịch vụ liên quan tới đặc quyền nhóm miền
+  |
+
+  | Discovery | T1087 | Liệt kê account phục vụ chọn mục tiêu service account |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Windows Security Event 4769:** Số lượng TGS request tăng bất thường từ một workstation
+  hoặc user bình thường.
+
+  - **Encryption type telemetry:** Ticket dùng loại mã hóa yếu hoặc không còn phù
+  hợp baseline hiện hành.
+
+  - **AD telemetry:** Người dùng bình thường đột nhiên yêu cầu ticket cho nhiều SPN
+  không liên quan công việc.
+
+  - **EDR / PowerShell / command-line:** Công cụ AD enumeration hoặc LDAP-heavy activity
+  xuất hiện trước loạt 4769.
+
+  - **Temporal pattern:** Các yêu cầu tập trung trong thời gian ngắn rồi theo sau
+  bởi activity dùng service account.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  ```text
+
+  EventID=4769
+
+  AND TicketEncryptionType = "0x17"
+
+  AND ClientHost NOT IN (approved_admin_hosts, service_management_hosts)
+
+  AND ServiceName NOT IN (baseline_for_user_role)
+
+  ```
+
+
+  - **Alert:** Tài khoản người dùng thường yêu cầu nhiều TGS cho nhiều SPN trong một
+  khoảng thời gian ngắn.
+
+  - **Hunt:** Ưu tiên các ticket dùng RC4 hoặc encryption type yếu nếu môi trường
+  đã chuyển phần lớn sang AES.
+
+  - **Alert:** Service account phát sinh đăng nhập tương tác hoặc từ host bất thường
+  ngay sau chuỗi 4769 đáng ngờ.
+
+  - **Hardening:** Rà soát mật khẩu dài cho service account, gMSA và loại bỏ SPN thừa.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Kerberoasting là scenario kinh điển nhưng vẫn bền vững về giá trị phòng thủ vì nó
+  khai thác đúng các điểm yếu quản trị tài khoản dịch vụ vốn tồn tại lâu dài trong
+  doanh nghiệp. Đây cũng là bài diễn tập rất tốt để kiểm tra năng lực theo dõi AD
+  event 4769, phân biệt hoạt động quản trị hợp lệ với hành vi truy vấn ticket hàng
+  loạt.
+
+
+  **Độ tin cậy:** Cao – kỹ thuật ổn định, có ATT&CK mapping rõ và phù hợp mọi môi
+  trường AD truyền thống.
+
+
+  **Tài liệu tham khảo**
+
+  - Harmj0y
+
+  - MITRE ATT&CK T1558.003
+
+  - Kerberos / AD Detection Guidance'

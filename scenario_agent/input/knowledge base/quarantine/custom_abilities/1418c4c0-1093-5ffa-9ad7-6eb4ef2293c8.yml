@@ -1,0 +1,12 @@
+- id: 1418c4c0-1093-5ffa-9ad7-6eb4ef2293c8
+  name: "Simulate T1561 - Wiper Malware \u2013 Ph\xE1 h\u1EE7y d\u1EEF li\u1EC7u"
+  description: Automated simulation ability for MITRE technique T1561
+  tactic: execution
+  technique_id: T1561
+  technique_name: "Wiper Malware \u2013 Ph\xE1 h\u1EE7y d\u1EEF li\u1EC7u"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1561: Wiper Malware \u2013\
+      \ Ph\xE1 h\u1EE7y d\u1EEF li\u1EC7u'"
+    timeout: 30

@@ -1,0 +1,12 @@
+- id: 51e03f83-7d11-58c0-aad3-eef98748b3a1
+  name: "Simulate T1210 - PrintNightmare (CVE-2021-34527) \u2013 Windows Spooler RCE"
+  description: Automated simulation ability for MITRE technique T1210
+  tactic: execution
+  technique_id: T1210
+  technique_name: "PrintNightmare (CVE-2021-34527) \u2013 Windows Spooler RCE"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1210: PrintNightmare (CVE-2021-34527)\
+      \ \u2013 Windows Spooler RCE'"
+    timeout: 30

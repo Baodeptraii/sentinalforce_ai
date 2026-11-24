@@ -1,0 +1,7 @@
+id: e5f6a7b8-dvwa-0003-command-injection
+name: DVWA Web OS Command Injection Probe
+description: Mô phỏng chèn lệnh hệ điều hành thông qua form ping của DVWA để đánh
+  giá tín hiệu tiến trình con trên Windows.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0003-cmdi-000000000003

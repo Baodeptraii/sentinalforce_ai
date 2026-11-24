@@ -1,0 +1,12 @@
+id: 972e7410-b576-5ba9-a4c2-ed6defe4a5dc
+name: '[SCENARIO-22] Kerberoasting – Tấn công Service Account'
+description: Một tác nhân đã có tài khoản domain người dùng thông thường tiến hành
+  liệt kê service account có SPN rồi yêu cầu Kerberos service ticket cho các tài khoản
+  đó. Điều kiện tiên quyết chỉ là quyền xác thực miền ở mức thấp. Mục tiêu cuối là
+  lấy được ticket material để brute-force offline, từ đó thu mật khẩu của service
+  account và đổi lợi thế này thành đặc quyền cao hơn hoặc truy cập dịch vụ nhạy cảm.
+atomic_ordering:
+- 4508da11-2b93-5840-8e7d-547a09d92806
+- aaf34d82-aea9-4278-8ec4-789653e4f5d9
+- f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb
+- 3f987809-3681-43c8-bcd8-b3ff3a28533a

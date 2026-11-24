@@ -1,0 +1,17 @@
+id: b04cddf6-fd84-590a-a7b9-9eae39cd1d82
+name: '[SCENARIO-09] Supply Chain Compromise – Trojanized Software Update (SolarWinds
+  Pattern)'
+description: Kẻ tấn công (APT29/Cozy Bear trong trường hợp SolarWinds) xâm nhập vào
+  build pipeline của vendor phần mềm, inject backdoor (SUNBURST) vào bản cập nhật
+  hợp lệ. Bản cập nhật được ký bởi code signing certificate thật của vendor, phát
+  tán đến 18,000+ tổ chức. Backdoor nằm im (dormant) 2 tuần trước khi activate để
+  tránh sandbox detection.
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- 35eb8d16-9820-4423-a2a1-90c4f5edd9ca
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- 81c13829-f6c9-45b8-85a6-053366d55297
+- aaf34d82-aea9-4278-8ec4-789653e4f5d9
+- 364ea817-bbb9-4083-87dd-94b9dba45f6f
+- 82a9f001-94c5-495e-9ed5-f530dbded5e2
+- a9604672-cd46-493b-b58f-fd4124c22dd3

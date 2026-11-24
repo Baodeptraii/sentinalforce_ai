@@ -1,0 +1,13 @@
+id: 7b0db596-30ad-5a65-9534-25eff35083a4
+name: '[SCENARIO-63] Volt Typhoon – Living-off-the-Land trên Critical Infrastructure'
+description: Trong kịch bản này, tác nhân đã có quyền truy cập ban đầu vào một môi
+  trường IT hoặc thiết bị edge, sau đó dùng tài khoản hợp lệ, remote access, công
+  cụ dòng lệnh và tiện ích quản trị sẵn có để khám phá mạng, xác định hệ thống quan
+  trọng, di chuyển ngang và duy trì kênh điều khiển kín đáo. Actor là nation-state
+  hoặc nhóm có mức OPSEC cao; điều kiện tiên quyết là có credential hoặc
+atomic_ordering:
+- 14a21534-350f-4d83-9dd7-3c56b93a0c17
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 638fb6bb-ba39-4285-93d1-7e4775b033a8
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b

@@ -1,0 +1,54 @@
+id: SCENARIO-54
+name: OAuth Token Theft – Đánh cắp Access Token
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 54 – OAuth Token Theft – Đánh cắp Access Token**\n\n**Giới thiệu\
+  \ chung**\n\nOAuth/OIDC token theft là một bước tiến tự nhiên sau browser theft,\
+  \ rogue app abuse hoặc compromise trên endpoint/cloud workload. Khi token đã bị\
+  \ lấy cắp, tác nhân có thể bỏ qua một phần quy trình đăng nhập tương tác và dùng\
+  \ chính token đó để truy cập API hoặc tài nguyên cloud như thể đang là người dùng\
+  \ thật.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, đối phương lấy được access\
+  \ token hoặc refresh token từ một nguồn đã bị compromise như endpoint người dùng,\
+  \ công cụ phát triển, session cloud hoặc ứng dụng bên thứ ba lưu trữ token không\
+  \ an toàn, rồi tái sử dụng token để truy cập tài nguyên cloud mà không cần nhập\
+  \ lại mật khẩu. Actor thường là post-exploitation operator hoặc cloud-focused adversary;\
+  \ điều kiện tiên quyết là đã có nguồn rò rỉ token và tenant chưa đủ khả năng ràng\
+  \ buộc mạnh token với thiết bị/ngữ cảnh; kết quả mong muốn là duy trì truy cập vào\
+  \ API, mailbox, storage hoặc SaaS mà khó bị nhìn thấy như một đăng nhập tương tác\
+  \ thông thường.\n\n**Dòng tấn công end-to-end**\n\n```text\nChiếm được access token\
+  \ hoặc refresh token\n→ Đưa token vào công cụ truy cập API / ứng dụng thay thế\n\
+  → Gọi cloud resource mà không cần đăng nhập tương tác mới\n→ Duy trì hoạt động nhờ\
+  \ alternate authentication material\n→ Thu thập dữ liệu hoặc thao tác tài nguyên\
+  \ cloud\n```\n\n1. **Thu được token:** Token bị lộ từ host, ứng dụng, session hoặc\
+  \ artifact cloud.\n2. **Xác minh khả năng dùng lại:** Tác nhân kiểm tra token còn\
+  \ hiệu lực hoặc có thể đổi mới.\n3. **Truy cập tài nguyên cloud:** API calls được\
+  \ thực hiện mà không có chuỗi password/MFA tương ứng.\n4. **Mở rộng hành vi:** Từ\
+  \ token ban đầu, đối phương tiếp tục thu thập dữ liệu hoặc thao tác cấu hình.\n\
+  5. **Giảm mức bị chú ý:** Vì không có login interactive rõ ràng, analyst dễ bỏ sót\
+  \ nếu chỉ theo dõi sign-in truyền thống.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic\
+  \ | Technique | Mô tả |\n|--------|-----------|-------|\n| Credential Access | T1528\
+  \ | Steal Application Access Token |\n| Credential Access | T1550 | T1550.001 –\
+  \ Use Alternate Authentication Material: Application Access Token |\n\n**Log / Telemetry\
+  \ / Observable**\n\n- **Cloud sign-in / API telemetry:** Xuất hiện API activity\
+  \ đáng kể mà không có interactive sign-in tương xứng ngay trước đó.\n- **Token usage\
+  \ anomaly:** Cùng token context được dùng từ IP, thiết bị hoặc địa lý mới.\n- **Client\
+  \ app mismatch:** Token vốn gắn với một client/app pattern quen thuộc nhưng lại\
+  \ bị dùng bởi ngữ cảnh khác.\n- **Cloud SIEM correlation:** Tài khoản có truy cập\
+  \ dữ liệu mạnh nhưng thiếu các mốc sign-in/MFA bình thường.\n- **Post-theft clue:**\
+  \ Endpoint hoặc app nguồn có dấu hiệu browser/session/token artifact access trước\
+  \ khi token bắt đầu bị lạm dụng.\n\n**Gợi ý Detection / Hunting**\n\n```text\nCloudApiAccess\
+  \ = true\nAND NoRecentInteractiveSignIn = true\nAND (\n  NewDeviceOrIP = true\n\
+  \  OR TokenUseAcrossRegions = true\n  OR ClientAppMismatch = true\n  OR SessionChainBreak\
+  \ = true\n)\n```\n\n- **Alert:** Hoạt động API cường độ cao từ tài khoản không có\
+  \ sign-in interactive tương ứng.\n- **Hunt:** Nối `endpoint browser/session artifact\
+  \ access` với `cloud API use without fresh login`.\n- **Alert:** Token bị dùng đồng\
+  \ thời hoặc rất gần nhau ở nhiều vùng mạng/địa lý.\n- **Containment readiness:**\
+  \ Kiểm tra khả năng thu hồi session, revoke refresh token và ép re-auth tenant-wide\
+  \ cho nhóm người dùng rủi ro.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nCloud identity\
+  \ ngày càng dịch chuyển từ mật khẩu sang session và token. Scenario này giúp đội\
+  \ phòng thủ nâng góc nhìn từ “đăng nhập thành công/thất bại” sang “material xác\
+  \ thực nào đang bị tái sử dụng”, vốn là một thay đổi tư duy rất quan trọng.\n\n\
+  **Độ tin cậy:** Cao – khi tenant có sign-in logs, session telemetry và API audit\
+  \ tốt, mẫu token abuse khá rõ.\n\n**Tài liệu tham khảo**\n- Microsoft DART\n- CrowdStrike\n\
+  - MITRE ATT&CK T1528, T1550.001"

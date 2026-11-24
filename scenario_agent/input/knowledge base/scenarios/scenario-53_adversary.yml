@@ -1,0 +1,13 @@
+id: 686ffed5-adb9-5b62-b55e-a8cfcaca3b64
+name: '[SCENARIO-53] Azure AD / Entra ID – Consent Phishing'
+description: Trong kịch bản này, đối phương chuẩn bị một ứng dụng OAuth hoặc service
+  principal có bề ngoài có vẻ hợp pháp, sau đó dẫn người dùng tới luồng consent để
+  chấp thuận các quyền như đọc mail, đọc file, truy cập profile hoặc duy trì quyền
+  truy cập ngoại tuyến. Actor thường là nhóm cloud-focused intrusion, BEC actor hoặc
+  espionage operator; điều kiện tiên quyết là tenant cho phép user consent rộng hoặc
+  cơ chế kiểm duyệt publisher/scopes chưa
+atomic_ordering:
+- 9d1fcfa3-c3d9-58cc-816c-957a34f111dd
+- 9a5352e4-56e5-45c2-9b3f-41a46d3b3a43
+- 37a36163-f420-5d50-a719-41da1a55c3c7
+- bc177ef9-6a12-4ebc-a2ec-d41e19c2791d

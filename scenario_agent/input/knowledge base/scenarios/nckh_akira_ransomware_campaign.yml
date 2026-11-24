@@ -1,0 +1,8 @@
+id: d1e2f3a4-nckh-akira-ransomware-0007
+name: Akira Ransomware Behavior Simulation
+description: 'Mô phỏng các hành vi điển hình của ransomware Akira: khám phá file,
+  tạo ransom note giả lập và sửa extension.'
+atomic_ordering:
+- 1c353eb4-29ab-4dfe-88ed-f34f5a60848e
+- 29451844-9b76-4e16-a9ee-d6feab4b24db
+- 649349c7-9abf-493b-a7a2-b1aa4d141528

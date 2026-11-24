@@ -1,0 +1,58 @@
+id: SCENARIO-49
+name: C2 qua Dịch vụ Web Hợp lệ (Slack/GitHub/Telegram)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 49 – C2 qua Dịch vụ Web Hợp lệ (Slack/GitHub/Telegram)**\n\n\
+  **Giới thiệu chung**\n\nMột xu hướng đáng chú ý trong giai đoạn gần đây là chuyển\
+  \ kênh C2 sang các dịch vụ web hợp lệ, nhất là những nền tảng cộng tác hoặc developer\
+  \ platform vốn đã được doanh nghiệp cho phép đi qua proxy. Lợi thế của kỹ thuật\
+  \ này là giảm khả năng bị chặn theo domain và hòa lưu lượng điều khiển vào nền giao\
+  \ tiếp SaaS bình thường của tổ chức.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này,\
+  \ malware hoặc implant dùng API của Slack, GitHub, Telegram hoặc một dịch vụ web\
+  \ hợp lệ tương tự để nhận chỉ thị, đẩy kết quả và duy trì C2 dưới hình thức gọi\
+  \ API tưởng như bình thường. Actor thường là tác nhân muốn tránh IOC-based blocklist\
+  \ hoặc hoạt động trong môi trường proxy chặn nghiêm ngặt các domain “xấu” nhưng\
+  \ vẫn cho phép SaaS phổ biến; điều kiện tiên quyết là host đã bị compromise và dịch\
+  \ vụ SaaS đích được phép truy cập từ mạng nội bộ; kết quả mong muốn là tạo được\
+  \ một kênh điều khiển khó phân biệt hơn với lưu lượng cloud/SaaS hợp lệ.\n\n**Dòng\
+  \ tấn công end-to-end**\n\n```text\nFoothold trên host\n→ Cấu hình implant dùng\
+  \ API của dịch vụ web hợp lệ\n→ Polling / gửi dữ liệu qua request HTTPS hợp lệ bề\
+  \ ngoài\n→ Nhận lệnh hoặc drop task qua API response\n→ Tiếp tục hậu khai thác dưới\
+  \ lớp vỏ SaaS traffic\n→ Duy trì C2 khó bị chặn theo domain đơn giản\n```\n\n1.\
+  \ **Có điểm bám ban đầu:** Kẻ tấn công đã thực thi implant hoặc script runner trên\
+  \ host mục tiêu.\n2. **Chọn dịch vụ hợp lệ làm kênh trung gian:** SaaS phổ biến\
+  \ được chọn vì xác suất cao đã nằm trong allowlist.\n3. **Thiết lập polling hoặc\
+  \ message exchange:** Implant định kỳ truy vấn API để lấy tác vụ mới.\n4. **Đẩy\
+  \ kết quả điều khiển:** Kết quả lệnh, heartbeat hoặc dữ liệu nhỏ được gửi ngược\
+  \ qua service API.\n5. **Mở rộng hoạt động:** Kênh này tiếp tục hỗ trợ collection,\
+  \ lateral movement hoặc tải nội dung tiếp theo.\n\n**MITRE ATT&CK Mapping**\n\n\
+  | Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n| Command and Control\
+  \ | T1102 | T1102.002 – Bidirectional Communication |\n| Command and Control | T1071\
+  \ | T1071.001 – Web Protocols |\n\n**Log / Telemetry / Observable**\n\n- **Proxy\
+  \ / web logs:** Requests đến `api.slack.com`, `api.github.com`, `raw.githubusercontent.com`,\
+  \ `api.telegram.org` hoặc các endpoint API tương tự từ process không phù hợp.\n\
+  - **EDR process-network correlation:** Binary lạ, script host hoặc system utility\
+  \ thực hiện outbound HTTPS tới doanh nghiệp SaaS nhưng không có user interaction\
+  \ tương ứng.\n- **API usage anomaly:** Tần suất polling đều, payload nhỏ, thời điểm\
+  \ truy cập lệch giờ làm việc hoặc không khớp vai trò host.\n- **Client mismatch:**\
+  \ Máy chủ ứng dụng hoặc workstation không dùng Slack/GitHub/Telegram hợp lệ nhưng\
+  \ vẫn có lưu lượng API định kỳ.\n- **Credential artifact clue:** Token bot, PAT\
+  \ hoặc dấu vết cấu hình API xuất hiện trên host bị nghi ngờ.\n\n**Gợi ý Detection\
+  \ / Hunting**\n\n```text\nDestinationDomain IN (\n  \"*.slack.com\",\n  \"api.github.com\"\
+  ,\n  \"raw.githubusercontent.com\",\n  \"api.telegram.org\"\n)\nAND ProcessName\
+  \ NOT IN (\n  approved_browsers,\n  approved_collaboration_clients,\n  approved_dev_tools\n\
+  )\nAND PeriodicPollingPattern = true\n```\n\n- **Alert:** Host không thuộc nhóm\
+  \ kỹ thuật hoặc không có nhu cầu SaaS tương ứng nhưng giao tiếp API đều đặn với\
+  \ dịch vụ đó.\n- **Hunt:** Tìm các process không có UI duy trì HTTPS ra nền tảng\
+  \ cộng tác/developer platform theo chu kỳ cố định.\n- **Alert:** Outbound API calls\
+  \ xuất hiện từ server nội bộ hoặc service account thay vì từ browser người dùng.\n\
+  - **Baseline:** Phân biệt ứng dụng DevOps hợp lệ, automation thật và tooling doanh\
+  \ nghiệp với polling C2 giả danh SaaS.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\n\
+  Việc ẩn C2 trong SaaS hợp lệ đánh thẳng vào mô hình phòng thủ dựa trên domain reputation.\
+  \ Kịch bản này đặc biệt hữu ích cho tổ chức đang chuyển mạnh sang cloud và cộng\
+  \ tác số, nơi lượng traffic tới dịch vụ web hợp lệ ngày càng nhiều và khó phân biệt\
+  \ chỉ bằng proxy allowlist truyền thống.\n\n**Độ tin cậy:** Cao – hành vi process-to-SaaS\
+  \ API vẫn là tín hiệu rất mạnh nếu có baseline người dùng và ứng dụng đầy đủ.\n\n\
+  **Tài liệu tham khảo**\n- Microsoft TI\n- SentinelOne 2024\n- MITRE ATT&CK T1102.002,\
+  \ T1071.001"

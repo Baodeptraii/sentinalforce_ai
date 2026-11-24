@@ -1,0 +1,15 @@
+id: b3c4d5e6-f7a8-4901-b234-56789abcdef0
+name: Windows Host Discovery and Telemetry Verification
+description: >-
+  Chuỗi kịch bản chuẩn mẫu thực thi trực tiếp trên Windows Sandcat để khảo sát
+  FQDN, GUID phần cứng và tiến trình người dùng nhằm sinh tín hiệu telemetry
+  Process Creation (Sysmon Event ID 1 / Wazuh).
+atomic_ordering:
+  - 74d1b640-7f1e-4b36-beba-23a8228f39e0
+  - 61d9206f-c65e-4236-a57a-5532c1c83e1d
+  - 300157e5-f4ad-4569-b533-9d1fa0e74d74
+objective: 495a9828-cab1-44dd-a0ca-66e58177d8cc
+tags:
+  - template
+  - windows
+  - discovery

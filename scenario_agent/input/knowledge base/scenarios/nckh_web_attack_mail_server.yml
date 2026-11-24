@@ -1,0 +1,8 @@
+id: d1e2f3a4-nckh-web-mail-atk-0003
+name: Web and Mail Server Attack Kill Chain
+description: 'Mô phỏng chuỗi tấn công dịch vụ Web và Mail: rà quét cổng, khai thác
+  ứng dụng công khai.'
+atomic_ordering:
+- 458d7f33-1f20-5ec1-88c8-3ca9860f9f41
+- a1b2c3d4-dvwa-0005-sqli-000000000005
+- 315cedf1-4a3a-4015-b63f-149d64bacbbc

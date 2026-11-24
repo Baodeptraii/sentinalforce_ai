@@ -1,0 +1,53 @@
+id: SCENARIO-42
+name: PsExec / SMB Lateral Movement
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 42 – PsExec / SMB Lateral Movement**\n\n**Giới thiệu chung**\n\
+  \nPsExec và các biến thể “service-over-SMB” là một trong những kỹ thuật di chuyển\
+  \ ngang có độ tín hiệu rất cao trên Windows. Dù literal tool có thể khác nhau, mô\
+  \ hình hành vi cốt lõi thường giống nhau: dùng SMB/admin share để chuyển file hoặc\
+  \ lệnh sang host đích, sau đó cài hoặc gọi một service từ xa để thực thi.\n\n**Mô\
+  \ tả kịch bản**\n\nTrong kịch bản này, kẻ tấn công đã có credential quản trị cục\
+  \ bộ hoặc miền và dùng SMB share / service creation để thực thi từ xa trên máy khác,\
+  \ có thể bằng PsExec thật hoặc một biến thể chức năng tương đương. Actor thường\
+  \ là operator hậu khai thác hoặc ransomware affiliate muốn lan nhanh trong mạng\
+  \ Windows; điều kiện tiên quyết là có quyền admin trên host đích và kết nối mạng\
+  \ nội bộ cho SMB/RPC; kết quả mong muốn là chạy được lệnh hoặc payload từ xa trên\
+  \ host mới, từ đó mở rộng footprint mà không cần đăng nhập tương tác. fileciteturn1file0L69-L69\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nCó admin credential hợp lệ\n→ Truy cập\
+  \ ADMIN$ / C$ trên host đích\n→ Chuyển file / stage từ xa\n→ Tạo hoặc gọi service\
+  \ thực thi\n→ Payload chạy trên host mới\n→ Lateral movement tiếp tục qua nhiều\
+  \ máy\n```\n\n1. **Chuẩn bị quyền thích hợp:** Tài khoản quản trị cục bộ hoặc miền\
+  \ đã nằm trong tay tác nhân.\n2. **Truy cập SMB share quản trị:** Host đích mở ra\
+  \ cơ hội copy file, script hoặc thành phần trung gian.\n3. **Tạo cơ chế thực thi\
+  \ từ xa:** Service mới, service tạm hoặc cơ chế tương đương được sử dụng.\n4. **Kích\
+  \ hoạt payload / lệnh:** Máy đích chạy nội dung vừa được đẩy sang.\n5. **Dọn hoặc\
+  \ lặp lại:** Artifacts có thể bị xóa; chuỗi tương tự lặp lại trên host khác.\n\n\
+  **MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Lateral Movement | T1021 | T1021.002 – SMB / Windows Admin Shares |\n| Execution\
+  \ | T1570 | Lateral Tool Transfer qua SMB sang host đích |\n| Execution | T1569\
+  \ | Service execution thường là hình thái follow-on của PsExec-like movement |\n\
+  \n**Log / Telemetry / Observable**\n\n- **SMB event 5140 / 5145:** Truy cập `ADMIN$`,\
+  \ `C$`, `IPC$` hoặc ghi file thực thi sang máy đích.\n- **Service creation 7045:**\
+  \ Service mới xuất hiện bất ngờ, đặc biệt với image path lạ hoặc xuất phát từ SMB-delivered\
+  \ binary.\n- **EDR process telemetry:** `services.exe` trên host đích spawn child\
+  \ process hoặc chạy binary vừa được copy.\n- **Named pipe / artifact clue:** Dấu\
+  \ vết kiểu `PSEXESVC` hoặc service name ngắn hạn/randomized xuất hiện gần chuỗi\
+  \ SMB activity.\n- **Lateral pattern:** Cùng một tài khoản thực hiện truy cập admin\
+  \ share và service creation trên nhiều máy trong thời gian ngắn.\n\n**Gợi ý Detection\
+  \ / Hunting**\n\n```text\nSMBAdminShareWrite = true\nAND ServiceCreation7045 = true\n\
+  AND SameSourceHost = true\nOR (\n  ServiceImagePath IN user_writable_or_temp_paths\n\
+  \  AND PreviousFileTransferOverSMB = true\n)\n```\n\n- **Alert:** Chuỗi `5140/5145\
+  \ → 7045 → services.exe child process` trên cùng host đích.\n- **Hunt:** Tài khoản\
+  \ quản trị dùng cùng một mẫu service hoặc cùng đường dẫn binary trên nhiều endpoint.\n\
+  - **Alert:** Service tạm thời không nằm trong baseline quản trị, đặc biệt nếu tồn\
+  \ tại rất ngắn.\n- **Baseline:** Chốt danh sách công cụ quản trị từ xa được phê\
+  \ duyệt và phân biệt chúng với execution-over-SMB bất thường.\n\n**Vì sao đáng ưu\
+  \ tiên 2024–2026**\n\nĐây là một trong những scenario có giá trị phòng thủ cao nhất\
+  \ vì dấu vết của nó vừa rõ vừa liên host. Nó giúp kiểm tra khả năng tương quan sự\
+  \ kiện giữa máy nguồn và máy đích, đồng thời là bài diễn tập cực hữu dụng cho giai\
+  \ đoạn ransomware propagation hoặc hands-on-keyboard movement trong mạng Windows.\n\
+  \n**Độ tin cậy:** Rất cao – mô hình hành vi rất rõ và có nhiều điểm quan sát mạnh\
+  \ ở cả SMB lẫn service telemetry.\n\n**Tài liệu tham khảo**\n- Mandiant\n- Microsoft\n\
+  - MITRE ATT&CK T1021.002, T1570"

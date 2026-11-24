@@ -1,0 +1,55 @@
+id: SCENARIO-39
+name: BITS Jobs – Background Intelligence Transfer Service Abuse
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 39 – BITS Jobs – Background Intelligence Transfer Service Abuse**\n\
+  \n**Giới thiệu chung**\n\nBITS là một dịch vụ Windows hợp pháp được thiết kế cho\
+  \ truyền tải nền, có khả năng chạy âm thầm, chịu lỗi tốt và ít gây chú ý hơn nhiều\
+  \ so với các utility tải file truyền thống. Chính các đặc tính này khiến BITS trở\
+  \ thành công cụ hấp dẫn cho download stage, staging file và đôi khi cả persistence.\n\
+  \n**Mô tả kịch bản**\n\nTrong kịch bản này, tác nhân đang hiện diện trên host tạo\
+  \ một hoặc nhiều BITS job để tải xuống nội dung theo nền, lưu nó vào thư mục staging\
+  \ và trong một số trường hợp gắn thêm hành vi kích hoạt sau khi transfer hoàn tất.\
+  \ Actor thường là loader, backdoor hoặc operator cần duy trì tải file và thực thi\
+  \ với mức độ lộ thấp; điều kiện tiên quyết là có thể tương tác với BITS dưới user/system\
+  \ context phù hợp; kết quả mong muốn là payload được kéo về hoặc cập nhật âm thầm,\
+  \ đồng thời sống đủ lâu để hỗ trợ persistence ít bị chú ý hơn. fileciteturn1file0L66-L66\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nFoothold trên host\n→ Tạo BITS job nền\n\
+  → Tải nội dung từ nguồn ngoài / nguồn nội bộ không chuẩn\n→ Lưu file vào vị trí\
+  \ staging\n→ Kích hoạt theo completion hoặc notify action\n→ Persistence / execution\
+  \ với độ ồn thấp\n```\n\n1. **Tạo điểm bám trên host:** Implant hoặc operator đã\
+  \ sẵn có quyền chạy PowerShell, cmd hoặc utility quản trị.\n2. **Khởi tạo job nền:**\
+  \ Một BITS job mới được tạo dưới ngữ cảnh tài khoản hiện tại hoặc tài khoản dịch\
+  \ vụ.\n3. **Tải nội dung âm thầm:** File được kéo về mà không tạo mẫu network giống\
+  \ downloader thông thường.\n4. **Staging / trigger:** Job hoàn tất và nội dung được\
+  \ đặt vào path thực thi hoặc path tạm.\n5. **Mở rộng sang persistence:** Hạ tầng\
+  \ này được tái sử dụng cho cập nhật stage, download thêm công cụ hoặc duy trì hiện\
+  \ diện.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Defense Evasion | T1197 | T1197 – BITS Jobs |\n| Persistence | T1197 | BITS có\
+  \ thể được dùng để duy trì tải / notify action trong nền |\n| Command and Control\
+  \ | T1071 | Lưu lượng truyền tải có thể hòa lẫn với traffic HTTP/HTTPS hợp lệ của\
+  \ hệ điều hành |\n\n**Log / Telemetry / Observable**\n\n- **BITS Operational logs:**\
+  \ Job mới được tạo, sửa, resume, complete hoặc cancel không nằm trong baseline update/enterprise\
+  \ management.\n- **Process creation:** `bitsadmin`, PowerShell, COM host hoặc utility\
+  \ lạ tương tác với BITS ngay trước/sau network transfer.\n- **Destination anomaly:**\
+  \ URL nguồn ngoài allowlist, path đích ở `%TEMP%`, `%APPDATA%`, `ProgramData` hoặc\
+  \ thư mục staging ít gặp.\n- **Job longevity:** BITS job tồn tại bất thường lâu,\
+  \ lặp lại, hoặc thuộc owner không phù hợp vai trò.\n- **Follow-on clue:** Sau completion\
+  \ xuất hiện process thực thi từ file vừa tải hoặc persistence mới trên host.\n\n\
+  **Gợi ý Detection / Hunting**\n\n```text\nBITSJobCreated = true\nAND (\n  RemoteUrl\
+  \ NOT IN allowlist\n  OR DestinationPath IN user_writable_paths\n  OR NotifyCommandLineExists\
+  \ = true\n  OR JobOwner NOT IN approved_management_accounts\n)\n```\n\n- **Alert:**\
+  \ Mọi BITS job mới trên máy người dùng nếu URL nguồn hoặc path đích không khớp workflow\
+  \ quản trị chuẩn.\n- **Hunt:** Liên kết BITS job với process creation và file execution\
+  \ xuất hiện sau khi job hoàn tất.\n- **Alert:** BITS job có notify action hoặc hành\
+  \ vi lặp lại nhưng không đến từ công cụ quản lý bản vá / endpoint management đã\
+  \ biết.\n- **Baseline:** Inventory các BITS workflow hợp lệ từ SCCM/Intune/update\
+  \ agent để phân tách với abuse thực sự.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\n\
+  Scenario này giúp đo năng lực phát hiện ở lớp “Windows-native background transfer”\
+  \ — một vùng mà nhiều tổ chức ít quan sát hơn download trực diện bằng trình duyệt\
+  \ hoặc PowerShell. Đây là bài diễn tập tuyệt vời cho SOC vì nó kết nối service telemetry,\
+  \ network telemetry, file staging và follow-on execution cùng một mạch.\n\n**Độ\
+  \ tin cậy:** Cao – dấu hiệu đủ rõ nếu tổ chức thu được BITS Operational logs và\
+  \ có baseline quản trị tương đối đầy đủ.\n\n**Tài liệu tham khảo**\n- MITRE ATT&CK\n\
+  - Microsoft\n- MITRE ATT&CK T1197"

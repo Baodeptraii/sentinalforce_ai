@@ -1,0 +1,14 @@
+id: eee25f9c-1f7d-5d89-a341-858649421c0a
+name: '[SCENARIO-38] Living-off-the-Land – LOLBins (certutil, mshta, regsvr32)'
+description: Trong kịch bản này, tác nhân đã có điểm bám ban đầu trên máy nạn nhân
+  và sử dụng một hoặc nhiều LOLBins như `certutil`, `mshta`, `regsvr32` hoặc utility
+  tương đương để tải nội dung, giải mã, proxy execution hoặc kích hoạt stage kế tiếp
+  mà không cần drop custom loader dễ bị nhận diện. Actor thường là malware loader,
+  post-exploitation operator hoặc nhóm thích giảm dấu vết công cụ; điều kiện tiên
+  quyết là có interactive execution hoặc script
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- dc6fe391-69e6-4506-bd06-ea5eeb4082f8
+- c426dacf-575d-4937-8611-a148a86a5e61
+- 5cb87818-0d7c-4469-b7ef-9224107aebe8
+- 449aa403-6aba-47ce-8a37-247d21ef0306

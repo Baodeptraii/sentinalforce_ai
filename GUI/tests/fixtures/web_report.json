@@ -1,0 +1,90 @@
+{
+  "status": "completed_with_unknowns",
+  "mode": "ai",
+  "model": "gemini-3.5-flash-lite",
+  "steps": 4,
+  "stop_reason": "model_finished",
+  "finished_at": "2026-11-12T02:49:46.152382+00:00",
+  "scope": [
+    "endpoint",
+    "web"
+  ],
+  "missing_information": [
+    {
+      "field": "dvwa_session_ready",
+      "status": "credential_required",
+      "reason": "Chỉ GET trang công khai; chưa đăng nhập hoặc xác minh session.",
+      "required": false
+    },
+    {
+      "field": "dvwa_security_level",
+      "status": "not_checked",
+      "reason": "Chưa đọc security level từ phiên đăng nhập được xác minh.",
+      "required": false
+    },
+    {
+      "field": "dvwa_version",
+      "status": "not_checked",
+      "reason": "Dấu hiệu nhận diện và banner không xác minh phiên bản DVWA.",
+      "required": false
+    },
+    {
+      "field": "telemetry.process_events",
+      "status": "not_checked",
+      "reason": "Không kiểm tra tạo/ingest log; service đang chạy không chứng minh telemetry hoạt động.",
+      "required": false
+    },
+    {
+      "field": "telemetry.network_events",
+      "status": "not_checked",
+      "reason": "Không kiểm tra tạo/ingest log; service đang chạy không chứng minh telemetry hoạt động.",
+      "required": false
+    },
+    {
+      "field": "telemetry.web_access_logs",
+      "status": "not_checked",
+      "reason": "Không kiểm tra tạo/ingest log; service đang chạy không chứng minh telemetry hoạt động.",
+      "required": false
+    },
+    {
+      "field": "telemetry.wazuh_ingestion",
+      "status": "not_checked",
+      "reason": "Không kiểm tra tạo/ingest log; service đang chạy không chứng minh telemetry hoạt động.",
+      "required": false
+    },
+    {
+      "field": "https",
+      "status": "check_failed",
+      "reason": "Lỗi probe HTTPS: legacy_unknown",
+      "required": false
+    }
+  ],
+  "warnings": [
+    "Chỉ GET trang công khai; chưa đăng nhập hoặc xác minh session.",
+    "Chưa đọc security level từ phiên đăng nhập được xác minh.",
+    "Dấu hiệu nhận diện và banner không xác minh phiên bản DVWA.",
+    "Không kiểm tra tạo/ingest log; service đang chạy không chứng minh telemetry hoạt động.",
+    "Không kiểm tra tạo/ingest log; service đang chạy không chứng minh telemetry hoạt động.",
+    "Không kiểm tra tạo/ingest log; service đang chạy không chứng minh telemetry hoạt động.",
+    "Không kiểm tra tạo/ingest log; service đang chạy không chứng minh telemetry hoạt động.",
+    "Lỗi probe HTTPS: legacy_unknown"
+  ],
+  "detection_result": "not_evaluated",
+  "web_readiness": {
+    "web_reachable": true,
+    "application_identified": true,
+    "session_ready": null,
+    "https": {
+      "verified": null,
+      "error_kinds": [
+        "legacy_unknown"
+      ],
+      "reason": "Lỗi probe HTTPS: legacy_unknown"
+    }
+  },
+  "review": {
+    "offline": true,
+    "source_run": "f273cfc2e7604db999778e4de0873723",
+    "timestamps": "Thời điểm gốc của lượt chạy; đây không phải lần khảo sát mới."
+  }
+}

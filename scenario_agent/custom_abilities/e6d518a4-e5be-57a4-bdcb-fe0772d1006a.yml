@@ -1,0 +1,14 @@
+- id: e6d518a4-e5be-57a4-bdcb-fe0772d1006a
+  name: "Simulate T1052 - Insider Threat \u2013 Data Exfiltration tr\u01B0\u1EDBc\
+    \ khi ngh\u1EC9 vi\u1EC7c"
+  description: Automated simulation ability for MITRE technique T1052
+  tactic: execution
+  technique_id: T1052
+  technique_name: "Insider Threat \u2013 Data Exfiltration tr\u01B0\u1EDBc khi ngh\u1EC9\
+    \ vi\u1EC7c"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1052: Insider Threat \u2013\
+      \ Data Exfiltration tr\u01B0\u1EDBc khi ngh\u1EC9 vi\u1EC7c'"
+    timeout: 30

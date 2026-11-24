@@ -1,0 +1,14 @@
+- id: 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b
+  name: "Simulate T1562 - PowerShell Fileless Malware \u2013 Th\u1EF1c Thi Ho\xE0\
+    n To\xE0n Trong B\u1ED9 Nh\u1EDB"
+  description: Automated simulation ability for MITRE technique T1562
+  tactic: execution
+  technique_id: T1562
+  technique_name: "PowerShell Fileless Malware \u2013 Th\u1EF1c Thi Ho\xE0n To\xE0\
+    n Trong B\u1ED9 Nh\u1EDB"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1562: PowerShell Fileless\
+      \ Malware \u2013 Th\u1EF1c Thi Ho\xE0n To\xE0n Trong B\u1ED9 Nh\u1EDB'"
+    timeout: 30

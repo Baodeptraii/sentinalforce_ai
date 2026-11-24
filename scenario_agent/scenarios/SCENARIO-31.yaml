@@ -1,0 +1,64 @@
+id: SCENARIO-31
+name: Credential Stuffing / Password Spraying
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 31 – Credential Stuffing / Password Spraying**\n\n**Giới thiệu\
+  \ chung**\n\nCredential stuffing và password spraying là hai biến thể tấn công danh\
+  \ tính có cùng đích đến: biến dữ liệu xác thực đã rò rỉ hoặc một mật khẩu phổ biến\
+  \ thành quyền truy cập hợp lệ mà không cần cấy mã độc hay khai thác lỗ hổng phức\
+  \ tạp trên endpoint. Giá trị phòng thủ của kịch bản này rất cao vì phần lớn dấu\
+  \ vết nằm ở lớp identity, sign-in risk, policy lockout và phân tích bất thường theo\
+  \ thời gian hơn là ở lớp malware truyền thống.\n\n**Mô tả kịch bản**\n\nTrong kịch\
+  \ bản này, tác nhân đe doạ sử dụng danh sách tài khoản bị lộ từ breach cũ hoặc chọn\
+  \ một nhóm mật khẩu phổ biến để thử theo kiểu low-and-slow lên Entra ID, VPN, OWA,\
+  \ cổng SSO hoặc bề mặt xác thực AD được publish ra ngoài. Actor thường là các nhóm\
+  \ intrusion ban đầu hoặc cybercrime operators muốn lấy initial access rẻ và khó\
+  \ bị chú ý; điều kiện tiên quyết là tồn tại bề mặt xác thực công khai, Smart Lockout\
+  \ / rate limiting chưa đủ chặt, hoặc tình trạng tái sử dụng mật khẩu giữa nhiều\
+  \ dịch vụ; kết quả mong muốn là chiếm được ít nhất một tài khoản hợp lệ để tiếp\
+  \ tục sang cloud mailbox, VPN nội bộ hoặc workstation của người dùng. fileciteturn1file0L58-L58\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nDanh sách credential rò rỉ / mật khẩu\
+  \ phổ biến\n→ Chọn cổng xác thực công khai\n→ Thử đăng nhập low-and-slow trên nhiều\
+  \ tài khoản\n→ Tránh ngưỡng khóa tài khoản / ngưỡng cảnh báo\n→ Một tài khoản hợp\
+  \ lệ bị chiếm\n→ Mở initial access kế tiếp\n```\n\n1. **Chuẩn bị danh sách đầu vào:**\
+  \ Tác nhân gom các cặp user-password từ breach cũ hoặc chọn một số mật khẩu phổ\
+  \ biến theo mùa vụ, vai trò hoặc khu vực.\n2. **Chọn bề mặt đăng nhập:** Mục tiêu\
+  \ có thể là IdP, VPN, mail web, RDP gateway hoặc cổng SSO công khai.\n3. **Thực\
+  \ hiện thử nghiệm ở nhịp thấp:** Số lần thử trên mỗi tài khoản được giữ thấp để\
+  \ không chạm ngưỡng khóa hoặc gây bùng nổ cảnh báo.\n4. **Xác định success event:**\
+  \ Một hoặc vài tài khoản hợp lệ xuất hiện sau chuỗi thất bại rải rác.\n5. **Mở rộng\
+  \ điểm bám:** Tài khoản thành công được dùng để truy cập thêm dịch vụ, mailbox,\
+  \ VPN hoặc nền tảng SaaS.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique |\
+  \ Mô tả |\n|--------|-----------|-------|\n| Credential Access | T1110 | T1110.004\
+  \ – Credential Stuffing |\n| Credential Access | T1110 | T1110.003 – Password Spraying\
+  \ |\n| Initial Access | T1078 | Sử dụng Valid Accounts sau khi chuỗi thử sai dẫn\
+  \ tới một đăng nhập thành công |\n\n**Log / Telemetry / Observable**\n\n- **IdP\
+  \ / Entra sign-in logs:** Nhiều lần đăng nhập thất bại phân tán trên nhiều user,\
+  \ thường xuất phát từ ít IP hoặc nhiều IP nhưng giữ cùng user-agent bất thường.\n\
+  - **Active Directory / AD FS / VPN logs:** Cụm failed logon lặp lại vào giờ bất\
+  \ thường, sau đó xuất hiện một success event đơn lẻ cho cùng user hoặc cùng nguồn.\n\
+  - **Risk signals:** Impossible travel, unfamiliar sign-in properties, legacy authentication\
+  \ use, hoặc đăng nhập đầu tiên từ ASN/địa lý hiếm gặp.\n- **Lockout telemetry:**\
+  \ Nhiều tài khoản chạm gần ngưỡng lockout nhưng không bị khóa hoàn toàn, phản ánh\
+  \ mô hình low-and-slow.\n- **Post-login activity:** Tài khoản vừa thành công ngay\
+  \ sau đó truy cập mailbox, tải dữ liệu, đổi MFA method hoặc mở VPN session.\n\n\
+  **Gợi ý Detection / Hunting**\n\n```text\n(\n  FailedLogonCount > baseline\n  AND\
+  \ DistinctTargetUsers > threshold\n  AND AttemptsPerUser <= smart_lockout_threshold\n\
+  )\nOR\n(\n  ManyFailedLogons\n  AND OneSuccessfulLogonFollowsWithin = 24h\n  AND\
+  \ SourceContext NOT IN approved_login_patterns\n)\n```\n\n- **Alert:** Một IP hoặc\
+  \ một nhóm IP thử cùng một mật khẩu lên nhiều tài khoản trong khoảng thời gian dài\
+  \ nhưng nhịp thấp.\n- **Hunt:** Chuỗi `nhiều thất bại → một thành công → hoạt động\
+  \ hậu đăng nhập mới` trên cùng user hoặc cùng nguồn.\n- **Alert:** Đăng nhập thành\
+  \ công đầu tiên của một tài khoản từ quốc gia, ASN hoặc thiết bị chưa từng thấy\
+  \ trước đó.\n- **Baseline:** Phân biệt rõ hành vi người dùng thật quên mật khẩu\
+  \ với password spraying có chủ đích bằng cách so sánh fan-out user/IP và sự xuất\
+  \ hiện của success event kế tiếp.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nĐây là\
+  \ một trong các scenario trọng yếu nhất cho mọi chương trình phòng thủ lấy identity\
+  \ làm trung tâm. Nó buộc SOC phải quan sát được hành vi “ít ồn nhưng bền”, nơi kẻ\
+  \ tấn công không cần malware, không cần exploit, chỉ cần một tài khoản hợp lệ để\
+  \ đi tiếp. Scenario này cũng giúp kiểm tra trực tiếp hiệu quả của Smart Lockout,\
+  \ Conditional Access, rate limiting, MFA enforcement và sign-in risk analytics.\n\
+  \n**Độ tin cậy:** Cao – mô hình hành vi rất thực dụng, giàu telemetry ở lớp identity\
+  \ và phù hợp diễn tập cả on-prem lẫn cloud.\n\n**Tài liệu tham khảo**\n- Microsoft\n\
+  - Okta\n- CISA\n- MITRE ATT&CK T1110.003, T1110.004, T1078"

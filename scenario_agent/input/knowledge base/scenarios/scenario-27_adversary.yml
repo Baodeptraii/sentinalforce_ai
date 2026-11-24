@@ -1,0 +1,13 @@
+id: de0d0ffd-1945-5da4-a5ca-93597ca58312
+name: '[SCENARIO-27] ADCS Abuse – ESC1/ESC8 Certificate Template Exploit'
+description: Kẻ tấn công đã có foothold trong domain và phát hiện template chứng chỉ
+  hoặc điểm enrollment bị cấu hình sai, cho phép người dùng hoặc máy ít đặc quyền
+  xin chứng chỉ có khả năng đại diện cho thực thể đặc quyền hơn. Điều kiện tiên quyết
+  là có quyền sử dụng template dễ lạm dụng hoặc có thể lợi dụng luồng enrollment /
+  relay phù hợp. Kết quả cuối là lấy được certificate xác thực để đăng nhập,
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 680cc609-3f4f-5195-af52-eb9e4f326352
+- dbf38128-7ba7-4776-bedf-cc2eed432098
+- 290ecfe6-5708-4753-afc4-9404d34c71a2

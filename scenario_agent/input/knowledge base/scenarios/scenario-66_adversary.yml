@@ -1,0 +1,12 @@
+id: 204e6d47-0c2c-56b4-8ed1-b9bafd4661aa
+name: '[SCENARIO-66] Insider Threat – Data Exfiltration trước khi nghỉ việc'
+description: Trong kịch bản này, một nhân viên sắp nghỉ việc, chuyển bộ phận hoặc
+  có dấu hiệu rủi ro sao chép tài liệu nội bộ, mã nguồn, danh sách khách hàng, hợp
+  đồng hoặc dữ liệu dự án ra USB, cloud cá nhân hoặc email cá nhân. Actor là insider
+  có quyền truy cập hợp lệ; điều kiện tiên quyết là có quyền đọc dữ liệu và kênh đưa
+  dữ liệu ra ngoài chưa bị kiểm soát chặt; kết quả
+atomic_ordering:
+- 90c2efaa-8205-480d-8bb6-61d90dbaf81b
+- e6d518a4-e5be-57a4-bdcb-fe0772d1006a
+- e6d518a4-e5be-57a4-bdcb-fe0772d1006a
+- 30724646-a8a7-5b1c-849c-5b1c35622d10

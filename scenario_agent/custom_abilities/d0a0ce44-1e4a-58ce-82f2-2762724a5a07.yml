@@ -1,0 +1,12 @@
+- id: d0a0ce44-1e4a-58ce-82f2-2762724a5a07
+  name: "Simulate T1102 - C2 qua D\u1ECBch v\u1EE5 Web H\u1EE3p l\u1EC7 (Slack/GitHub/Telegram)"
+  description: Automated simulation ability for MITRE technique T1102
+  tactic: execution
+  technique_id: T1102
+  technique_name: "C2 qua D\u1ECBch v\u1EE5 Web H\u1EE3p l\u1EC7 (Slack/GitHub/Telegram)"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1102: C2 qua D\u1ECBch v\u1EE5\
+      \ Web H\u1EE3p l\u1EC7 (Slack/GitHub/Telegram)'"
+    timeout: 30

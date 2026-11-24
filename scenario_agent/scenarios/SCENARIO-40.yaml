@@ -1,0 +1,58 @@
+id: SCENARIO-40
+name: Masquerading – Đặt tên file giả mạo tiến trình hệ thống
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 40 – Masquerading – Đặt tên file giả mạo tiến trình hệ thống**\n\
+  \n**Giới thiệu chung**\n\nMasquerading không phải lúc nào cũng phức tạp về mặt kỹ\
+  \ thuật, nhưng lại cực kỳ hiệu quả ở tầng vận hành và phân tích sơ cấp. Chỉ cần\
+  \ đặt tên một binary độc hại là `svchost.exe`, `lsass.exe`, `services.exe` hoặc\
+  \ tên gần giống rồi lưu ở thư mục không chuẩn, kẻ tấn công đã có thể làm chậm phản\
+  \ ứng ban đầu của người dùng và analyst ít kinh nghiệm.\n\n**Mô tả kịch bản**\n\n\
+  Trong kịch bản này, malware hoặc operator đưa một file độc hại lên host với tên\
+  \ trùng hoặc gần giống tiến trình hệ thống quen thuộc, đồng thời đặt nó ở thư mục\
+  \ mà người dùng hoặc một số công cụ kiểm soát dễ bỏ qua nếu chỉ nhìn tên file. Actor\
+  \ thường là commodity malware, trojan hoặc implant hậu khai thác muốn tăng cơ hội\
+  \ tồn tại ở giai đoạn sớm; điều kiện tiên quyết là có khả năng ghi file và thực\
+  \ thi payload trên endpoint; kết quả mong muốn là file độc hại được nhìn nhận như\
+  \ thành phần hệ thống, giúp trì hoãn điều tra hoặc làm suy yếu các rule quá dựa\
+  \ vào process name mà không xác minh path, signature và lineage. fileciteturn1file0L67-L67\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nGhi payload lên endpoint\n→ Đặt tên giống\
+  \ tiến trình hệ thống quen thuộc\n→ Lưu vào thư mục không chuẩn\n→ Thực thi dưới\
+  \ tên dễ gây nhầm lẫn\n→ Người dùng / công cụ nhìn tên nhưng bỏ sót path\n→ Defense\
+  \ evasion ở lớp nhận diện bề mặt\n```\n\n1. **Đưa file lên host:** Payload được\
+  \ drop hoặc giải nén vào máy nạn nhân.\n2. **Ngụy trang tên gọi:** Tên file được\
+  \ đặt giống thành phần hệ thống hoặc phần mềm hợp lệ.\n3. **Chọn vị trí đánh lừa:**\
+  \ File nằm ở `AppData`, `Temp`, desktop, download hoặc thư mục chương trình phụ.\n\
+  4. **Kích hoạt thực thi:** Process chạy và tạo ấn tượng là một binary bình thường\
+  \ của hệ thống.\n5. **Tận dụng nhầm lẫn:** Chậm trễ phân tích cho phép kẻ tấn công\
+  \ kéo dài dwell time.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả\
+  \ |\n|--------|-----------|-------|\n| Defense Evasion | T1036 | T1036.005 – Match\
+  \ Legitimate Name or Location |\n| Defense Evasion | T1036 | T1036.003 – Rename\
+  \ System Utilities / đặt tên gây nhầm lẫn |\n| Defense Evasion | T1036 | Ngụy trang\
+  \ lớp nhận diện bề mặt để đánh lừa analyst hoặc rule đơn giản |\n\n**Log / Telemetry\
+  \ / Observable**\n\n- **Process creation logs:** Tên process trùng với Windows core\
+  \ process nhưng path nằm ngoài `C:\\Windows\\System32\\`, `C:\\Windows\\SysWOW64\\\
+  ` hoặc thư mục chuẩn của vendor.\n- **Signature / publisher anomaly:** File không\
+  \ ký số, chữ ký không hợp lệ, hoặc publisher không khớp với binary cùng tên chuẩn.\n\
+  - **Parent/child mismatch:** `svchost.exe` giả mạo spawn child process hoặc network\
+  \ activity không phù hợp hành vi service host thật.\n- **User-writable path clue:**\
+  \ Binary mang tên hệ thống nằm trong thư mục người dùng ghi được hoặc path tạm.\n\
+  - **Icon / metadata mismatch:** Version info, company name, compile metadata hoặc\
+  \ PE description lệch với binary hợp lệ cùng tên.\n\n**Gợi ý Detection / Hunting**\n\
+  \n```text\nprocess.name IN (\"svchost.exe\", \"lsass.exe\", \"services.exe\", \"\
+  explorer.exe\")\nAND NOT process.path IN canonical_system_paths\nOR (\n  process.name\
+  \ IN suspicious_lookalike_names\n  AND process.signature_status != \"valid\"\n)\n\
+  ```\n\n- **Alert:** Mọi process tên hệ thống nhưng path ngoài canonical path.\n\
+  - **Hunt:** So sánh hash, signer, version info của các binary tên hệ thống trên\
+  \ toàn bộ estate để tìm outlier.\n- **Alert:** Process giả mạo có network connection,\
+  \ child process hoặc persistence behavior mà binary gốc không nên có.\n- **Baseline:**\
+  \ Lập danh sách path chuẩn của các process hệ thống quan trọng và cảnh báo mọi trường\
+  \ hợp sai lệch trước khi phân tích sâu hơn.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nĐây là scenario nhỏ về mặt kỹ thuật nhưng rất lớn về mặt vận hành, vì nó chạm\
+  \ đúng một lỗi phổ biến trong triage: analyst nhìn tên mà không nhìn path, signature\
+  \ và lineage. Scenario này cũng là bài học trực tiếp cho việc thiết kế detection\
+  \ rule: **process name alone is not enough**.\n\n**Độ tin cậy:** Cao – dễ mô phỏng,\
+  \ dấu hiệu path/signature rất rõ, và phù hợp để nâng chất lượng triage của SOC.\n\
+  \n**Tài liệu tham khảo**\n- MITRE ATT&CK\n- SentinelOne\n- MITRE ATT&CK T1036.005,\
+  \ T1036.003"

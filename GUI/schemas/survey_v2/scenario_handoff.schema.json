@@ -1,0 +1,110 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "survey_run_id": {
+      "title": "Survey Run Id",
+      "type": "string"
+    },
+    "target_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Target Id"
+    },
+    "target_ip": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Target Ip"
+    },
+    "scope": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Scope",
+      "type": "array"
+    },
+    "started_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Started At"
+    },
+    "finished_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Finished At"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    },
+    "artifacts": {
+      "items": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "title": "Artifacts",
+      "type": "array"
+    },
+    "quality": {
+      "additionalProperties": true,
+      "title": "Quality",
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": true,
+      "title": "Consumer",
+      "type": "object"
+    },
+    "legacy": {
+      "additionalProperties": true,
+      "title": "Legacy",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "survey_run_id",
+    "target_id",
+    "target_ip",
+    "scope",
+    "started_at",
+    "finished_at",
+    "status",
+    "artifacts",
+    "quality",
+    "consumer",
+    "legacy"
+  ],
+  "title": "Handoff",
+  "type": "object"
+}

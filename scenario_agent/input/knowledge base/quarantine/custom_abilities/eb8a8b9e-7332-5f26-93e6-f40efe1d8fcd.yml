@@ -1,0 +1,12 @@
+- id: eb8a8b9e-7332-5f26-93e6-f40efe1d8fcd
+  name: "Simulate T1574 - DLL Sideloading \u2013 Persistence v\xE0 Defense Evasion"
+  description: Automated simulation ability for MITRE technique T1574
+  tactic: execution
+  technique_id: T1574
+  technique_name: "DLL Sideloading \u2013 Persistence v\xE0 Defense Evasion"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1574: DLL Sideloading \u2013\
+      \ Persistence v\xE0 Defense Evasion'"
+    timeout: 30

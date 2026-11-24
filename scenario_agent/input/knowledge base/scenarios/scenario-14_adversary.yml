@@ -1,0 +1,15 @@
+id: 59695de3-b22c-5334-acce-dc6b3d04934a
+name: '[SCENARIO-14] PowerShell Fileless Malware – Thực Thi Hoàn Toàn Trong Bộ Nhớ'
+description: Kẻ tấn công gửi macro-enabled document hoặc exploit tạo PowerShell process.
+  PowerShell tải script từ internet (encoded base64), decode trong memory, thực thi
+  shellcode thông qua .NET reflection hoặc `Add-Type`. Shellcode inject vào tiến trình
+  hợp lệ, establish C2.
+atomic_ordering:
+- a50d5a97-2531-499e-a1de-5544c74432c6
+- ccdb8caf-c69e-424b-b930-551969450c57
+- 1c91e740-1729-4329-b779-feba6e71d048
+- a9b93f17-31cb-435d-a462-5e838a2a6026
+- 315cedf1-4a3a-4015-b63f-149d64bacbbc
+- 60f63260-39bb-4136-87a0-b6c2dca799fc
+- 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b
+- 3864fd22-5c63-41c9-bdbc-a66b5ffa3f5e

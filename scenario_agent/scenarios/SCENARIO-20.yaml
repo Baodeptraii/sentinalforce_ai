@@ -1,0 +1,133 @@
+id: SCENARIO-20
+name: Boot Sector / Bootkit Persistence (UEFI Implant)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 20 – Boot Sector / Bootkit Persistence (UEFI Implant)**
+
+
+  **Giới thiệu chung**
+
+
+  Bootkit hoặc implant ở tầng UEFI là một dạng persistence nâng cao, hoạt động trước
+  khi hệ điều hành nạp hoàn chỉnh. Khó khăn lớn nhất của kỹ thuật này là không nằm
+  trọn trong lớp quan sát truyền thống của EDR người dùng. Chính vì vậy, dù không
+  phổ biến như scheduled task hay Run Key, đây lại là scenario có giá trị diễn tập
+  cao cho các tổ chức muốn đánh giá năng lực phát hiện ở lớp firmware và boot chain.
+
+
+  **Mô tả kịch bản**
+
+
+  Một tác nhân đã có quyền cao trên host hoặc quyền đủ để can thiệp vào boot chain
+  tiến hành sửa thành phần trong EFI System Partition hoặc firmware liên quan, hoặc
+  lợi dụng cơ chế cập nhật firmware / driver dễ bị lạm dụng. Điều kiện tiên quyết
+  là quyền thực thi ở mức rất cao và khả năng ghi vào vùng trước OS. Mục tiêu cuối
+  là tạo cơ chế tồn tại qua reboot, thậm chí qua cài lại hệ điều hành, đồng thời tái
+  nạp user-mode implant hoặc các thành phần tiếp theo sau mỗi lần khởi động.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Chiếm quyền cao trên host
+
+  → Can thiệp boot chain / EFI System Partition / firmware liên quan
+
+  → Khởi động lại hệ thống
+
+  → Thành phần boot-level kích hoạt trước OS
+
+  → Tái nạp payload hậu khai thác sau khi máy lên
+
+  ```
+
+
+  1. **Đạt đặc quyền cần thiết:** Kẻ tấn công đã có admin cấp cao hoặc tương đương
+  trên thiết bị.
+
+  2. **Chèn thành phần boot-level:** Boot component hoặc firmware-related artifact
+  bị thay đổi.
+
+  3. **Khởi động lại:** Hệ thống reboot để chuỗi khởi động mới có hiệu lực.
+
+  4. **Thực thi trước OS:** Thành phần implant hoạt động sớm hơn lớp giám sát thông
+  thường.
+
+  5. **Tái triển khai payload:** Khi hệ điều hành nạp xong, implant hỗ trợ kéo lại
+  hoặc kích hoạt các phần tử hậu khai thác.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Persistence | T1542 | T1542.001 – System Firmware |
+
+  | Persistence | T1542 | T1542.003 – Bootkit |
+
+  | Defense Evasion | T1562 | Nằm ngoài một phần phạm vi quan sát người dùng truyền
+  thống |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **UEFI / firmware telemetry:** Thay đổi phiên bản firmware, firmware capsule không
+  mong đợi, hoặc trạng thái cập nhật bất thường.
+
+  - **TPM / measured boot:** PCR measurement lệch baseline hoặc chuỗi đo khởi động
+  thay đổi không giải thích được.
+
+  - **Secure Boot state:** Tắt Secure Boot, thay khóa, hoặc thay đổi chính sách boot
+  không nằm trong thay đổi quản trị hợp lệ.
+
+  - **Disk / partition telemetry:** Ghi bất thường vào EFI System Partition, boot
+  entry mới, hoặc file hệ thống khởi động bị thay đổi.
+
+  - **EDR / OS-level clue:** Sau reboot xuất hiện lại payload từng bị xoá, hoặc cùng
+  một implant quay về mà không có vector tái xâm nhập rõ ràng.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Baseline:** Lưu hash và inventory các file trong EFI System Partition đối với
+  các mẫu phần cứng trọng yếu.
+
+  - **Alert:** Mọi thay đổi Secure Boot hoặc measured boot ngoài lịch bảo trì chính
+  thức.
+
+  - **Hunt:** Tình huống “payload quay lại sau cài lại OS / sau cleanup” mà không
+  tìm thấy persistence ở tầng người dùng.
+
+  - **Control validation:** Kiểm tra khả năng kết hợp giữa BIOS/UEFI inventory, TPM
+  attestation và EDR host telemetry.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Scenario này không nhằm mô phỏng tần suất cao mà nhằm kiểm tra chiều sâu phòng thủ.
+  Trong giai đoạn 2024–2026, các tổ chức có yêu cầu bảo vệ máy trạm quản trị, jump
+  server, máy làm việc của lãnh đạo, hoặc hạ tầng trọng yếu đều cần ít nhất một kịch
+  bản đánh giá firmware/boot chain, vì đây là khoảng trống mà nhiều chương trình giám
+  sát vẫn bỏ qua.
+
+
+  **Độ tin cậy:** Cao – kỹ thuật khó nhưng cấu trúc hành vi rõ ràng và rất giàu giá
+  trị đánh giá kiểm soát sâu.
+
+
+  **Tài liệu tham khảo**
+
+  - Kaspersky
+
+  - ESET (CosmicStrand)
+
+  - MITRE ATT&CK T1542.001, T1542.003'

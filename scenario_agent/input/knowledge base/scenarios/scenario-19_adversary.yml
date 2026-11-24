@@ -1,0 +1,12 @@
+id: 5861be37-9a03-5055-910f-92cbbb04f7b2
+name: '[SCENARIO-19] Registry Run Key – Autostart Persistence'
+description: Sau khi đã chạy được code trên endpoint, kẻ tấn công ghi một giá trị
+  vào `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, `RunOnce`, hoặc biến thể
+  trong `HKLM`. Actor thường là malware loader, stealer, hoặc tác nhân hậu khai thác
+  muốn bảo đảm payload quay lại sau đăng nhập. Điều kiện tiên quyết là quyền ghi registry
+  tại hive tương ứng. Kết quả mong muốn là một binary, script hoặc LOLBin được gọi
+  lại khi người dùng đăng nhập hoặc máy khởi động lại.
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- cb01b3da-b0e7-4e24-bf6d-de5223526785
+- e55be3fd-3521-4610-9d1a-e210e42dcf05

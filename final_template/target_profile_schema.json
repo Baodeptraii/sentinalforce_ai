@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "os",
+    "address",
+    "services",
+    "capabilities",
+    "telemetry"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "os": {
+      "type": "object",
+      "required": [
+        "name",
+        "status"
+      ],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "address": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "web",
+              "endpoint",
+              null
+            ]
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "applications": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "base_url",
+                "application_identified",
+                "evidence_ref"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "base_url": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "application_identified": {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                },
+                "session_ready": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "current_security_level": {
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high",
+                    "impossible",
+                    null
+                  ]
+                },
+                "version": {
+                  "type": "null"
+                },
+                "evidence_ref": {
+                  "type": "string"
+                },
+                "authentication_ref": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "modules_ref": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "sandcat_online": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "powershell_ready": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "web_runner_ready": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "web_reachable": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "dvwa_session_ready": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "admin_ready": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "art_ready": {
+          "not": {}
+        },
+        "application_identified": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "telemetry": {
+      "type": "object",
+      "properties": {
+        "process_events": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Observed only from telemetry_evidence.json; null means not verified. Ingestion is not detection."
+        },
+        "network_events": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Observed only from telemetry_evidence.json; null means not verified. Ingestion is not detection."
+        },
+        "web_access_logs": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Observed only from telemetry_evidence.json; null means not verified. Ingestion is not detection."
+        },
+        "wazuh_ingestion": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Observed only from telemetry_evidence.json; null means not verified. Ingestion is not detection."
+        }
+      }
+    }
+  }
+}

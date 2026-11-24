@@ -1,0 +1,14 @@
+id: 7f11a926-b12a-5d2b-81e4-0c9b54717eee
+name: '[SCENARIO-10] Supply Chain – Gói Độc Hại npm/PyPI (Dependency Confusion)'
+description: Kẻ tấn công phát hiện tổ chức dùng gói nội bộ có tên `company-utils`
+  (không publish lên public registry). Tải lên npm gói tên `company-utils` với version
+  cao hơn và preinstall script độc hại. Khi developer hoặc CI/CD chạy `npm install`,
+  gói public được tải về thay vì gói nội bộ, script độc hại thực thi.
+atomic_ordering:
+- c943d285-ada3-45ca-b3aa-7cd6500c6a48
+- a9b93f17-31cb-435d-a462-5e838a2a6026
+- 01d75adf-ca1b-4dd1-ac96-7c9550ad1035
+- 82a9f001-94c5-495e-9ed5-f530dbded5e2
+- 82a9f001-94c5-495e-9ed5-f530dbded5e2
+- f9c3d0ab-479b-4019-945f-22ace2b1731a
+- 31e794c4-48fd-4a76-aca4-6587c155bc11

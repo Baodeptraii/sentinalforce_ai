@@ -1,0 +1,12 @@
+- id: 7818090c-4924-5d00-a1d2-79be40c7f7f4
+  name: "Simulate T1484 - GPO Abuse \u2013 Tri\u1EC3n khai payload qua Group Policy"
+  description: Automated simulation ability for MITRE technique T1484
+  tactic: execution
+  technique_id: T1484
+  technique_name: "GPO Abuse \u2013 Tri\u1EC3n khai payload qua Group Policy"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1484: GPO Abuse \u2013 Tri\u1EC3\
+      n khai payload qua Group Policy'"
+    timeout: 30

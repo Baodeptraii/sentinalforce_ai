@@ -1,0 +1,12 @@
+- id: d2d48150-7cfd-51d8-8c72-b4cfc2b4fa3a
+  name: Simulate T1621 - MFA Fatigue / Push Bombing
+  description: Automated simulation ability for MITRE technique T1621
+  tactic: execution
+  technique_id: T1621
+  technique_name: MFA Fatigue / Push Bombing
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1621: MFA Fatigue / Push
+      Bombing'''
+    timeout: 30

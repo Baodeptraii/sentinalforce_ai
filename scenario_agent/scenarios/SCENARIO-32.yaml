@@ -1,0 +1,64 @@
+id: SCENARIO-32
+name: Browser Credential Theft – Đánh cắp mật khẩu lưu trên trình duyệt
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 32 – Browser Credential Theft – Đánh cắp mật khẩu lưu trên trình\
+  \ duyệt**\n\n**Giới thiệu chung**\n\nKho lưu trữ thông tin xác thực và cookie phiên\
+  \ trên trình duyệt đã trở thành một trong những mục tiêu có giá trị cao nhất của\
+  \ malware đánh cắp dữ liệu và các tác nhân hậu khai thác. Chỉ với quyền người dùng\
+  \ thông thường trên endpoint, kẻ tấn công có thể tiếp cận một tập hợp rất lớn gồm\
+  \ mật khẩu đã lưu, cookie phiên, dữ liệu autofill, lịch sử truy cập và token trình\
+  \ duyệt.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, malware hoặc tác nhân hậu\
+  \ khai thác đọc credential store của Chrome, Edge hoặc Firefox trong profile người\
+  \ dùng, sau đó lợi dụng ngữ cảnh người dùng hiện tại để giải mã dữ liệu được bảo\
+  \ vệ bởi cơ chế hệ điều hành hoặc profile key liên quan. Actor thường là stealer\
+  \ malware, initial access broker hoặc operator muốn chuyển nhanh từ foothold trên\
+  \ một máy sang chiếm trình duyệt, tài khoản web và session cloud; điều kiện tiên\
+  \ quyết là đã có code execution trong user context hoặc có thể truy cập profile\
+  \ của người dùng; kết quả mong muốn là trích xuất được mật khẩu lưu trên trình duyệt,\
+  \ cookie phiên và dữ liệu đủ để đăng nhập lại hoặc vượt một phần quy trình xác thực\
+  \ thông thường. fileciteturn1file0L59-L59\n\n**Dòng tấn công end-to-end**\n\n\
+  ```text\nFoothold trong user context\n→ Truy cập profile trình duyệt\n→ Sao chép\
+  \ Login Data / Cookies / Local State hoặc file tương đương\n→ Giải mã trong ngữ\
+  \ cảnh phù hợp\n→ Tái sử dụng credential / session\n→ Mở rộng truy cập cloud và\
+  \ ứng dụng doanh nghiệp\n```\n\n1. **Thiết lập hiện diện ở user context:** Malware\
+  \ hoặc operator đã chạy được code dưới tài khoản người dùng.\n2. **Khảo sát browser\
+  \ profile:** Hệ thống profile của Chrome/Edge/Firefox được rà soát để tìm file lưu\
+  \ mật khẩu, cookie và khóa liên quan.\n3. **Thu thập dữ liệu trình duyệt:** Các\
+  \ file như `Login Data`, `Cookies`, `Local State`, `Web Data`, `logins.json`, `key4.db`\
+  \ bị truy cập hoặc sao chép.\n4. **Trích xuất nội dung hữu ích:** Mật khẩu lưu trữ,\
+  \ token phiên và dữ liệu web nhạy cảm được staging.\n5. **Tái sử dụng thông tin:**\
+  \ Tài khoản SaaS, cổng web nội bộ hoặc mailbox tiếp tục bị xâm nhập.\n\n**MITRE\
+  \ ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Credential Access | T1555 | T1555.003 – Credentials from Web Browsers |\n| Credential\
+  \ Access | T1539 | Steal Web Session Cookie |\n| Collection | T1005 | Thu thập dữ\
+  \ liệu cục bộ từ profile người dùng làm bước trung gian |\n\n**Log / Telemetry /\
+  \ Observable**\n\n- **EDR file access telemetry:** Tiến trình không phải trình duyệt\
+  \ hoặc công cụ enterprise-approved truy cập `Login Data`, `Cookies`, `Local State`,\
+  \ `Web Data`, `logins.json`, `key4.db`.\n- **Process context:** Binary lạ chạy trong\
+  \ user space đọc hàng loạt file browser profile rồi nén / ghi sang thư mục staging.\n\
+  - **MDE / EDR behavioral events:** Truy cập bất thường vào browser credential store\
+  \ kèm thao tác copy sang vùng tạm.\n- **Cookie/session reuse clue:** Tài khoản web\
+  \ vừa có sign-in hoặc session usage từ thiết bị/địa lý khác sau khi endpoint người\
+  \ dùng có dấu hiệu đọc cookie store.\n- **Archive / exfil staging:** File tạm, archive\
+  \ nhỏ hoặc artifact trong `%TEMP%`, `%APPDATA%`, thư mục download bị tạo ngay sau\
+  \ chuỗi đọc browser data.\n\n**Gợi ý Detection / Hunting**\n\n```text\nFileAccess.path\
+  \ IN (\n  \"*\\\\Login Data\",\n  \"*\\\\Cookies\",\n  \"*\\\\Local State\",\n \
+  \ \"*\\\\Web Data\",\n  \"*\\\\logins.json\",\n  \"*\\\\key4.db\"\n)\nAND ProcessName\
+  \ NOT IN (\n  \"chrome.exe\",\n  \"msedge.exe\",\n  \"firefox.exe\",\n  approved_browser_support_tools\n\
+  )\n```\n\n- **Alert:** Process không thuộc allowlist truy cập hàng loạt file credential/cookie\
+  \ của trình duyệt trong một phiên ngắn.\n- **Hunt:** Chuỗi `đọc browser store →\
+  \ tạo archive/staging → outbound connection` trên cùng host.\n- **Alert:** Session\
+  \ cloud mới xuất hiện rất nhanh sau khi endpoint có read-access bất thường vào cookie\
+  \ store.\n- **Baseline:** Lập allowlist rõ cho browser migration tools, password\
+  \ manager enterprise và công cụ hỗ trợ hợp lệ để giảm nhiễu.\n\n**Vì sao đáng ưu\
+  \ tiên 2024–2026**\n\nStealer malware và những chuỗi truy cập ngắn ngày đang tận\
+  \ dụng rất mạnh browser-stored secrets vì đây là đường nhanh nhất để đi từ một endpoint\
+  \ người dùng sang cloud account, email, SaaS và SSO phiên còn hiệu lực. Scenario\
+  \ này đặc biệt hữu ích để kiểm tra liệu tổ chức có thực sự theo dõi được browser\
+  \ artifact access, session abuse và mối liên hệ giữa endpoint telemetry với identity\
+  \ telemetry hay không.\n\n**Độ tin cậy:** Cao – telemetry file/object access và\
+  \ session reuse tương quan khá tốt, rất phù hợp cho detection engineering.\n\n**Tài\
+  \ liệu tham khảo**\n- RedLine\n- Vidar\n- Raccoon Stealer TTPs\n- MITRE ATT&CK T1555.003,\
+  \ T1539"

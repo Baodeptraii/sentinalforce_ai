@@ -1,0 +1,7 @@
+id: e5f6a7b8-dvwa-0004-file-inclusion
+name: DVWA Web Local File Inclusion (LFI)
+description: Mô phỏng tấn công duyệt file nhạy cảm cục bộ qua tham số page trên DVWA
+  (LFI).
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0004-flfi-000000000004

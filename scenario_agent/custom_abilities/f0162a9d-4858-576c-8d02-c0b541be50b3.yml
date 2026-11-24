@@ -1,0 +1,12 @@
+- id: f0162a9d-4858-576c-8d02-c0b541be50b3
+  name: "Simulate T1134 - Token Impersonation \u2013 SeImpersonatePrivilege Abuse"
+  description: Automated simulation ability for MITRE technique T1134
+  tactic: execution
+  technique_id: T1134
+  technique_name: "Token Impersonation \u2013 SeImpersonatePrivilege Abuse"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1134: Token Impersonation\
+      \ \u2013 SeImpersonatePrivilege Abuse'"
+    timeout: 30

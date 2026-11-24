@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "bindings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "historical_identity_bindings_v1"
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "target",
+          "agent",
+          "verified_by",
+          "verified_at",
+          "valid_from",
+          "valid_until",
+          "purpose",
+          "evidence_refs"
+        ],
+        "properties": {
+          "purpose": {
+            "const": "historical_identity"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    }
+  }
+}

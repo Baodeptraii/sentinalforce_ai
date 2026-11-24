@@ -1,0 +1,142 @@
+id: SCENARIO-24
+name: DCSync – Giả lập Domain Controller để dump credential
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 24 – DCSync – Giả lập Domain Controller để dump credential**
+
+
+  **Giới thiệu chung**
+
+
+  DCSync là một kỹ thuật cực kỳ nguy hiểm trong môi trường AD: thay vì trích xuất
+  credential trực tiếp trên Domain Controller, kẻ tấn công lạm dụng chính giao thức
+  replication để yêu cầu dữ liệu bí mật như một DC hợp lệ. Nếu thành công, đây là
+  điểm bùng nổ đưa cuộc xâm nhập từ mức host hoặc admin cục bộ sang cấp độ compromise
+  domain.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công đã chiếm được một tài khoản có quyền replication hoặc đã leo thang đến
+  nhóm / quyền cho phép thực hiện replication directory. Điều kiện tiên quyết là quyền
+  trên AD đủ để gọi chuỗi replication. Từ một máy không nhất thiết là DC, tác nhân
+  gửi yêu cầu đồng bộ dữ liệu nhạy cảm và thu về credential material của các tài khoản
+  miền, bao gồm cả tài khoản có giá trị cao. Kết quả mong muốn là rút được bí mật
+  từ domain mà không cần tương tác trực tiếp kiểu dump với LSASS trên DC.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Chiếm tài khoản có quyền replication
+
+  → Từ host không phải DC gửi yêu cầu DRS replication
+
+  → Kéo dữ liệu credential từ AD
+
+  → Trích xuất account có giá trị cao
+
+  → Domain compromise sâu hơn
+
+  ```
+
+
+  1. **Đạt đặc quyền phù hợp:** Tài khoản có quyền replication được chiếm hoặc được
+  gán nhầm.
+
+  2. **Khởi phát DCSync:** Host ngoài danh sách Domain Controller thực hiện yêu cầu
+  replication.
+
+  3. **Nhận dữ liệu bí mật:** Password data / secrets của nhiều tài khoản được đồng
+  bộ trái phép.
+
+  4. **Chọn mục tiêu giá trị cao:** KRBTGT, admin miền hoặc service account đặc quyền
+  trở thành mục tiêu chính.
+
+  5. **Mở rộng hậu khai thác:** Kẻ tấn công có khả năng forge ticket hoặc kiểm soát
+  domain sâu hơn.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Credential Access | T1003 | T1003.006 – DCSync |
+
+  | Privilege Escalation | T1078 | T1078.002 – Valid Accounts: Domain Accounts |
+
+  | Discovery | T1482 | Domain Trust / AD relationship awareness thường xuất hiện
+  trước đó |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Event 4662:** Quyền và thao tác liên quan tới DS replication được gọi từ principal
+  bất thường.
+
+  - **Network telemetry:** Lưu lượng DRSUAPI / replication từ máy không phải Domain
+  Controller tới DC.
+
+  - **AD audit:** Gán quyền replication mới cho user / group ngoài baseline quản trị.
+
+  - **EDR:** Host phát động DCSync thường đồng thời có dấu hiệu hậu khai thác AD khác
+  như enumeration, ticket abuse, credential dump trước đó.
+
+  - **Identity anomaly:** Principal ít khi dùng bỗng thực hiện thao tác directory
+  cấp cao.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  ```text
+
+  EventID=4662
+
+  AND Properties CONTAINS ("DS-Replication-Get-Changes", "DS-Replication-Get-Changes-All")
+
+  AND CallerHost NOT IN (DomainControllerList)
+
+  ```
+
+
+  - **Alert:** Bất kỳ luồng replication nào khởi phát từ máy không phải DC.
+
+  - **Hunt:** Kiểm kê toàn bộ account / group có replication rights và đối chiếu với
+  vai trò quản trị thực tế.
+
+  - **Alert:** Quyền replication vừa được cấp, sau đó trong thời gian ngắn xuất hiện
+  4662 phù hợp DCSync.
+
+  - **Segmentation:** Hạn chế máy quản trị có thể giao tiếp tới DC bằng các luồng
+  cần thiết; ghi log đầy đủ cho mọi ngoại lệ.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  DCSync là một “checkpoint” rất rõ trong nhiều kịch bản compromise domain. Nó buộc
+  đội phòng thủ phải hiểu AD permissions, network segmentation, directory auditing
+  và tương quan sự kiện đa nguồn. Vì vậy, đây là một scenario ưu tiên cao cho mọi
+  môi trường AD có tài khoản đặc quyền phân tán.
+
+
+  **Độ tin cậy:** Rất cao – kỹ thuật có ngữ nghĩa rõ, ranh giới hành vi giữa hợp lệ
+  và bất thường tương đối sắc nét.
+
+
+  **Tài liệu tham khảo**
+
+  - Microsoft
+
+  - Mandiant
+
+  - MITRE ATT&CK T1003.006, T1078.002'

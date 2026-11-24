@@ -1,0 +1,23 @@
+- description: 'Observed TTP of threat actor Scattered Spider, where a an older, legitimate,
+    cryptographically signed Intel driver with a known vulnerability is downloaded
+    and run to escalate privileges
+
+    '
+  id: 16b654eac25996def01562179244e99c
+  name: Scattered Spider BYOVD (CVE-2015-2291 for Intel Ethernet Diagnostics Driver)
+  platforms:
+    windows:
+      psh:
+        cleanup: sc.exe stop iqvw64e.sys; sc.exe delete iqvw64e.sys; Remove-Item -Recurse
+          "PathToAtomicsFolder\..\ExternalPayloads\iqvw64e.sys" -ErrorAction Ignore
+        command: sc.exe create iqvw64e.sys binPath="PathToAtomicsFolder\..\ExternalPayloads\iqvw64e.sys"
+          type=kernel; sc.exe start iqvw64e.sys
+        parsers:
+          plugins.atomic.app.parsers.atomic_powershell:
+          - source: validate_me
+        payloads: []
+  tactic: privilege-escalation
+  technique:
+    attack_id: T1068
+    name: Exploitation for Privilege Escalation
+  privilege: Elevated

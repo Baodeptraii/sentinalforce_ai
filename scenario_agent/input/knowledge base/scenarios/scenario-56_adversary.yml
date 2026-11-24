@@ -1,0 +1,13 @@
+id: 09933e0f-f561-5c2d-8446-e64213cf486c
+name: '[SCENARIO-56] Kubernetes Escape – Container Breakout'
+description: Trong kịch bản này, tác nhân đã compromise một container hoặc pod và
+  lợi dụng cấu hình nguy hiểm như privileged container, hostPath mount, capability
+  quá rộng, runtime exposure hoặc cơ chế liên đới của node để thoát ra ngoài phạm
+  vi container, tiếp cận host hoặc API điều khiển cluster. Actor thường là cloud-native
+  intruder, nhóm nhắm vào CI/CD hoặc đối thủ tận dụng sai cấu hình container; điều
+  kiện tiên quyết là pod có sai cấu hình hoặc
+atomic_ordering:
+- f9c3d0ab-479b-4019-945f-22ace2b1731a
+- ae9b2e3e-efa1-4483-86e2-fae529ab9fb6
+- 59aa6f26-7620-417e-9318-589e0fb7a372
+- 0b2f9520-a17a-4671-9dba-3bd034099fff

@@ -1,0 +1,13 @@
+- id: 749a12cd-6994-5511-b489-db1fdac79517
+  name: "Simulate T1074 - Network Share Enumeration v\xE0 Staging D\u1EEF li\u1EC7\
+    u"
+  description: Automated simulation ability for MITRE technique T1074
+  tactic: execution
+  technique_id: T1074
+  technique_name: "Network Share Enumeration v\xE0 Staging D\u1EEF li\u1EC7u"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1074: Network Share Enumeration\
+      \ v\xE0 Staging D\u1EEF li\u1EC7u'"
+    timeout: 30

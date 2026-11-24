@@ -1,0 +1,167 @@
+id: FC-02
+name: 'Scattered Spider (UNC3944): Tấn công MGM Resorts & Caesars Entertainment'
+source: source-dataset/NCKH/69 kịch bản/full_attack_campaigns.md
+format: scenario_description
+executable: false
+content: "# FC-02 – Scattered Spider (UNC3944): Tấn công MGM Resorts & Caesars Entertainment\n\
+  ## Chiến dịch Social Engineering + Cloud-Native Ransomware Nổi Bật Nhất 2023\n\n\
+  ---\n\n### Giới thiệu chung\n\nScattered Spider (còn gọi là UNC3944, Muddled Libra,\
+  \ Octo Tempest, 0ktapus) là một nhóm tội phạm mạng chủ yếu gồm thanh niên nói tiếng\
+  \ Anh (Mỹ, UK, Canada), nổi bật vì khả năng **social engineering** cực kỳ tinh vi,\
+  \ nhắm vào nhân viên helpdesk để bypass MFA và chiếm quyền quản trị. Nhóm này tấn\
+  \ công **MGM Resorts International** (thiệt hại $100M+) và **Caesars Entertainment**\
+  \ (trả $15M tiền chuộc) vào tháng 9/2023, gây chú ý toàn cầu.\n\nĐặc điểm nổi bật\
+  \ của Scattered Spider khác với APT truyền thống:\n- **Không dùng 0-day** — hoàn\
+  \ toàn dựa vào social engineering, MFA bypass, và cloud-native tools\n- **Nói tiếng\
+  \ Anh bản ngữ** — gọi điện thuyết phục helpdesk cực kỳ hiệu quả\n- **Tốc độ rất\
+  \ cao** — từ initial access đến domain compromise có thể chỉ vài giờ\n- **Cloud-native\
+  \ post-exploitation** — nhắm vào Azure AD, Okta, VMware, Citrix\n- **Collaboration\
+  \ với RaaS** — cuối 2023 bắt đầu phối hợp với ALPHV/BlackCat để deploy ransomware\n\
+  \nCISA và FBI ban hành advisory chung (AA23-320A) về Scattered Spider vào tháng\
+  \ 11/2023 sau các vụ tấn công này.\n\n---\n\n### Mô tả kịch bản\n\nKẻ tấn công sử\
+  \ dụng thông tin công khai từ LinkedIn để xác định tên và số điện thoại của nhân\
+  \ viên IT helpdesk của tổ chức mục tiêu. Sau đó gọi điện giả vờ là nhân viên mới\
+  \ gặp sự cố đăng nhập, yêu cầu reset MFA. Helpdesk không xác minh danh tính đúng\
+  \ cách và reset token → kẻ tấn công có quyền truy cập Okta/Azure AD → pivot vào\
+  \ cloud infrastructure → deploy ransomware (ALPHV/BlackCat) hoặc đánh cắp dữ liệu.\n\
+  \nĐiều kiện tiên quyết: Tổ chức dùng Okta/Azure AD cho SSO; helpdesk không có quy\
+  \ trình xác minh danh tính nghiêm ngặt; không có SSPR self-service verification\
+  \ đầy đủ; cloud tenant không được segmented đúng.\n\n---\n\n### Dòng tấn công end-to-end\n\
+  \n```\n[Giai đoạn 1 – Reconnaissance]\nLinkedIn/OSINT → Tìm tên nhân viên, cấu trúc\
+  \ tổ chức, số điện thoại helpdesk\n→ Thu thập email/username pattern (first.last@company.com)\n\
+  → Dark web: tìm password reuse từ breach\n\n[Giai đoạn 2 – Initial Access qua Social\
+  \ Engineering]\nGọi điện đến IT Helpdesk → Giả mạo nhân viên mới / senior executive\n\
+  → Khai thác tình huống khẩn cấp (\"I'm traveling, locked out\")\n→ Helpdesk reset\
+  \ Okta MFA / SMS MFA\n→ Kẻ tấn công đăng nhập với credential + new MFA\n\n[Giai\
+  \ đoạn 3 – Discovery trong Cloud (Okta/Azure AD)]\n→ Enum Okta users, groups, apps\
+  \ được gán\n→ Tìm admin accounts, service accounts, Super Admin\n→ Enum Azure AD:\
+  \ tenant, subscriptions, VMs, key vaults\n\n[Giai đoạn 4 – Privilege Escalation\
+  \ trong Okta]\n→ Tạo Okta Super Admin account mới\n→ Hoặc: Compromise existing admin\
+  \ account qua Okta session hijack\n→ Assign admin roles cho account do kẻ tấn công\
+  \ kiểm soát\n\n[Giai đoạn 5 – Lateral Movement – On-prem qua Okta SSO]\n→ Dùng Okta\
+  \ admin để access on-prem apps (VPN, VMware, Citrix, SAP)\n→ Chiếm VMware vCenter\
+  \ → Truy cập toàn bộ VM environment\n→ Chiếm Citrix → Truy cập virtual desktop của\
+  \ toàn bộ nhân viên\n\n[Giai đoạn 6 – Credential Access]\n→ Dump credential từ password\
+  \ manager, secrets vault\n→ Azure Key Vault: đọc secrets (connection strings, API\
+  \ keys)\n→ Okta: export session tokens của C-level executives\n\n[Giai đoạn 7 –\
+  \ Defense Evasion]\n→ Disable MFA cho các admin account\n→ Tạo Okta API token để\
+  \ duy trì truy cập ngay cả khi password đổi\n→ Thêm trusted device / trusted network\
+  \ bypass\n\n[Giai đoạn 8 – Collection & Exfiltration]\n→ SharePoint/OneDrive: Tải\
+  \ tài liệu nhạy cảm (business plans, PII, financial)\n→ Customer database download\n\
+  → Đánh cắp data trước khi deploy ransomware (double extortion prep)\n\n[Giai đoạn\
+  \ 9 – Impact]\n→ Deploy ALPHV/BlackCat ransomware qua VMware vCenter (snapshot all\
+  \ VMs → encrypt)\n→ Hoặc: đe doạ công bố data nếu không trả tiền chuộc (Caesars\
+  \ scenario)\n→ Gây gián đoạn hoạt động kinh doanh (casino floor, hotel check-in,\
+  \ website)\n```\n\n**Timeline thực tế (MGM Resorts 2023):**\n- ~10 phút gọi điện\
+  \ → Okta compromise\n- <2 giờ → Okta admin access\n- <4 giờ → VMware/Citrix pivot\n\
+  - <24 giờ → Ransomware deployment bắt đầu\n- 10 ngày → Full recovery MGM Resorts\
+  \ (thiệt hại $100M+)\n\n---\n\n### MITRE ATT&CK Mapping – Scattered Spider (UNC3944)\n\
+  \n| # | Tactic | Technique ID | Sub-technique | Tên kỹ thuật | Giai đoạn |\n|---|--------|-------------|---------------|--------------|-----------|\n\
+  | 1 | Reconnaissance | T1591 | T1591.004 | Gather Victim Org Information: Identify\
+  \ Roles | Giai đoạn 1 |\n| 2 | Reconnaissance | T1598 | T1598.003 | Phishing for\
+  \ Information: Spearphishing via Service | Giai đoạn 1 |\n| 3 | Reconnaissance |\
+  \ T1589 | T1589.001 | Gather Victim Identity Information: Credentials (breach data)\
+  \ | Giai đoạn 1 |\n| 4 | Initial Access | T1566 | T1566.003 | Phishing: Spearphishing\
+  \ via Voice (Vishing) | Giai đoạn 2 |\n| 5 | Initial Access | T1078 | T1078.004\
+  \ | Valid Accounts: Cloud Accounts | Giai đoạn 2 |\n| 6 | Credential Access | T1621\
+  \ | – | Multi-Factor Authentication Request Generation (MFA reset abuse) | Giai\
+  \ đoạn 2 |\n| 7 | Credential Access | T1556 | T1556.006 | Modify Auth Process: Multi-Factor\
+  \ Authentication | Giai đoạn 2/7 |\n| 8 | Discovery | T1087 | T1087.004 | Account\
+  \ Discovery: Cloud Account | Giai đoạn 3 |\n| 9 | Discovery | T1069 | T1069.003\
+  \ | Permission Groups Discovery: Cloud Groups | Giai đoạn 3 |\n| 10 | Discovery\
+  \ | T1526 | – | Cloud Service Discovery | Giai đoạn 3 |\n| 11 | Discovery | T1580\
+  \ | – | Cloud Infrastructure Discovery (Azure subscriptions, VMs) | Giai đoạn 3\
+  \ |\n| 12 | Privilege Escalation | T1098 | T1098.003 | Account Manipulation: Additional\
+  \ Cloud Roles | Giai đoạn 4 |\n| 13 | Privilege Escalation | T1078 | T1078.004 |\
+  \ Valid Accounts: Cloud Accounts (escalated) | Giai đoạn 4 |\n| 14 | Lateral Movement\
+  \ | T1021 | T1021.007 | Remote Services: Cloud Services (Okta SSO pivot) | Giai\
+  \ đoạn 5 |\n| 15 | Lateral Movement | T1550 | T1550.001 | Use Alternate Auth Material:\
+  \ Application Access Token | Giai đoạn 5 |\n| 16 | Credential Access | T1528 | –\
+  \ | Steal Application Access Token (Okta token) | Giai đoạn 6 |\n| 17 | Credential\
+  \ Access | T1552 | T1552.008 | Unsecured Credentials: Chat Messages (Teams/Slack\
+  \ creds) | Giai đoạn 6 |\n| 18 | Credential Access | T1555 | T1555.006 | Credentials\
+  \ from Password Stores: Cloud Secrets (Key Vault) | Giai đoạn 6 |\n| 19 | Defense\
+  \ Evasion | T1562 | T1562.010 | Impair Defenses: Downgrade Attack (disable MFA)\
+  \ | Giai đoạn 7 |\n| 20 | Defense Evasion | T1098 | T1098.005 | Account Manipulation:\
+  \ Device Registration (add trusted device) | Giai đoạn 7 |\n| 21 | Defense Evasion\
+  \ | T1550 | T1550.001 | Use Alternate Auth Material: API Token persistence | Giai\
+  \ đoạn 7 |\n| 22 | Collection | T1213 | T1213.002 | Data from Information Repositories:\
+  \ SharePoint | Giai đoạn 8 |\n| 23 | Collection | T1530 | – | Data from Cloud Storage\
+  \ (OneDrive, SharePoint) | Giai đoạn 8 |\n| 24 | Exfiltration | T1537 | – | Transfer\
+  \ Data to Cloud Account (attacker-controlled storage) | Giai đoạn 8 |\n| 25 | Impact\
+  \ | T1486 | – | Data Encrypted for Impact (ALPHV via VMware) | Giai đoạn 9 |\n|\
+  \ 26 | Impact | T1657 | – | Financial Theft (extortion: $15M paid by Caesars) |\
+  \ Giai đoạn 9 |\n| 27 | Impact | T1489 | – | Service Stop (casino systems, hotel\
+  \ check-in offline) | Giai đoạn 9 |\n\n**Tổng: 27 techniques/sub-techniques | 9\
+  \ tactics phủ**\n\n---\n\n### Log / Telemetry / Observable cần theo dõi\n\n**Giai\
+  \ đoạn Social Engineering & Initial Access:**\n- **Okta System Log:** `user.mfa.factor.deactivate`\
+  \ – MFA factor bị deactivate; đặc biệt nếu bởi admin khác tài khoản chủ\n- **Okta\
+  \ System Log:** `user.mfa.factor.activate` sau khi vừa deactivate (reset + re-enroll\
+  \ bởi kẻ tấn công)\n- **Okta System Log:** `user.session.start` từ IP mới không\
+  \ có lịch sử, country mới\n- **Entra ID:** Sign-in success từ unfamiliar IP ngay\
+  \ sau MFA enrollment event\n- **Helpdesk tickets:** Request reset MFA không đi qua\
+  \ self-service, đặc biệt cho admin account; request có urgency cao\n\n**Giai đoạn\
+  \ Cloud Discovery & Privilege Escalation:**\n- **Okta System Log:** `system.api_token.create`\
+  \ – Tạo API token, đặc biệt từ session mới\n- **Okta System Log:** `user.account.privilege.grant`\
+  \ – Role admin được cấp cho user không phải IT admin\n- **Azure AD Audit Log:**\
+  \ Nhiều `List users`, `List groups`, `List applications` API call trong thời gian\
+  \ ngắn từ IP mới\n- **Azure Activity Log:** `roleAssignments/write` – Role assignment\
+  \ mới trên subscription/resource group\n- **AWS CloudTrail (nếu có):** `ListRoles`,\
+  \ `ListPolicies`, `GetSecretValue` từ principal mới\n\n**Giai đoạn Lateral Movement\
+  \ qua SSO:**\n- **Okta System Log:** Single admin account access nhiều ứng dụng\
+  \ khác nhau trong thời gian ngắn (VMware, Citrix, SAP, VPN)\n- **VMware vCenter\
+  \ Audit:** Admin login từ IP không phải infrastructure team; snapshot creation;\
+  \ VM modification hàng loạt\n- **Citrix:** Admin session từ IP mới truy cập management\
+  \ console\n\n**Giai đoạn Credential Access:**\n- **Azure Key Vault:** `SecretGet`\
+  \ operation từ service principal hoặc user không thường xuyên access vault này\n\
+  - **Microsoft Defender for Cloud Apps:** Impossible travel, mass download từ SharePoint\n\
+  - **Slack/Teams audit:** Export conversation history, bulk message read từ IP lạ\n\
+  \n**Giai đoạn Defense Evasion:**\n- **Okta:** `policy.lifecycle.update` – Thay đổi\
+  \ MFA policy, sign-on policy\n- **Okta:** `authenticator.lifecycle.deactivate` –\
+  \ Disable authenticator cho org\n- **Entra ID:** Conditional Access policy modified\
+  \ hoặc disabled\n- **Entra ID:** New device registered for admin account từ IP lạ\n\
+  \n**Giai đoạn Impact:**\n- **VMware vCenter:** Mass snapshot deletion + mass VM\
+  \ reconfiguration trong cùng session\n- **EDR trên VM:** ALPHV/BlackCat binary execution\
+  \ pattern; file rename đến `.alphv` / `.blackcat`\n- **Network:** Mass SMB traffic\
+  \ từ một nguồn; ALPHV propagation pattern\n\n---\n\n### Gợi ý Detection / Hunting\n\
+  \n**Critical – Okta Admin Alerts (phải có ngay):**\n\n```\n// Okta – MFA Reset followed\
+  \ by immediate login from new IP\neventType = \"user.mfa.factor.deactivate\" \n\
+  → within 10 min → eventType = \"user.session.start\"\nAND client.ipAddress NOT IN\
+  \ (user's historical IPs)\n→ CRITICAL ALERT\n```\n\n```\n// Okta – API Token Creation\
+  \ from new session\neventType = \"system.api_token.create\"\nAND actor.alternateId\
+  \ = admin account\nAND client.geographicalContext.country != usual_country\n→ HIGH\
+  \ ALERT\n```\n\n```kql\n// KQL – Entra ID – Privilege escalation in cloud\nAuditLogs\n\
+  | where OperationName == \"Add member to role\"\n| where InitiatedBy.user.userPrincipalName\
+  \ !in (known_admins)\n| where Result == \"success\"\n| project TimeGenerated, InitiatedBy,\
+  \ TargetResources, Result\n```\n\n**Hunting – Impossible travel sau MFA reset:**\n\
+  \n```kql\n// Entra Sign-in log – after MFA enroll from new country\nSigninLogs\n\
+  | where TimeGenerated > ago(24h)\n| where AuthenticationRequirement == \"multiFactorAuthentication\"\
+  \n| where Status.failureReason == \"\" // success\n| summarize locations = make_set(LocationDetails.countryOrRegion)\
+  \ by UserPrincipalName\n| where array_length(locations) > 1\n```\n\n**VMware/vCenter\
+  \ Hunting:**\n- Monitor: Admin login đến vCenter ngoài business hours từ IP không\
+  \ phải jump host\n- Monitor: `vim-cmd vmsvc/snapshot.create` hoặc snapshot operation\
+  \ hàng loạt (>10 VMs/5 phút)\n- Alert: VM power state change hàng loạt (>20 VMs\
+  \ tắt/5 phút) = possible ransomware via vCenter\n\n**Behavioral Analytics quan trọng:**\n\
+  - Helpdesk ticket volume spike cho MFA reset: nếu >5 requests/giờ cho admin account\
+  \ → alert\n- Cross-application access pattern: Admin Okta session access >5 ứng\
+  \ dụng khác nhau trong <15 phút → suspicious\n- SharePoint: User download >1GB trong\
+  \ 30 phút ngoài giờ hành chính → DLP alert\n\n---\n\n### Vì sao đáng ưu tiên 2024–2026\n\
+  \nScattered Spider / UNC3944 tiếp tục hoạt động mạnh trong 2024 với các vụ tấn công\
+  \ vào ngành retail, viễn thông, và tài chính. Một số thành viên bị bắt (UK, Mỹ)\
+  \ nhưng nhóm vẫn tuyển recruit mới. Điều đặc biệt là **pattern tấn công này không\
+  \ cần 0-day hay kỹ năng kỹ thuật cao** — chỉ cần social engineering hiệu quả, khiến\
+  \ nó cực kỳ khó chặn bằng kỹ thuật thuần túy.\n\nKịch bản này đặc biệt quan trọng\
+  \ vì nó chỉ ra **lỗ hổng quy trình** (helpdesk verification) thường bị bỏ qua trong\
+  \ diễn tập kỹ thuật. Với sự phát triển của AI voice cloning, viễn cảnh này sẽ chỉ\
+  \ trở nên tệ hơn trong 2024–2026.\n\n**Kịch bản này đặc biệt có giá trị diễn tập\
+  \ vì:**\n- Kiểm tra quy trình helpdesk identity verification (thường bị bỏ qua)\n\
+  - Kiểm tra Okta/Entra alerting cho privilege escalation\n- Kiểm tra VMware/Citrix\
+  \ access control và monitoring\n- Red team có thể thực hiện mà không cần kỹ thuật\
+  \ cao\n\n**Độ tin cậy:** Rất cao – CISA/FBI Advisory AA23-320A, Mandiant UNC3944\
+  \ profile (2023/2024), Microsoft/Okta incident reports (MGM/Caesars).\n\n---\n\n\
+  ### Tài liệu tham khảo\n\n- CISA/FBI: \"Advisory AA23-320A – Scattered Spider\"\
+  \ (November 2023)\n- Mandiant: \"UNC3944 (Scattered Spider) Threat Actor Profile\"\
+  \ (2023/2024)\n- Microsoft: \"Octo Tempest (Scattered Spider) Analysis\" (October\
+  \ 2023)\n- Okta: \"Security Incident and Investigation Report\" (October 2023)\n\
+  - MGM Resorts: SEC 8-K Filing, \"Material Cybersecurity Incident\" (September 2023)\n\
+  - MITRE ATT&CK: T1566.003, T1621, T1556.006, T1098.003, T1528, T1486\n\n---\n---"

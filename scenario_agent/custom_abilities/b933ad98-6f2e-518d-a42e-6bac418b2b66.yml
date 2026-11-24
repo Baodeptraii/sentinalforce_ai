@@ -1,0 +1,12 @@
+- id: b933ad98-6f2e-518d-a42e-6bac418b2b66
+  name: "Simulate T1008 - Cobalt Strike \u2013 HTTPS Beacon C2"
+  description: Automated simulation ability for MITRE technique T1008
+  tactic: execution
+  technique_id: T1008
+  technique_name: "Cobalt Strike \u2013 HTTPS Beacon C2"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1008: Cobalt Strike \u2013\
+      \ HTTPS Beacon C2'"
+    timeout: 30

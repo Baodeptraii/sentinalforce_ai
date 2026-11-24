@@ -1,0 +1,13 @@
+- id: dde0a1f4-5657-54f2-b022-e1673ba11b8c
+  name: "Simulate T1656 - AI-Assisted Phishing \u2013 Deepfake Voice/Video Social\
+    \ Engineering"
+  description: Automated simulation ability for MITRE technique T1656
+  tactic: execution
+  technique_id: T1656
+  technique_name: "AI-Assisted Phishing \u2013 Deepfake Voice/Video Social Engineering"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1656: AI-Assisted Phishing\
+      \ \u2013 Deepfake Voice/Video Social Engineering'"
+    timeout: 30

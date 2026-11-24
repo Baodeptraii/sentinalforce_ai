@@ -1,0 +1,17 @@
+{
+  "paw": "imaixt",
+  "host": "DESKTOP-KDAB44M",
+  "platform": "windows",
+  "group": "red",
+  "trusted": true,
+  "last_seen": "2026-11-12T02:48:51Z",
+  "executors": [
+    "cmd",
+    "psh",
+    "proc"
+  ],
+  "privilege": "Elevated",
+  "host_ip_addrs": [
+    "192.0.2.10"
+  ]
+}

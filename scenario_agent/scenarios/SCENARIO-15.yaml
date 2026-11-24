@@ -1,0 +1,36 @@
+id: SCENARIO-15
+name: WMI Abuse – Thực Thi Từ Xa và Event Subscription Persistence
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: "### Kịch bản 15 – WMI Abuse – Thực Thi Từ Xa và Event Subscription Persistence\n\
+  \n**Giới thiệu chung**\n\nWindows Management Instrumentation (WMI) là công cụ quản\
+  \ lý hợp lệ nhưng thường bị lạm dụng để thực thi lệnh từ xa (thay thế PsExec, ít\
+  \ bị phát hiện hơn), và tạo event subscription persistence (chạy payload khi có\
+  \ event cụ thể như startup, login, process creation).\n\n**Mô tả kịch bản**\n\n\
+  Sau khi chiếm credential, kẻ tấn công dùng `wmic /node:target` hoặc PowerShell `Invoke-WMIMethod`\
+  \ để thực thi lệnh từ xa mà không tạo service mới. Để persistence, kẻ tấn công tạo\
+  \ WMI Event Subscription gồm EventFilter + EventConsumer + FilterToConsumerBinding\
+  \ — payload chạy mỗi khi có event trigger (login, 5 phút sau boot, v.v.).\n\n**Dòng\
+  \ tấn công end-to-end**\n\n```\nCredential compromise → WMI remote execution (no\
+  \ service creation)\n→ Thực thi payload trên target system\n→ Tạo WMI Event Subscription\
+  \ (persistence)\n→ Event trigger → Payload chạy lại sau restart\n```\n\n**MITRE\
+  \ ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Execution | T1047 | Windows Management Instrumentation |\n| Persistence | T1546\
+  \ | T1546.003 – WMI Event Subscription |\n| Lateral Movement | T1021 | T1021.006\
+  \ – WMI |\n\n**Log / Telemetry / Observable**\n\n- **Sysmon Event 19, 20, 21:**\
+  \ WMI EventFilter, EventConsumer, FilterToConsumerBinding creation\n- **Windows\
+  \ Security Event 4688:** `wmiprvse.exe` tạo child process lạ\n- **Microsoft-Windows-WMI-Activity/Operational\
+  \ log (Event 5857/5858/5860):** WMI query execution\n- **EDR:** WMI consumer execution\
+  \ (CommandLineEventConsumer, ActiveScriptEventConsumer)\n\n**Gợi ý Detection / Hunting**\n\
+  \n- **Alert:** WMI ActiveScriptEventConsumer hoặc CommandLineEventConsumer creation\
+  \ (Sysmon 19/20/21)\n- **Hunt:** `Select * From __InstanceCreationEvent Where TargetInstance\
+  \ Isa 'Win32_LogonSession'` — common WMI persistence trigger\n- **Alert:** `wmiprvse.exe`\
+  \ spawning `cmd.exe`, `powershell.exe`, hoặc script engine\n- **Baseline:** Inventory\
+  \ existing WMI subscriptions, alert on new ones\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nWMI abuse được ghi nhận trong nhiều APT và ransomware campaigns. Đây là LOLBin\
+  \ cổ điển nhưng vẫn rất hiệu quả do nhiều tổ chức chưa bật WMI activity logging.\
+  \ Volt Typhoon và nhiều nhóm APT ưa dùng WMI vì tính stealth cao.\n\n**Độ tin cậy:**\
+  \ Cao – Mandiant, MITRE ATT&CK, Microsoft.\n\n**Tài liệu tham khảo**\n- Mandiant:\
+  \ \"WMI Offense, Defense, and Forensics\" (2015, vẫn applicable 2024)\n- Microsoft:\
+  \ \"WMI activity logging\" \n- MITRE ATT&CK T1047, T1546.003"

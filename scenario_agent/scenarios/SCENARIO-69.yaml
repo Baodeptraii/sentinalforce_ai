@@ -1,0 +1,61 @@
+id: SCENARIO-69
+name: AI-Assisted Phishing – Deepfake Voice/Video Social Engineering
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 69 – AI-Assisted Phishing – Deepfake Voice/Video Social Engineering**\n\
+  \n**Giới thiệu chung**\n\nAI-assisted phishing và deepfake social engineering là\
+  \ kịch bản mới nổi nhưng có giá trị diễn tập rất cao, đặc biệt trong BEC, fraud,\
+  \ executive impersonation và lừa đảo qua kênh hội nghị/nhắn tin. Điểm nguy hiểm\
+  \ không nằm ở “mã độc” mà ở việc đối thủ tăng độ tin cậy của yêu cầu bằng giọng\
+  \ nói, hình ảnh hoặc video giả, khiến quy trình xác minh truyền thống dựa vào cảm\
+  \ nhận con người trở nên kém hiệu quả.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này,\
+  \ đối thủ dùng dữ liệu công khai như video, ảnh, bài phát biểu, email style hoặc\
+  \ thông tin mạng xã hội để tạo nội dung giả mạo lãnh đạo, đối tác hoặc nhân sự có\
+  \ thẩm quyền. Nội dung có thể là email, tin nhắn, cuộc gọi thoại, video meeting\
+  \ hoặc chỉ đạo chuyển tiền/cung cấp quyền truy cập. Actor thường là BEC operator,\
+  \ social engineering crew hoặc nhóm lừa đảo tài chính; điều kiện tiên quyết là tổ\
+  \ chức thiếu xác minh ngoài băng cho yêu cầu nhạy cảm; kết quả mong muốn là khiến\
+  \ nạn nhân thực hiện giao dịch, chia sẻ thông tin, cấp quyền hoặc mở đường cho compromise.\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nThu thập dữ liệu công khai về lãnh đạo\
+  \ / đối tác / mục tiêu\n→ Tạo nội dung giả mạo bằng AI hoặc deepfake voice/video\n\
+  → Gửi yêu cầu qua email, chat, cuộc gọi hoặc video meeting\n→ Tạo áp lực thời gian\
+  \ và ngữ cảnh có vẻ hợp lệ\n→ Nạn nhân thực hiện chuyển tiền / chia sẻ thông tin\
+  \ / cấp quyền\n→ Đối thủ monetization hoặc mở rộng social engineering\n```\n\n1.\
+  \ **Thu thập dữ liệu mục tiêu:** Giọng nói, hình ảnh, văn phong, quan hệ công việc\
+  \ và lịch hoạt động được tận dụng.\n2. **Tạo danh tính giả:** AI-generated voice/video\
+  \ hoặc nội dung email/chat mô phỏng người có thẩm quyền.\n3. **Gửi yêu cầu nhạy\
+  \ cảm:** Chuyển tiền, thay đổi thông tin thanh toán, cấp quyền, chia sẻ file hoặc\
+  \ bỏ qua kiểm soát.\n4. **Tăng áp lực:** Tính khẩn cấp, bí mật, uy quyền hoặc sự\
+  \ kiện kinh doanh được dùng để giảm kiểm tra.\n5. **Hoàn tất fraud/compromise:**\
+  \ Nạn nhân thực hiện hành động mà không xác minh qua kênh độc lập.\n\n**MITRE ATT&CK\
+  \ Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Initial Access | T1566 | Phishing qua email/link/attachment hoặc kênh giao tiếp\
+  \ số |\n| Reconnaissance | T1598 | Phishing for Information / thu thập hoặc yêu\
+  \ cầu thông tin hỗ trợ social engineering |\n| Impact | T1656 | Impersonation /\
+  \ giả mạo danh tính để gây tác động tài chính hoặc vận hành |\n\n**Log / Telemetry\
+  \ / Observable**\n\n- **Email metadata:** Tên hiển thị giống lãnh đạo nhưng domain,\
+  \ reply-to, SPF/DKIM/DMARC hoặc routing bất thường.\n- **Communication anomaly:**\
+  \ Yêu cầu nhạy cảm phát sinh từ kênh không thường dùng hoặc ngoài quy trình phê\
+  \ duyệt.\n- **Collaboration logs:** Cuộc họp/nhắn tin từ tài khoản mới, guest account,\
+  \ số điện thoại lạ hoặc platform không chuẩn.\n- **Finance workflow:** Yêu cầu thay\
+  \ đổi tài khoản nhận tiền, chuyển tiền khẩn, bỏ qua bước xác minh hoặc giữ bí mật\
+  \ bất thường.\n- **Out-of-band verification:** Thiếu dấu vết xác minh độc lập qua\
+  \ kênh đã định nghĩa trước.\n\n**Gợi ý Detection / Hunting**\n\n```text\nSensitiveBusinessRequest\
+  \ = true\nAND (\n  SenderIdentityMismatch = true\n  OR NewCommunicationChannel =\
+  \ true\n  OR UrgencyOrSecrecyLanguage = true\n  OR PaymentInstructionChanged = true\n\
+  \  OR NoOutOfBandVerification = true\n)\n```\n\n- **Alert:** Yêu cầu tài chính hoặc\
+  \ cấp quyền quan trọng đến từ kênh mới, tài khoản mới hoặc sender metadata bất thường.\n\
+  - **Hunt:** Tìm các chuỗi BEC có thay đổi thông tin thanh toán kèm áp lực thời gian\
+  \ và thiếu xác minh ngoài băng.\n- **Alert:** Guest meeting/chat hoặc số điện thoại\
+  \ lạ tự nhận là lãnh đạo/đối tác và yêu cầu hành động nhạy cảm.\n- **Process control:**\
+  \ Bắt buộc xác minh ngoài băng bằng kênh đã đăng ký trước cho chuyển tiền, thay\
+  \ đổi nhà cung cấp và cấp quyền khẩn cấp.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nAI làm giảm chi phí tạo nội dung giả mạo có tính thuyết phục cao, khiến social\
+  \ engineering trở nên khó phát hiện hơn bằng trực giác. Kịch bản này giúp tổ chức\
+  \ kiểm tra không chỉ công nghệ email security, mà cả quy trình nghiệp vụ, xác minh\
+  \ danh tính, đào tạo người dùng và khả năng phát hiện bất thường trên kênh cộng\
+  \ tác.\n\n**Độ tin cậy:** Trung bình đến cao – deepfake và AI-assisted fraud đang\
+  \ tăng nhanh, nhưng mỗi case cần xác minh kỹ giữa bằng chứng kỹ thuật, quy trình\
+  \ nghiệp vụ và điều tra gian lận.\n\n**Tài liệu tham khảo**\n- FBI IC3 2024\n- Microsoft\
+  \ 2025\n- MITRE ATT&CK T1566, T1598, T1656"

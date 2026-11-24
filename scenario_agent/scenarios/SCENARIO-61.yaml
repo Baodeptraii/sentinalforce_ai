@@ -1,0 +1,63 @@
+id: SCENARIO-61
+name: SEO Poisoning / Malvertising dẫn đến Malware Download
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 61 – SEO Poisoning / Malvertising dẫn đến Malware Download**\n\
+  \n**Giới thiệu chung**\n\nSEO poisoning và malvertising là các kỹ thuật xâm nhập\
+  \ ban đầu lợi dụng thói quen tìm kiếm phần mềm, tài liệu, trình điều khiển hoặc\
+  \ công cụ hỗ trợ công việc trên Internet. Thay vì gửi email trực tiếp, đối thủ đẩy\
+  \ trang giả, quảng cáo độc hại hoặc landing page bị tối ưu hóa lên vị trí dễ thấy,\
+  \ khiến người dùng tự truy cập và tự tải xuống nội dung bị gài mã độc. Đây là kịch\
+  \ bản có giá trị phòng thủ cao vì nó nằm giữa web security, endpoint telemetry,\
+  \ DNS, proxy và user behavior.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, tác\
+  \ nhân chuẩn bị một trang web hoặc quảng cáo giả mạo liên quan đến phần mềm hợp\
+  \ lệ, tài liệu phổ biến, công cụ quản trị hoặc từ khóa đang được nhiều người tìm\
+  \ kiếm. Người dùng truy cập kết quả tìm kiếm hoặc quảng cáo, tải về một file nhìn\
+  \ giống phần mềm hợp lệ, sau đó mở file và kích hoạt loader hoặc downloader. Actor\
+  \ thường là nhóm cybercrime, initial access broker hoặc malware operator; điều kiện\
+  \ tiên quyết là người dùng có khả năng truy cập web và thiếu cơ chế kiểm soát download/allowlist\
+  \ chặt chẽ; kết quả mong muốn là thiết lập foothold ban đầu trên endpoint thông\
+  \ qua hành vi tải và mở file tưởng như hợp pháp.\n\n**Dòng tấn công end-to-end**\n\
+  \n```text\nChuẩn bị trang giả / quảng cáo độc hại / landing page SEO\n→ Người dùng\
+  \ tìm kiếm phần mềm hoặc tài liệu phổ biến\n→ Truy cập kết quả tìm kiếm hoặc quảng\
+  \ cáo đã bị thao túng\n→ Tải file cài đặt / tài liệu / archive giả mạo\n→ Người\
+  \ dùng mở file hoặc chạy installer\n→ Endpoint thực thi downloader / loader và tạo\
+  \ foothold ban đầu\n```\n\n1. **Tạo bề mặt thu hút:** Đối thủ dùng tên phần mềm,\
+  \ tài liệu hoặc truy vấn phổ biến để tăng khả năng người dùng nhấp vào.\n2. **Dẫn\
+  \ người dùng tới landing page:** Trang có giao diện hợp pháp, tên miền tương tự\
+  \ hoặc nội dung đủ thuyết phục để giảm nghi ngờ.\n3. **Kích hoạt download:** File\
+  \ được đặt tên, biểu tượng hoặc mô tả giống nội dung người dùng đang tìm.\n4. **Thực\
+  \ thi bởi người dùng:** Người dùng tự mở file, qua đó giúp đối thủ vượt qua một\
+  \ số kiểm soát chỉ tập trung vào email attachment.\n5. **Thiết lập foothold:** Loader\
+  \ hoặc downloader tạo kết nối ra ngoài, tải payload tiếp theo hoặc tạo persistence\
+  \ ban đầu.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Resource Development | T1608 | T1608.006 – SEO Poisoning để đẩy nội dung độc hại\
+  \ vào luồng tìm kiếm |\n| Initial Access | T1189 | Drive-by Compromise / lạm dụng\
+  \ truy cập web để dẫn tới compromise |\n| Execution | T1204 | T1204.001 – User Execution:\
+  \ Malicious Link hoặc nội dung tải về do người dùng mở |\n\n**Log / Telemetry /\
+  \ Observable**\n\n- **Web proxy / Secure Web Gateway:** Truy cập tới domain mới\
+  \ đăng ký, domain hiếm gặp hoặc URL download từ nguồn không nằm trong danh sách\
+  \ phần mềm hợp lệ.\n- **DNS logs:** Truy vấn tới domain có tuổi đời thấp, tên giống\
+  \ phần mềm phổ biến hoặc campaign-specific landing page.\n- **EDR download event:**\
+  \ File cài đặt hoặc archive được tải từ browser rồi nhanh chóng được thực thi.\n\
+  - **Process tree:** Browser → archive utility / installer → script host / child\
+  \ process bất thường.\n- **Threat intel enrichment:** Domain hoặc certificate liên\
+  \ quan tới malvertising, fake software hoặc traffic distribution system.\n\n**Gợi\
+  \ ý Detection / Hunting**\n\n```text\nBrowserDownloadEvent = true\nAND DownloadSourceReputation\
+  \ IN (new_domain, rare_domain, suspicious_ad_chain)\nAND (\n  DownloadedFileExecutedSoon\
+  \ = true\n  OR BrowserChildProcessAnomaly = true\n  OR UnsignedInstallerFromInternet\
+  \ = true\n)\n```\n\n- **Alert:** File thực thi hoặc installer được tải từ domain\
+  \ hiếm gặp và chạy trong thời gian ngắn sau download.\n- **Hunt:** Truy vết chuỗi\
+  \ `search/ad click → download → execution → outbound beacon` trên cùng endpoint.\n\
+  - **Alert:** Browser sinh child process không phù hợp như script host, command shell,\
+  \ installer lạ hoặc archive tự giải nén.\n- **Baseline:** Lập danh sách nguồn phần\
+  \ mềm hợp lệ theo phòng ban để phân biệt download nghiệp vụ với fake installer/malvertising.\n\
+  \n**Vì sao đáng ưu tiên 2024–2026**\n\nNgười dùng ngày càng quen cài nhanh công\
+  \ cụ hỗ trợ từ web, trong khi đối thủ chuyển nhiều initial access khỏi email sang\
+  \ search, ads và fake software. Kịch bản này giúp SOC kiểm tra khả năng quan sát\
+  \ web-to-endpoint chain, đặc biệt là các sự kiện tưởng như bình thường nhưng khi\
+  \ ghép lại tạo thành một chuỗi xâm nhập rõ ràng.\n\n**Độ tin cậy:** Cao – hành vi\
+  \ SEO poisoning/malvertising và fake download thường để lại dấu vết rõ ở proxy,\
+  \ DNS, EDR và process lineage.\n\n**Tài liệu tham khảo**\n- Mandiant\n- Palo Alto\
+  \ Unit 42\n- MITRE ATT&CK T1608.006, T1204.001, T1189"

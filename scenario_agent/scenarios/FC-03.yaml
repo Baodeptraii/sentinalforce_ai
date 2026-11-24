@@ -1,0 +1,182 @@
+id: FC-03
+name: 'Volt Typhoon: Xâm Nhập Hạ Tầng Trọng Yếu (Living-off-the-Land APT)'
+source: source-dataset/NCKH/69 kịch bản/full_attack_campaigns.md
+format: scenario_description
+executable: false
+content: "# FC-03 – Volt Typhoon: Xâm Nhập Hạ Tầng Trọng Yếu (Living-off-the-Land\
+  \ APT)\n## Chiến dịch Gián Điệp/Pre-positioning Dài Hạn của Nhóm APT Trung Quốc\
+  \ 2023–2025\n\n---\n\n### Giới thiệu chung\n\nVolt Typhoon (còn gọi là BRONZE SILHOUETTE,\
+  \ Vanguard Panda, KV Botnet operator) là một nhóm APT được cho là liên kết với nhà\
+  \ nước Trung Quốc, bị phát hiện bởi Microsoft vào tháng 5/2023. Điểm đặc biệt nhất\
+  \ là nhóm này **không sử dụng malware tùy chỉnh** — toàn bộ hoạt động dựa vào **Living-off-the-Land\
+  \ (LOL)** — các công cụ có sẵn trong Windows và network devices, khiến việc phát\
+  \ hiện cực kỳ khó khăn.\n\nMục tiêu chính của Volt Typhoon **không phải đánh cắp\
+  \ dữ liệu ngay** mà là **pre-positioning** — thiết lập và duy trì quyền truy cập\
+  \ ẩn trong các hạ tầng trọng yếu của Mỹ (military bases, utilities, water, communications,\
+  \ transportation) để sẵn sàng gây gián đoạn trong tình huống xung đột địa chính\
+  \ trị.\n\nCISA, NSA, FBI và các đối tác quốc tế (Australia, Canada, New Zealand,\
+  \ UK) cùng ban hành advisory về Volt Typhoon vào tháng 2/2024, mô tả sự xâm nhập\
+  \ đã duy trì **ít nhất 5 năm** trong một số trường hợp.\n\n**KV Botnet:** Volt Typhoon\
+  \ cũng vận hành KV Botnet — mạng các thiết bị SOHO (Cisco RV320, Netgear ProSAFE,\
+  \ Axis cameras) bị compromise để làm relay trung gian, ẩn traffic C2 vào trong traffic\
+  \ bình thường của ISP.\n\n---\n\n### Mô tả kịch bản\n\nVolt Typhoon khai thác lỗ\
+  \ hổng trong các thiết bị edge network lộ ra internet (VPN, router, firewall) để\
+  \ xâm nhập. Sau khi vào mạng, nhóm dùng hoàn toàn LOLBins để di chuyển, thu thập\
+  \ thông tin, và duy trì truy cập — không cài malware, không để lại file mới. Traffic\
+  \ C2 được route qua KV Botnet (các thiết bị SOHO bị compromise) để tránh bị phát\
+  \ hiện theo địa lý. Dwell time thường tính bằng tháng đến năm.\n\nĐiều kiện tiên\
+  \ quyết: Thiết bị edge network (VPN, Cisco, Fortinet) lộ ra internet và chưa được\
+  \ patch; tổ chức không có network segmentation đầy đủ giữa IT và OT; không có baseline\
+  \ cho LOLBins usage.\n\n---\n\n### Dòng tấn công end-to-end\n\n```\n[Giai đoạn 1\
+  \ – Reconnaissance & Targeting]\nShodan/Censys scan → Xác định edge device model/version\n\
+  → Passive reconnaissance: tìm hiểu cấu trúc mạng từ job postings, CVE databases\n\
+  → Xác định target liên quan đến military/utilities/communications\n\n[Giai đoạn\
+  \ 2 – Initial Access qua Edge Device]\nExploit lỗ hổng VPN/router (Cisco, Fortinet,\
+  \ Ivanti, NETGEAR)\n→ Authentication bypass hoặc command injection trên edge device\n\
+  → Lấy credentials từ device config\n→ Hoặc: Dùng stolen VPN credential (từ recon)\n\
+  \n[Giai đoạn 3 – Establish Foothold (LOL-only)]\n→ Dùng built-in shell/CLI của device\
+  \ để thực thi lệnh\n→ Không upload malware; dùng netsh, ntdsutil, wmi, reg, cmd,\
+  \ powershell\n→ Dump credentials từ memory/config bằng comsvcs.dll MiniDump\n\n\
+  [Giai đoạn 4 – Defense Evasion & Stealth]\n→ Xóa/sửa log trên edge device\n→ Dùng\
+  \ built-in admin tools → activity lẫn vào normal admin traffic\n→ Proxy traffic\
+  \ qua KV Botnet (SOHO devices) → IP xuất xứ giống US/local ISP\n→ Thời gian hoạt\
+  \ động phù hợp múi giờ mục tiêu (giả mạo admin hợp pháp)\n\n[Giai đoạn 5 – Discovery\
+  \ (extensive, manual)]\n→ ipconfig /all, route print, netstat -ano, net user, net\
+  \ group\n→ Enum network topology: arp -a, ping sweep, traceroute\n→ Xác định OT/ICS\
+  \ network path từ IT network\n→ Thu thập thông tin về critical system: SCADA, HMI,\
+  \ historian server\n\n[Giai đoạn 6 – Credential Access]\n→ Dump SAM, NTDS.dit bằng\
+  \ ntdsutil hoặc VSS\n→ Trích xuất credentials từ Windows Credential Manager, browser\n\
+  → Thu thập VPN pre-shared keys, SSH keys từ config files\n\n[Giai đoạn 7 – Lateral\
+  \ Movement (LOL)]\n→ Dùng stolen credentials qua RDP, WMI, SMB\n→ SSH lateral movement\
+  \ trong Linux/network device environment\n→ Không dùng Cobalt Strike hay tool công\
+  \ khai → dùng built-in tools\n\n[Giai đoạn 8 – C2 via KV Botnet Proxy]\n→ Traffic\
+  \ từ victim → KV Botnet relay node (SOHO device tại Mỹ) → C2 server\n→ HTTPS traffic\
+  \ ẩn trong Cloudflare/legitimate CDN\n→ DNS-over-HTTPS để ẩn DNS query\n\n[Giai\
+  \ đoạn 9 – Long-term Persistence]\n→ Tạo admin account ẩn trong AD\n→ Cài SSH authorized_keys\
+  \ trên Linux servers\n→ Modify scheduled task / cron job hiện có (thay vì tạo mới)\n\
+  → Duy trì truy cập im lặng, không hành động rõ ràng = pre-positioning\n\n[Giai đoạn\
+  \ 10 – OT/ICS Pre-positioning (tiềm năng)]\n→ Pivot từ IT sang OT network qua DMZ\n\
+  → Map SCADA/ICS topology\n→ Identify potential disruption points (power, water treatment,\
+  \ communications)\n→ Không thực hiện destructive action (tránh bị phát hiện) – chỉ\
+  \ maintain access\n```\n\n---\n\n### MITRE ATT&CK Mapping – Volt Typhoon\n\n| #\
+  \ | Tactic | Technique ID | Sub-technique | Tên kỹ thuật | Giai đoạn |\n|---|--------|-------------|---------------|--------------|-----------|\n\
+  | 1 | Reconnaissance | T1595 | T1595.002 | Active Scanning: Vulnerability Scanning\
+  \ (Shodan) | Giai đoạn 1 |\n| 2 | Reconnaissance | T1592 | T1592.004 | Gather Victim\
+  \ Host Info: Client Config (VPN model/version) | Giai đoạn 1 |\n| 3 | Resource Development\
+  \ | T1584 | T1584.005 | Compromise Infrastructure: Botnet (KV Botnet SOHO) | Giai\
+  \ đoạn 1/8 |\n| 4 | Initial Access | T1190 | – | Exploit Public-Facing Application\
+  \ (VPN/router vuln) | Giai đoạn 2 |\n| 5 | Initial Access | T1133 | – | External\
+  \ Remote Services (VPN with stolen creds) | Giai đoạn 2 |\n| 6 | Initial Access\
+  \ | T1078 | T1078.001 | Valid Accounts: Default Accounts (device default creds)\
+  \ | Giai đoạn 2 |\n| 7 | Execution | T1059 | T1059.003 | Command and Scripting:\
+  \ Windows Command Shell | Giai đoạn 3 |\n| 8 | Execution | T1059 | T1059.004 | Command\
+  \ and Scripting: Unix Shell (network devices) | Giai đoạn 3 |\n| 9 | Persistence\
+  \ | T1136 | T1136.001 | Create Account: Local Account (hidden admin) | Giai đoạn\
+  \ 9 |\n| 10 | Persistence | T1098 | T1098.004 | Account Manipulation: SSH Authorized\
+  \ Keys | Giai đoạn 9 |\n| 11 | Persistence | T1053 | T1053.003 | Scheduled Task/Job:\
+  \ Cron (modify existing) | Giai đoạn 9 |\n| 12 | Defense Evasion | T1070 | T1070.001\
+  \ | Indicator Removal: Clear Windows Event Logs | Giai đoạn 4 |\n| 13 | Defense\
+  \ Evasion | T1070 | T1070.003 | Indicator Removal: Clear Command History (bash history\
+  \ delete) | Giai đoạn 4 |\n| 14 | Defense Evasion | T1036 | T1036.003 | Masquerading:\
+  \ Rename System Utilities | Giai đoạn 4 |\n| 15 | Defense Evasion | T1562 | T1562.006\
+  \ | Impair Defenses: Indicator Blocking (disable audit logging) | Giai đoạn 4 |\n\
+  | 16 | Defense Evasion | T1090 | T1090.003 | Proxy: Multi-hop Proxy (KV Botnet relay\
+  \ chain) | Giai đoạn 4/8 |\n| 17 | Credential Access | T1003 | T1003.002 | OS Credential\
+  \ Dumping: Security Account Manager | Giai đoạn 6 |\n| 18 | Credential Access |\
+  \ T1552 | T1552.004 | Unsecured Credentials: Private Keys (SSH keys) | Giai đoạn\
+  \ 6 |\n| 19 | Credential Access | T1552 | T1552.001 | Unsecured Credentials: Credentials\
+  \ in Files (VPN config) | Giai đoạn 6 |\n| 20 | Discovery | T1016 | T1016.001 |\
+  \ System Network Configuration Discovery: Internet Connection Discovery | Giai đoạn\
+  \ 5 |\n| 21 | Discovery | T1049 | – | System Network Connections Discovery (netstat)\
+  \ | Giai đoạn 5 |\n| 22 | Discovery | T1018 | – | Remote System Discovery (arp,\
+  \ ping sweep) | Giai đoạn 5 |\n| 23 | Discovery | T1482 | – | Domain Trust Discovery\
+  \ | Giai đoạn 5 |\n| 24 | Discovery | T1046 | – | Network Service Discovery (port\
+  \ scan internal) | Giai đoạn 5 |\n| 25 | Lateral Movement | T1021 | T1021.001 |\
+  \ Remote Services: RDP | Giai đoạn 7 |\n| 26 | Lateral Movement | T1021 | T1021.004\
+  \ | Remote Services: SSH | Giai đoạn 7 |\n| 27 | C2 | T1071 | T1071.001 | Application\
+  \ Layer Protocol: Web Protocols (HTTPS) | Giai đoạn 8 |\n| 28 | C2 | T1090 | T1090.004\
+  \ | Proxy: Domain Fronting (CDN-based C2) | Giai đoạn 8 |\n| 29 | C2 | T1132 | T1132.001\
+  \ | Data Encoding: Standard Encoding | Giai đoạn 8 |\n| 30 | Collection | T1005\
+  \ | – | Data from Local System (config files, credentials) | Giai đoạn 6/7 |\n\n\
+  **Tổng: 30 techniques/sub-techniques | 10 tactics phủ**\n\n---\n\n### Log / Telemetry\
+  \ / Observable cần theo dõi\n\n**Edge Device & Initial Access:**\n- **Firewall/VPN\
+  \ logs:** Auth success từ IP bất thường; đặc biệt exploit pattern trước login (HTTP\
+  \ 200 sau nhiều 400/500 errors)\n- **VPN appliance syslog:** Unexpected admin commands;\
+  \ config download; credential export commands\n- **Netflow:** Outbound connection\
+  \ từ VPN appliance đến non-standard IP; traffic spike bất thường từ edge device\n\
+  - **DNS:** Edge device thực hiện DNS query đến external domain (VPN appliances không\
+  \ nên resolve external DNS)\n\n**LOLBins Discovery Activity:**\n- **Windows Security\
+  \ Event 4688 (với command line logging):**\n  - `whoami /all` từ system account\n\
+  \  - `nltest /dclist:` và `nltest /domain_trusts`\n  - `net user /domain`, `net\
+  \ group \"Domain Admins\" /domain`\n  - `ipconfig /all`, `route print`, `arp -a`,\
+  \ `netstat -ano`\n  - `wmic product get`, `wmic os get`\n- **Sysmon Event 1:** Chuỗi\
+  \ các LOLBin liên tiếp trong thời gian ngắn từ cùng một account\n- **PowerShell\
+  \ Event 4104:** `Get-ADUser`, `Get-ADGroup`, `Get-ADComputer` hàng loạt từ non-admin\
+  \ user\n\n**Credential Dumping (LOL methods):**\n- **Sysmon Event 10:** `comsvcs.dll`\
+  \ được load bởi `rundll32.exe` nhắm vào `lsass.exe` (MiniDump method)\n- **Sysmon\
+  \ Event 11:** File `lsass.dmp` hoặc tên ngẫu nhiên với kích thước ~40–200MB được\
+  \ tạo\n- **Process:** `ntdsutil snapshot create` + `ntdsutil activate instance ntds`\
+  \ + copy NTDS.dit (Event 4662)\n- **File access:** VSS shadow copy được mount và\
+  \ NTDS.dit được copy\n\n**KV Botnet / C2 Traffic:**\n- **Network:** Outbound HTTPS\
+  \ đến SOHO device IP (Cisco RV320, Netgear ProSAFE) — không phải corporate asset\n\
+  - **Proxy logs:** Traffic đến unusual IP ở US residential/small business range với\
+  \ consistent beaconing pattern (every N minutes)\n- **DNS:** DNS-over-HTTPS (DoH)\
+  \ traffic đến Cloudflare/Google 8.8.8.8 từ internal server (không phải DNS server)\n\
+  - **JA3/JA3S fingerprint:** Unusual TLS fingerprint không khớp với expected Windows/browser\
+  \ client\n\n**Persistence (Modified, không phải mới):**\n- **Windows Security Event\
+  \ 4720/4722:** New account creation; đặc biệt account tên giống system account\n\
+  - **Sysmon Event 13 (Registry):** `HKLM\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\\
+  WDigest\\UseLogonCredential` = 1 (force plaintext cred in memory)\n- **Linux:**\
+  \ `/etc/passwd`, `/etc/shadow`, `~/.ssh/authorized_keys` modification — FIM alert\n\
+  - **Scheduled Task:** Modification của existing task (không tạo mới) — khó phát\
+  \ hiện hơn, cần baseline\n\n**Long-term Dwell Indicators:**\n- **Authentication\
+  \ patterns:** Account đăng nhập chính xác 8:30 AM giờ US, không bao giờ có failed\
+  \ login, không bao giờ có MFA challenge → anomalous pattern (quá \"perfect\")\n\
+  - **Network:** Server internal tạo outbound connection đến fixed IP lúc 03:17 AM\
+  \ mỗi ngày → beaconing\n\n---\n\n### Gợi ý Detection / Hunting\n\n**Critical – LOLBin\
+  \ command chain detection:**\n\n```kql\n// KQL – Detect LOLBin recon chain (Volt\
+  \ Typhoon pattern)\nSecurityEvent\n| where EventID == 4688\n| where CommandLine\
+  \ has_any (\n    \"whoami /all\", \"nltest /domain_trusts\", \"nltest /dclist\"\
+  ,\n    \"net group \\\"Domain Admins\\\"\", \"netstat -ano\", \"route print\",\n\
+  \    \"wmic os get\", \"systeminfo\", \"ipconfig /all\"\n  )\n| summarize commands\
+  \ = make_set(CommandLine), count=count() \n    by Account, Computer, bin(TimeGenerated,\
+  \ 30m)\n| where count > 4\n| order by TimeGenerated desc\n```\n\n```kql\n// KQL\
+  \ – Detect comsvcs MiniDump (LOL LSASS dump)\nSecurityEvent\n| where EventID ==\
+  \ 4688\n| where CommandLine has \"comsvcs\" and CommandLine has \"MiniDump\"\n \
+  \   or CommandLine has \"rundll32\" and CommandLine has \"lsass\"\n```\n\n**Hunting\
+  \ – Beaconing detection:**\n\n```kql\n// Network flow analysis – detect periodic\
+  \ beaconing\n// Requires network flow data (Zeek, Darktrace, etc.)\n// Look for:\
+  \ same destination IP, consistent interval (±10%), \n// small payload (~1-5KB),\
+  \ HTTPS, >48 hours continuous\nNetworkFlow\n| where RemotePort == 443\n| summarize\
+  \ \n    connection_count = count(),\n    avg_bytes = avg(BytesSent),\n    time_variance\
+  \ = stdev(datetime_diff('minute', TimeGenerated, prev(TimeGenerated)))\n    by SrcIP,\
+  \ DstIP, bin(TimeGenerated, 1d)\n| where connection_count > 100 and time_variance\
+  \ < 2 // very consistent interval\n```\n\n**Hunting – Edge device anomaly:**\n\n\
+  ```\n// Firewall/VPN: Alert on CLI commands from management interface\n// Look for:\
+  \ show running-config, copy running-config, \n//           show version, show interface,\
+  \ show users (cisco)\n// These commands from unusual source IP → IOC\n```\n\n**Hunt\
+  \ priority list (Volt Typhoon specific):**\n1. Tìm `ntdsutil` usage bên ngoài DC\
+  \ maintenance window\n2. Tìm `comsvcs.dll` được gọi bởi `rundll32.exe`\n3. Tìm account\
+  \ mới được tạo với tên gần giống service account tồn tại (1 ký tự khác)\n4. Review\
+  \ SSH `authorized_keys` trên tất cả Linux server — tìm key không được ghi nhận trong\
+  \ key management system\n5. Tìm scheduled task được modify (không phải tạo mới)\
+  \ trong 30 ngày qua\n6. Map tất cả SOHO device IP trong network flow tới external\
+  \ destinations lạ\n\n---\n\n### Vì sao đáng ưu tiên 2024–2026\n\nCISA/NSA/FBI Advisory\
+  \ (2/2024) cảnh báo Volt Typhoon đã xâm nhập vào cơ sở hạ tầng trọng yếu Mỹ và nhiều\
+  \ quốc gia đồng minh, duy trì quyền truy cập ẩn trong nhiều năm. Hơn 400 thiết bị\
+  \ SOHO bị compromise cho KV Botnet đã bị FBI neutralize (1/2024), nhưng nhóm tiếp\
+  \ tục tái xây dựng botnet. Điều đặc biệt là không có malware đặc trưng nào để detect\
+  \ — toàn bộ dựa vào LOLBins.\n\nKịch bản này quan trọng với tổ chức chính phủ, quốc\
+  \ phòng, năng lượng, nước, viễn thông — và bất kỳ tổ chức nào là nhà cung cấp cho\
+  \ military/government.\n\n**Giá trị diễn tập:** Kiểm tra khả năng phát hiện LOLBins;\
+  \ kiểm tra edge device monitoring; kiểm tra OT/ICS segmentation; kiểm tra Network\
+  \ Traffic Analysis (NTA/NDR) deployment.\n\n**Độ tin cậy:** Rất cao – CISA Advisory\
+  \ AA24-038A (February 2024), Microsoft TI Blog \"Volt Typhoon\" (May 2023), NSA/CISA/FBI\
+  \ joint advisory, multiple US government disclosures.\n\n---\n\n### Tài liệu tham\
+  \ khảo\n\n- CISA/NSA/FBI: \"Advisory AA24-038A – PRC State-Sponsored Actors Compromise\
+  \ and Maintain Persistent Access to U.S. Critical Infrastructure\" (February 2024)\n\
+  - Microsoft: \"Volt Typhoon targets US critical infrastructure with living-off-the-land\
+  \ techniques\" (May 2023)\n- SecurityScorecard: \"KV Botnet Analysis\" (2024)\n\
+  - FBI: \"Court-Authorized Operation Disrupts the KV Botnet\" (January 2024)\n- MITRE\
+  \ ATT&CK: T1190, T1090.003, T1003.002, T1070.003, T1584.005\n- Dragos: \"VOLTZITE\
+  \ Threat Group\" (2024) [Dragos designation cho Volt Typhoon]\n\n---"

@@ -1,0 +1,108 @@
+id: SCENARIO-07
+name: Khai Thác Log4Shell (CVE-2021-44228) Còn Tồn Tại Đến 2024
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 07 – Khai Thác Log4Shell (CVE-2021-44228) Còn Tồn Tại Đến 2024
+
+
+  **Giới thiệu chung**
+
+
+  Log4Shell, lỗ hổng RCE trong Apache Log4j 2 (CVE-2021-44228), được công bố tháng
+  12/2021 nhưng vẫn là mối đe doạ thực tế trong 2024. Hàng nghìn tổ chức chưa hoàn
+  toàn khắc phục (do hệ thống shadow IT, nested dependencies). CISA, NSA và nhiều
+  vendor xác nhận Log4Shell vẫn được khai thác tích cực.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công quét internet tìm ứng dụng Java/Spring Boot public-facing có Log4j dễ
+  bị tấn công. Gửi JNDI lookup string trong HTTP header (User-Agent, X-Forwarded-For,
+  etc.). Server ghi log request → Log4j xử lý JNDI → kết nối đến server của kẻ tấn
+  công → tải class Java độc hại → thực thi mã.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Scan tìm Log4j endpoint → Inject JNDI payload vào HTTP header
+
+  → Victim server lookup LDAP/RMI server của attacker
+
+  → Tải và thực thi Java class độc hại → RCE
+
+  → Reverse shell / Payload download → Post-exploitation
+
+  ```
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1190 | Exploit Public-Facing Application |
+
+  | Execution | T1059 | T1059.004 – Unix Shell |
+
+  | Defense Evasion | T1140 | Deobfuscate/Decode Files |
+
+  | C2 | T1071 | Application Layer Protocol |
+
+  | Exfiltration | T1041 | Exfiltration Over C2 Channel |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **WAF/IDS:** JNDI lookup string patterns trong request (`${jndi:ldap://`, `${${::-j}...}`),
+  obfuscated variants
+
+  - **Network:** Outbound LDAP/RMI connection từ Java application server đến external
+  IP
+
+  - **Application logs:** Chuỗi lookup xuất hiện trong log output
+
+  - **EDR:** Java process tạo outbound connection đến non-standard destination
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **WAF rule:** Block JNDI lookup patterns (và các biến thể obfuscated: `${${lower:j}ndi:...}`)
+
+  - **Network:** Alert khi Java process tạo outbound LDAP/RMI connection
+
+  - **SIEM:** Tìm User-Agent/X-Forwarded-For headers chứa `${jndi` trong web server
+  logs
+
+  - **Vuln scan:** Định kỳ scan inventory tìm Log4j dependency (nested jars)
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Unit 42 (2024) xác nhận Log4Shell vẫn trong top exploited vulnerabilities. Đặc biệt
+  nguy hiểm với tổ chức dùng nhiều sản phẩm Java thương mại (VMware, Cisco) chưa được
+  update đầy đủ. CISA liệt kê Log4Shell là "routinely exploited" trong báo cáo 2024.
+
+
+  **Độ tin cậy:** Rất cao – CISA, NSA, Unit 42, multiple vendor advisories.
+
+
+  **Tài liệu tham khảo**
+
+  - CISA: "Apache Log4j Vulnerability Guidance"
+
+  - NSA/CISA: "Joint Cybersecurity Advisory – Log4Shell" (2021–2024)
+
+  - Unit 42: "Top CVEs Still Being Exploited" (2024)
+
+
+  ---'

@@ -1,0 +1,11 @@
+id: 18f6343c-e621-5bb4-b4bd-7827287f8b23
+name: '[SCENARIO-35] Process Hollowing – Ngụy trang payload trong tiến trình hợp lệ'
+description: Trong kịch bản này, tác nhân đã có khả năng chạy code cục bộ và chọn
+  một executable hợp lệ, quen thuộc để tạo process mới trong trạng thái suspended.
+  Actor thường là loader malware, trojan hoặc implant hậu khai thác tìm cách chạy
+  lâu hơn mà ít gây chú ý; điều kiện tiên quyết là có thể tạo process mới và can thiệp
+  giai đoạn đầu của vòng đời tiến trình; kết quả mong muốn là payload độc hại
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- 1c91e740-1729-4329-b779-feba6e71d048
+- 562427b4-39ef-4e8c-af88-463a78e70b9c

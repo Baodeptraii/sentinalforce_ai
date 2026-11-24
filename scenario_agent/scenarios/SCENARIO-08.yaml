@@ -1,0 +1,109 @@
+id: SCENARIO-08
+name: Khai Thác VPN/SSL Gateway (Ivanti/Citrix/Pulse Secure)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 08 – Khai Thác VPN/SSL Gateway (Ivanti/Citrix/Pulse Secure)
+
+
+  **Giới thiệu chung**
+
+
+  Lỗ hổng trong VPN và SSL gateway là một trong các vector tấn công được ưa thích
+  nhất bởi cả ransomware groups và APT nation-state. Các sản phẩm như Ivanti Connect
+  Secure, Citrix NetScaler ADC, Fortinet FortiOS, và Pulse Secure thường xuyên có
+  lỗ hổng pre-authentication RCE hoặc authentication bypass nghiêm trọng.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công quét internet tìm VPN gateway lộ ra public. Khai thác lỗ hổng authentication
+  bypass (ví dụ CVE-2023-46805, CVE-2024-21887 trên Ivanti) để thực thi lệnh không
+  cần xác thực. Upload web shell để duy trì truy cập, sau đó pivot vào mạng nội bộ.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Scan Shodan/Censys cho VPN endpoint → Identify vulnerable version
+
+  → Exploit auth bypass → Execute commands as root/admin
+
+  → Upload persistent web shell → Harvest VPN credentials
+
+  → Pivot vào internal network → Lateral movement
+
+  ```
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1190 | Exploit Public-Facing Application |
+
+  | Initial Access | T1133 | External Remote Services (VPN) |
+
+  | Persistence | T1505 | T1505.003 – Web Shell |
+
+  | Credential Access | T1552 | T1552.001 – Credentials in Files |
+
+  | Lateral Movement | T1021 | Remote Services |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **VPN gateway logs:** Authentication attempts từ unusual IP, auth bypass patterns,
+  config change events
+
+  - **Syslog từ appliance:** Unexpected command execution, web shell creation, unusual
+  outbound connection
+
+  - **Network:** Outbound connection từ VPN appliance đến external C2
+
+  - **SIEM:** Login events từ VPN gateway với non-standard user agents
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** CVE scan traffic nhắm vào VPN appliance (version fingerprinting patterns)
+
+  - **Alert:** Outbound connection từ VPN appliance đến external IP
+
+  - **Hunt:** Review VPN appliance log cho bất thường về command execution
+
+  - **Integrity check:** Monitor VPN system files với FIM (File Integrity Monitoring)
+
+  - **Patch cadence:** Ivanti/Fortinet/Citrix cần patch trong 24–48h sau advisory
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  CISA AA24-060A (2024): Ivanti VPN exploits được dùng bởi nation-state actors. Fortinet
+  FortiOS vulns (CVE-2023-27997) được khai thác tích cực bởi ransomware và APT. Citrix
+  Bleed (CVE-2023-4966) đã ảnh hưởng hàng chục nghìn tổ chức. Đây là top-priority
+  attack vector của 2023–2025.
+
+
+  **Độ tin cậy:** Rất cao – CISA, Mandiant, multiple vendor advisories 2024.
+
+
+  **Tài liệu tham khảo**
+
+  - CISA: "Advisory AA24-060A – Ivanti Connect Secure Vulnerabilities" (2024)
+
+  - Mandiant: "Ivanti Zero-Day Exploitation" (2024)
+
+  - CISA KEV: CVE-2023-46805, CVE-2024-21887, CVE-2023-4966
+
+
+  ---'

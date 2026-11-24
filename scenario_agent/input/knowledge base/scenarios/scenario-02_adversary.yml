@@ -1,0 +1,15 @@
+id: a800f886-1f0b-518a-9db1-04188c272d08
+name: '[SCENARIO-02] Phishing AiTM (Adversary-in-the-Middle) Đánh Cắp Session Cookie'
+description: Kẻ tấn công gửi email phishing với link dẫn đến reverse proxy. Người
+  dùng đăng nhập và hoàn tất MFA thông qua proxy — proxy chuyển tiếp request đến server
+  thật và nhận session cookie hợp lệ. Kẻ tấn công sử dụng cookie này để đăng nhập
+  vào tài khoản mà không cần MFA.
+atomic_ordering:
+- 4c9f1a19-3126-4bf5-8224-a2ace3f31755
+- b8e747c3-bdf7-4d71-bce2-f1df2a057406
+- 9d1fcfa3-c3d9-58cc-816c-957a34f111dd
+- 3f1b5096-0139-4736-9b78-19bcb02bb1cb
+- 3234117e-151d-4254-9150-3d0bac41e38c
+- a1b2c3d4-dvwa-0010-weak-000000000010
+- b37b3e44-a4df-517f-a1e5-9df64381db59
+- b37b3e44-a4df-517f-a1e5-9df64381db59

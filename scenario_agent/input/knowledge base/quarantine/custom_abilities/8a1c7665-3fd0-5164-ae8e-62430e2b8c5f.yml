@@ -1,0 +1,13 @@
+- id: 8a1c7665-3fd0-5164-ae8e-62430e2b8c5f
+  name: "Simulate T1563 - Lateral Movement qua RDP \u2013 Brute Force v\xE0 Session\
+    \ Hijacking"
+  description: Automated simulation ability for MITRE technique T1563
+  tactic: execution
+  technique_id: T1563
+  technique_name: "Lateral Movement qua RDP \u2013 Brute Force v\xE0 Session Hijacking"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1563: Lateral Movement qua\
+      \ RDP \u2013 Brute Force v\xE0 Session Hijacking'"
+    timeout: 30

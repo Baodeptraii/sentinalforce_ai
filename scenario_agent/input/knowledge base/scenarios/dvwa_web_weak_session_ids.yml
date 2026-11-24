@@ -1,0 +1,6 @@
+id: e5f6a7b8-dvwa-0010-weak-session
+name: DVWA Web Weak Session ID Inspection
+description: Mô phỏng kiểm tra cơ chế cấp phát Cookie/Session ID tuần tự yếu của DVWA.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0010-weak-000000000010

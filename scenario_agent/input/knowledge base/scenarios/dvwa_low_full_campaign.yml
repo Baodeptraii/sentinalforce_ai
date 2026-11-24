@@ -1,0 +1,15 @@
+id: e5f6a7b8-dvwa-low-adversary-profile-0001
+name: DVWA Low Security Full Test Campaign
+description: Kịch bản kiểm thử toàn diện 10 kỹ thuật web trên ứng dụng DVWA mức bảo
+  mật low (XAMPP trên Windows).
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0002-brut-000000000002
+- a1b2c3d4-dvwa-0003-cmdi-000000000003
+- a1b2c3d4-dvwa-0004-flfi-000000000004
+- a1b2c3d4-dvwa-0005-sqli-000000000005
+- a1b2c3d4-dvwa-0006-bsql-000000000006
+- a1b2c3d4-dvwa-0007-upld-000000000007
+- a1b2c3d4-dvwa-0008-xssr-000000000008
+- a1b2c3d4-dvwa-0009-xsss-000000000009
+- a1b2c3d4-dvwa-0010-weak-000000000010

@@ -1,0 +1,136 @@
+id: SCENARIO-21
+name: LSASS Memory Dumping – Mimikatz-style
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 21 – LSASS Memory Dumping – Mimikatz-style**
+
+
+  **Giới thiệu chung**
+
+
+  Bộ nhớ của tiến trình `lsass.exe` từ lâu là mục tiêu hàng đầu của các tác nhân hậu
+  khai thác trên Windows vì có thể chứa credential material phục vụ di chuyển ngang,
+  chiếm tài khoản đặc quyền và mở rộng phạm vi xâm nhập. Đây là scenario nền tảng
+  trong hầu hết các chuỗi xâm nhập nội bộ nhắm vào Active Directory.
+
+
+  **Mô tả kịch bản**
+
+
+  Sau khi có quyền quản trị cục bộ hoặc khả năng truy cập handle tới tiến trình LSASS,
+  kẻ tấn công thực hiện dump bộ nhớ hoặc trích xuất credential material từ tiến trình
+  này bằng công cụ quen thuộc hoặc binary sống nhờ hệ thống. Điều kiện tiên quyết
+  là đặc quyền đủ cao trên endpoint. Kết quả mong muốn là thu được NTLM hash, plaintext
+  credential, ticket material hoặc dữ liệu xác thực đủ để tiếp tục sang pass-the-hash,
+  pass-the-ticket hoặc DCSync.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Foothold với quyền cao trên endpoint
+
+  → Truy cập bộ nhớ LSASS hoặc tạo memory dump
+
+  → Trích xuất credential material
+
+  → Tái sử dụng thông tin xác thực trên host/domain khác
+
+  → Mở rộng hậu khai thác trong AD
+
+  ```
+
+
+  1. **Leo quyền trên host:** Kẻ tấn công đã đạt local admin hoặc SYSTEM.
+
+  2. **Mở handle vào LSASS:** Process lạ truy cập bộ nhớ hoặc tạo dump file.
+
+  3. **Thu credential material:** Hash, plaintext, secrets hoặc vé xác thực được lấy
+  ra.
+
+  4. **Tái sử dụng thông tin:** Material thu được được dùng để truy cập dịch vụ và
+  host khác.
+
+  5. **Kích hoạt giai đoạn tiếp theo:** Lateral movement hoặc AD abuse được đẩy nhanh.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Credential Access | T1003 | T1003.001 – OS Credential Dumping: LSASS Memory |
+
+  | Defense Evasion | T1036 | Có thể dùng công cụ / process hợp pháp để ngụy trang
+  thao tác dump |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Sysmon Event 10 / EDR process access:** Process không được phê duyệt truy cập
+  `lsass.exe`.
+
+  - **Process creation:** `rundll32`, `taskmgr`, `comsvcs`, `procdump`, hoặc binary
+  ít gặp được dùng gần thời điểm dump.
+
+  - **File telemetry:** Dump file xuất hiện ở `%TEMP%`, desktop admin, `C:\Windows\Temp\`,
+  hoặc đường dẫn staging lạ.
+
+  - **Defender / EDR alerts:** Credential dumping, suspicious memory access, AMSI
+  / AV detections liên quan.
+
+  - **Correlation:** Sau dump LSASS, cùng tài khoản hoặc cùng host nhanh chóng xuất
+  hiện đăng nhập tới máy khác.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  ```text
+
+  EventID=10
+
+  AND TargetImage = "*\\lsass.exe"
+
+  AND SourceImage NOT IN (approved_security_tools, approved_backup_tools)
+
+  ```
+
+
+  - **Alert:** Mọi tiến trình không thuộc allowlist truy cập handle tới LSASS.
+
+  - **Hunt:** Tìm `lsass.exe` access đi kèm dump file creation trong vòng vài phút.
+
+  - **Alert:** Các binary sống nhờ hệ thống mở handle tới LSASS rồi ngay sau đó ghi
+  file `.dmp`.
+
+  - **Hardening validation:** Bật Protected Process Light, Credential Guard và kiểm
+  tra xem telemetry có phản ánh nỗ lực bị chặn hay không.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Nếu tổ chức muốn mô phỏng hậu khai thác thực chiến trên Windows, LSASS dumping gần
+  như là kịch bản không thể thiếu. Nó là cầu nối tự nhiên giữa persistence trên endpoint
+  và các bước chiếm quyền miền, đồng thời buộc đội phòng thủ phải phối hợp giữa hardening,
+  EDR detection, memory access monitoring và hunting theo chuỗi hành vi.
+
+
+  **Độ tin cậy:** Rất cao – kỹ thuật cốt lõi, giàu observable và có giá trị thực chiến
+  cao.
+
+
+  **Tài liệu tham khảo**
+
+  - Microsoft
+
+  - CrowdStrike
+
+  - MITRE ATT&CK T1003.001'

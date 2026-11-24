@@ -1,0 +1,13 @@
+id: 502f015f-97f2-5596-9ab0-037adff47fd0
+name: '[SCENARIO-49] C2 qua Dịch vụ Web Hợp lệ (Slack/GitHub/Telegram)'
+description: Trong kịch bản này, malware hoặc implant dùng API của Slack, GitHub,
+  Telegram hoặc một dịch vụ web hợp lệ tương tự để nhận chỉ thị, đẩy kết quả và duy
+  trì C2 dưới hình thức gọi API tưởng như bình thường. Actor thường là tác nhân muốn
+  tránh IOC-based blocklist hoặc hoạt động trong môi trường proxy chặn nghiêm ngặt
+  các domain “xấu” nhưng vẫn cho phép SaaS phổ biến; điều kiện tiên quyết là host
+  đã bị compromise
+atomic_ordering:
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- 81c13829-f6c9-45b8-85a6-053366d55297
+- d0a0ce44-1e4a-58ce-82f2-2762724a5a07
+- ec9ab81c-8053-4957-8c66-0218381ab564

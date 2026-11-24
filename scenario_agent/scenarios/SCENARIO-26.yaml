@@ -1,0 +1,53 @@
+id: SCENARIO-26
+name: Pass-the-Ticket – Golden/Silver Ticket Attack
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 26 – Pass-the-Ticket – Golden/Silver Ticket Attack**\n\n**Giới\
+  \ thiệu chung**\n\nPass-the-Ticket là lớp tấn công Kerberos nguy hiểm hơn so với\
+  \ pass-the-hash trong nhiều bối cảnh AD. Nếu có được ticket material hoặc khóa cần\
+  \ thiết, kẻ tấn công có thể sử dụng hoặc giả mạo ticket để truy cập dịch vụ mà không\
+  \ cần biết mật khẩu tài khoản gốc. Golden Ticket và Silver Ticket là hai biến thể\
+  \ nổi bật nhất trong nhóm này.\n\n**Mô tả kịch bản**\n\nTác nhân hậu khai thác đã\
+  \ có điều kiện thu được ticket hợp lệ, khóa tài khoản dịch vụ, hoặc material đủ\
+  \ để tạo vé Kerberos giả mạo. Điều kiện tiên quyết có thể là compromise tài khoản\
+  \ dịch vụ, KRBTGT hoặc dữ liệu AD nhạy cảm từ bước trước như DCSync. Mục tiêu cuối\
+  \ là tạo truy cập lâu dài, vượt kiểm soát xác thực thông thường, và truy cập tài\
+  \ nguyên AD hoặc dịch vụ cụ thể với quyền cao.\n\n**Dòng tấn công end-to-end**\n\
+  \n```text\nThu ticket material hoặc khóa quan trọng\n→ Nạp / dùng ticket Kerberos\
+  \ giả mạo hoặc đánh cắp\n→ Truy cập dịch vụ hoặc tài nguyên AD\n→ Duy trì quyền\
+  \ truy cập đặc quyền không phụ thuộc mật khẩu\n→ Mở rộng tầm kiểm soát trong domain\n\
+  ```\n\n1. **Chuẩn bị material:** Ticket hoặc khóa mật mã cần thiết đã bị lấy từ\
+  \ các bước xâm nhập trước.\n2. **Tạo hoặc nạp ticket:** Ticket được đưa vào phiên\
+  \ truy cập trên host do kẻ tấn công kiểm soát.\n3. **Thử quyền truy cập:** Dịch\
+  \ vụ đích chấp nhận ticket và mở đường cho truy cập đặc quyền.\n4. **Mở rộng phạm\
+  \ vi:** Từ một dịch vụ, quyền truy cập lan sang nhiều tài nguyên miền khác.\n5.\
+  \ **Duy trì stealth:** Vì không cần dùng password trực tiếp, nhiều kiểm soát dựa\
+  \ trên thay đổi mật khẩu không đủ hiệu quả.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic\
+  \ | Technique | Mô tả |\n|--------|-----------|-------|\n| Lateral Movement | T1550\
+  \ | T1550.003 – Pass the Ticket |\n| Credential Access | T1558 | T1558.001 – Golden\
+  \ Ticket |\n| Credential Access | T1558 | T1558.002 – Silver Ticket |\n| Privilege\
+  \ Escalation | T1078 | Sử dụng danh tính hợp lệ / material xác thực thay thế để\
+  \ leo quyền |\n\n**Log / Telemetry / Observable**\n\n- **Event 4768 / 4769 / 4770:**\
+  \ Ticket issuance / service access có mẫu bất thường so với vòng đời Kerberos chuẩn.\n\
+  - **KDC logs:** Không thấy chuỗi AS-REQ / TGS-REQ tương xứng trước khi ticket được\
+  \ dùng để truy cập dịch vụ.\n- **Account anomaly:** Tài khoản hoặc SID chưa từng\
+  \ xuất hiện lại được chấp nhận trong phiên truy cập.\n- **Lifetime anomaly:** Ticket\
+  \ có thời lượng sống hoặc thuộc tính lệch baseline.\n- **Service telemetry:** Dịch\
+  \ vụ đích ghi nhận truy cập đặc quyền nhưng không có logon chain phù hợp từ user\
+  \ thật.\n\n**Gợi ý Detection / Hunting**\n\n```text\nEventID IN (4768, 4769, 4770)\n\
+  AND (\n  TicketLifetime > baseline_max\n  OR AccountName NOT IN current_directory_baseline\n\
+  \  OR ExpectedPreAuthChainMissing = true\n  OR ServiceAccessFromUnusualHost = true\n\
+  )\n```\n\n- **Alert:** Dịch vụ nhận ticket hợp lệ cho account mà trước đó không\
+  \ có chuỗi cấp phát hợp lý.\n- **Hunt:** So sánh thời lượng, encryption type, realm\
+  \ và host nguồn với baseline Kerberos của môi trường.\n- **Alert:** Sau thay đổi\
+  \ KRBTGT hoặc sau sự cố DCSync, vẫn còn ticket hành xử bất thường tồn tại.\n- **Containment\
+  \ readiness:** Kiểm tra khả năng reset hai vòng KRBTGT, thu hồi ticket và cô lập\
+  \ host quản trị có nguy cơ cao.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nScenario\
+  \ này đại diện cho giai đoạn AD compromise trưởng thành, nơi bài toán không còn\
+  \ là “ai đăng nhập bằng mật khẩu gì” mà là “material xác thực nào đang được dùng\
+  \ thay thế”. Nó rất phù hợp cho các đội blue team muốn nâng cấp phân tích Kerberos\
+  \ từ mức log cơ bản lên mức hunting hành vi.\n\n**Độ tin cậy:** Cao – khó xử lý\
+  \ hơn PTH nhưng cực kỳ giá trị cho diễn tập miền và nhận diện compromise sâu.\n\n\
+  **Tài liệu tham khảo**\n- SpecterOps\n- MITRE ATT&CK T1550.003, T1558.001, T1558.002\n\
+  - Kerberos Detection and Hunting Guidance"

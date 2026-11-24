@@ -1,0 +1,16 @@
+id: e5f6a7b8-dvwa-low-adversary-profile-0001
+name: DVWA Low Security Standard Campaign
+description: >-
+  Chuỗi kịch bản mẫu kiểm thử Web DVWA (Apache trên Windows XAMPP) với khởi tạo
+  phiên, thử nghiệm Brute Force, Command Injection và SQL Injection để đánh giá
+  Web Access Log và Wazuh Rule Alert.
+atomic_ordering:
+  - a1b2c3d4-dvwa-0001-init-000000000001
+  - a1b2c3d4-dvwa-0002-brut-000000000002
+  - a1b2c3d4-dvwa-0003-cmdi-000000000003
+  - a1b2c3d4-dvwa-0005-sqli-000000000005
+objective: 495a9828-cab1-44dd-a0ca-66e58177d8cc
+tags:
+  - template
+  - web
+  - dvwa

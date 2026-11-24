@@ -1,0 +1,12 @@
+- id: cc96c7c9-ff2f-59a4-ba30-2ec14a35da21
+  name: "Simulate T1213 - Microsoft 365 \u2013 Teams/SharePoint Data Collection"
+  description: Automated simulation ability for MITRE technique T1213
+  tactic: execution
+  technique_id: T1213
+  technique_name: "Microsoft 365 \u2013 Teams/SharePoint Data Collection"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1213: Microsoft 365 \u2013\
+      \ Teams/SharePoint Data Collection'"
+    timeout: 30

@@ -1,0 +1,59 @@
+id: SCENARIO-41
+name: Lateral Movement qua RDP – Brute Force và Session Hijacking
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 41 – Lateral Movement qua RDP – Brute Force và Session Hijacking**\n\
+  \n**Giới thiệu chung**\n\nRDP vẫn là một trong những con đường di chuyển ngang phổ\
+  \ biến nhất trong môi trường Windows vì nó cung cấp ngay phiên tương tác đầy đủ\
+  \ trên máy đích. Một khi tác nhân có credential phù hợp, RDP không chỉ cho phép\
+  \ điều khiển trực tiếp mà còn mở ra khả năng chiếm, nối lại hoặc lợi dụng phiên\
+  \ làm việc sẵn có của người dùng/quản trị viên.\n\n**Mô tả kịch bản**\n\nTrong kịch\
+  \ bản này, kẻ tấn công dùng credential đánh cắp, brute-force nội bộ, hoặc một phiên\
+  \ người dùng còn sống để mở RDP sang máy khác trong mạng và thao tác trực tiếp như\
+  \ một người quản trị hoặc người dùng hợp lệ. Actor thường là operator hậu khai thác,\
+  \ ransomware affiliate hoặc kẻ xâm nhập AD đang cần tương tác GUI để đi nhanh; điều\
+  \ kiện tiên quyết là có credential hợp lệ hoặc quyền đủ để lợi dụng phiên RDP/console\
+  \ có sẵn, đồng thời mạng nội bộ cho phép kết nối tới máy đích; kết quả mong muốn\
+  \ là thiết lập được điểm bám tương tác trên host mới và dùng host đó cho các bước\
+  \ discovery, persistence, staging hoặc triển khai tiếp theo. fileciteturn1file0L68-L68\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nCó credential / phiên người dùng phù\
+  \ hợp\n→ Kết nối RDP tới host đích\n→ Đăng nhập interactive hoặc nối lại phiên hiện\
+  \ có\n→ Thao tác trực tiếp trên máy mới\n→ Mở rộng lateral movement\n→ Dùng host\
+  \ mới làm bàn đạp tiếp theo\n```\n\n1. **Chuẩn bị credential hoặc điểm vào phiên:**\
+  \ Tài khoản người dùng, quản trị viên hoặc thông tin về phiên còn sống đã nằm trong\
+  \ tay tác nhân.\n2. **Thiết lập kênh RDP:** Kết nối tới workstation, server ứng\
+  \ dụng hoặc máy quản trị được mở.\n3. **Tạo hoặc chiếm phiên tương tác:** Đăng nhập\
+  \ mới, reconnect hoặc lợi dụng session đang có.\n4. **Thao tác trực tiếp trên host:**\
+  \ Discovery, copy dữ liệu, chạy công cụ hợp lệ hoặc triển khai bước tiếp theo.\n\
+  5. **Lan rộng nội bộ:** Host mới trở thành điểm trung gian cho RDP tiếp theo hoặc\
+  \ công cụ quản trị khác.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô\
+  \ tả |\n|--------|-----------|-------|\n| Lateral Movement | T1021 | T1021.001 –\
+  \ Remote Desktop Protocol |\n| Lateral Movement | T1563 | T1563.002 – RDP Session\
+  \ Hijacking / Session shadowing trong bối cảnh chiếm phiên |\n| Credential Access\
+  \ | T1078 | Valid Accounts thường là điều kiện mở đầu cho luồng RDP hợp lệ nhưng\
+  \ bị lạm dụng |\n\n**Log / Telemetry / Observable**\n\n- **Windows Security Event\
+  \ 4624 / 4625:** Logon type 10, nhiều lần thất bại trước thành công, hoặc thành\
+  \ công từ host nguồn bất thường.\n- **Event 4778 / 4779:** Session reconnect/disconnect\
+  \ cho thấy mô hình chiếm/khôi phục phiên.\n- **TerminalServices logs:** Sự kiện\
+  \ xác nhận RDP inbound, nguồn IP, tên tài khoản và thời điểm tạo phiên.\n- **EDR\
+  \ process telemetry:** `mstsc.exe`, remote session processes, clipboard/drive redirection\
+  \ hoặc child process hoạt động trong thời gian phiên RDP tồn tại.\n- **Behavior\
+  \ drift:** Một workstation người dùng bình thường đột nhiên nhận nhiều phiên RDP\
+  \ quản trị hoặc đóng vai máy nhảy trung gian.\n\n**Gợi ý Detection / Hunting**\n\
+  \n```text\n(\n  EventID = 4624\n  AND LogonType = 10\n  AND SourceHost NOT IN approved_rdp_gateways\n\
+  )\nOR\n(\n  EventID = 4625\n  AND RepeatedFailuresToSameHost = true\n)\nOR\n(\n\
+  \  EventID IN (4778, 4779)\n  AND SessionOwnerContextIsUnusual = true\n)\n```\n\n\
+  - **Alert:** RDP từ workstation ngang hàng sang server hoặc từ host người dùng sang\
+  \ nhiều host khác trong thời gian ngắn.\n- **Hunt:** Chuỗi `credential theft / spray\
+  \ → RDP success → interactive admin activity` xuyên nhiều host.\n- **Alert:** Session\
+  \ reconnect/hijack trên máy có tài khoản đặc quyền đang đăng nhập.\n- **Baseline:**\
+  \ Chốt rõ danh sách jump server, bastion host và nhóm máy được phép RDP để mọi luồng\
+  \ còn lại trở thành tín hiệu ưu tiên.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nRDP\
+  \ không chỉ là công cụ quản trị hợp lệ; nó còn là một trong những cơ chế lateral\
+  \ movement rõ nét nhất. Scenario này rất phù hợp cho diễn tập vì nó kết nối được\
+  \ identity, network segmentation, host telemetry và session management trong cùng\
+  \ một bài kiểm tra thực dụng.\n\n**Độ tin cậy:** Cao – log RDP và Windows security\
+  \ events rất hữu ích nếu được thu thập đầy đủ và baseline tốt theo vai trò hệ thống.\n\
+  \n**Tài liệu tham khảo**\n- Microsoft DART\n- CrowdStrike\n- MITRE ATT&CK T1021.001,\
+  \ T1563.002"

@@ -1,0 +1,12 @@
+id: b100bc49-8357-5a49-a016-98be5b2c05cf
+name: '[SCENARIO-15] WMI Abuse – Thực Thi Từ Xa và Event Subscription Persistence'
+description: Sau khi chiếm credential, kẻ tấn công dùng `wmic /node:target` hoặc PowerShell
+  `Invoke-WMIMethod` để thực thi lệnh từ xa mà không tạo service mới. Để persistence,
+  kẻ tấn công tạo WMI Event Subscription gồm EventFilter + EventConsumer + FilterToConsumerBinding
+  — payload chạy mỗi khi có event trigger (login, 5 phút sau boot, v.v.).
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 3734aa1e-c536-42b3-8912-4c91b8bdce90
+- 94f21386-9547-43c4-99df-938ab05d45ce
+- aca9ae16-7425-4b6d-8c30-cad306fdbd5b
+- 3c64f177-28e2-49eb-a799-d767b24dd1e0

@@ -1,0 +1,12 @@
+id: cc39adb5-2999-5596-886f-847883375827
+name: '[SCENARIO-55] AWS Credential Theft qua IMDS'
+description: Trong kịch bản này, tác nhân sau khi chiếm được ứng dụng hoặc host trong
+  EC2 tận dụng SSRF, local foothold hoặc đường truy cập nội bộ tới IMDS để lấy temporary
+  credential của IAM role gắn với instance, rồi dùng các credential đó truy cập AWS
+  API. Actor thường là cloud intruder, post-exploitation operator hoặc nhóm muốn pivot
+  trong tài khoản AWS; điều kiện tiên quyết là instance có role hữu ích và IMDS vẫn
+  có thể bị gọi
+atomic_ordering:
+- a1b2c3d4-dvwa-0005-sqli-000000000005
+- f9c3d0ab-479b-4019-945f-22ace2b1731a
+- ae9b2e3e-efa1-4483-86e2-fae529ab9fb6

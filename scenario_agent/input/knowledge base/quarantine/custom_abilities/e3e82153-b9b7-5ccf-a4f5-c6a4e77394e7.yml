@@ -1,0 +1,11 @@
+- id: e3e82153-b9b7-5ccf-a4f5-c6a4e77394e7
+  name: Simulate T1499.003 - Unknown Technique
+  description: Automated simulation ability for MITRE technique T1499.003
+  tactic: execution
+  technique_id: T1499.003
+  technique_name: Unknown Technique
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1499.003: Unknown Technique'''
+    timeout: 30

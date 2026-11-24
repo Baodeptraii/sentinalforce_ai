@@ -1,0 +1,14 @@
+id: f32455e4-9c19-58e7-9e4f-68c6fbb25a96
+name: '[SCENARIO-48] DNS Tunneling – C2 và Exfiltration qua DNS'
+description: Trong kịch bản này, malware hoặc implant trên máy nạn nhân mã hóa chuỗi
+  điều khiển hoặc dữ liệu thành các nhãn phụ của truy vấn DNS, sau đó gửi ra một authoritative
+  domain do kẻ tấn công kiểm soát và nhận phản hồi chỉ đạo thông qua DNS response.
+  Actor thường là nhóm cần kênh C2 phụ, hoạt động trong môi trường egress bị siết
+  chặt hoặc muốn diễn giải lưu lượng của mình như DNS bình thường; điều
+atomic_ordering:
+- c943d285-ada3-45ca-b3aa-7cd6500c6a48
+- d754878c-17dd-46dc-891c-a993f8a10336
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- 1700f5d6-5a44-487b-84de-bc66f507b0a6
+- fef32c75-94e7-5dda-947a-d6b934290da8
+- c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08

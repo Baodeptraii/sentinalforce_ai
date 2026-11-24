@@ -1,0 +1,60 @@
+id: SCENARIO-46
+name: Network Share Enumeration và Staging Dữ liệu
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 46 – Network Share Enumeration và Staging Dữ liệu**\n\n**Giới\
+  \ thiệu chung**\n\nTrong nhiều chuỗi xâm nhập nội bộ, giai đoạn tìm kiếm và gom\
+  \ dữ liệu quan trọng trên các network share thường là bước chuyển tiếp trực tiếp\
+  \ từ discovery sang exfiltration. Đây là kịch bản có giá trị phòng thủ cao vì nó\
+  \ không chỉ phản ánh khả năng nhìn thấy lưu lượng SMB và quyền truy cập chia sẻ,\
+  \ mà còn kiểm tra năng lực phát hiện sự kết hợp giữa liệt kê tài nguyên, đọc dữ\
+  \ liệu diện rộng và staging cục bộ trước khi dữ liệu rời mạng.\n\n**Mô tả kịch bản**\n\
+  \nTrong kịch bản này, tác nhân đã có foothold trong mạng nội bộ với ít nhất một\
+  \ tài khoản người dùng hợp lệ hoặc một host bị compromise, sau đó liệt kê các network\
+  \ share có thể truy cập, xác định thư mục chứa tài liệu nhạy cảm và sao chép dữ\
+  \ liệu về một vị trí staging cục bộ hoặc share trung gian trước khi nén lại. Actor\
+  \ thường là post-exploitation operator, ransomware affiliate hoặc nhóm đánh cắp\
+  \ dữ liệu; điều kiện tiên quyết là có kết nối SMB nội bộ và quyền đọc phù hợp trên\
+  \ file server; kết quả mong muốn là dựng được một “túi staging” gọn hơn, sẵn sàng\
+  \ cho bước nén, chuyển tiếp hoặc exfiltration ra ngoài.\n\n**Dòng tấn công end-to-end**\n\
+  \n```text\nFoothold trong mạng nội bộ\n→ Liệt kê các network share hiện có\n→ Xác\
+  \ định thư mục và file có giá trị\n→ Sao chép dữ liệu về thư mục staging\n→ Nén\
+  \ / gom dữ liệu thành gói nhỏ hơn\n→ Chuẩn bị exfiltration hoặc chuyển sang host\
+  \ trung gian\n```\n\n1. **Thiết lập điểm bám ban đầu:** Kẻ tấn công đã điều khiển\
+  \ được một endpoint hoặc có sẵn danh tính hợp lệ trong miền.\n2. **Khảo sát tài\
+  \ nguyên dùng chung:** Các file server, departmental share, home drive và project\
+  \ share được truy vấn để đo phạm vi truy cập.\n3. **Ưu tiên dữ liệu giá trị cao:**\
+  \ Tài liệu tài chính, hợp đồng, dữ liệu nhân sự, tài liệu kỹ thuật hoặc thư mục\
+  \ dự án được chọn lọc.\n4. **Tiến hành staging:** Một lượng lớn file được sao chép\
+  \ về thư mục tạm, ổ cục bộ hoặc một share khác ít bị chú ý hơn.\n5. **Chuẩn bị đóng\
+  \ gói:** Dữ liệu được gom lại, nén hoặc chia nhỏ để hỗ trợ exfiltration ở bước kế\
+  \ tiếp.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Discovery | T1135 | Network Share Discovery |\n| Collection | T1074 | T1074.001\
+  \ – Local Data Staging |\n| Collection | T1560 | T1560.001 – Archive Collected Data\
+  \ |\n\n**Log / Telemetry / Observable**\n\n- **Windows Security Event 5140 / 5145:**\
+  \ Truy cập share, đọc file hoặc enumerating path trên file server tăng mạnh từ một\
+  \ host nguồn cụ thể.\n- **SMB telemetry / network flow:** Một endpoint bắt đầu kết\
+  \ nối tới nhiều file server hoặc nhiều share hơn baseline công việc thông thường.\n\
+  - **EDR file telemetry:** Khối lượng lớn file office, PDF, source code hoặc archive\
+  \ được tạo trong thư mục staging trên máy nguồn.\n- **Access pattern anomaly:**\
+  \ Người dùng truy cập các share ngoài vai trò, ngoài giờ làm việc hoặc trải rộng\
+  \ nhiều phòng ban trong thời gian ngắn.\n- **Follow-on artifact:** Sau giai đoạn\
+  \ đọc file hàng loạt, xuất hiện archive mới hoặc thư mục staging có quy mô bất thường.\n\
+  \n**Gợi ý Detection / Hunting**\n\n```text\n(\n  SMBShareAccessFanOut > baseline\n\
+  \  AND SensitiveShareReadVolume > threshold\n)\nAND (\n  ArchiveCreatedInUserWritablePath\
+  \ = true\n  OR NewStagingDirectoryCreated = true\n  OR SameHostAccessesManyDepartments\
+  \ = true\n)\n```\n\n- **Alert:** Một workstation hoặc jump host đọc lượng lớn dữ\
+  \ liệu từ nhiều share không liên quan tới vai trò tài khoản.\n- **Hunt:** Ghép chuỗi\
+  \ `5140/5145 tăng đột biến → tạo archive/staging → kết nối ra ngoài hoặc sang host\
+  \ trung gian`.\n- **Alert:** Tài khoản người dùng thường đột nhiên truy cập share\
+  \ tài chính, pháp chế, kỹ thuật và nhân sự trong một cửa sổ thời gian hẹp.\n- **Baseline:**\
+  \ Xây dựng profile “fan-out SMB bình thường” theo từng nhóm người dùng và từng máy\
+  \ quản trị.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nĐây là một scenario rất thực\
+  \ dụng vì nó nằm đúng ở giao điểm giữa insider-like behavior và post-exploitation\
+  \ thật sự. Nhiều tổ chức có log file server nhưng không tương quan được chúng với\
+  \ host telemetry và file staging cục bộ; kịch bản này giúp kiểm tra đúng khoảng\
+  \ trống đó trước khi sự cố tiến sang exfiltration.\n\n**Độ tin cậy:** Cao – hành\
+  \ vi discovery, staging và archive thường để lại dấu vết rõ ở cả SMB lẫn endpoint\
+  \ telemetry.\n\n**Tài liệu tham khảo**\n- CrowdStrike\n- Mandiant\n- MITRE ATT&CK\
+  \ T1135, T1074.001, T1560.001"

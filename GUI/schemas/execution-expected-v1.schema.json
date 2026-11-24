@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "execution_id",
+    "plan_sha256",
+    "validation_binding",
+    "origin",
+    "steps",
+    "sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "execution_expected_v1"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "step_id",
+          "index",
+          "ability_id",
+          "source",
+          "executor",
+          "technique_ids",
+          "telemetry",
+          "alert",
+          "behavior_verifier"
+        ]
+      }
+    },
+    "origin": {
+      "enum": [
+        "before_execution",
+        "historical_reconstruction_from_preflight"
+      ]
+    }
+  }
+}

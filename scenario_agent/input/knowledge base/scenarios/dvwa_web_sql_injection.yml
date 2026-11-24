@@ -1,0 +1,7 @@
+id: e5f6a7b8-dvwa-0005-sql-injection
+name: DVWA Web SQL Injection (Error & Union)
+description: Mô phỏng kiểm thử SQL Injection cổ điển (Union/Error-based) trên form
+  User ID của DVWA.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0005-sqli-000000000005

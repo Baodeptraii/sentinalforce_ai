@@ -1,0 +1,11 @@
+id: 69c10fef-c4da-5de5-82e0-c0578d87b214
+name: '[SCENARIO-33] Keylogging – Thu thập thông tin xác thực qua bàn phím'
+description: Trong kịch bản này, malware hoặc tác nhân hậu khai thác cài cơ chế theo
+  dõi luồng nhập bàn phím ở user session để ghi lại các tổ hợp phím người dùng nhập
+  vào ứng dụng đích. Actor thường là stealer, trojan ngân hàng hoặc operator đang
+  tìm credential không có sẵn trong browser; điều kiện tiên quyết là đã có code execution
+  trong ngữ cảnh người dùng và có thể duy trì hiện diện đủ lâu để chờ hành
+atomic_ordering:
+- 8aa78b60-6c00-530e-bf51-fd7dfd46f80a
+- d9b633ca-8efb-45e6-b838-70f595c6ae26
+- 316251ed-6a28-4013-812b-ddf5b5b007f8

@@ -1,0 +1,17 @@
+id: eab99f89-f85a-5c84-b307-9b651e472f91
+name: '[SCENARIO-01] Spearphishing với Tệp Đính Kèm Độc Hại (Office Macro)'
+description: Tác nhân đe doạ (thường là cybercrime groups như TA505, TA571, hoặc APT
+  nhắm vào lĩnh vực tài chính/chính phủ) gửi email được thiết kế cẩn thận đến mục
+  tiêu cụ thể. Nội dung email giả mạo là hoá đơn, hợp đồng, thông báo nhân sự, hoặc
+  tài liệu quan trọng. Tệp đính kèm là file .docm, .xlsm, hoặc .xls cũ (Binary format)
+  chứa macro VBA độc hại. Khi người dùng kích hoạt macro, một payload (thường là loader
+  như
+atomic_ordering:
+- a50d5a97-2531-499e-a1de-5544c74432c6
+- a9b93f17-31cb-435d-a462-5e838a2a6026
+- 1620de42-160a-4fe5-bbaf-d3fef0181ce9
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- 81c13829-f6c9-45b8-85a6-053366d55297
+- cd0fe01c-7bdc-54a1-9e59-333088b4d71a
+- 8bebc690-18c7-4549-bc98-210f7019efff
+- cb01b3da-b0e7-4e24-bf6d-de5223526785

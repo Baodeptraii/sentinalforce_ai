@@ -1,0 +1,12 @@
+- id: 1f36323d-7747-5244-8efa-eb7fd012d3f1
+  name: Simulate T1584 - Watering Hole (Drive-by Compromise)
+  description: Automated simulation ability for MITRE technique T1584
+  tactic: execution
+  technique_id: T1584
+  technique_name: Watering Hole (Drive-by Compromise)
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1584: Watering Hole (Drive-by
+      Compromise)'''
+    timeout: 30

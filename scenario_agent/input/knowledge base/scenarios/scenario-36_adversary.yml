@@ -1,0 +1,14 @@
+id: c347977a-58ab-5a2a-b348-39eb053c4589
+name: '[SCENARIO-36] AMSI Bypass – Vô hiệu hóa Antimalware Scan Interface'
+description: Trong kịch bản này, tác nhân đã hiện diện trên host và chuẩn bị thực
+  hiện hoặc tiếp tục một chuỗi script-based execution, nhưng trước đó tìm cách làm
+  suy yếu AMSI ở mức process hoặc memory để giảm khả năng bị quét. Actor thường là
+  operator hậu khai thác hoặc malware fileless phụ thuộc nhiều vào PowerShell/in-memory
+  script; điều kiện tiên quyết là có code execution trên host và quyền thao tác đủ
+  để làm thay đổi trạng thái
+atomic_ordering:
+- a50d5a97-2531-499e-a1de-5544c74432c6
+- a9b93f17-31cb-435d-a462-5e838a2a6026
+- 315cedf1-4a3a-4015-b63f-149d64bacbbc
+- 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b
+- 3864fd22-5c63-41c9-bdbc-a66b5ffa3f5e

@@ -1,0 +1,14 @@
+id: e933983c-cad0-5701-ab92-a670be2caaaf
+name: '[SCENARIO-51] Exfiltration qua Cloud Storage (OneDrive/Dropbox/MEGA)'
+description: Trong kịch bản này, sau khi đã có tập dữ liệu staging, tác nhân upload
+  các archive hoặc file nhạy cảm lên cloud storage hợp lệ bằng trình duyệt, ứng dụng
+  đồng bộ, API client hoặc công cụ chuyên dụng được ngụy trang như thao tác người
+  dùng bình thường. Actor thường là nhóm đánh cắp dữ liệu, ransomware affiliate hoặc
+  operator muốn chuyển dữ liệu ra ngoài trước khi impact; điều kiện tiên quyết là
+  đã có dữ liệu
+atomic_ordering:
+- c943d285-ada3-45ca-b3aa-7cd6500c6a48
+- 1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0
+- 41410c60-614d-4b9d-b66e-b0192dd9c597
+- 30724646-a8a7-5b1c-849c-5b1c35622d10
+- 3ce95a28-25fc-4a7e-a0cd-0fdb190e2081

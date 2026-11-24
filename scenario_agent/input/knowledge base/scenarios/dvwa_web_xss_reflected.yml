@@ -1,0 +1,6 @@
+id: e5f6a7b8-dvwa-0008-xss-reflected
+name: DVWA Web Reflected Cross-Site Scripting (XSS)
+description: Mô phỏng gửi request chứa script payload XSS phản xạ qua tham số name.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0008-xssr-000000000008

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "plan_sha256",
+    "binding_sha256",
+    "ready",
+    "checked_at",
+    "expires_at",
+    "steps",
+    "issues",
+    "sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "execution_validation_v1"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "index",
+          "status",
+          "issues",
+          "source",
+          "prerequisites"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "ready",
+              "needs_information",
+              "unsupported"
+            ]
+          }
+        }
+      }
+    },
+    "ready": {
+      "type": "boolean"
+    }
+  }
+}

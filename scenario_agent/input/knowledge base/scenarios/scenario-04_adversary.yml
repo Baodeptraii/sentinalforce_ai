@@ -1,0 +1,11 @@
+id: d10dc8b0-d4e1-5dac-acfb-513b42c07ba0
+name: '[SCENARIO-04] Callback Phishing (TOAD – Telephone-Oriented Attack Delivery)'
+description: 'Kẻ tấn công gửi email giả mạo thông báo đăng ký dịch vụ (ví dụ: Norton
+  Antivirus, McAfee, Microsoft) với số tiền lớn và yêu cầu gọi điện nếu không đồng
+  ý. Nạn nhân hoảng loạn và gọi điện. Call center giả mạo hướng dẫn cài AnyDesk/TeamViewer/ScreenConnect.
+  Qua đó, kẻ tấn công chiếm quyền điều khiển máy tính.'
+atomic_ordering:
+- 8bebc690-18c7-4549-bc98-210f7019efff
+- 75eee53b-6016-4822-9791-b0f7f9432bf6
+- 234f9b7c-b53d-4f32-897b-b880a6c9ea7b
+- 37a36163-f420-5d50-a719-41da1a55c3c7

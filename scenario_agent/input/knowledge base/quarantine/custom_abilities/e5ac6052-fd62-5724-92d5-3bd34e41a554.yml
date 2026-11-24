@@ -1,0 +1,12 @@
+- id: e5ac6052-fd62-5724-92d5-3bd34e41a554
+  name: "Simulate T1037 - GPO Abuse \u2013 Tri\u1EC3n khai payload qua Group Policy"
+  description: Automated simulation ability for MITRE technique T1037
+  tactic: execution
+  technique_id: T1037
+  technique_name: "GPO Abuse \u2013 Tri\u1EC3n khai payload qua Group Policy"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1037: GPO Abuse \u2013 Tri\u1EC3\
+      n khai payload qua Group Policy'"
+    timeout: 30

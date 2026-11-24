@@ -1,0 +1,36 @@
+{
+  "caldera_url": "http://127.0.0.1:8888",
+  "key_file": "~/.config/caldera-survey/api-key",
+  "allowed_networks": [
+    "192.0.2.0/24"
+  ],
+  "agent_max_age_seconds": 180,
+  "operation_timeout_seconds": 240,
+  "web_ports": [
+    80,
+    443,
+    8080,
+    8000,
+    8443
+  ],
+  "web_paths": [
+    "/",
+    "/dvwa/"
+  ],
+  "max_web_ports": 12,
+  "max_web_pages": 4,
+  "orchestration_mode": "ai",
+  "llm": {
+    "base_url": "",
+    "model": "",
+    "key_file": "",
+    "max_steps": 8,
+    "max_seconds": 600,
+    "timeout_seconds": 45,
+    "max_output_tokens": 1000
+  },
+  "dvwa_paths": [
+    "/dvwa/",
+    "/dvwa/login.php"
+  ]
+}

@@ -1,0 +1,62 @@
+id: SCENARIO-45
+name: Active Directory Enumeration – BloodHound / SharpHound
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 45 – Active Directory Enumeration – BloodHound / SharpHound**\n\
+  \n**Giới thiệu chung**\n\nActive Directory enumeration thường là bước bản lề giữa\
+  \ foothold ban đầu và compromise miền sâu hơn. Khi một tác nhân dùng collector kiểu\
+  \ BloodHound/SharpHound hoặc một bộ công cụ tương tự, mục tiêu không còn là “xem\
+  \ có gì trong domain” nữa mà là “vẽ được đường đi ngắn nhất tới đặc quyền cao”,\
+  \ bao gồm group membership, ACLs, local admin edges, session data, trust relationship\
+  \ và các quyền bị cấu hình sai.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, tác\
+  \ nhân đã có ít nhất một tài khoản domain mức thấp và bắt đầu thu thập có hệ thống\
+  \ cấu trúc AD để dựng đồ thị quan hệ đặc quyền. Actor thường là operator hậu khai\
+  \ thác, red team hoặc adversary nhắm tới privilege escalation trong domain; điều\
+  \ kiện tiên quyết là có domain foothold và khả năng truy vấn LDAP/ADWS/SMB ở mức\
+  \ người dùng hợp lệ; kết quả mong muốn là xác định được đường đi khả thi tới các\
+  \ tài khoản, nhóm hoặc hệ thống có giá trị cao, từ đó chọn chính xác bước leo quyền\
+  \ hoặc lateral movement tiếp theo. fileciteturn1file0L72-L72\n\n**Dòng tấn công\
+  \ end-to-end**\n\n```text\nCó domain foothold mức thấp\n→ Thực hiện LDAP / AD enumeration\
+  \ quy mô lớn\n→ Thu thập group, account, trust, ACL, session, local admin edges\n\
+  → Dựng đồ thị quan hệ đặc quyền\n→ Xác định đường đi khả thi tới tài khoản / hệ\
+  \ thống giá trị cao\n→ Chuẩn bị bước privilege escalation tiếp theo\n```\n\n1. **Xác\
+  \ thực vào domain:** Tài khoản người dùng thông thường hoặc máy đã gia nhập domain\
+  \ đang nằm trong tay tác nhân.\n2. **Thu thập quan hệ AD:** Group membership, account\
+  \ properties, trusts, ACLs, OU/GPO links và session-related data được truy vấn hàng\
+  \ loạt.\n3. **Tập hợp dữ liệu thành đồ thị:** Dữ liệu thu thập được staging, đóng\
+  \ gói hoặc dựng graph để phân tích.\n4. **Chọn path leo quyền:** Các đường đi qua\
+  \ local admin rights, delegated admin, GPO rights, trust path hoặc session path\
+  \ được ưu tiên.\n5. **Chuẩn bị follow-on action:** Kẻ tấn công sử dụng insight vừa\
+  \ thu được để chuyển sang credential access, lateral movement hoặc domain abuse.\n\
+  \n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Discovery | T1069 | T1069.002 – Permission Groups Discovery: Domain Groups |\n\
+  | Discovery | T1087 | T1087.002 – Domain Account Discovery |\n| Discovery | T1482\
+  \ | Domain Trust Discovery |\n| Discovery | T1018 | Thu thập thông tin hệ thống/host\
+  \ liên quan để hoàn thiện attack path graph |\n\n**Log / Telemetry / Observable**\n\
+  \n- **LDAP / AD query telemetry:** Một host hoặc user gửi số lượng lớn truy vấn\
+  \ LDAP/ADWS trong thời gian ngắn, trải rộng nhiều object class.\n- **Event 4662\
+  \ / directory access clue:** Nhiều thao tác đọc thuộc tính đối tượng AD không phù\
+  \ hợp vai trò người dùng thông thường.\n- **EDR network telemetry:** Workstation\
+  \ người dùng tạo lưu lượng dày đặc tới Domain Controller, GC hoặc dịch vụ AD liên\
+  \ quan.\n- **File staging:** JSON/ZIP/CSV hiếm gặp, archive nhỏ hoặc output graph-like\
+  \ artifacts được tạo trên host.\n- **Sequencing anomaly:** Ngay sau phase enumeration,\
+  \ xuất hiện hành vi chọn lọc hơn như nhắm vào tài khoản, GPO, certificate service\
+  \ hoặc máy có đặc quyền.\n\n**Gợi ý Detection / Hunting**\n\n```text\nLDAPQueryVolumeBySingleHost\
+  \ > baseline\nAND QueriedObjectClasses INTERSECT (\n  \"user\", \"group\", \"computer\"\
+  , \"domainDNS\", \"trustedDomain\", \"organizationalUnit\"\n)\nAND SourceHost NOT\
+  \ IN approved_admin_hosts\n```\n\n- **Alert:** Workstation người dùng hoặc server\
+  \ ứng dụng bình thường tạo fan-out query lớn tới DC/GC.\n- **Hunt:** Kết hợp `LDAP\
+  \ surge + file staging + follow-on privileged targeting` để phân biệt recon có chủ\
+  \ đích với công cụ admin hợp lệ.\n- **Alert:** Tài khoản mức thấp truy vấn dày đặc\
+  \ nhóm đặc quyền, trust objects, ACL-heavy objects hoặc session-related data.\n\
+  - **Baseline:** Xác định host và công cụ quản trị AD hợp lệ để không nhầm automation/CMDB\
+  \ với reconnaissance độc hại.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nAD enumeration\
+  \ kiểu graph-based là bước chuẩn bị cực kỳ phổ biến trước privilege escalation trong\
+  \ mạng doanh nghiệp. Scenario này có giá trị cao vì nó không chỉ kiểm tra khả năng\
+  \ phát hiện “nhiều LDAP query”, mà còn kiểm tra khả năng hiểu **ý nghĩa của pattern\
+  \ truy vấn**: đang có ai đó vẽ bản đồ domain để tìm đường ngắn nhất tới quyền cao.\n\
+  \n**Độ tin cậy:** Cao – mô hình truy vấn diện rộng và sự nối tiếp sang hoạt động\
+  \ chọn mục tiêu làm cho scenario này rất phù hợp với hunting theo chuỗi.\n\n**Tài\
+  \ liệu tham khảo**\n- SpecterOps BloodHound\n- Mandiant\n- MITRE ATT&CK T1069.002,\
+  \ T1087.002, T1482"

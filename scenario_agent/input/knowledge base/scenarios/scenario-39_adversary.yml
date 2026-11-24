@@ -1,0 +1,10 @@
+id: 325b093d-553a-583b-bef3-5af1574407bc
+name: '[SCENARIO-39] BITS Jobs – Background Intelligence Transfer Service Abuse'
+description: Trong kịch bản này, tác nhân đang hiện diện trên host tạo một hoặc nhiều
+  BITS job để tải xuống nội dung theo nền, lưu nó vào thư mục staging và trong một
+  số trường hợp gắn thêm hành vi kích hoạt sau khi transfer hoàn tất. Actor thường
+  là loader, backdoor hoặc operator cần duy trì tải file và thực thi với mức độ lộ
+  thấp; điều kiện tiên quyết là có thể tương tác với BITS dưới user/system
+atomic_ordering:
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- 3c73d728-75fb-4180-a12f-6712864d7421

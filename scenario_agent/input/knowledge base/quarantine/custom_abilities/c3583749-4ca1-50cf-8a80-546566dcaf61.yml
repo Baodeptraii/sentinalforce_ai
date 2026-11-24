@@ -1,0 +1,14 @@
+- id: c3583749-4ca1-50cf-8a80-546566dcaf61
+  name: "Simulate T1505 - Khai Th\xE1c \u1EE8ng D\u1EE5ng C\xF4ng Khai \u2013 SQL\
+    \ Injection \u2192 RCE \u2192 Web Shell"
+  description: Automated simulation ability for MITRE technique T1505
+  tactic: execution
+  technique_id: T1505
+  technique_name: "Khai Th\xE1c \u1EE8ng D\u1EE5ng C\xF4ng Khai \u2013 SQL Injection\
+    \ \u2192 RCE \u2192 Web Shell"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1505: Khai Th\xE1c \u1EE8\
+      ng D\u1EE5ng C\xF4ng Khai \u2013 SQL Injection \u2192 RCE \u2192 Web Shell'"
+    timeout: 30

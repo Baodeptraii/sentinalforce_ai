@@ -1,0 +1,11 @@
+id: b1eab73a-ba6f-5805-8ad2-13637eb46c00
+name: '[SCENARIO-23] AS-REP Roasting – Tài khoản không cần Pre-Auth'
+description: Tác nhân đe dọa có thể là người dùng nội bộ đã xác thực hoặc thậm chí
+  một thực thể ở vùng quan sát AD đủ để gửi yêu cầu ban đầu. Điều kiện tiên quyết
+  là tồn tại ít nhất một tài khoản AD bị tắt pre-auth. Kẻ tấn công xác định các account
+  như vậy, yêu cầu AS-REP tương ứng và mang dữ liệu đi brute-force offline. Kết quả
+  mong muốn là chiếm được tài khoản đích mà
+atomic_ordering:
+- aaf34d82-aea9-4278-8ec4-789653e4f5d9
+- f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb
+- 615bd568-2859-41b5-9aed-61f6a88e48dd

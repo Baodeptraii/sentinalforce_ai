@@ -1,0 +1,192 @@
+{
+  "tool": "collect_endpoint",
+  "arguments": {},
+  "target_ip": "192.0.2.10",
+  "started_at": "2026-11-12T02:49:13.452070+00:00",
+  "status": "ok",
+  "data": {
+    "tool": "get_endpoint_info",
+    "target": "DESKTOP-KDAB44M",
+    "status": "ok",
+    "data": {
+      "os_name": "Microsoft Windows 10 Pro",
+      "os_version": "10.0.19045",
+      "architecture": "64-bit",
+      "hostname": "DESKTOP-KDAB44M",
+      "username": "DESKTOP-KDAB44M\\SOC",
+      "is_elevated": true,
+      "powershell_version": "5.1.19041.6456",
+      "collected_at": "2026-11-12T02:49:38.8930036Z",
+      "listeners": [
+        {
+          "LocalAddress": "::",
+          "LocalPort": 49671,
+          "OwningProcess": 2816
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 49669,
+          "OwningProcess": 740
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 49668,
+          "OwningProcess": 2500
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 49667,
+          "OwningProcess": 1276
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 49666,
+          "OwningProcess": 1260
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 49665,
+          "OwningProcess": 596
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 49664,
+          "OwningProcess": 764
+        },
+        {
+          "LocalAddress": "::1",
+          "LocalPort": 42050,
+          "OwningProcess": 4108
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 7680,
+          "OwningProcess": 5692
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 5357,
+          "OwningProcess": 4
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 3306,
+          "OwningProcess": 8776
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 445,
+          "OwningProcess": 4
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 443,
+          "OwningProcess": 8772
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 135,
+          "OwningProcess": 1012
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 80,
+          "OwningProcess": 8772
+        },
+        {
+          "LocalAddress": "::",
+          "LocalPort": 22,
+          "OwningProcess": 2172
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 49671,
+          "OwningProcess": 2816
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 49669,
+          "OwningProcess": 740
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 49668,
+          "OwningProcess": 2500
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 49667,
+          "OwningProcess": 1276
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 49666,
+          "OwningProcess": 1260
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 49665,
+          "OwningProcess": 596
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 49664,
+          "OwningProcess": 764
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 5040,
+          "OwningProcess": 7148
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 443,
+          "OwningProcess": 8772
+        },
+        {
+          "LocalAddress": "192.0.2.10",
+          "LocalPort": 139,
+          "OwningProcess": 4
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 135,
+          "OwningProcess": 1012
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 80,
+          "OwningProcess": 8772
+        },
+        {
+          "LocalAddress": "0.0.0.0",
+          "LocalPort": 22,
+          "OwningProcess": 2172
+        }
+      ],
+      "services": [
+        {
+          "name": "Sysmon64",
+          "display_name": "Sysmon64",
+          "state": "Running"
+        },
+        {
+          "name": "WazuhSvc",
+          "display_name": "Wazuh",
+          "state": "Running"
+        }
+      ],
+      "limitations": []
+    },
+    "evidence": [
+      "Win32_OperatingSystem",
+      "WindowsIdentity",
+      "WindowsPrincipal",
+      "Get-NetTCPConnection",
+      "Get-Service"
+    ],
+    "error": null
+  },
+  "error": null,
+  "finished_at": "2026-11-12T02:49:42.028928+00:00"
+}

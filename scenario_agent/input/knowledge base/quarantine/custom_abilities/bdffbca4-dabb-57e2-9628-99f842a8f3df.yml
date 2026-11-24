@@ -1,0 +1,12 @@
+- id: bdffbca4-dabb-57e2-9628-99f842a8f3df
+  name: Simulate T1110 - Credential Stuffing / Password Spraying
+  description: Automated simulation ability for MITRE technique T1110
+  tactic: execution
+  technique_id: T1110
+  technique_name: Credential Stuffing / Password Spraying
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1110: Credential Stuffing
+      / Password Spraying'''
+    timeout: 30

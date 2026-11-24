@@ -1,0 +1,13 @@
+config.json
+outputs/
+__pycache__/
+engine/__pycache__/
+tests/__pycache__/
+*.log
+!tests/fixtures/legacy_run/execution.log
+.venv/
+backups/
+.uv-cache/
+.uv-bootstrap/
+
+.secrets/

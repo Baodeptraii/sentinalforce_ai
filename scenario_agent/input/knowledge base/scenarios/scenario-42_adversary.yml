@@ -1,0 +1,13 @@
+id: 3920e7be-4215-5081-8085-b79c9eb3fc57
+name: '[SCENARIO-42] PsExec / SMB Lateral Movement'
+description: Trong kịch bản này, kẻ tấn công đã có credential quản trị cục bộ hoặc
+  miền và dùng SMB share / service creation để thực thi từ xa trên máy khác, có thể
+  bằng PsExec thật hoặc một biến thể chức năng tương đương. Actor thường là operator
+  hậu khai thác hoặc ransomware affiliate muốn lan nhanh trong mạng Windows; điều
+  kiện tiên quyết là có quyền admin trên host đích và kết nối mạng nội bộ cho SMB/RPC;
+  kết
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 40161ad0-75bd-11e9-b475-0800200c9a66
+- e9c47e3d-0925-55fc-9234-2c5b8e9e52a4
+- 4908fdc4-74fc-4d7c-8935-26d11ad26a8d

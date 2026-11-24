@@ -1,0 +1,102 @@
+{
+  "$defs": {
+    "Ref": {
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "pointer": {
+          "title": "Pointer",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file",
+        "pointer",
+        "sha256",
+        "source"
+      ],
+      "title": "Ref",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Target Id"
+    },
+    "target_ip": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Target Ip"
+    },
+    "domains": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Domains",
+      "type": "object"
+    },
+    "summary": {
+      "additionalProperties": true,
+      "title": "Summary",
+      "type": "object"
+    },
+    "inventory_refs": {
+      "items": {
+        "$ref": "#/$defs/Ref"
+      },
+      "title": "Inventory Refs",
+      "type": "array"
+    },
+    "interpretation": {
+      "additionalProperties": true,
+      "title": "Interpretation",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "target_id",
+    "target_ip",
+    "domains",
+    "summary",
+    "inventory_refs",
+    "interpretation"
+  ],
+  "title": "Profile",
+  "type": "object"
+}

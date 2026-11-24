@@ -1,0 +1,107 @@
+id: SCENARIO-13
+name: Thực Thi Macro qua OneNote/PDF Nhúng File Thực Thi
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 13 – Thực Thi Macro qua OneNote/PDF Nhúng File Thực Thi
+
+
+  **Giới thiệu chung**
+
+
+  Sau khi Microsoft block macro từ internet mặc định (2022), kẻ tấn công chuyển sang
+  dùng OneNote (.one) để nhúng file thực thi (.exe, .hta, .js, .vbs, .bat) trực tiếp
+  vào notebook. Người dùng bị social engineered để double-click vào "button" trực
+  quan trong notebook thực ra là embedded file. Định dạng OneNote ít bị kiểm tra hơn
+  Office.
+
+
+  **Mô tả kịch bản**
+
+
+  Email phishing với attachment .one hoặc .pdf chứa "Click here to view document"
+  overlay. Khi click, file thực thi nhúng bên trong được chạy (thường là .hta, .vbs,
+  .js loader) dẫn đến download payload từ C2.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Email với .one attachment → Người dùng mở OneNote file
+
+  → Instruction giả mạo: "Double click to view" → Click vào embedded file
+
+  → .hta/.vbs/.js thực thi → Download Qakbot/IcedID/AsyncRAT
+
+  → Persistence → C2 → Post-exploitation
+
+  ```
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Initial Access | T1566 | T1566.001 – Spearphishing Attachment |
+
+  | Execution | T1204 | T1204.002 – User Execution: Malicious File |
+
+  | Execution | T1059 | T1059.005 – VBScript, T1059.007 – JS |
+
+  | Defense Evasion | T1027 | T1027.013 – Embedded Payloads |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Email gateway:** .one file attachment từ external; alert nếu .one chứa embedded
+  PE/script
+
+  - **Sysmon Event 1:** `ONENOTE.EXE` tạo child process (cmd, powershell, wscript,
+  mshta)
+
+  - **Sysmon Event 11:** File .hta/.vbs/.js được tạo trong %TEMP% từ ONENOTE.EXE
+
+  - **EDR:** OneNote process mở network connection
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Block:** .one file từ external email theo policy (nếu không cần thiết)
+
+  - **Alert:** OneNote spawning script interpreter (wscript, mshta, powershell)
+
+  - **EDR rule:** OneNote → cmd/powershell/wscript process creation chain
+
+  - **User awareness:** Train users nhận biết "double click button" trong OneNote
+  là suspicious
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Sau khi Microsoft block Office macro (2022), Proofpoint và Sophos ghi nhận spike
+  lớn trong OneNote-based phishing (Q1–Q2 2023). Qakbot, IcedID, AsyncRAT phân phối
+  qua vector này. Microsoft sau đó bổ sung cảnh báo trong OneNote nhưng không block
+  hoàn toàn.
+
+
+  **Độ tin cậy:** Cao – Proofpoint, Sophos, Microsoft MSRC 2023.
+
+
+  **Tài liệu tham khảo**
+
+  - Proofpoint: "OneNote Phishing" (2023)
+
+  - Sophos: "OneNote malware spike analysis" (2023)
+
+  - Microsoft MSRC: OneNote embedded file warning
+
+
+  ---'

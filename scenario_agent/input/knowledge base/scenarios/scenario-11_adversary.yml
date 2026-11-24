@@ -1,0 +1,13 @@
+id: 3ade1d65-da6f-5ba5-bd72-bc9b3b19f1e2
+name: '[SCENARIO-11] Phishing qua QR Code (Quishing)'
+description: Email chứa QR code (thường giả mạo Microsoft MFA reset, DocuSign, HR
+  notification). Người dùng scan bằng điện thoại cá nhân → truy cập trang phishing
+  trông giống Microsoft 365 login → nhập thông tin xác thực và hoàn tất MFA → session
+  cookie hoặc credential bị đánh cắp.
+atomic_ordering:
+- b37b3e44-a4df-517f-a1e5-9df64381db59
+- b37b3e44-a4df-517f-a1e5-9df64381db59
+- 37a36163-f420-5d50-a719-41da1a55c3c7
+- 114ccff9-ae6d-4547-9ead-4cd69f687306
+- 7ba84893-605f-5a10-9214-7cfef1a12dfc
+- 7ba84893-605f-5a10-9214-7cfef1a12dfc

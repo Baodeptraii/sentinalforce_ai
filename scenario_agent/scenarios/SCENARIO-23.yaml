@@ -1,0 +1,126 @@
+id: SCENARIO-23
+name: AS-REP Roasting – Tài khoản không cần Pre-Auth
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 23 – AS-REP Roasting – Tài khoản không cần Pre-Auth**
+
+
+  **Giới thiệu chung**
+
+
+  AS-REP Roasting nhắm vào các tài khoản cấu hình “không yêu cầu Kerberos pre-authentication”.
+  Khi sai cấu hình này tồn tại, kẻ tấn công có thể thu được material đủ để brute-force
+  offline mà không cần tương tác như người dùng hợp lệ với tài khoản mục tiêu. Đây
+  là một vấn đề cấu hình điển hình trong AD mà nhiều tổ chức chỉ phát hiện khi audit
+  sâu.
+
+
+  **Mô tả kịch bản**
+
+
+  Tác nhân đe dọa có thể là người dùng nội bộ đã xác thực hoặc thậm chí một thực thể
+  ở vùng quan sát AD đủ để gửi yêu cầu ban đầu. Điều kiện tiên quyết là tồn tại ít
+  nhất một tài khoản AD bị tắt pre-auth. Kẻ tấn công xác định các account như vậy,
+  yêu cầu AS-REP tương ứng và mang dữ liệu đi brute-force offline. Kết quả mong muốn
+  là chiếm được tài khoản đích mà không cần phishing trực tiếp hoặc chạm tới endpoint
+  của nạn nhân.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Khảo sát tài khoản AD cấu hình sai
+
+  → Xác định account không yêu cầu pre-auth
+
+  → Yêu cầu AS-REP cho account mục tiêu
+
+  → Brute-force offline để tìm mật khẩu
+
+  → Tái sử dụng tài khoản đã thu được
+
+  ```
+
+
+  1. **Liệt kê tài khoản có rủi ro:** Các thuộc tính cấu hình AD được rà soát để tìm
+  account không bật pre-auth.
+
+  2. **Yêu cầu AS-REP:** Yêu cầu Kerberos ban đầu được gửi tới KDC cho mục tiêu phù
+  hợp.
+
+  3. **Thu material:** Dữ liệu phản hồi được lấy về ngoài hệ thống nạn nhân.
+
+  4. **Bẻ khóa offline:** Mật khẩu yếu bị suy ra nếu chính sách password không đủ
+  mạnh.
+
+  5. **Chiếm account:** Tài khoản thu được được dùng cho truy cập tiếp theo trong
+  domain.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Credential Access | T1558 | T1558.004 – AS-REP Roasting |
+
+  | Discovery | T1087 | Liệt kê account để tìm cấu hình pre-auth bất thường |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Windows Security Event 4768:** AS-REQ / AS-REP phát sinh cho các account ít
+  được dùng hoặc không thuộc luồng đăng nhập thông thường.
+
+  - **AD analytics:** Tài khoản có thuộc tính `Do not require Kerberos preauthentication`
+  cần được inventory và cảnh báo liên tục.
+
+  - **Source anomaly:** Host người dùng thông thường hoặc host không thuộc nhóm quản
+  trị AD gửi nhiều yêu cầu liên tiếp để dò tài khoản.
+
+  - **Temporal correlation:** Sau một đợt yêu cầu 4768 bất thường, tài khoản đích
+  bắt đầu được dùng cho logon hoặc truy cập mới.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** Bất kỳ account nào bị cấu hình không yêu cầu pre-auth nên được xem
+  là finding cấu hình mức cao.
+
+  - **Hunt:** Tìm 4768 với mẫu yêu cầu lặp lại vào nhiều account trong thời gian ngắn
+  từ cùng một host.
+
+  - **Alert:** Account hiếm dùng nhưng đột nhiên có yêu cầu Kerberos ban đầu từ workstation
+  không liên quan.
+
+  - **Hardening:** Dọn dẹp triệt để mọi tài khoản còn giữ cờ không yêu cầu pre-auth
+  nếu không có lý do nghiệp vụ đặc biệt.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Giá trị của scenario này nằm ở chỗ nó kiểm toán cấu hình AD, không chỉ hành vi tấn
+  công thuần túy. Nó rất phù hợp với diễn tập kiểu “config-to-compromise”, nơi một
+  cấu hình sai tồn tại lâu ngày trở thành điểm vào cho compromise tài khoản mà gần
+  như không cần tiếp xúc với người dùng đích.
+
+
+  **Độ tin cậy:** Cao – kỹ thuật cụ thể, dễ chuẩn hóa thành kiểm tra định kỳ và hunting
+  rule.
+
+
+  **Tài liệu tham khảo**
+
+  - MITRE ATT&CK T1558.004
+
+  - SpecterOps
+
+  - Windows Event 4768 / AD Hardening Guidance'

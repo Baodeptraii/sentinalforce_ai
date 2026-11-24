@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.venv/
+.cache/
+__pycache__/
+*.pyc
+*.egg-info/
+data/rag/
+outputs/runs/

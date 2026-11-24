@@ -1,0 +1,56 @@
+id: SCENARIO-53
+name: Azure AD / Entra ID – Consent Phishing
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 53 – Azure AD / Entra ID – Consent Phishing**\n\n**Giới thiệu\
+  \ chung**\n\nConsent phishing là một biến thể cloud-native rất đáng chú ý vì nó\
+  \ bỏ qua nhiều lớp kiểm soát vốn tập trung vào mật khẩu. Thay vì chiếm chính tài\
+  \ khoản theo cách truyền thống, tác nhân lừa người dùng hoặc admin cấp quyền cho\
+  \ một ứng dụng OAuth độc hại, rồi sử dụng quyền đó để truy cập mailbox, file hoặc\
+  \ dữ liệu Microsoft 365 một cách “hợp lệ” về mặt token.\n\n**Mô tả kịch bản**\n\n\
+  Trong kịch bản này, đối phương chuẩn bị một ứng dụng OAuth hoặc service principal\
+  \ có bề ngoài có vẻ hợp pháp, sau đó dẫn người dùng tới luồng consent để chấp thuận\
+  \ các quyền như đọc mail, đọc file, truy cập profile hoặc duy trì quyền truy cập\
+  \ ngoại tuyến. Actor thường là nhóm cloud-focused intrusion, BEC actor hoặc espionage\
+  \ operator; điều kiện tiên quyết là tenant cho phép user consent rộng hoặc cơ chế\
+  \ kiểm duyệt publisher/scopes chưa chặt; kết quả mong muốn là nhận được delegated\
+  \ permissions đủ để truy cập dữ liệu mà không cần giữ mật khẩu của người dùng.\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nChuẩn bị ứng dụng OAuth giả mạo\n→ Lừa\
+  \ người dùng mở link consent\n→ Người dùng đăng nhập và chấp thuận quyền\n→ Ứng\
+  \ dụng độc hại nhận delegated access\n→ Truy cập mailbox / file / profile qua Graph\
+  \ hoặc API liên quan\n→ Duy trì truy cập dựa trên consent thay vì mật khẩu\n```\n\
+  \n1. **Chuẩn bị ứng dụng độc hại:** App và branding được dựng sao cho ít gây nghi\
+  \ ngờ.\n2. **Dẫn nạn nhân vào luồng consent:** Email, trang giả hoặc lời mời cộng\
+  \ tác được dùng để thu hút hành động.\n3. **Nhận quyền truy cập:** Người dùng hoặc\
+  \ admin chấp thuận scopes cho ứng dụng.\n4. **Dùng token hợp lệ:** Ứng dụng tiếp\
+  \ cận mailbox, file hoặc dữ liệu tenant qua API hợp lệ.\n5. **Duy trì hiện diện\
+  \ cloud-native:** Quyền tồn tại chừng nào consent chưa bị thu hồi hoặc app chưa\
+  \ bị vô hiệu hóa.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n\
+  |--------|-----------|-------|\n| Credential Access | T1528 | Steal Application\
+  \ Access Token / Abusing OAuth Access |\n| Initial Access | T1566 | T1566.002 –\
+  \ Spearphishing Link |\n| Collection | T1114 | Truy cập email và dữ liệu liên quan\
+  \ sau khi consent thành công |\n\n**Log / Telemetry / Observable**\n\n- **Entra\
+  \ ID audit logs:** Tạo application, service principal, app consent và cấp quyền\
+  \ mới cho app.\n- **OAuth consent telemetry:** Ứng dụng mới yêu cầu scopes nhạy\
+  \ cảm như `Mail.Read`, `Files.Read.All`, `offline_access`, `User.Read`.\n- **Publisher\
+  \ anomaly:** App không xác minh publisher, tên gần giống sản phẩm hợp lệ hoặc mới\
+  \ xuất hiện.\n- **Sign-in / API usage:** Tài khoản người dùng có consent event,\
+  \ sau đó xuất hiện Graph API access từ ngữ cảnh không quen thuộc.\n- **Tenant drift:**\
+  \ Số lượng app có quyền cao tăng mà không đi qua quy trình app review bình thường.\n\
+  \n**Gợi ý Detection / Hunting**\n\n```text\nOAuthConsentGranted = true\nAND RequestedScopes\
+  \ INTERSECT (\n  \"Mail.Read\",\n  \"Mail.ReadWrite\",\n  \"Files.Read.All\",\n\
+  \  \"offline_access\"\n)\nAND (\n  AppPublisherUnverified = true\n  OR AppCreatedRecently\
+  \ = true\n  OR UserNotInApprovedConsentGroup = true\n)\n```\n\n- **Alert:** Bất\
+  \ kỳ consent nào cấp quyền nhạy cảm cho app mới hoặc app chưa xác minh publisher.\n\
+  - **Hunt:** Nối `consent event → Graph activity → mailbox/file access surge` trên\
+  \ cùng tài khoản hoặc app.\n- **Alert:** App yêu cầu scopes vượt xa nhu cầu business\
+  \ hiển nhiên của tên ứng dụng.\n- **Governance:** Rà soát chính sách user consent,\
+  \ admin consent workflow, verified publisher và allowlist ứng dụng đối tác.\n\n\
+  **Vì sao đáng ưu tiên 2024–2026**\n\nConsent phishing là dạng xâm nhập “không cần\
+  \ mật khẩu theo nghĩa truyền thống” và rất phù hợp với môi trường Microsoft 365/Entra\
+  \ hiện đại. Nó giúp đội phòng thủ đánh giá sự trưởng thành trong cloud identity\
+  \ governance, chứ không chỉ ở lớp sign-in hay MFA.\n\n**Độ tin cậy:** Cao – audit\
+  \ trail của app consent, service principal và Graph access rất hữu ích nếu tenant\
+  \ bật đủ logging.\n\n**Tài liệu tham khảo**\n- Microsoft 2023/2024\n- Storm-0558\n\
+  - MITRE ATT&CK T1528, T1566.002, T1114"

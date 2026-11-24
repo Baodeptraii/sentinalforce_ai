@@ -1,0 +1,12 @@
+- id: 28b10d9e-ebc5-5d9a-b0dd-b5a6ba8b3693
+  name: "Simulate T1090 - Domain Fronting \u2013 C2 \u1EA9n sau CDN h\u1EE3p l\u1EC7"
+  description: Automated simulation ability for MITRE technique T1090
+  tactic: execution
+  technique_id: T1090
+  technique_name: "Domain Fronting \u2013 C2 \u1EA9n sau CDN h\u1EE3p l\u1EC7"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1090: Domain Fronting \u2013\
+      \ C2 \u1EA9n sau CDN h\u1EE3p l\u1EC7'"
+    timeout: 30

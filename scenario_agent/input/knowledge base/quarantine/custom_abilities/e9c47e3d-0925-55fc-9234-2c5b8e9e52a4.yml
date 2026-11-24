@@ -1,0 +1,12 @@
+- id: e9c47e3d-0925-55fc-9234-2c5b8e9e52a4
+  name: Simulate T1569 - PsExec / SMB Lateral Movement
+  description: Automated simulation ability for MITRE technique T1569
+  tactic: execution
+  technique_id: T1569
+  technique_name: PsExec / SMB Lateral Movement
+  executors:
+  - platform: windows
+    name: psh
+    command: 'Write-Output ''[+] Simulating telemetry for T1569: PsExec / SMB Lateral
+      Movement'''
+    timeout: 30

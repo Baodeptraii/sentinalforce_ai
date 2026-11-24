@@ -1,0 +1,12 @@
+id: 13bd7566-c59d-5868-b270-94e22cd9e388
+name: '[SCENARIO-54] OAuth Token Theft – Đánh cắp Access Token'
+description: Trong kịch bản này, đối phương lấy được access token hoặc refresh token
+  từ một nguồn đã bị compromise như endpoint người dùng, công cụ phát triển, session
+  cloud hoặc ứng dụng bên thứ ba lưu trữ token không an toàn, rồi tái sử dụng token
+  để truy cập tài nguyên cloud mà không cần nhập lại mật khẩu. Actor thường là post-exploitation
+  operator hoặc cloud-focused adversary; điều kiện tiên quyết là đã có nguồn rò rỉ
+  token và tenant
+atomic_ordering:
+- 9a5352e4-56e5-45c2-9b3f-41a46d3b3a43
+- 680cc609-3f4f-5195-af52-eb9e4f326352
+- 680cc609-3f4f-5195-af52-eb9e4f326352

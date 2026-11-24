@@ -1,0 +1,58 @@
+id: SCENARIO-62
+name: Trojanized Installer – Giả mạo phần mềm hợp lệ
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 62 – Trojanized Installer – Giả mạo phần mềm hợp lệ**\n\n**Giới\
+  \ thiệu chung**\n\nTrojanized installer là biến thể rất thực dụng của supply-chain-like\
+  \ abuse: phần mềm nhìn giống hợp lệ, có tên quen thuộc, biểu tượng quen thuộc và\
+  \ đôi khi vẫn thực hiện một phần chức năng mong đợi, nhưng bên trong có thành phần\
+  \ độc hại đi kèm. Kịch bản này đặc biệt phù hợp với môi trường doanh nghiệp có người\
+  \ dùng tự cài công cụ, đội kỹ thuật tải tiện ích từ Internet, hoặc chưa kiểm soát\
+  \ tốt nguồn phần mềm.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, đối thủ đóng\
+  \ gói lại một phần mềm phổ biến hoặc công cụ quản trị thường dùng, gắn thêm loader,\
+  \ backdoor hoặc script độc hại, rồi phân phối qua quảng cáo, torrent, mirror giả,\
+  \ forum kỹ thuật hoặc trang download không chính thức. Actor thường là cybercrime,\
+  \ malware distribution network hoặc initial access broker; điều kiện tiên quyết\
+  \ là người dùng có quyền cài đặt hoặc chạy file tải từ Internet; kết quả mong muốn\
+  \ là mã độc được thực thi dưới vỏ bọc một installer hợp pháp, tạo foothold và giảm\
+  \ khả năng bị phát hiện dựa trên tên file/process đơn giản.\n\n**Dòng tấn công end-to-end**\n\
+  \n```text\nTạo installer giả mạo phần mềm hợp lệ\n→ Phân phối qua nguồn download\
+  \ không chính thức\n→ Người dùng tải và chạy installer\n→ Installer thực hiện chức\
+  \ năng giả hoặc cài phần mềm thật kèm payload\n→ Payload tạo kết nối ra ngoài hoặc\
+  \ persistence\n→ Đối thủ sử dụng foothold cho bước hậu khai thác\n```\n\n1. **Chuẩn\
+  \ bị gói cài đặt:** Installer được đặt tên giống phần mềm hợp lệ, có biểu tượng\
+  \ và metadata dễ gây tin tưởng.\n2. **Phân phối qua kênh rủi ro:** Người dùng tải\
+  \ từ mirror, ads, torrent hoặc trang giả thay vì vendor chính thức.\n3. **Thực thi\
+  \ bởi người dùng:** Installer được chạy với quyền người dùng hoặc quyền cao hơn\
+  \ nếu yêu cầu cài đặt.\n4. **Tạo artifact bất thường:** Payload phụ tạo file, service,\
+  \ scheduled task hoặc kết nối mạng không liên quan chức năng phần mềm.\n5. **Duy\
+  \ trì và mở rộng:** Foothold được dùng để tải module tiếp theo hoặc thu thập thông\
+  \ tin hệ thống.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n\
+  |--------|-----------|-------|\n| Initial Access | T1195 | T1195.002 – Compromise\
+  \ Software Supply Chain / trojanized software package |\n| Execution | T1204 | T1204.002\
+  \ – User Execution: Malicious File |\n| Defense Evasion | T1036 | T1036.005 – Match\
+  \ Legitimate Name or Location |\n\n**Log / Telemetry / Observable**\n\n- **EDR process\
+  \ creation:** Installer được chạy từ thư mục Downloads, Temp hoặc user-writable\
+  \ path, sau đó sinh process con không phù hợp.\n- **File reputation / hash telemetry:**\
+  \ Hash không khớp bản chính thức, chữ ký số thiếu hoặc chữ ký không đúng vendor.\n\
+  - **Process tree:** Installer hợp lệ giả tạo ra network tool, script engine, service\
+  \ creation hoặc persistence artifact.\n- **Network logs:** Kết nối outbound ngay\
+  \ sau khi installer chạy tới domain/IP không liên quan vendor.\n- **Software inventory:**\
+  \ Phần mềm “mới cài” không trùng với danh sách package chuẩn hoặc không có nguồn\
+  \ phân phối nội bộ.\n\n**Gợi ý Detection / Hunting**\n\n```text\nInstallerExecutedFromUserPath\
+  \ = true\nAND (\n  SignatureInvalidOrUnexpected = true\n  OR HashNotInApprovedCatalog\
+  \ = true\n  OR SuspiciousChildProcess = true\n  OR NetworkConnectionToRareDomainWithin5m\
+  \ = true\n)\n```\n\n- **Alert:** Installer không có chữ ký hợp lệ hoặc chữ ký không\
+  \ đúng vendor được thực thi từ thư mục người dùng.\n- **Hunt:** So sánh hash installer\
+  \ trong doanh nghiệp với hash từ nguồn phân phối chính thức.\n- **Alert:** Một installer\
+  \ phần mềm thông thường tạo scheduled task, service hoặc kết nối mạng không phù\
+  \ hợp.\n- **Baseline:** Triển khai allowlist nguồn cài đặt phần mềm theo vendor,\
+  \ repository nội bộ và phần mềm được quản lý.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nKhi macro và attachment-based phishing bị kiểm soát tốt hơn, trojanized installer\
+  \ trở thành lựa chọn phổ biến để tận dụng thói quen tự tải phần mềm. Kịch bản này\
+  \ kiểm tra trực tiếp năng lực software control, EDR process lineage và khả năng\
+  \ xác minh nguồn gốc file thực thi.\n\n**Độ tin cậy:** Cao – khác biệt giữa installer\
+  \ hợp lệ và installer giả thường có thể quan sát qua chữ ký, hash, nguồn download,\
+  \ process tree và hành vi mạng sau cài đặt.\n\n**Tài liệu tham khảo**\n- CrowdStrike\n\
+  - Palo Alto Unit 42\n- MITRE ATT&CK T1195.002, T1204.002, T1036.005"

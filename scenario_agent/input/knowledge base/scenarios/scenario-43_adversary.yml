@@ -1,0 +1,14 @@
+id: 2e1c603b-1a8a-571e-86aa-960cc8a732d4
+name: '[SCENARIO-43] SSH Lateral Movement – Credential Reuse và Agent Hijacking'
+description: Trong kịch bản này, kẻ tấn công tái sử dụng credential SSH đã đánh cắp,
+  private key bị lộ, hoặc lợi dụng SSH agent/agent forwarding của một phiên hợp lệ
+  để đăng nhập sang host Linux khác. Actor thường là post-exploitation operator, cloud/Linux
+  intruder hoặc nhóm nhắm vào hạ tầng lai; điều kiện tiên quyết là có thông tin xác
+  thực SSH, agent socket có thể bị sử dụng sai mục đích, hoặc key material bị lộ từ
+  host đầu
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 8f6c14d1-f13d-4616-b7fc-98cc69fe56ec
+- a1b2c3d4-dvwa-0001-init-000000000001
+- f9c3d0ab-479b-4019-945f-22ace2b1731a
+- de632c2d-a729-4b77-b781-6a6b09c148ba

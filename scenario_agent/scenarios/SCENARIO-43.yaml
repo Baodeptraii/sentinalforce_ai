@@ -1,0 +1,55 @@
+id: SCENARIO-43
+name: SSH Lateral Movement – Credential Reuse và Agent Hijacking
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 43 – SSH Lateral Movement – Credential Reuse và Agent Hijacking**\n\
+  \n**Giới thiệu chung**\n\nTrong môi trường Linux, Unix-like systems, network appliances\
+  \ hoặc các hệ thống lai cloud/on-prem, SSH là kênh di chuyển ngang quan trọng tương\
+  \ đương RDP ở Windows. Một khi có password, private key hoặc quyền lợi dụng SSH\
+  \ agent đang mở, tác nhân có thể di chuyển rất nhanh giữa nhiều host mà gần như\
+  \ không cần công cụ phức tạp.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, kẻ tấn\
+  \ công tái sử dụng credential SSH đã đánh cắp, private key bị lộ, hoặc lợi dụng\
+  \ SSH agent/agent forwarding của một phiên hợp lệ để đăng nhập sang host Linux khác.\
+  \ Actor thường là post-exploitation operator, cloud/Linux intruder hoặc nhóm nhắm\
+  \ vào hạ tầng lai; điều kiện tiên quyết là có thông tin xác thực SSH, agent socket\
+  \ có thể bị sử dụng sai mục đích, hoặc key material bị lộ từ host đầu tiên; kết\
+  \ quả mong muốn là mở được shell trên host kế tiếp, từ đó tiếp tục discovery, privilege\
+  \ escalation hoặc lan rộng sang hệ thống quản trị, hypervisor, bastion và thiết\
+  \ bị mạng hỗ trợ SSH. fileciteturn1file0L70-L70\n\n**Dòng tấn công end-to-end**\n\
+  \n```text\nFoothold trên Linux / jump host\n→ Có password, private key hoặc agent\
+  \ context\n→ SSH sang host kế tiếp\n→ Thực hiện thao tác discovery / staging / admin\
+  \ action\n→ Lặp lại qua nhiều host\n→ Mở rộng lateral movement trong môi trường\
+  \ Unix/Linux\n```\n\n1. **Giành điểm bám đầu tiên:** Host Linux, bastion hoặc thiết\
+  \ bị quản trị đầu tiên đã bị compromise.\n2. **Thu thập vật liệu xác thực:** Password,\
+  \ private key, known_hosts context hoặc agent socket hiện hữu bị lạm dụng.\n3. **Thiết\
+  \ lập SSH sang host mới:** Kết nối từ host nguồn sang máy kế tiếp trong cùng estate.\n\
+  4. **Khai thác host mới:** Lệnh quản trị, thu thập thông tin hoặc mở rộng quyền\
+  \ diễn ra trên machine đích.\n5. **Tiếp tục lan truyền:** Chuỗi movement này lặp\
+  \ lại theo mô hình multi-hop.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique\
+  \ | Mô tả |\n|--------|-----------|-------|\n| Lateral Movement | T1021 | T1021.004\
+  \ – SSH |\n| Credential Access | T1552 | T1552.004 – Private Keys |\n| Lateral Movement\
+  \ | T1078 | Valid Accounts trong ngữ cảnh SSH credential reuse |\n\n**Log / Telemetry\
+  \ / Observable**\n\n- **SSH auth logs:** `Accepted password`, `Accepted publickey`,\
+  \ nguồn IP/host bất thường, hoặc đăng nhập không đúng giờ vận hành.\n- **Syslog\
+  \ / SIEM:** Một host Linux bình thường đột nhiên trở thành nguồn SSH tới nhiều host\
+  \ khác.\n- **Agent-related clue:** Phiên shell bất thường có `SSH_AUTH_SOCK`, agent\
+  \ forwarding, hoặc hành vi dùng agent trên host vốn không phải jump host.\n- **File\
+  \ telemetry:** Sửa `authorized_keys`, tạo key mới, hoặc truy cập private keys ngoài\
+  \ baseline quản trị.\n- **Multi-hop pattern:** Thành công SSH trên host A ngay sau\
+  \ đó dẫn tới thành công SSH từ A sang B, C, D.\n\n**Gợi ý Detection / Hunting**\n\
+  \n```text\nLinuxAuthSuccess = true\nAND SourceHost NOT IN approved_admin_hosts\n\
+  AND (\n  NewSSHSourcePattern = true\n  OR AgentForwardingObserved = true\n  OR AuthorizedKeysModified\
+  \ = true\n)\n```\n\n- **Alert:** Một Linux server ứng dụng bình thường bắt đầu đăng\
+  \ nhập SSH sang nhiều host khác.\n- **Hunt:** Theo dõi đường đi nhiều bước của các\
+  \ SSH success events để phát hiện chuỗi pivot.\n- **Alert:** `authorized_keys` hoặc\
+  \ private key path bị tác động trên host không có hoạt động onboarding/automation\
+  \ tương ứng.\n- **Baseline:** Xác định rõ jump host hợp lệ, host nào được phép dùng\
+  \ agent forwarding và đường SSH nào là bình thường.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nHầu hết chương trình phòng thủ doanh nghiệp vẫn quan sát Linux network và auth\
+  \ yếu hơn Windows. Scenario SSH lateral movement giúp lấp đúng khoảng trống đó,\
+  \ nhất là trong môi trường hạ tầng hybrid, DevOps, cloud VM, thiết bị mạng và bastion\
+  \ hosts. Nó cũng đặc biệt hữu ích cho bài toán theo dõi credential reuse trên hệ\
+  \ sinh thái không phải Windows.\n\n**Độ tin cậy:** Cao – auth logs, syslog và mô\
+  \ hình multi-hop cho phép xây dựng use case khá mạnh nếu có tập trung log đầy đủ.\n\
+  \n**Tài liệu tham khảo**\n- CISA\n- NSA\n- MITRE ATT&CK T1021.004, T1552.004"

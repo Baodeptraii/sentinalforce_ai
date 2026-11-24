@@ -1,0 +1,110 @@
+id: SCENARIO-14
+name: PowerShell Fileless Malware – Thực Thi Hoàn Toàn Trong Bộ Nhớ
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 14 – PowerShell Fileless Malware – Thực Thi Hoàn Toàn Trong
+  Bộ Nhớ
+
+
+  **Giới thiệu chung**
+
+
+  Fileless malware sử dụng PowerShell, WMI, hoặc .NET reflection để thực thi payload
+  hoàn toàn trong RAM, không ghi file xuống đĩa. Điều này bypass các AV truyền thống
+  dựa trên file scanning. Kỹ thuật này được sử dụng rộng rãi bởi cả APT và cybercrime
+  groups (Cobalt Strike, Empire, Metasploit).
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công gửi macro-enabled document hoặc exploit tạo PowerShell process. PowerShell
+  tải script từ internet (encoded base64), decode trong memory, thực thi shellcode
+  thông qua .NET reflection hoặc `Add-Type`. Shellcode inject vào tiến trình hợp lệ,
+  establish C2.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Initial stager (macro/script) → PowerShell execution
+
+  → Download encoded payload from C2 → Decode + execute in memory
+
+  → Reflective DLL loading hoặc shellcode injection
+
+  → C2 establish → Post-exploitation (AMSI bypass included)
+
+  ```
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Execution | T1059 | T1059.001 – PowerShell |
+
+  | Defense Evasion | T1027 | T1027.010 – Command Obfuscation |
+
+  | Defense Evasion | T1055 | Process Injection |
+
+  | Defense Evasion | T1562 | T1562.001 – Impair Defenses: Disable AMSI |
+
+  | C2 | T1105 | Ingress Tool Transfer |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **PowerShell Event 4104 (Script Block Logging):** Encoded commands, Invoke-Expression,
+  DownloadString, Add-Type, Reflection
+
+  - **AMSI:** Script content flagged, AMSI bypass attempts
+
+  - **EDR:** PowerShell → network download; PowerShell writing to registry; PowerShell
+  → process injection target
+
+  - **Network:** HTTP/HTTPS call từ PowerShell process
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Enable Script Block Logging:** Event 4104 bắt buộc; Level: Verbose
+
+  - **Enable Module Logging:** Event 4103 để capture module load
+
+  - **Alert:** `Invoke-Expression(iex)` + `DownloadString`; base64 encoded commands;
+  `-EncodedCommand` flag; `Add-Type -Assembly`; `[System.Reflection.Assembly]`
+
+  - **AMSI:** Monitor AMSI bypass patterns (patching AmsiScanBuffer)
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  PowerShell-based attacks vẫn chiếm >60% của các post-exploitation activity theo
+  CrowdStrike 2024. Cobalt Strike và nhiều C2 frameworks mặc định dùng PowerShell
+  stages. Constrained Language Mode (CLM) và AMSI là biện pháp quan trọng cần triển
+  khai.
+
+
+  **Độ tin cậy:** Rất cao – CrowdStrike, Microsoft, multiple IR reports.
+
+
+  **Tài liệu tham khảo**
+
+  - Microsoft: "PowerShell security best practices" (2023)
+
+  - CrowdStrike: "2024 Global Threat Report – PowerShell usage"
+
+  - MITRE ATT&CK T1059.001, T1027.010
+
+
+  ---'

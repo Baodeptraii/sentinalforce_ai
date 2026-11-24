@@ -1,0 +1,12 @@
+id: 17a93fea-1714-5428-801c-073642aae8f9
+name: '[SCENARIO-28] Token Impersonation – SeImpersonatePrivilege Abuse'
+description: Kẻ tấn công đã có code execution trên một host và đang chạy trong ngữ
+  cảnh có `SeImpersonatePrivilege` hoặc quyền tương đương có thể bị lạm dụng. Actor
+  phù hợp là tác nhân hậu khai thác nhắm tới local privilege escalation nhanh trên
+  máy chủ ứng dụng hoặc máy trạm. Điều kiện tiên quyết là tiến trình ban đầu có quyền
+  gắn / mạo danh token. Kết quả mong muốn là tạo ra một tiến trình mới với mức đặc
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- f0162a9d-4858-576c-8d02-c0b541be50b3
+- 90db9e27-8e7c-4c04-b602-a45927884966
+- dbf4f5a9-b8e0-46a3-9841-9ad71247239e

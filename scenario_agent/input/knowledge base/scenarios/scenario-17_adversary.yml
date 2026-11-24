@@ -1,0 +1,13 @@
+id: 22cfece4-8d92-538a-a6b5-594da5acfa02
+name: '[SCENARIO-17] DLL Sideloading – Persistence và Defense Evasion'
+description: Sau khi có khả năng ghi file lên máy đích hoặc thư mục cài đặt của một
+  ứng dụng, kẻ tấn công đặt DLL độc hại trùng tên với dependency mà ứng dụng đang
+  mong đợi. Actor thường là tác nhân hậu xâm nhập muốn duy trì hiện diện hoặc ngụy
+  trang việc thực thi dưới một tiến trình tin cậy. Điều kiện tiên quyết là quyền ghi
+  file vào thư mục cùng cấp với executable hoặc một vị trí
+atomic_ordering:
+- a50d5a97-2531-499e-a1de-5544c74432c6
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- 35eb8d16-9820-4423-a2a1-90c4f5edd9ca
+- eb8a8b9e-7332-5f26-93e6-f40efe1d8fcd
+- eb8a8b9e-7332-5f26-93e6-f40efe1d8fcd

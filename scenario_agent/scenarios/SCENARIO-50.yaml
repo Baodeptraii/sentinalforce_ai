@@ -1,0 +1,56 @@
+id: SCENARIO-50
+name: Domain Fronting – C2 ẩn sau CDN hợp lệ
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 50 – Domain Fronting – C2 ẩn sau CDN hợp lệ**\n\n**Giới thiệu\
+  \ chung**\n\nDomain fronting là kỹ thuật che giấu điểm đến thật của lưu lượng bằng\
+  \ cách lợi dụng hạ tầng CDN hoặc cloud edge hợp lệ. Đối với phía phòng thủ, điểm\
+  \ khó nhất là bề mặt kết nối nhìn như đang đi tới một nhà cung cấp lớn, trong khi\
+  \ đích logic bên trong lại phục vụ C2 hoặc hoạt động điều khiển khác.\n\n**Mô tả\
+  \ kịch bản**\n\nTrong kịch bản này, implant trên host bị compromise hướng lưu lượng\
+  \ HTTPS qua một CDN hoặc edge provider phổ biến, dùng cấu hình request sao cho kết\
+  \ nối trông giống truy cập tới dịch vụ hợp lệ nhưng thực chất điều hướng vào hạ\
+  \ tầng điều khiển do đối phương chuẩn bị. Actor thường là nhóm cần vượt egress control\
+  \ theo domain hoặc hoạt động trong mạng chỉ cho phép số ít CDN/cloud lớn; điều kiện\
+  \ tiên quyết là host đã có implant hoạt động và tổ chức chưa có đủ visibility vào\
+  \ SNI, Host header, hoặc mẫu giao tiếp ở lớp proxy/TLS; kết quả mong muốn là duy\
+  \ trì C2 khó bị phân biệt với traffic đi tới CDN hợp lệ.\n\n**Dòng tấn công end-to-end**\n\
+  \n```text\nFoothold trên host\n→ Implant kết nối HTTPS tới hạ tầng CDN hợp lệ\n\
+  → Request được định tuyến tới đích logic ẩn phía sau\n→ Beacon hoặc tasking đi qua\
+  \ lớp fronting\n→ Traffic bề ngoài mang dáng dấp truy cập cloud/CDN thông thường\n\
+  → Duy trì C2 vượt chính sách chặn đơn giản theo domain\n```\n\n1. **Có implant hoạt\
+  \ động:** Host đã ở giai đoạn hậu khai thác có nhu cầu giữ C2 ổn định.\n2. **Định\
+  \ tuyến qua CDN:** Kết nối vật lý được gửi tới một CDN hoặc cloud edge phổ biến.\n\
+  3. **Giấu đích logic:** Mẫu request được tổ chức để chuyển tiếp tới hạ tầng điều\
+  \ khiển thực.\n4. **Duy trì beaconing:** Implant tiếp tục check-in và nhận chỉ thị\
+  \ thông qua lớp fronting.\n5. **Giảm khả năng bị chặn:** Bên phòng thủ khó khóa\
+  \ CDN phổ biến nếu thiếu bằng chứng rõ ràng hơn ở lớp ứng dụng.\n\n**MITRE ATT&CK\
+  \ Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Command and Control | T1090 | T1090.004 – Domain Fronting |\n| Command and Control\
+  \ | T1071 | T1071.001 – Web Protocols |\n| Defense Evasion | T1090 | Dùng lớp trung\
+  \ gian hợp lệ để che giấu hạ tầng đích thực |\n\n**Log / Telemetry / Observable**\n\
+  \n- **Proxy / TLS logs:** Kết nối đi vào dải CDN phổ biến nhưng mẫu request không\
+  \ khớp ứng dụng cloud nào tổ chức thực sự dùng.\n- **SNI / Host mismatch clue:**\
+  \ Khi có khả năng quan sát, SNI, HTTP Host hoặc đích logic không đồng nhất với mẫu\
+  \ client hợp lệ.\n- **Process anomaly:** Process không nên truy cập cloud edge lại\
+  \ tạo lưu lượng HTTPS định kỳ tới các IP/CDN range lớn.\n- **Destination rarity:**\
+  \ Chỉ một số rất ít host trong doanh nghiệp dùng cùng một mẫu kết nối CDN lạ.\n\
+  - **Behavioral correlation:** Beaconing period, jitter, payload size và tỷ lệ request/response\
+  \ nhỏ phản ánh rõ mô hình C2 hơn là dùng ứng dụng SaaS chuẩn.\n\n**Gợi ý Detection\
+  \ / Hunting**\n\n```text\nTLSDestination IN known_cdn_ranges\nAND BeaconPattern\
+  \ = true\nAND (\n  SNIHostMismatch = true\n  OR RareCdnUsageBySourceHost = true\n\
+  \  OR HttpHostHeaderRare = true\n  OR ProcessContext NOT IN approved_apps\n)\n```\n\
+  \n- **Alert:** Một host không có nghiệp vụ cloud đặc thù nhưng duy trì lưu lượng\
+  \ định kỳ tới CDN range lạ.\n- **Hunt:** Kết hợp fingerprint TLS, process lineage\
+  \ và tính hiếm của đích CDN theo từng phân đoạn mạng.\n- **Alert:** CDN traffic\
+  \ xuất hiện từ script host, service phụ hoặc binary không có lý do business rõ ràng.\n\
+  - **Baseline:** Lập inventory các ứng dụng thực sự dùng CloudFront, Cloudflare hoặc\
+  \ CDN lớn để biến traffic ngoại lệ thành tín hiệu mạnh.\n\n**Vì sao đáng ưu tiên\
+  \ 2024–2026**\n\nKhi doanh nghiệp ngày càng phụ thuộc vào cloud và CDN, domain fronting\
+  \ hoặc các biến thể che giấu tương tự trở nên thực dụng hơn cho phía tấn công. Scenario\
+  \ này đo đúng năng lực quan sát lớp TLS/proxy và khả năng phân biệt “kết nối tới\
+  \ nhà cung cấp lớn” với “lưu lượng điều khiển được bọc trong nhà cung cấp lớn”.\n\
+  \n**Độ tin cậy:** Trung bình đến cao – tín hiệu rất giá trị nhưng mức độ hiệu quả\
+  \ phụ thuộc mạnh vào độ sâu quan sát proxy/TLS của tổ chức.\n\n**Tài liệu tham khảo**\n\
+  - FireEye/Mandiant\n- CrowdStrike\n- MITRE ATT&CK T1090.004, T1071.001"

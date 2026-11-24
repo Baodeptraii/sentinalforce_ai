@@ -1,0 +1,11 @@
+id: fdfea2e2-112d-5775-80c9-03c26fb23656
+name: '[SCENARIO-68] SIM Swapping dẫn đến chiếm quyền tài khoản quan trọng'
+description: Trong kịch bản này, đối thủ dùng thông tin cá nhân bị rò rỉ, social engineering
+  hoặc lạm dụng quy trình hỗ trợ để chiếm quyền kiểm soát số điện thoại của mục tiêu.
+  Sau đó, đối thủ dùng số này để hoàn tất quy trình reset mật khẩu, nhận OTP hoặc
+  vượt qua một lớp xác thực SMS. Actor thường là nhóm social engineering, cybercrime
+  hoặc nhóm giống Scattered Spider; điều kiện tiên quyết là tài khoản quan trọng
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 7ba84893-605f-5a10-9214-7cfef1a12dfc
+- d2d48150-7cfd-51d8-8c72-b4cfc2b4fa3a

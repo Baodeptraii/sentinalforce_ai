@@ -1,0 +1,15 @@
+id: b53f7acf-b142-5554-8fd5-55b16e8bca0e
+name: '[SCENARIO-06] Khai Thác Ứng Dụng Công Khai – SQL Injection → RCE → Web Shell'
+description: Kẻ tấn công quét ứng dụng web công khai, phát hiện SQL injection trong
+  form đăng nhập hoặc parameter. Sử dụng SQLMap hoặc manual để khai thác, leo thang
+  đến xp_cmdshell (MSSQL) hoặc ghi web shell. Từ web shell, thực thi lệnh, tải tool,
+  và mở rộng vào mạng nội bộ.
+atomic_ordering:
+- 14a21534-350f-4d83-9dd7-3c56b93a0c17
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 638fb6bb-ba39-4285-93d1-7e4775b033a8
+- a9b93f17-31cb-435d-a462-5e838a2a6026
+- a1b2c3d4-dvwa-0003-cmdi-000000000003
+- a1b2c3d4-dvwa-0005-sqli-000000000005
+- c3583749-4ca1-50cf-8a80-546566dcaf61
+- 0a2ce662-1efa-496f-a472-2fe7b080db16

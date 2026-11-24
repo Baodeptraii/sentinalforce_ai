@@ -1,0 +1,59 @@
+id: SCENARIO-38
+name: Living-off-the-Land – LOLBins (certutil, mshta, regsvr32)
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 38 – Living-off-the-Land – LOLBins (certutil, mshta, regsvr32)**\n\
+  \n**Giới thiệu chung**\n\nLiving-off-the-Land là nhóm kỹ thuật tận dụng các binary,\
+  \ script host hoặc thành phần hệ điều hành có sẵn để thực thi hoặc hỗ trợ payload\
+  \ mà không cần mang nhiều công cụ tùy biến từ ngoài vào. Đây là một nhóm kịch bản\
+  \ rất quan trọng với blue team vì hoạt động nhìn bề ngoài thường “giống admin”,\
+  \ nhưng ngữ cảnh, đối tượng và chuỗi follow-on lại khác hẳn vận hành hợp lệ.\n\n\
+  **Mô tả kịch bản**\n\nTrong kịch bản này, tác nhân đã có điểm bám ban đầu trên máy\
+  \ nạn nhân và sử dụng một hoặc nhiều LOLBins như `certutil`, `mshta`, `regsvr32`\
+  \ hoặc utility tương đương để tải nội dung, giải mã, proxy execution hoặc kích hoạt\
+  \ stage kế tiếp mà không cần drop custom loader dễ bị nhận diện. Actor thường là\
+  \ malware loader, post-exploitation operator hoặc nhóm thích giảm dấu vết công cụ;\
+  \ điều kiện tiên quyết là có interactive execution hoặc script execution trên host;\
+  \ kết quả mong muốn là tận dụng trusted system binaries để vượt qua một phần kiểm\
+  \ soát application allowlisting và giảm mức độ nổi bật của payload thực thi. fileciteturn1file0L65-L65\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nFoothold trên host\n→ Gọi LOLBin hệ điều\
+  \ hành\n→ Tải / giải mã / gọi nội dung trung gian\n→ Payload hoặc stage kế tiếp\
+  \ được kích hoạt\n→ Hành vi trông giống utility hệ thống hợp lệ\n→ Defense evasion\
+  \ + execution\n```\n\n1. **Thiết lập ngữ cảnh thực thi:** Host đã bị compromise\
+  \ ở mức người dùng hoặc cao hơn.\n2. **Lựa chọn LOLBin phù hợp:** Utility sẵn có\
+  \ được chọn tùy vào mục tiêu là tải, giải mã hay proxy thực thi.\n3. **Kích hoạt\
+  \ stage trung gian:** Nội dung trung gian được gọi bằng binary có uy tín hệ điều\
+  \ hành.\n4. **Thực thi stage tiếp theo:** Payload hoạt động mà không cần process\
+  \ độc quyền dễ bị chặn.\n5. **Pha trộn với noise nền:** Hành vi được bọc trong tên\
+  \ process tưởng như hợp lệ.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique\
+  \ | Mô tả |\n|--------|-----------|-------|\n| Defense Evasion | T1218 | T1218.001\
+  \ – System Binary Proxy Execution trong bối cảnh LOLBins |\n| Defense Evasion |\
+  \ T1218 | T1218.010 – Regsvr32 |\n| Execution | T1140 | Decode/Deobfuscate Files\
+  \ or Information |\n| Defense Evasion | T1036 | Mượn uy tín utility hệ thống để\
+  \ giảm nghi ngờ bằng tên process |\n\n**Log / Telemetry / Observable**\n\n- **Process\
+  \ creation logs:** `certutil.exe`, `mshta.exe`, `regsvr32.exe` hoặc utility tương\
+  \ tự xuất hiện trên workstation không có nhu cầu quản trị tương ứng.\n- **Command-line\
+  \ anomaly:** Tham số tham chiếu user-writable path, URL ngoài, nội dung mã hóa,\
+  \ hoặc object/script không phù hợp baseline.\n- **EDR lineage:** LOLBin sinh child\
+  \ process, network connection hoặc file write bất thường.\n- **Sysmon / network\
+  \ telemetry:** Signed utility hệ thống đột nhiên thực hiện outbound connection hoặc\
+  \ giải mã dữ liệu rồi ghi vào thư mục tạm.\n- **Sequence clue:** LOLBin được gọi\
+  \ ngay sau email/phishing/open document hoặc trước persistence/execution khác.\n\
+  \n**Gợi ý Detection / Hunting**\n\n```text\nProcessName IN (\"certutil.exe\", \"\
+  mshta.exe\", \"regsvr32.exe\")\nAND (\n  NetworkConnection = true\n  OR UserWritablePathReferenced\
+  \ = true\n  OR EncodedContentLikeArgument = true\n  OR SuspiciousChildProcess =\
+  \ true\n)\nAND ParentProcess NOT IN approved_admin_workflows\n```\n\n- **Alert:**\
+  \ LOLBin hệ thống xuất hiện trên máy người dùng với command line lệch chuẩn hoặc\
+  \ có network activity.\n- **Hunt:** Tìm chuỗi `Office/browser/phishing artifact\
+  \ → LOLBin → file drop / child process / network`.\n- **Alert:** `mshta` và `regsvr32`\
+  \ được dùng trong user context ngoài nhóm máy quản trị hoặc máy build.\n- **Baseline:**\
+  \ Thiết lập allowlist command-line và ngữ cảnh sử dụng LOLBins cho đội IT; mọi thứ\
+  \ ngoài baseline nên được ưu tiên xem xét.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\
+  \nLOLBins là vùng giao tranh kinh điển giữa blue team và tác nhân hậu khai thác\
+  \ vì chúng sống ngay bên trong hệ điều hành. Kịch bản này đặc biệt hữu ích cho diễn\
+  \ tập vì buộc đội phòng thủ phải quan tâm đến **ngữ cảnh sử dụng công cụ hợp lệ**,\
+  \ thay vì chỉ chặn theo hash hay tên file.\n\n**Độ tin cậy:** Cao – tín hiệu rất\
+  \ thực dụng, dễ chuyển thành use case và rất có giá trị cho threat hunting.\n\n\
+  **Tài liệu tham khảo**\n- LOLBAS Project\n- CrowdStrike\n- MITRE ATT&CK T1218.001,\
+  \ T1218.010, T1140"

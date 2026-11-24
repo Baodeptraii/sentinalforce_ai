@@ -1,0 +1,11 @@
+id: a35b8ba1-440b-5c32-ae10-3074708bcf6a
+name: '[SCENARIO-12] MFA Fatigue / Push Bombing'
+description: Kẻ tấn công có được credential (password) hợp lệ qua phishing hoặc data
+  breach. Liên tục thử đăng nhập → trigger hàng chục push MFA. Đồng thời, kẻ tấn công
+  gọi điện giả vờ IT helpdesk, giải thích rằng có sự cố hệ thống và yêu cầu chấp nhận
+  notification. Nạn nhân chấp nhận → kẻ tấn công vào được account.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 37a36163-f420-5d50-a719-41da1a55c3c7
+- 37a36163-f420-5d50-a719-41da1a55c3c7
+- d2d48150-7cfd-51d8-8c72-b4cfc2b4fa3a

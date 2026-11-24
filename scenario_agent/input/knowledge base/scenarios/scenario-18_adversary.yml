@@ -1,0 +1,13 @@
+id: fb2f98a4-6fc9-5e3c-bb7d-5fd59c641d8f
+name: '[SCENARIO-18] Web Shell – Persistence trên Web Server'
+description: Kẻ tấn công khai thác thành công một ứng dụng công khai hoặc dùng credential
+  quản trị web để tải lên một file `.aspx`, `.php`, `.jsp`, `.ashx` hoặc biến thể
+  tương tự vào webroot. Actor phù hợp cho scenario này là tác nhân đã có initial access
+  trên web tier và muốn duy trì truy cập ngay cả khi session ban đầu mất đi. Điều
+  kiện tiên quyết là quyền upload file, write file sau RCE, hoặc đường dẫn deployment
+atomic_ordering:
+- a9b93f17-31cb-435d-a462-5e838a2a6026
+- 3b0df731-030c-4768-b492-2a3216d90e53
+- a1b2c3d4-dvwa-0005-sqli-000000000005
+- c3583749-4ca1-50cf-8a80-546566dcaf61
+- 0a2ce662-1efa-496f-a472-2fe7b080db16

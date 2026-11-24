@@ -1,0 +1,134 @@
+id: SCENARIO-03
+name: Business Email Compromise (BEC) – Wire Transfer Fraud
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part1.md
+format: scenario_description
+executable: false
+content: '### Kịch bản 03 – Business Email Compromise (BEC) – Wire Transfer Fraud
+
+
+  **Giới thiệu chung**
+
+
+  BEC (Business Email Compromise) là một trong các loại tấn công gây thiệt hại tài
+  chính lớn nhất toàn cầu. FBI IC3 2024 ghi nhận BEC gây thiệt hại >$2.9 tỷ USD chỉ
+  trong năm 2023. Kẻ tấn công chiếm quyền hoặc giả mạo hộp thư doanh nghiệp để yêu
+  cầu chuyển tiền, thay đổi thông tin ngân hàng, hoặc lừa đảo mua gift card.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công chiếm tài khoản email hợp lệ của CEO/CFO/kế toán qua phishing, sau đó
+  giám sát hộp thư để tìm thời điểm thích hợp (giao dịch đang chờ xử lý). Khi phát
+  hiện cơ hội, kẻ tấn công gửi email yêu cầu thay đổi thông tin ngân hàng hưởng thụ
+  hoặc yêu cầu chuyển tiền khẩn.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```
+
+  Phishing/Credential Theft → Chiếm hộp thư → Giám sát email (silent)
+
+  → Xác định giao dịch đang chờ → Giả mạo email chỉ đạo
+
+  → Yêu cầu chuyển tiền / thay đổi thông tin TK → Nhận tiền
+
+  ```
+
+
+  1. **Credential theft hoặc account compromise (T1078):** Qua phishing hoặc credential
+  stuffing.
+
+  2. **Email monitoring (T1114.001):** Kẻ tấn công đọc email âm thầm, học quy trình
+  nội bộ.
+
+  3. **Timing identification:** Phát hiện giao dịch lớn hoặc đối tác đang chờ thanh
+  toán.
+
+  4. **Spoofing hoặc tạo inbox rule (T1114.003):** Giả mạo địa chỉ email CEO/CFO,
+  hoặc tạo rule để intercept phản hồi.
+
+  5. **Social engineering (T1656):** Gửi email khẩn cấp yêu cầu chuyển tiền đến tài
+  khoản mới.
+
+  6. **Money mule network:** Tiền được chuyển qua nhiều tài khoản trung gian rồi rút.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Sub-technique | Mô tả |
+
+  |--------|-----------|---------------|-------|
+
+  | Initial Access | T1566 | T1566.002 | Spearphishing Link |
+
+  | Credential Access | T1078 | T1078.004 | Valid Accounts: Cloud Accounts |
+
+  | Collection | T1114 | T1114.001 | Email Collection |
+
+  | Collection | T1114 | T1114.003 | Email Forwarding Rule |
+
+  | Impact | T1657 | – | Financial Theft |
+
+  | Defense Evasion | T1036 | T1036.006 | Email Spoofing |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **O365 Unified Audit Log:** `Set-InboxRule`, `New-InboxRule`, `UpdateInboxRules`
+  đặc biệt với điều kiện forward/delete
+
+  - **Mail flow:** Email từ domain trẻ với display name giống CEO/CFO
+
+  - **Sign-in logs:** Sign-in thành công từ IP/country bất thường (cross với hành
+  vi lịch sử)
+
+  - **Microsoft Defender for Cloud Apps:** "Suspicious inbox forwarding", "Impossible
+  travel"
+
+  - **Exchange transport rules:** Outbound email chứa ACH/Wire/routing number keywords
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** Inbox rule `ForwardTo` external domain, `DeleteMessage=True`, hoặc
+  `MarkAsRead=True` lạ
+
+  - **Alert:** Email spoofing — `From` display name khớp CEO nhưng SMTP address khác
+  domain
+
+  - **Alert:** Đăng nhập từ Tor/VPN sau đó tạo inbox rule trong cùng session
+
+  - **Hunt:** Tìm tài khoản có sign-in từ quốc gia lạ sau đó truy cập finance/payroll
+  mailbox
+
+  - **DLP:** Block email chứa pattern ngân hàng (IBAN, routing number) đến domain
+  không phổ biến
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  FBI IC3 Report 2024: BEC đứng đầu về thiệt hại tài chính ($2.9B+). Các nhóm như
+  Scattered Spider, Muddled Libra tiếp tục khai thác BEC kết hợp với vishing (voice
+  phishing). Xu hướng 2024–2025: BEC kết hợp deepfake voice để tăng tính thuyết phục.
+
+
+  **Độ tin cậy:** Rất cao – FBI IC3 2024, Microsoft DART.
+
+
+  **Tài liệu tham khảo**
+
+  - FBI Internet Crime Complaint Center (IC3) Report 2024
+
+  - Microsoft DART: "Business Email Compromise" case studies
+
+  - CISA BEC Fact Sheet
+
+
+  ---'

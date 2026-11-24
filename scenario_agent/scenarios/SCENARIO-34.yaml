@@ -1,0 +1,58 @@
+id: SCENARIO-34
+name: Process Injection – DLL Injection vào tiến trình hợp lệ
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 34 – Process Injection – DLL Injection vào tiến trình hợp lệ**\n\
+  \n**Giới thiệu chung**\n\nProcess injection là một trong các kỹ thuật né tránh phát\
+  \ hiện kinh điển vì nó biến tiến trình hợp lệ thành “vật chứa” cho code không mong\
+  \ muốn. Khi quá trình này diễn ra thành công, network connection, child process,\
+  \ hoặc hành vi hậu khai thác có thể trông như được sinh ra từ một tiến trình đáng\
+  \ tin cậy thay vì từ malware ban đầu.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này,\
+  \ tác nhân hậu khai thác đã có foothold trên endpoint và thực hiện chèn DLL hoặc\
+  \ vùng mã nhớ vào một tiến trình hợp lệ đang chạy để ẩn quá trình thực thi kế tiếp.\
+  \ Actor thường là loader, implant hậu xâm nhập hoặc operator cần giảm khả năng bị\
+  \ người dùng và EDR chú ý; điều kiện tiên quyết là đã có quyền truy cập tiến trình\
+  \ đích ở mức đủ để ghi bộ nhớ hoặc điều khiển luồng thực thi; kết quả mong muốn\
+  \ là payload chạy bên trong một process hợp lệ, qua đó che giấu network traffic,\
+  \ child-process lineage hoặc các hành vi tiếp theo. fileciteturn1file0L61-L61\n\
+  \n**Dòng tấn công end-to-end**\n\n```text\nFoothold ban đầu trên endpoint\n→ Chọn\
+  \ tiến trình hợp lệ làm vật chứa\n→ Mở truy cập chéo tiến trình / ghi vùng nhớ\n\
+  → Nạp module hoặc shellcode vào process đích\n→ Payload chạy dưới danh nghĩa tiến\
+  \ trình hợp lệ\n→ Defense evasion + execution tiếp theo\n```\n\n1. **Thiết lập foothold:**\
+  \ Implant ban đầu đang chạy dưới user hoặc ngữ cảnh cao hơn.\n2. **Lựa chọn process\
+  \ đích:** Browser, explorer, trình ký số, công cụ management hoặc process thường\
+  \ xuyên có network là các ứng viên phổ biến trong kịch bản mô phỏng.\n3. **Can thiệp\
+  \ bộ nhớ từ xa:** Tiến trình nguồn tương tác chéo với tiến trình đích để chèn nội\
+  \ dung thực thi.\n4. **Kích hoạt luồng thực thi mới:** Payload bắt đầu chạy trong\
+  \ process hợp lệ thay vì process ban đầu.\n5. **Ẩn bước hậu khai thác:** Network\
+  \ beacon hoặc hành vi tiếp theo phát sinh dưới lineage khó nhận diện hơn.\n\n**MITRE\
+  \ ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n\
+  | Defense Evasion | T1055 | T1055.001 – Dynamic-link Library Injection |\n| Defense\
+  \ Evasion | T1055 | T1055.002 – Portable Executable Injection |\n| Execution | T1055\
+  \ | Process Injection đồng thời là cơ chế thực thi payload trong process vật chứa\
+  \ |\n\n**Log / Telemetry / Observable**\n\n- **EDR memory events:** Cross-process\
+  \ access, remote memory write, thread start mới hoặc executable memory region trong\
+  \ process khác.\n- **Sysmon / EDR process access:** Tiến trình ít gặp mở handle\
+  \ mạnh tới process đích không liên quan chức năng nghiệp vụ.\n- **Module anomaly:**\
+  \ Process đã ký số hoặc quen thuộc suddenly load module lạ, module không ký, hoặc\
+  \ có image memory không khớp baseline.\n- **Behavior drift:** Process hợp lệ đột\
+  \ nhiên mở outbound connection mới, spawn child process hoặc truy cập dữ liệu nhạy\
+  \ cảm trái vai trò.\n- **Parent/child mismatch:** Tiến trình khởi phát hành vi mạng\
+  \ hoặc script nhưng lineage ban đầu không giải thích được hiện tượng đó.\n\n**Gợi\
+  \ ý Detection / Hunting**\n\n```text\nCrossProcessAccess = true\nAND RemoteMemoryWrite\
+  \ = true\nAND (\n  RemoteThreadStart = true\n  OR APCExecution = true\n  OR ExecutableMemoryRegionCreated\
+  \ = true\n)\nAND SourceProcess NOT IN approved_security_tools\n```\n\n- **Alert:**\
+  \ Tiến trình người dùng hoặc utility lạ truy cập và ghi bộ nhớ vào browser, explorer\
+  \ hoặc process nghiệp vụ phổ biến.\n- **Hunt:** Tìm chuỗi `handle mở mạnh → remote\
+  \ memory write → network activity mới từ process đích`.\n- **Alert:** Module lạ\
+  \ hoặc vùng nhớ thực thi xuất hiện trong process vốn có baseline module rất ổn định.\n\
+  - **Baseline:** Tách rõ những security agent, accessibility tool và EDR component\
+  \ hợp lệ vốn có hành vi chéo tiến trình khỏi tất cả phần còn lại.\n\n**Vì sao đáng\
+  \ ưu tiên 2024–2026**\n\nProcess injection vẫn là kỹ thuật nền tảng của rất nhiều\
+  \ loader, backdoor và implant hiện đại vì nó giúp “mượn uy tín” của process hợp\
+  \ lệ. Scenario này rất phù hợp cho bài toán detection engineering vì nó ép đội phòng\
+  \ thủ phải quan sát được truy cập chéo tiến trình, bộ nhớ, module load và network\
+  \ drift cùng một lúc.\n\n**Độ tin cậy:** Cao – chuỗi hành vi khá đặc trưng và rất\
+  \ có giá trị đối với EDR-based hunting.\n\n**Tài liệu tham khảo**\n- MITRE ATT&CK\n\
+  - CrowdStrike\n- MITRE ATT&CK T1055.001, T1055.002"

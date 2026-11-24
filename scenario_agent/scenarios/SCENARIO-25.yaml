@@ -1,0 +1,143 @@
+id: SCENARIO-25
+name: Pass-the-Hash – Lateral Movement không cần mật khẩu
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 25 – Pass-the-Hash – Lateral Movement không cần mật khẩu**
+
+
+  **Giới thiệu chung**
+
+
+  Pass-the-Hash là một kỹ thuật cổ điển nhưng vẫn nguy hiểm trong môi trường NTLM
+  còn được sử dụng rộng. Khi có được NTLM hash thay vì plaintext password, kẻ tấn
+  công vẫn có thể xác thực tới các dịch vụ hỗ trợ mà không cần biết mật khẩu thật.
+  Vì vậy, đây là một cầu nối direct từ credential dumping sang lateral movement.
+
+
+  **Mô tả kịch bản**
+
+
+  Sau khi thu được NTLM hash từ LSASS, SAM hoặc nguồn lưu trữ khác, kẻ tấn công dùng
+  hash đó để xác thực tới máy chủ hoặc máy trạm khác qua SMB, WinRM, WMI hoặc các
+  dịch vụ tương đương. Actor thường là tác nhân nội bộ đã kiểm soát ít nhất một host.
+  Điều kiện tiên quyết là hash hợp lệ và giao thức đích cho phép xác thực phù hợp.
+  Kết quả mong muốn là di chuyển ngang nhanh mà không phải crack password trước.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Thu được NTLM hash trên host đầu tiên
+
+  → Dùng hash để xác thực sang host đích
+
+  → Mở remote service / admin share / shell
+
+  → Thiết lập foothold trên host mới
+
+  → Tiếp tục lan rộng nội bộ
+
+  ```
+
+
+  1. **Thu hash:** Hash xuất phát từ credential dumping hoặc lưu trữ bí mật cục bộ.
+
+  2. **Chọn host đích:** Máy chủ file, application server hoặc máy có quyền cao hơn
+  được nhắm tới.
+
+  3. **Xác thực bằng hash:** NTLM authentication được dùng thay vì mật khẩu plaintext.
+
+  4. **Mở kênh điều khiển:** SMB admin share, service creation, WMI, hoặc shell quản
+  trị được kích hoạt.
+
+  5. **Mở rộng phạm vi:** Host mới trở thành điểm bàn đạp tiếp theo.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Credential Access | T1550 | T1550.002 – Pass the Hash |
+
+  | Lateral Movement | T1021 | T1021.002 – SMB / Admin Shares |
+
+  | Lateral Movement | T1021 | T1021.001 – Remote Desktop Protocol trong một số chuỗi
+  tái sử dụng danh tính sau đó |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Event 4624 type 3:** Đăng nhập mạng bằng NTLM từ host không điển hình, nhất
+  là giữa các workstation ngang hàng.
+
+  - **Event 4672 / 7045 / 5140 / 5145:** Quyền đặc biệt, tạo service, truy cập admin
+  share sau login.
+
+  - **EDR correlation:** Host nguồn vừa có dấu hiệu dump hash, host đích ngay sau
+  đó nhận logon quản trị mạng.
+
+  - **Protocol telemetry:** NTLM authentication xảy ra ở nơi lẽ ra đã chuẩn hóa Kerberos
+  hoặc hạn chế NTLM.
+
+  - **Account behavior:** Cùng một account xuất hiện trên nhiều host liên tiếp trong
+  thời gian ngắn.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  ```text
+
+  EventID=4624
+
+  AND LogonType = 3
+
+  AND AuthenticationPackageName = "NTLM"
+
+  AND TargetUserName IN (local_admins, domain_admins, privileged_service_accounts)
+
+  AND SourceHost NOT IN (baseline_admin_jump_hosts)
+
+  ```
+
+
+  - **Alert:** Đăng nhập NTLM quản trị giữa các endpoint không nên có luồng quản trị
+  trực tiếp.
+
+  - **Hunt:** Chuỗi `credential dump → NTLM logon → admin share access / service creation`
+  trong cùng cửa sổ thời gian.
+
+  - **Alert:** Local Administrator dùng trên nhiều máy khác nhau với nhịp di chuyển
+  ngang.
+
+  - **Hardening:** Giảm tối đa NTLM, triển khai LAPS / Windows LAPS và quản lý mật
+  khẩu local admin độc nhất.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Pass-the-Hash là scenario rất tốt để đánh giá chuỗi phòng thủ từ host tới identity.
+  Nó không chỉ kiểm tra detection trên endpoint nguồn mà còn cho thấy liệu SOC có
+  đủ khả năng nối sự kiện từ máy nguồn sang máy đích hay không. Đây cũng là kịch bản
+  hữu ích để lượng giá hiệu quả của việc giảm NTLM và quản lý local admin hiện đại.
+
+
+  **Độ tin cậy:** Rất cao – kỹ thuật nền tảng, có flow quan sát rõ ràng giữa credential
+  access và lateral movement.
+
+
+  **Tài liệu tham khảo**
+
+  - Microsoft
+
+  - CrowdStrike
+
+  - MITRE ATT&CK T1550.002, T1021.002'

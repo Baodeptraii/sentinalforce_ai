@@ -1,0 +1,11 @@
+id: fd09d9f7-3d3a-553d-a642-28e213dfc664
+name: '[SCENARIO-52] Exfiltration qua Email – Email Forwarding Rule ẩn'
+description: Trong kịch bản này, sau khi chiếm được quyền truy cập vào mailbox doanh
+  nghiệp, kẻ tấn công tạo rule hoặc cấu hình forwarding ẩn để tự động chuyển email,
+  tệp đính kèm hoặc thư khớp điều kiện nhất định tới một địa chỉ ngoài tổ chức. Actor
+  thường là BEC operator, espionage actor hoặc nhóm muốn thu thập thông tin liên tục
+  mà tránh tải toàn bộ mailbox; điều kiện tiên quyết là đã có quyền thao tác mailbox
+atomic_ordering:
+- 9d1fcfa3-c3d9-58cc-816c-957a34f111dd
+- 3f1b5096-0139-4736-9b78-19bcb02bb1cb
+- 3234117e-151d-4254-9150-3d0bac41e38c

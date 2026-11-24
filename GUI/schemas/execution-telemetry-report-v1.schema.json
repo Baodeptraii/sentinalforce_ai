@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:soc:execution-telemetry-report:v1",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "execution_id", "command_status", "behavior_status", "telemetry_status", "detection_status", "steps", "evidence", "collection", "source_coverage", "limitations", "evidence_provenance"],
+  "properties": {
+    "schema_version": {"const": "execution_telemetry_report_v1"},
+    "execution_id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "command_status": {"enum": ["dispatched", "completed", "failed", "unknown"]},
+    "behavior_status": {"enum": ["observed", "not_verified", "unknown"]},
+    "telemetry_status": {"enum": ["observed", "partial", "unavailable", "unknown"]},
+    "detection_status": {"enum": ["matched_alert", "unknown", "not_evaluable"]},
+    "collection": {"type": "object"},
+    "source_coverage": {"type": "object"},
+    "evidence_provenance": {"type": "object"},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "steps": {"type": "array", "items": {"type": "object", "required": ["index", "command_status", "behavior_status", "telemetry_status", "detection_status", "evidence_refs"]}},
+    "evidence": {"type": "array", "items": {"type": "object", "required": ["document_id", "index", "timestamp", "agent", "rule", "source", "correlation", "test_marker", "redacted", "truncated"]}}
+  }
+}

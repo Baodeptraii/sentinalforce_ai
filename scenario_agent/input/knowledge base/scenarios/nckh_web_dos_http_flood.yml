@@ -1,0 +1,7 @@
+id: d1e2f3a4-nckh-web-dos-flood-0005
+name: Web Application HTTP Flood DoS
+description: Mô phỏng lưu lượng HTTP flood có giới hạn để kiểm tra khả năng phát hiện
+  DoS tầng ứng dụng của SOC.
+atomic_ordering:
+- 2fe2d5e6-7b06-4fc0-bf71-6966a1226731
+- 29451844-9b76-4e16-a9ee-d6feab4b24db

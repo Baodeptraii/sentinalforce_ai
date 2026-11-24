@@ -1,0 +1,12 @@
+- id: fef32c75-94e7-5dda-947a-d6b934290da8
+  name: "Simulate T1132 - DNS Tunneling \u2013 C2 v\xE0 Exfiltration qua DNS"
+  description: Automated simulation ability for MITRE technique T1132
+  tactic: execution
+  technique_id: T1132
+  technique_name: "DNS Tunneling \u2013 C2 v\xE0 Exfiltration qua DNS"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1132: DNS Tunneling \u2013\
+      \ C2 v\xE0 Exfiltration qua DNS'"
+    timeout: 30

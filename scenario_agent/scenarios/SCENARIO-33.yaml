@@ -1,0 +1,59 @@
+id: SCENARIO-33
+name: Keylogging – Thu thập thông tin xác thực qua bàn phím
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part3.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 33 – Keylogging – Thu thập thông tin xác thực qua bàn phím**\n\
+  \n**Giới thiệu chung**\n\nKeylogging là kỹ thuật lâu đời nhưng vẫn giữ giá trị thực\
+  \ chiến trong các môi trường nơi người dùng nhập trực tiếp thông tin xác thực vào\
+  \ ứng dụng desktop, VPN client, cổng quản trị, hoặc các hệ thống không lưu mật khẩu\
+  \ trong browser store. So với browser theft, keylogging thiên về thu thập “dòng\
+  \ nhập trực tiếp”, nên giá trị phòng thủ nằm ở behavioral analytics nhiều hơn là\
+  \ file artifact.\n\n**Mô tả kịch bản**\n\nTrong kịch bản này, malware hoặc tác nhân\
+  \ hậu khai thác cài cơ chế theo dõi luồng nhập bàn phím ở user session để ghi lại\
+  \ các tổ hợp phím người dùng nhập vào ứng dụng đích. Actor thường là stealer, trojan\
+  \ ngân hàng hoặc operator đang tìm credential không có sẵn trong browser; điều kiện\
+  \ tiên quyết là đã có code execution trong ngữ cảnh người dùng và có thể duy trì\
+  \ hiện diện đủ lâu để chờ hành vi nhập liệu; kết quả mong muốn là thu được username,\
+  \ password, mã truy cập hoặc dữ liệu thao tác có giá trị để dùng lại ở các bước\
+  \ tiếp theo. fileciteturn1file0L60-L60\n\n**Dòng tấn công end-to-end**\n\n```text\n\
+  Code execution trong user session\n→ Cài cơ chế thu thập input bàn phím\n→ Chờ người\
+  \ dùng nhập thông tin vào ứng dụng đích\n→ Ghi / staging dữ liệu đã thu\n→ Exfil\
+  \ hoặc dùng lại cho truy cập tiếp theo\n```\n\n1. **Bám vào user session:** Implant\
+  \ đang chạy dưới tài khoản người dùng và có thể quan sát thao tác tương tác.\n2.\
+  \ **Khởi tạo cơ chế thu thập input:** Hành vi hook hoặc monitor input được bật đối\
+  \ với desktop session hiện tại.\n3. **Chờ sự kiện nhập liệu:** Tác nhân không cần\
+  \ hoạt động mạnh; nó chỉ chờ chuỗi nhập tại ứng dụng mục tiêu.\n4. **Ghi dữ liệu\
+  \ có chọn lọc:** Dữ liệu vào được lưu cục bộ, đệm trong bộ nhớ hoặc staging ngắn\
+  \ hạn.\n5. **Khai thác đầu ra:** Nội dung ghi được được exfil hoặc chuyển sang bước\
+  \ credential reuse.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique | Mô tả\
+  \ |\n|--------|-----------|-------|\n| Credential Access | T1056 | T1056.001 – Keylogging\
+  \ |\n| Collection | T1056 | Thu thập trực tiếp input của người dùng trong quá trình\
+  \ tương tác |\n| Collection | T1113 | Trong một số chuỗi, input capture đi kèm theo\
+  \ dõi phiên làm việc hoặc thao tác màn hình |\n\n**Log / Telemetry / Observable**\n\
+  \n- **EDR behavioral telemetry:** Hành vi keyboard capture, input monitoring hoặc\
+  \ API hooking xuất hiện từ binary không có lý do nghiệp vụ.\n- **Process anomaly:**\
+  \ Tiến trình không có UI hoặc không phải accessibility tool nhưng lại bám chặt vào\
+  \ user desktop/session trong thời gian dài.\n- **Module / injection clue:** Tiến\
+  \ trình lạ chèn DLL hoặc component vào các ứng dụng người dùng hay dùng để đăng\
+  \ nhập.\n- **Local staging artifacts:** Log file nhỏ, file văn bản / binary tạm\
+  \ hoặc blob dữ liệu được ghi định kỳ vào thư mục người dùng.\n- **Exfil rhythm:**\
+  \ Lưu lượng outbound ngắn và đều theo chu kỳ sau các phiên người dùng đăng nhập\
+  \ vào ứng dụng.\n\n**Gợi ý Detection / Hunting**\n\n```text\nBehavior = \"KeyboardCapture\"\
+  \nAND ProcessName NOT IN (\n  approved_accessibility_tools,\n  approved_security_agents\n\
+  )\nAND (\n  UnusualAPIHooking = true\n  OR DesktopSessionMonitoring = true\n  OR\
+  \ SmallRepeatedLogArtifacts = true\n)\n```\n\n- **Alert:** Binary không thuộc allowlist\
+  \ có dấu hiệu thu thập input người dùng trong desktop session.\n- **Hunt:** Tìm\
+  \ các tiến trình bám theo user session nhiều giờ nhưng gần như không có chức năng\
+  \ hiển thị hay tương tác hợp lệ.\n- **Alert:** Hành vi input capture đi kèm file\
+  \ staging nhỏ, tăng dần theo thời gian, trong `%APPDATA%`, `%TEMP%` hoặc thư mục\
+  \ ẩn trong profile.\n- **Validation:** So khớp với tồn tại của phần mềm accessibility,\
+  \ IME, remote support hoặc DLP agent để giảm false positive.\n\n**Vì sao đáng ưu\
+  \ tiên 2024–2026**\n\nScenario này có giá trị vì nó kiểm tra độ sâu của behavioral\
+  \ telemetry trên endpoint. Không phải mọi credential đều đi qua browser; trong nhiều\
+  \ môi trường, password VPN, công cụ quản trị, ứng dụng tài chính nội bộ hoặc màn\
+  \ hình remote vẫn được nhập tay. Nếu tổ chức chỉ giám sát file hoặc network mà không\
+  \ giám sát hành vi input capture, khoảng trống phát hiện sẽ rất rõ.\n\n**Độ tin\
+  \ cậy:** Trung bình đến cao – tín hiệu tốt nhưng phụ thuộc mạnh vào khả năng quan\
+  \ sát hành vi và phân biệt với công cụ accessibility hợp lệ.\n\n**Tài liệu tham\
+  \ khảo**\n- MITRE ATT&CK T1056.001"

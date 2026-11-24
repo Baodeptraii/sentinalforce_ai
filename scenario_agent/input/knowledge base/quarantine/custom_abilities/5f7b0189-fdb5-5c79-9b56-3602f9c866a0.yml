@@ -1,0 +1,14 @@
+- id: 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+  name: "Simulate T1021 - Khai Th\xE1c \u1EE8ng D\u1EE5ng C\xF4ng Khai \u2013 SQL\
+    \ Injection \u2192 RCE \u2192 Web Shell"
+  description: Automated simulation ability for MITRE technique T1021
+  tactic: execution
+  technique_id: T1021
+  technique_name: "Khai Th\xE1c \u1EE8ng D\u1EE5ng C\xF4ng Khai \u2013 SQL Injection\
+    \ \u2192 RCE \u2192 Web Shell"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1021: Khai Th\xE1c \u1EE8\
+      ng D\u1EE5ng C\xF4ng Khai \u2013 SQL Injection \u2192 RCE \u2192 Web Shell'"
+    timeout: 30

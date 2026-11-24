@@ -1,0 +1,7 @@
+id: e5f6a7b8-dvwa-0007-file-upload
+name: DVWA Web Arbitrary File Upload Simulation
+description: Mô phỏng hành vi tải lên tệp tin độc hại dạng web shell vào thư mục hackable
+  của DVWA.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0007-upld-000000000007

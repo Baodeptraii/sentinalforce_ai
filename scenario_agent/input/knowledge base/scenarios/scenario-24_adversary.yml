@@ -1,0 +1,13 @@
+id: 0338c4a7-9d8b-5b22-a0a2-1a1c2f44e756
+name: '[SCENARIO-24] DCSync – Giả lập Domain Controller để dump credential'
+description: Kẻ tấn công đã chiếm được một tài khoản có quyền replication hoặc đã
+  leo thang đến nhóm / quyền cho phép thực hiện replication directory. Điều kiện tiên
+  quyết là quyền trên AD đủ để gọi chuỗi replication. Từ một máy không nhất thiết
+  là DC, tác nhân gửi yêu cầu đồng bộ dữ liệu nhạy cảm và thu về credential material
+  của các tài khoản miền, bao gồm cả tài khoản có giá trị cao. Kết quả mong
+atomic_ordering:
+- 96345bfc-8ae7-4b6a-80b7-223200f24ef9
+- 129efd28-8497-4c87-a1b0-73b9a870ca3e
+- a1b2c3d4-dvwa-0001-init-000000000001
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 6131397e-7765-424e-a594-3d7fb2d93a6a

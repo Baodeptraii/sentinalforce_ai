@@ -1,0 +1,132 @@
+id: SCENARIO-28
+name: Token Impersonation – SeImpersonatePrivilege Abuse
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 28 – Token Impersonation – SeImpersonatePrivilege Abuse**
+
+
+  **Giới thiệu chung**
+
+
+  Token impersonation là một cơ chế hợp lệ của Windows, nhưng khi bị lạm dụng, nó
+  cho phép một tiến trình đang chạy dưới service account hoặc ngữ cảnh có đặc quyền
+  phù hợp nhận quyền của một token mạnh hơn. Trong nhiều chuỗi xâm nhập, đây là bước
+  leo quyền từ service account lên `SYSTEM`, tạo bàn đạp cho dump cred, tắt bảo vệ
+  hoặc persistence sâu hơn.
+
+
+  **Mô tả kịch bản**
+
+
+  Kẻ tấn công đã có code execution trên một host và đang chạy trong ngữ cảnh có `SeImpersonatePrivilege`
+  hoặc quyền tương đương có thể bị lạm dụng. Actor phù hợp là tác nhân hậu khai thác
+  nhắm tới local privilege escalation nhanh trên máy chủ ứng dụng hoặc máy trạm. Điều
+  kiện tiên quyết là tiến trình ban đầu có quyền gắn / mạo danh token. Kết quả mong
+  muốn là tạo ra một tiến trình mới với mức đặc quyền `SYSTEM`, từ đó mở thêm các
+  kỹ thuật hậu khai thác khác.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Thực thi code dưới service account / ngữ cảnh có SeImpersonatePrivilege
+
+  → Kích hoạt luồng token impersonation
+
+  → Nhận token đặc quyền cao hơn
+
+  → Sinh tiến trình mới chạy với SYSTEM
+
+  → Tiếp tục credential access hoặc persistence sâu
+
+  ```
+
+
+  1. **Xác định quyền sẵn có:** Tiến trình ban đầu có đặc quyền mạo danh token.
+
+  2. **Kích hoạt mạo danh:** Một luồng token abuse được thực hiện để có context cao
+  hơn.
+
+  3. **Nâng ngữ cảnh:** Token `SYSTEM` hoặc tương đương được gắn cho tiến trình /
+  luồng mới.
+
+  4. **Thực thi sau leo quyền:** Kẻ tấn công dùng quyền mới để dump cred, tắt bảo
+  vệ hoặc cài persistence.
+
+  5. **Củng cố kiểm soát host:** Máy đích chuyển từ foothold hạn chế sang full local
+  compromise.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Privilege Escalation | T1134 | T1134.001 – Token Impersonation/Theft |
+
+  | Privilege Escalation | T1134 | T1134.002 – Create Process with Token |
+
+  | Defense Evasion | T1036 | Có thể ngụy trang dưới tiến trình hợp lệ để giảm chú
+  ý |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Special privilege usage:** Tiến trình hoặc tài khoản dịch vụ nắm `SeImpersonatePrivilege`
+  rồi nhanh chóng sinh child process đặc quyền cao.
+
+  - **Process telemetry:** Parent chạy dưới service account nhưng child lại chuyển
+  sang `SYSTEM` mà không có quy trình quản trị chuẩn.
+
+  - **Sysmon / EDR:** API/token manipulation behavior, duplicated token usage, high-integrity
+  jump.
+
+  - **Event correlation:** 4672, 4688 và các sự kiện liên quan tới service / process
+  creation xuất hiện gần nhau.
+
+  - **Named pipe / local privilege abuse clue:** Hoạt động IPC bất thường đi kèm tiến
+  trình leo quyền.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  - **Alert:** Tài khoản dịch vụ thông thường spawn `cmd`, `powershell`, `rundll32`
+  hoặc shell khác dưới `SYSTEM`.
+
+  - **Hunt:** Tìm chuỗi `service account context → token duplication / impersonation
+  indicator → SYSTEM child process`.
+
+  - **Alert:** Host ứng dụng có nhiều service account sở hữu `SeImpersonatePrivilege`
+  rộng hơn mức cần thiết.
+
+  - **Hardening:** Tối thiểu hóa quyền dịch vụ, rà soát service account internet-facing
+  và giới hạn local admin footprint.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  Scenario này có giá trị cao vì mô tả một bước leo quyền “nội bộ hoàn toàn”, không
+  cần CVE mới vẫn đủ nguy hiểm nếu hệ thống được phân quyền chưa chặt. Nó giúp đội
+  phòng thủ kiểm tra năng lực phát hiện sự thay đổi integrity / token level, thay
+  vì chỉ nhìn vào tiến trình hoặc file đơn lẻ.
+
+
+  **Độ tin cậy:** Cao – dễ chuyển thành rule hành vi trong EDR và rất hữu ích trong
+  diễn tập host compromise.
+
+
+  **Tài liệu tham khảo**
+
+  - MITRE ATT&CK T1134.001, T1134.002
+
+  - HackTricks
+
+  - Windows Audit / Privilege Use Guidance'

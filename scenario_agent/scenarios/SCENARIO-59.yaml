@@ -1,0 +1,55 @@
+id: SCENARIO-59
+name: Double Extortion Ransomware – BlackCat/ALPHV
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 59 – Double Extortion Ransomware – BlackCat/ALPHV**\n\n**Giới\
+  \ thiệu chung**\n\nDouble extortion đã biến nhiều chiến dịch ransomware từ thuần\
+  \ “impact” thành bài toán kết hợp giữa collection, exfiltration và gây thiệt hại\
+  \ vận hành. Giá trị của kịch bản này nằm ở việc nó buộc SOC phải theo dõi được mối\
+  \ liên hệ giữa hai pha tưởng như tách biệt: data theft trước, rồi mã hóa sau.\n\n\
+  **Mô tả kịch bản**\n\nTrong kịch bản này, tác nhân sau khi thu thập và chuyển một\
+  \ phần dữ liệu ra ngoài mới kích hoạt mã hóa diện rộng, đồng thời sử dụng việc công\
+  \ khai hoặc đe dọa công khai dữ liệu làm đòn ép bổ sung. Actor thường là ransomware\
+  \ affiliate hoặc extortion crew; điều kiện tiên quyết là đã có dwell time đủ dài\
+  \ để thu thập dữ liệu giá trị và có đường exfil phù hợp; kết quả mong muốn là tăng\
+  \ đòn bẩy đàm phán bằng cách kết hợp gián đoạn nghiệp vụ với rủi ro rò rỉ công khai\
+  \ dữ liệu.\n\n**Dòng tấn công end-to-end**\n\n```text\nFoothold và mở rộng quyền\
+  \ trong mạng\n→ Thu thập và staging dữ liệu nhạy cảm\n→ Exfiltration ra hạ tầng\
+  \ ngoài\n→ Kích hoạt mã hóa hàng loạt trên hệ thống nội bộ\n→ Đưa ra thông điệp\
+  \ tống tiền gắn với đe dọa công khai dữ liệu\n→ Gia tăng áp lực pháp lý và vận hành\
+  \ lên nạn nhân\n```\n\n1. **Có chỗ đứng đủ sâu trong mạng:** Tác nhân đã chiếm nhiều\
+  \ host hoặc dữ liệu trọng yếu.\n2. **Thu thập dữ liệu trước impact:** File giá trị\
+  \ cao được staging và chuyển ra ngoài.\n3. **Thiết lập đòn bẩy extortion:** Bên\
+  \ tấn công giữ một bản dữ liệu ngoài doanh nghiệp.\n4. **Phát động impact:** Mã\
+  \ hóa tệp và làm gián đoạn hoạt động như các chiến dịch ransomware truyền thống.\n\
+  5. **Đe dọa công khai:** Tác động không chỉ còn là vận hành mà mở rộng sang pháp\
+  \ lý, uy tín và nghĩa vụ thông báo.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic | Technique\
+  \ | Mô tả |\n|--------|-----------|-------|\n| Impact | T1486 | Data Encrypted for\
+  \ Impact |\n| Exfiltration | T1041 | Exfiltration Over C2 Channel hoặc kênh điều\
+  \ khiển liên đới |\n| Exfiltration | T1567 | T1567.002 – Exfiltration to Cloud Storage\
+  \ |\n| Impact | T1657 | Financial Theft / mục tiêu tống tiền tài chính trong chuỗi\
+  \ extortion |\n\n**Log / Telemetry / Observable**\n\n- **DLP / proxy / CASB:** Có\
+  \ giai đoạn upload hoặc outbound transfer đáng kể xảy ra trước khi màn mã hóa xuất\
+  \ hiện.\n- **EDR / SIEM:** Archive creation, staging directory, share collection\
+  \ hoặc cloud upload xuất hiện trước mass encryption.\n- **Multi-phase correlation:**\
+  \ Cùng nhóm host, tài khoản hoặc operator artifacts xuất hiện ở cả pha exfil và\
+  \ pha impact.\n- **Ransomware artifacts:** Các dấu hiệu note, file encryption, recovery\
+  \ inhibition vẫn xuất hiện như thông thường.\n- **Business consequence clue:** Sau\
+  \ impact nội bộ, các kênh liên lạc extortion hoặc leak-threat artifacts bắt đầu\
+  \ xuất hiện trong phạm vi xử lý sự cố.\n\n**Gợi ý Detection / Hunting**\n\n```text\n\
+  (\n  LargeOutboundTransferBeforeEncryption = true\n  OR ArchiveStagingDetected =\
+  \ true\n)\nAND (\n  LaterMassEncryption = true\n  OR LeakThreatArtifactsPresent\
+  \ = true\n  OR SameOperatorContextAcrossPhases = true\n)\n```\n\n- **Alert:** Một\
+  \ host hoặc một chiến dịch có cả dấu hiệu exfiltration và impact thay vì chỉ riêng\
+  \ mã hóa.\n- **Hunt:** Dựng timeline xuyên nhiều ngày để nối `collection/exfil`\
+  \ với `mass encryption`, tránh xem đây là hai sự cố rời nhau.\n- **Alert:** Dữ liệu\
+  \ giá trị cao bị touch và upload ra ngoài trước khi các dấu hiệu ransomware nổ ra.\n\
+  - **Preparedness:** Kết hợp playbook DLP, IR, pháp lý và truyền thông vì đây là\
+  \ loại sự cố có hậu quả vượt khỏi phạm vi kỹ thuật thuần túy.\n\n**Vì sao đáng ưu\
+  \ tiên 2024–2026**\n\nDouble extortion đã trở thành mô hình tống tiền thống trị\
+  \ trong nhiều chiến dịch lớn. Nếu tổ chức chỉ săn được encryption mà không săn được\
+  \ pha data theft đi trước, khả năng phản ứng sớm và giảm thiểu hậu quả sẽ thấp hơn\
+  \ rất nhiều.\n\n**Độ tin cậy:** Cao – khi telemetry exfil và impact được gom chung\
+  \ trong một timeline, tín hiệu của double extortion rất rõ.\n\n**Tài liệu tham khảo**\n\
+  - FBI\n- CISA ALPHV advisory 2024\n- MITRE ATT&CK T1486, T1041, T1567.002, T1657"

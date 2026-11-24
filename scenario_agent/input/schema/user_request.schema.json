@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Yêu cầu kiểm thử SOC đã chuẩn hóa",
+  "description": "Đầu ra của bước phân tích văn bản, dùng làm đầu vào cho Scenario Agent. Chỉ trích xuất ý định có trong text; trường chưa được đề cập dùng null hoặc danh sách rỗng. id, target_id và mode do ứng dụng cung cấp hoặc xác nhận. Schema không cấp quyền thực thi và không thay thế việc kiểm tra với target profile, catalog và chính sách lab.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "text",
+    "target_id",
+    "objective",
+    "requested_techniques",
+    "scope",
+    "max_tests",
+    "mode",
+    "constraints",
+    "clarifications_needed"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/nonBlankString",
+      "description": "Mã yêu cầu do ứng dụng cấp, ví dụ REQ-001."
+    },
+    "text": {
+      "$ref": "#/$defs/nonBlankString",
+      "description": "Nguyên văn yêu cầu người dùng; giữ lại để đối chiếu kết quả trích xuất."
+    },
+    "target_id": {
+      "$ref": "#/$defs/nonBlankString",
+      "description": "ID target profile được chọn cho yêu cầu; ứng dụng phải kiểm tra target tồn tại."
+    },
+    "objective": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Mục tiêu kiểm thử rút ra từ text, không tự bổ sung technique hoặc khả năng của target. null nếu chưa xác định được."
+    },
+    "requested_techniques": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^T[0-9]{4}(\\.[0-9]{3})?$"
+      },
+      "description": "Các mã MITRE ATT&CK người dùng chỉ định rõ. Dùng [] nếu không có mã; không đoán ID từ mô tả mơ hồ. Mẫu mã đúng không chứng minh technique tồn tại; cần đối chiếu catalog."
+    },
+    "scope": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["endpoint", "web"]
+      },
+      "description": "Phạm vi kiểm thử được yêu cầu trong phiên bản hiện tại. [] nếu chưa được chỉ định. Không tự mở rộng theo mọi khả năng của target; yêu cầu ngoài các phạm vi này cần được ghi nhận để làm rõ."
+    },
+    "max_tests": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "description": "Số test tối đa người dùng yêu cầu, không phải số bước workflow. null nếu không được chỉ định; không tự đặt mặc định trong bước trích xuất."
+    },
+    "mode": {
+      "type": "string",
+      "const": "plan_only",
+      "description": "Giai đoạn hiện tại chỉ lập kế hoạch. Giá trị do ứng dụng cung cấp; yêu cầu chạy của người dùng không tự cấp quyền thực thi."
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Ràng buộc trích xuất từ text. true/false chỉ khi người dùng nêu rõ; null nếu chưa biết. false hoặc null không phải quyền bỏ qua chính sách lab. Ràng buộc chưa có trường riêng phải được giữ trong additional_constraints.",
+      "required": [
+        "baseline_required",
+        "cleanup_required",
+        "rollback_required",
+        "health_check_required",
+        "avoid_service_disruption",
+        "service_changes_require_separate_approval",
+        "variants_require_approval",
+        "setup_cleanup_count_toward_max_tests",
+        "exploitation_success_required",
+        "detection_evaluation_requested",
+        "additional_constraints"
+      ],
+      "properties": {
+        "baseline_required": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Yêu cầu ghi nhận trạng thái ban đầu trước khi thay đổi."
+        },
+        "cleanup_required": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Yêu cầu dọn dẹp sau kiểm thử."
+        },
+        "rollback_required": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Yêu cầu có phương án khôi phục thay đổi."
+        },
+        "health_check_required": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Yêu cầu kiểm tra tình trạng dịch vụ/hệ thống."
+        },
+        "avoid_service_disruption": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Yêu cầu tránh gián đoạn dịch vụ hoặc hệ thống."
+        },
+        "service_changes_require_separate_approval": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Yêu cầu duyệt riêng trước khi dừng hoặc thay đổi dịch vụ; không biểu thị đã được duyệt."
+        },
+        "variants_require_approval": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Biến thể đề xuất phải được duyệt trước khi sử dụng; không biểu thị đã được duyệt."
+        },
+        "setup_cleanup_count_toward_max_tests": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "false khi người dùng nói setup/cleanup không tính vào giới hạn số test."
+        },
+        "exploitation_success_required": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Có yêu cầu khai thác thành công hay không; không đồng nghĩa hành vi kiểm thử đã xảy ra."
+        },
+        "detection_evaluation_requested": {
+          "$ref": "#/$defs/nullableBoolean",
+          "description": "Người dùng có yêu cầu đánh giá phát hiện trong lần này hay không. Không dùng trường này để khẳng định log/alert đã sẵn sàng; phải đối chiếu target profile."
+        },
+        "additional_constraints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonBlankString"
+          },
+          "description": "Các ràng buộc cụ thể còn lại trong text, gồm giới hạn đường dẫn hoặc cách sử dụng kịch bản. Không đặt lệnh thực thi, ability do LLM tự chọn hoặc thông tin xác thực ở đây."
+        }
+      }
+    },
+    "clarifications_needed": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonBlankString"
+      },
+      "description": "Các câu hỏi cần làm rõ khi thiếu dữ liệu quan trọng, yêu cầu mâu thuẫn hoặc vượt phạm vi hỗ trợ. [] nếu không cần hỏi. Thông tin về trạng thái môi trường trong text phải được đối chiếu với target profile; nếu mâu thuẫn thì cần xác minh."
+    }
+  },
+  "$defs": {
+    "nonBlankString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "nullableBoolean": {
+      "type": ["boolean", "null"]
+    }
+  }
+}

@@ -1,0 +1,146 @@
+id: SCENARIO-17
+name: DLL Sideloading – Persistence và Defense Evasion
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part2.md
+format: scenario_description
+executable: false
+content: '**Kịch bản 17 – DLL Sideloading – Persistence và Defense Evasion**
+
+
+  **Giới thiệu chung**
+
+
+  DLL sideloading là kỹ thuật lợi dụng thứ tự tìm kiếm DLL hoặc dependency chưa được
+  bảo vệ chặt trong ứng dụng hợp pháp để nạp một thư viện độc hại. Điểm mạnh của kỹ
+  thuật này là tiến trình cha thường là một binary đã ký số, khiến hoạt động trông
+  giống phần mềm hợp lệ và khó bị phân biệt nếu tổ chức chỉ nhìn vào tên tiến trình.
+
+
+  **Mô tả kịch bản**
+
+
+  Sau khi có khả năng ghi file lên máy đích hoặc thư mục cài đặt của một ứng dụng,
+  kẻ tấn công đặt DLL độc hại trùng tên với dependency mà ứng dụng đang mong đợi.
+  Actor thường là tác nhân hậu xâm nhập muốn duy trì hiện diện hoặc ngụy trang việc
+  thực thi dưới một tiến trình tin cậy. Điều kiện tiên quyết là quyền ghi file vào
+  thư mục cùng cấp với executable hoặc một vị trí sẽ được load khi service / ứng dụng
+  khởi chạy. Kết quả mong muốn là DLL độc hại được gọi mỗi lần ứng dụng hợp lệ chạy,
+  tạo persistence và che giấu payload.
+
+
+  **Dòng tấn công end-to-end**
+
+
+  ```text
+
+  Truy cập máy đích → Xác định ứng dụng dễ sideload
+
+  → Ghi DLL độc hại vào thư mục cùng cấp
+
+  → Ứng dụng hợp lệ khởi chạy
+
+  → DLL độc hại được nạp dưới tiến trình đã ký số
+
+  → Persistence + defense evasion
+
+  ```
+
+
+  1. **Khảo sát binary phù hợp:** Kẻ tấn công tìm ứng dụng portable, service, hoặc
+  phần mềm bên thứ ba có dependency lỏng lẻo.
+
+  2. **Đặt file DLL:** Một DLL cùng tên với dependency mục tiêu được ghi vào thư mục
+  mà ứng dụng sẽ ưu tiên tìm kiếm.
+
+  3. **Kích hoạt ứng dụng:** Service khởi động lại, người dùng mở ứng dụng, hoặc tác
+  vụ định kỳ gọi binary hợp pháp.
+
+  4. **Thực thi ngầm:** DLL độc hại được nạp vào không gian nhớ của tiến trình đã
+  ký.
+
+  5. **Duy trì hiện diện:** Mỗi lần ứng dụng khởi chạy, payload quay lại mà không
+  cần command line lộ liễu.
+
+
+  **MITRE ATT&CK Mapping**
+
+
+  | Tactic | Technique | Mô tả |
+
+  |--------|-----------|-------|
+
+  | Defense Evasion | T1574 | T1574.002 – DLL Side-Loading |
+
+  | Persistence | T1574 | Cùng kỹ thuật được dùng như cơ chế khởi chạy lặp lại |
+
+  | Defense Evasion | T1036 | T1036.005 – Match Legitimate Name or Location |
+
+  | Defense Evasion | T1027 | Dùng file hợp pháp làm lớp che cho payload |
+
+
+  **Log / Telemetry / Observable**
+
+
+  - **Sysmon Event 7 / EDR Image Load:** Tiến trình đã ký số nạp DLL không ký hoặc
+  ít gặp từ thư mục cục bộ.
+
+  - **File creation telemetry:** DLL mới xuất hiện cạnh executable hợp pháp, đặc biệt
+  trong thư mục người dùng hoặc `ProgramData`.
+
+  - **Process telemetry:** Ứng dụng bình thường bỗng phát sinh network connection,
+  child process, hoặc module bất thường.
+
+  - **Hash / reputation:** Cùng tên DLL nhưng hash khác baseline build chuẩn.
+
+  - **Path anomaly:** Signed executable chạy từ thư mục không chuẩn rồi nạp module
+  cùng cấp.
+
+
+  **Gợi ý Detection / Hunting**
+
+
+  ```text
+
+  EventID=7
+
+  AND SignedExecutable = true
+
+  AND LoadedModuleSigned = false
+
+  AND ImageLoadedPath IN (user_writable_path, application_local_dir, temp_like_path)
+
+  ```
+
+
+  - **Alert:** Ứng dụng đã ký số nạp DLL không có trong baseline module list thông
+  thường.
+
+  - **Hunt:** Tìm các cặp `executable + DLL` khởi chạy từ cùng thư mục không chuẩn
+  hoặc từ vùng người dùng ghi được.
+
+  - **Alert:** Module load sự kiện trùng tên dependency phổ biến nhưng file signature,
+  publisher hoặc compile path lệch chuẩn.
+
+  - **Baseline:** Duy trì danh sách các ứng dụng nội bộ / bên thứ ba vốn hay bị lạm
+  dụng cho sideloading.
+
+
+  **Vì sao đáng ưu tiên 2024–2026**
+
+
+  DLL sideloading có giá trị diễn tập rất cao vì kiểm thử được khả năng quan sát module
+  load, xác thực chữ ký số, và năng lực baseline software inventory của SOC. Đây cũng
+  là kỹ thuật điển hình cho giai đoạn giữa chuỗi tấn công, nơi mục tiêu không còn
+  là vào được hệ thống mà là ở lại đủ lâu trong một hình hài “có vẻ hợp lệ”.
+
+
+  **Độ tin cậy:** Cao – kỹ thuật chín muồi, phù hợp cả threat hunting lẫn kiểm thử
+  kiểm soát EDR.
+
+
+  **Tài liệu tham khảo**
+
+  - Palo Alto Unit 42 2024
+
+  - Mandiant
+
+  - MITRE ATT&CK T1574.002'

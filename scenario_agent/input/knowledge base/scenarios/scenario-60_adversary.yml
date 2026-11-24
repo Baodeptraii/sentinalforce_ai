@@ -1,0 +1,12 @@
+id: 07f36be8-55ae-5c82-92b2-3c5235c2d5ab
+name: '[SCENARIO-60] Wiper Malware – Phá hủy dữ liệu'
+description: Trong kịch bản này, malware phá hủy dữ liệu bằng cách ghi đè file, xóa
+  hoặc làm hỏng cấu trúc đĩa/partition, vô hiệu khả năng khôi phục và để hệ thống
+  đi vào trạng thái boot failure hoặc data loss diện rộng. Actor thường là destructive
+  operator, nhóm liên quan đến xung đột địa chính trị hoặc adversary có động cơ phá
+  hoại; điều kiện tiên quyết là đã có quyền thực thi đủ sâu trên host hoặc nhiều host;
+atomic_ordering:
+- 476419b5-aebf-4366-a131-ae3e8dae5fc2
+- 43819286-91a9-4369-90ed-d31fb4da2c01
+- 1418c4c0-1093-5ffa-9ad7-6eb4ef2293c8
+- 1418c4c0-1093-5ffa-9ad7-6eb4ef2293c8

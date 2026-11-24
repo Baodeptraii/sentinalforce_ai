@@ -1,0 +1,73 @@
+{
+  "id": "target-192-168-73-130",
+  "os": {
+    "name": "Microsoft Windows 10 Pro",
+    "version": "10.0.19045",
+    "architecture": "64-bit",
+    "hostname": "DESKTOP-KDAB44M",
+    "status": "observed"
+  },
+  "address": "192.0.2.10",
+  "services": [
+    {
+      "name": "Sysmon64",
+      "service_name": "Sysmon64",
+      "state": "Running",
+      "status": "observed"
+    },
+    {
+      "name": "Wazuh",
+      "service_name": "WazuhSvc",
+      "state": "Running",
+      "status": "observed"
+    },
+    {
+      "name": "Sandcat",
+      "paw": "imaixt",
+      "privilege": "Elevated",
+      "status": "observed"
+    },
+    {
+      "name": "HTTP",
+      "kind": "web",
+      "applications": [
+        {
+          "name": "XAMPP",
+          "base_url": "http://192.0.2.10/dashboard/",
+          "application_identified": true,
+          "session_ready": null,
+          "current_security_level": null,
+          "version": null,
+          "evidence_ref": "web_evidence.json#/applications/0"
+        },
+        {
+          "name": "DVWA",
+          "base_url": "http://192.0.2.10/dvwa/",
+          "application_identified": true,
+          "session_ready": null,
+          "current_security_level": null,
+          "version": null,
+          "evidence_ref": "web_evidence.json#/applications/1"
+        }
+      ],
+      "evidence_ref": "web_evidence.json#/origins/0",
+      "status": "observed",
+      "url": "http://192.0.2.10/"
+    }
+  ],
+  "capabilities": {
+    "sandcat_online": true,
+    "powershell_ready": true,
+    "admin_ready": true,
+    "web_runner_ready": true,
+    "web_reachable": true,
+    "application_identified": true,
+    "dvwa_session_ready": null
+  },
+  "telemetry": {
+    "process_events": null,
+    "network_events": null,
+    "web_access_logs": null,
+    "wazuh_ingestion": null
+  }
+}

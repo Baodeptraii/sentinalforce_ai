@@ -1,0 +1,12 @@
+- id: 37a36163-f420-5d50-a719-41da1a55c3c7
+  name: "Simulate T1566 - Business Email Compromise (BEC) \u2013 Wire Transfer Fraud"
+  description: Automated simulation ability for MITRE technique T1566
+  tactic: execution
+  technique_id: T1566
+  technique_name: "Business Email Compromise (BEC) \u2013 Wire Transfer Fraud"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1566: Business Email Compromise\
+      \ (BEC) \u2013 Wire Transfer Fraud'"
+    timeout: 30

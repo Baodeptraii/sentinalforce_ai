@@ -1,0 +1,12 @@
+id: 8e974a7e-e4cd-5d43-ac9e-8c30309dd96a
+name: '[SCENARIO-57] Microsoft 365 – Teams/SharePoint Data Collection'
+description: Trong kịch bản này, tác nhân đã có tài khoản Microsoft 365 hoặc token
+  hợp lệ và dùng quyền đó để duyệt Teams, SharePoint site, thư viện tài liệu, lịch
+  sử cộng tác và file nhạy cảm, tập trung vào những workspace có giá trị kinh doanh
+  hoặc kỹ thuật cao. Actor thường là espionage actor, cloud intruder hoặc post-exploitation
+  operator; điều kiện tiên quyết là tài khoản có quyền truy cập hợp lệ vào ít nhất
+  một phần tài
+atomic_ordering:
+- cc96c7c9-ff2f-59a4-ba30-2ec14a35da21
+- cc96c7c9-ff2f-59a4-ba30-2ec14a35da21
+- 979356b9-b588-4e49-bba4-c35517c484f5

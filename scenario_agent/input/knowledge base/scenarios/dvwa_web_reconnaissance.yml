@@ -1,0 +1,6 @@
+id: e5f6a7b8-dvwa-0011-web-recon
+name: DVWA Web Path & Parameter Reconnaissance
+description: Thực hiện thăm dò các đường dẫn nhạy cảm, mã phản hồi 404/403 trên ứng
+  dụng DVWA.
+atomic_ordering:
+- a1b2c3d4-dvwa-0001-init-000000000001

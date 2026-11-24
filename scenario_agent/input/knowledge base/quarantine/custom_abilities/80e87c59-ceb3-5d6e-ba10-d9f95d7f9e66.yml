@@ -1,0 +1,12 @@
+- id: 80e87c59-ceb3-5d6e-ba10-d9f95d7f9e66
+  name: "Simulate T1657 - Double Extortion Ransomware \u2013 BlackCat/ALPHV"
+  description: Automated simulation ability for MITRE technique T1657
+  tactic: execution
+  technique_id: T1657
+  technique_name: "Double Extortion Ransomware \u2013 BlackCat/ALPHV"
+  executors:
+  - platform: windows
+    name: psh
+    command: "Write-Output '[+] Simulating telemetry for T1657: Double Extortion Ransomware\
+      \ \u2013 BlackCat/ALPHV'"
+    timeout: 30

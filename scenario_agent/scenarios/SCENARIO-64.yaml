@@ -1,0 +1,56 @@
+id: SCENARIO-64
+name: APT29 / Midnight Blizzard – Cloud Lateral Movement
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part5.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 64 – APT29 / Midnight Blizzard – Cloud Lateral Movement**\n\n\
+  **Giới thiệu chung**\n\nAPT29/Midnight Blizzard là ví dụ điển hình cho việc các\
+  \ actor cấp quốc gia chuyển trọng tâm từ endpoint truyền thống sang cloud identity,\
+  \ OAuth, service account, trust relationship và tài nguyên SaaS. Cloud lateral movement\
+  \ không nhất thiết tạo ra “máy bị nhiễm” theo nghĩa cũ; nhiều khi dấu vết quan trọng\
+  \ nhất nằm ở token, app consent, service principal, API call, audit log và chuỗi\
+  \ truy cập giữa các tenant hoặc môi trường tin cậy.\n\n**Mô tả kịch bản**\n\nTrong\
+  \ kịch bản này, tác nhân đã có quyền truy cập vào một tài khoản, ứng dụng, service\
+  \ principal hoặc chuỗi trust liên quan cloud, sau đó tận dụng quyền đó để pivot\
+  \ sang mailbox, repository, tenant khác, hoặc hệ thống SaaS được liên kết. Actor\
+  \ thường là nation-state intrusion operator; điều kiện tiên quyết là có credential,\
+  \ token, OAuth permission hoặc trusted relationship bị lạm dụng; kết quả mong muốn\
+  \ là mở rộng quyền truy cập trong môi trường cloud mà không cần di chuyển ngang\
+  \ qua host nội bộ theo cách truyền thống.\n\n**Dòng tấn công end-to-end**\n\n```text\n\
+  Chiếm tài khoản / app / service principal / token cloud\n→ Kiểm tra quyền hiện có\
+  \ và trust relationship\n→ Gọi API cloud để liệt kê mailbox, file, app, service\
+  \ account\n→ Lạm dụng OAuth consent hoặc token để pivot\n→ Truy cập dữ liệu hoặc\
+  \ môi trường cloud liên kết\n→ Duy trì access qua identity/cloud control plane\n\
+  ```\n\n1. **Có điểm vào cloud identity:** Đối thủ nắm credential, token hoặc app\
+  \ permission có giá trị.\n2. **Khảo sát quyền:** Scope, role, mailbox, repository,\
+  \ application và trust relationship được kiểm tra.\n3. **Pivot bằng cloud-native\
+  \ path:** API, OAuth, service account hoặc federation trust được tận dụng.\n4. **Truy\
+  \ cập dữ liệu chiến lược:** Email, tài liệu, source code, secret hoặc cấu hình cloud\
+  \ trở thành mục tiêu.\n5. **Duy trì truy cập:** Actor ưu tiên persistence ở lớp\
+  \ identity/app thay vì malware endpoint.\n\n**MITRE ATT&CK Mapping**\n\n| Tactic\
+  \ | Technique | Mô tả |\n|--------|-----------|-------|\n| Initial Access | T1199\
+  \ | Trusted Relationship |\n| Credential Access | T1528 | Steal Application Access\
+  \ Token / lạm dụng OAuth material |\n| Lateral Movement | T1021 | T1021.007 – Cloud\
+  \ Services |\n\n**Log / Telemetry / Observable**\n\n- **Cloud audit logs:** App\
+  \ consent, service principal modification, role assignment hoặc API access bất thường.\n\
+  - **OAuth telemetry:** Scope nhạy cảm được cấp mới hoặc token được dùng từ ngữ cảnh\
+  \ khác.\n- **Mailbox / repository logs:** Truy cập email, file, source code hoặc\
+  \ secret sau sự kiện identity bất thường.\n- **SIEM correlation:** API activity\
+  \ không có interactive sign-in tương ứng hoặc xuất hiện từ IP/ASN mới.\n- **Cross-tenant\
+  \ / trust activity:** Access qua trust relationship không khớp baseline lịch sử.\n\
+  \n**Gợi ý Detection / Hunting**\n\n```text\nCloudIdentityChange = true\nAND (\n\
+  \  NewOAuthConsentHighRisk = true\n  OR ServicePrincipalRoleChange = true\n  OR\
+  \ TokenUsedFromNewContext = true\n  OR CloudServiceAccessWithoutRecentInteractiveLogin\
+  \ = true\n)\n```\n\n- **Alert:** App hoặc service principal mới được cấp quyền cao\
+  \ với scope truy cập mail/file/repository.\n- **Hunt:** Nối `identity change → token/API\
+  \ use → mailbox/source repository access`.\n- **Alert:** Cloud API access từ địa\
+  \ điểm, thiết bị hoặc client app chưa từng thấy cho tài khoản đó.\n- **Governance:**\
+  \ Rà soát OAuth app, service principal, app secret, federation trust và tài khoản\
+  \ có quyền cross-tenant.\n\n**Vì sao đáng ưu tiên 2024–2026**\n\nCác sự cố cloud\
+  \ identity lớn cho thấy attacker có thể đạt mục tiêu chiến lược mà không cần triển\
+  \ khai malware truyền thống. Kịch bản này giúp đội phòng thủ kiểm tra độ trưởng\
+  \ thành của cloud audit, identity detection, OAuth governance và khả năng điều tra\
+  \ token/app-level compromise.\n\n**Độ tin cậy:** Cao – cloud lateral movement qua\
+  \ identity, OAuth và service account là pattern đã được nhiều báo cáo chính thống\
+  \ nhấn mạnh.\n\n**Tài liệu tham khảo**\n- Microsoft Threat Intelligence\n- CISA\n\
+  - MITRE ATT&CK T1199, T1528, T1021.007"

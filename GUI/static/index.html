@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOC Console</title><script src="/console.js" defer></script><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/flow.css"><script src="/app.js" defer></script><script src="/scenario-core.js" defer></script><script src="/scenario-execution.js" defer></script><script src="/scenario.js" defer></script><script src="/flow-core.js" defer></script><script src="/flow.js" defer></script><link rel="stylesheet" href="/console.css"></head>
+<body>
+<svg class="symbols" aria-hidden="true">
+<symbol id="radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12 20 4M12 3v3M3 12h3"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+<symbol id="globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></symbol>
+<symbol id="layers" viewBox="0 0 24 24"><path d="m12 3 10 5-10 5L2 8Zm-9 9 9 5 9-5M3 16l9 5 9-5"/></symbol>
+<symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"/><circle cx="8" cy="7" r="3"/><circle cx="16" cy="17" r="3"/></symbol>
+<symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+<symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></symbol>
+<symbol id="file" viewBox="0 0 24 24"><path d="M14 2H5v20h14V7Zm0 0v6h5M8 13h8M8 17h5"/></symbol></svg>
+<aside class="sidebar">
+<a class="brand" href="/"><span class="brand-icon"><svg><use href="#radar"/></svg></span><span>SOC<span class="brand-light">Console</span></span></a>
+<div class="workspace"><span class="workspace-icon">S</span><div><strong>SOC Lab</strong><small>Môi trường khảo sát nội bộ</small></div><span class="dots">···</span></div>
+<button type="button" id="workspace-flow" class="workspace-mode"><span>Ứng dụng / Luồng hệ thống</span><span aria-hidden="true">⇄</span></button>
+<p class="nav-label">KHÔNG GIAN LÀM VIỆC</p>
+<nav aria-label="Điều hướng chính"><div class="nav-group"><button id="nav-survey" class="nav-item selected"><svg><use href="#radar"/></svg>Khảo sát mục tiêu</button><button id="nav-history" class="nav-item nav-child"><svg><use href="#clock"/></svg>Lịch sử khảo sát<span id="history-count" class="count">0</span></button></div><div class="nav-group"><button id="nav-scenario" class="nav-item"><svg><use href="#file"/></svg>Sinh kịch bản</button><button id="nav-library" class="nav-item nav-child"><svg><use href="#layers"/></svg>Kho kịch bản</button><button id="nav-abilities" class="nav-item nav-child"><svg><use href="#layers"/></svg>Kho ability</button></div><button id="nav-flow" hidden>Luồng hệ thống</button><button id="nav-config" class="nav-item"><svg><use href="#settings"/></svg>Cấu hình kết nối</button></nav>
+
+
+<button id="theme-toggle" class="button secondary theme-toggle" type="button" aria-pressed="false">☾ Giao diện tối</button></aside>
+<main>
+<header class="topbar"><div><span class="crumb">Workspace</span><span class="slash">/</span><strong id="view-title">Khảo sát mục tiêu</strong></div><span id="connection" class="badge neutral"><i></i>Chưa kiểm tra kết nối</span></header>
+<div class="content" id="survey-view">
+<div class="page-heading"><div><div class="eyebrow">DISCOVER. UNDERSTAND. PREPARE.</div><h1>Khảo sát môi trường</h1><p>Một địa chỉ IP. Hồ sơ mục tiêu có bằng chứng.</p></div><button id="new-survey" class="button secondary">＋ Lượt khảo sát mới</button></div>
+<div class="intro-strip"><div><span class="step-number">01</span>Chọn mục tiêu</div><span class="line"></span><div><span class="step-number">02</span>Kiểm tra & thu thập</div><span class="line"></span><div><span class="step-number">03</span>Xuất Target Profile</div><span class="strip-caption">Tự động lưu mỗi lượt</span></div>
+<div id="notice" class="notice" hidden role="alert"></div><div class="mode-strip"><span>CHẾ ĐỘ KHẢO SÁT</span><strong id="mode-label">Đang đọc cấu hình…</strong></div>
+<div class="main-grid">
+<section class="card target-card">
+<div class="card-heading"><div class="icon-box"><svg><use href="#radar"/></svg></div><div><h2>Thiết lập khảo sát</h2><p>Xác định mục tiêu và nội dung cần thu thập.</p></div><span class="small-tag">INPUT</span></div>
+<form id="survey-form">
+<label class="field-label" for="target-ip">Địa chỉ IP mục tiêu <span>*</span></label>
+<div class="input-shell"><span class="mono">IP</span><input id="target-ip" name="target_ip" placeholder="Ví dụ: 192.168.1.150" inputmode="decimal" autocomplete="off" required aria-describedby="ip-help"><span class="input-indicator"></span></div>
+<p id="ip-help" class="help">Chọn IP hiện tại của máy đã chạy Sandcat.</p>
+<fieldset><legend class="field-label">Nội dung khảo sát</legend>
+<label class="scope-option"><input type="radio" name="scope" value="endpoint"><span class="scope-icon"><svg><use href="#monitor"/></svg></span><span><strong>Endpoint</strong><small>Hệ điều hành, quyền và dịch vụ trên máy</small></span><span class="radio-mark"></span></label>
+<label class="scope-option"><input type="radio" name="scope" value="web"><span class="scope-icon"><svg><use href="#globe"/></svg></span><span><strong>Dịch vụ web</strong><small>Cổng HTTP, máy chủ và ứng dụng web</small></span><span class="radio-mark"></span></label>
+<label class="scope-option"><input type="radio" name="scope" value="both" checked><span class="scope-icon"><svg><use href="#layers"/></svg></span><span><strong>Endpoint & dịch vụ web <em>Đầy đủ</em></strong><small>Kết hợp thông tin máy và bề mặt web</small></span><span class="radio-mark"></span></label>
+</fieldset>
+<label class="dvwa-option"><input type="checkbox" id="check-dvwa" checked> Khảo sát DVWA · xác minh đăng nhập nếu đã cấu hình</label>
+<div class="form-hint"><span>ⓘ</span><p>Hệ thống tự tìm Sandcat theo IP. Dịch vụ được khảo sát trong phạm vi công cụ hiện có; thông tin chưa xác minh được giữ trống.</p></div>
+<button id="check-button" type="button" class="button secondary full"><svg><use href="#check"/></svg>Kiểm tra điều kiện cần</button>
+<button id="start-button" type="submit" class="button primary full" disabled>Bắt đầu khảo sát<svg><use href="#arrow"/></svg></button>
+<div class="form-footer"><span class="tiny-dot"></span>Chỉ thu thập thông tin · Không chạy bài tấn công</div>
+</form></section>
+<div class="right-column">
+<section class="card checks-card"><div class="section-title"><div><h2>Điều kiện sẵn sàng</h2><p>Kiểm tra trước khi thực thi trên endpoint.</p></div><span id="check-summary" class="badge neutral">Chưa kiểm tra</span></div>
+<div id="checks" class="checks">
+<div class="check-row"><span class="check-icon pending">○</span><div><strong>Phạm vi mạng & CALDERA API</strong><p>Đợi kiểm tra IP và thông tin kết nối.</p></div></div>
+<div class="check-row"><span class="check-icon pending">○</span><div><strong>Sandcat & công cụ khảo sát</strong><p>Agent online, đúng máy và có PowerShell.</p></div></div>
+<div class="check-row"><span class="check-icon pending">○</span><div><strong>Operation & quyền thực thi</strong><p>Kiểm tra endpoint không bận và quyền hiện tại.</p></div></div></div></section>
+<section class="card progress-card"><div class="section-title"><div><h2>Tiến trình khảo sát</h2><p id="run-message">Kết quả sẽ hiển thị tại đây khi bắt đầu.</p></div><span id="run-status" class="badge neutral">Đang chờ</span></div>
+<div class="progress-line"><div class="progress-track"><div id="progress-fill" class="activity-indicator"></div></div><span id="progress-number">Chưa chạy</span></div>
+<button id="cancel-survey" class="button secondary" hidden>Yêu cầu dừng khảo sát</button>
+  <ol id="survey-events" class="survey-events" aria-label="Các sự kiện khảo sát đã ghi nhận"></ol>
+<details class="technical-detail"><summary>Nhật ký kỹ thuật <span id="log-count">0 sự kiện</span></summary><div class="terminal"><pre id="logs">Chưa có hoạt động.</pre></div></details></section>
+</div></div>
+<section class="card results-card"><div class="section-title"><div><span class="eyebrow">SURVEY OUTPUT</span><h2>Kết quả & Target Profile</h2><p id="result-caption">Hồ sơ được chuẩn hóa từ kết quả thực thi của lượt khảo sát.</p></div><div class="result-actions"><button id="transfer-profile" class="button secondary" disabled>Chuyển sang sinh kịch bản →</button><a id="download-bundle" class="button secondary" hidden>Tải hồ sơ + bằng chứng (.zip)</a><button id="copy-json" class="button secondary" disabled>Sao chép JSON</button><a id="download-profile" class="button primary disabled" aria-disabled="true"><svg><use href="#download"/></svg>Tải Target Profile</a></div></div>
+<div id="result-empty" class="empty-state"><div class="empty-icon"><svg><use href="#file"/></svg></div><strong>Chưa có hồ sơ mục tiêu</strong><p>Nhập IP, kiểm tra điều kiện và bắt đầu khảo sát.<br>Kết quả được lưu thành file JSON riêng cho từng lượt.</p></div>
+<div id="result-body" hidden><div id="result-error" class="result-error" role="alert" hidden></div><details class="technical-detail"><summary>Cảnh báo và số liệu điều phối</summary><div id="result-warnings"></div></details>
+<div id="profile-summary"><div class="result-meta" id="result-meta"></div><div class="summary-columns"><section><h3>Khả năng thực thi</h3><div id="summary-capabilities"></div></section><section><h3>Khả năng quan sát</h3><div id="summary-telemetry"></div><details class="technical-detail"><summary>Bằng chứng telemetry</summary><div id="telemetry-details"></div></details></section></div><p class="observation-note">Có: có bản ghi phù hợp trong 24 giờ trước lúc khảo sát. Xem bằng chứng để phân biệt log trên máy và log tới Wazuh. Đây không phải đánh giá detection.</p><section class="web-section"><h3>Dịch vụ và ứng dụng</h3><ul id="summary-services" class="service-groups"></ul><p id="https-readiness" class="https-readiness"></p></section><details class="technical-detail"><summary>Các URL đã kiểm tra và lỗi kỹ thuật</summary><p id="web-counts" class="help"></p><div id="web-requests" class="web-requests"></div></details><details class="technical-detail"><summary>Thông tin còn thiếu và phạm vi</summary><div id="missing-information"></div></details></div>
+<details class="technical-detail"><summary>JSON và các file bằng chứng</summary><div class="result-layout"><div><div class="files-label">FILE CỦA LƯỢT KHẢO SÁT</div><div id="files"></div></div><pre id="profile-json" tabindex="0" aria-label="Target Profile JSON"></pre></div></details>
+<p class="download-note">Tên file tải chứa IP, thời điểm UTC của lượt khảo sát và run ID. Trình duyệt có thể thêm “(1)” khi tải lại cùng file.</p>
+</div></section>
+<section id="history-section" class="card history-card"><div class="section-title"><div><h2>Lịch sử gần đây</h2><p>Mở lại kết quả và bằng chứng của từng lượt.</p></div><button id="refresh-history" class="text-button">Làm mới ↻</button></div><div id="history-empty" class="history-empty">Chưa có lượt khảo sát nào.</div><div class="table-scroll"><table id="history-table" hidden><thead><tr><th>Mục tiêu</th><th>Phạm vi</th><th>Thời gian</th><th>Trạng thái</th><th></th></tr></thead><tbody id="history"></tbody></table></div></section>
+<footer class="page-footer"><span>Survey Console · SOC Lab</span><span id="mode-footer">Profile được tạo từ bằng chứng</span></footer>
+</div><div class="content scenario-workspace" id="scenario-view" hidden>
+  <div class="page-heading"><div><div class="eyebrow">SCENARIO AGENT</div><h1>Sinh kế hoạch kịch bản</h1><p>Từ hồ sơ mục tiêu và yêu cầu đến kịch bản phù hợp.</p></div><span class="badge purple">Scenario Agent · lập kế hoạch</span></div>
+  <div class="intro-strip"><div><span class="step-number">01</span>Hồ sơ mục tiêu</div><span class="line"></span><div><span class="step-number">02</span>Yêu cầu kiểm thử</div><span class="line"></span><div><span class="step-number">03</span>Sinh kế hoạch kịch bản</div></div>
+  <div id="scenario-notice" class="notice" role="status" aria-live="polite" hidden></div>
+  <section class="card scenario-card" aria-label="Trạng thái Scenario Agent">
+    <h2 id="scenario-run-status">Chưa có lượt lập kế hoạch</h2>
+    <p id="scenario-feedback" style="white-space:pre-wrap"></p>
+    <div id="scenario-resume" hidden><label id="scenario-clarification-label" for="scenario-clarification">Bổ sung thông tin nếu được yêu cầu</label><textarea id="scenario-clarification" rows="3" maxlength="4000"></textarea><button id="scenario-resume-button" type="button" class="button secondary">Tiếp tục lượt này</button></div>
+    <div id="scenario-actions" class="scenario-actions" hidden aria-label="Thao tác kịch bản">
+      <button id="scenario-add-library" type="button" class="button secondary">Thêm vào kho kịch bản</button>
+      <button id="scenario-regenerate" type="button" class="button secondary">Tạo lại</button>
+      <button id="scenario-cancel" type="button" class="button secondary" hidden>Hủy sinh kịch bản</button>
+      <button id="scenario-delete" type="button" class="button secondary">Xóa khỏi lịch sử</button>
+      <button id="scenario-execute" type="button" class="button primary" title="Kiểm tra nguồn, mục tiêu và điều kiện; chưa gửi lệnh">Validate kịch bản</button>
+    </div>
+    <p id="scenario-action-hint" class="muted-note" hidden></p>
+    <p id="wazuh-connectivity-status" role="status"></p>
+    <section id="scenario-execution" class="execution-panel" hidden aria-label="Thực thi kịch bản qua CALDERA">
+      <h3 id="execution-status">Chưa kiểm tra thực thi</h3>
+      <p id="execution-identity"></p><p id="execution-context" class="execution-binding"></p><p id="execution-operation"></p>
+      <a id="execution-caldera-link" href="#" target="_blank" rel="noopener noreferrer" hidden>Mở CALDERA</a>
+      <p id="execution-message" role="status" aria-live="polite"></p>
+      <button id="execution-refresh-preview" class="button secondary" type="button" hidden>Kiểm tra lại điều kiện</button>
+      <p id="execution-blockers" class="execution-multiline"></p>
+      <ol id="execution-step-list"></ol>
+      <div id="execution-confirmation" hidden>
+        <p>Xác nhận này chỉ áp dụng cho plan, mục tiêu và thứ tự bước trong preview hiện tại.</p>
+        <label><input type="checkbox" id="execution-ack"> Tôi đã xem lệnh nguồn, tác động, điều kiện và cleanup.</label>
+        <label for="execution-target-confirm">Nhập lại IP mục tiêu để xác nhận</label>
+        <input id="execution-target-confirm" type="text" autocomplete="off">
+        <button id="execution-confirm" class="button primary" type="button" disabled>Xác nhận thực thi</button>
+      </div>
+      <div class="scenario-actions"><button id="execution-stop" class="button secondary" type="button" hidden>Yêu cầu dừng gửi lệnh</button><button id="execution-reconcile" class="button secondary" type="button" hidden>Đối soát / phục hồi</button></div>
+      <p>Lệnh đã giao cho Sandcat có thể tiếp tục chạy sau yêu cầu dừng. Hệ thống không tự bịa lệnh rollback.</p>
+      <p id="execution-detection"></p><div id="execution-artifacts"></div>
+      <section aria-label="Telemetry và báo cáo">
+        <h4>Telemetry / Báo cáo</h4>
+        <p id="telemetry-summary" role="status" aria-live="polite">Chưa thu thập.</p>
+        <p id="telemetry-coverage"></p><section id="expected-reality"><h4>Expected / Reality</h4><div id="telemetry-metrics"></div><div id="telemetry-step-comparison"></div><details><summary>Vận hành và truy vấn</summary><pre id="telemetry-operations"></pre></details></section>
+        <button id="telemetry-refresh" type="button" class="button secondary">Thu thập / làm mới log</button>
+        <a id="telemetry-json" download="report.json">Tải JSON</a> · <a id="telemetry-markdown" download="report.md">Tải báo cáo Markdown</a>
+      </section>
+    </section>
+    <details class="technical-detail scenario-artifacts"><summary>File bằng chứng & chi tiết kỹ thuật</summary><div id="scenario-files"></div><pre id="scenario-run-details" class="light-code"></pre></details>
+    <details class="scenario-history-panel"><summary>Lịch sử lập kế hoạch</summary><div id="scenario-history"></div></details>
+  </section>
+  <div class="scenario-columns">
+    <div class="scenario-inputs">
+      <section class="card scenario-card" aria-labelledby="profile-heading">
+        <div class="section-title"><div><span class="eyebrow">01 · TARGET PROFILE</span><h2 id="profile-heading">Hồ sơ mục tiêu</h2><p>Chọn lượt khảo sát để sử dụng cả hồ sơ và bằng chứng đã lưu.</p></div><span id="scenario-profile-state" class="badge">Chưa chọn</span></div>
+        <label class="upload-zone" id="profile-drop" for="profile-upload"><svg><use href="#file"/></svg><strong>Nhập hồ sơ JSON từ máy tính</strong><span>Kéo thả hoặc chọn JSON · tối đa 1 MB · Hồ sơ riêng không kèm bằng chứng</span><input id="profile-upload" type="file" accept=".json,application/json"></label>
+        <label class="field-label" for="existing-profile">Chọn lượt khảo sát đã lưu · giữ liên kết bằng chứng</label>
+        <select id="existing-profile"><option value="">Đang đọc hồ sơ…</option></select>
+        <div id="selected-profile" class="selected-profile" hidden><div class="selection-heading"><div><strong id="scenario-profile-name"></strong><small id="scenario-profile-source"></small></div><button type="button" id="remove-profile" class="text-button">Bỏ chọn</button></div><div id="scenario-profile-summary" class="result-meta"></div><details><summary>Xem Target Profile JSON</summary><pre id="scenario-profile-json" class="light-code"></pre></details></div>
+      </section>
+      <section class="card scenario-card" aria-labelledby="request-heading">
+        <div class="section-title"><div><span class="eyebrow">02 · USER REQUEST</span><h2 id="request-heading">Bạn muốn kiểm thử điều gì?</h2><p>Mô tả mục tiêu hoặc nhập mỗi hành vi trên một dòng.</p></div></div>
+        <label class="sr-only" for="scenario-request">Yêu cầu sinh kịch bản</label>
+        <textarea id="scenario-request" rows="6" maxlength="4000" placeholder="Ví dụ: Kiểm tra khả năng ghi nhận tiến trình PowerShell và hành vi khám phá hệ thống trên máy Windows. Ưu tiên các bước không cần quyền admin." aria-describedby="request-help"></textarea>
+        <div class="field-bottom"><span id="request-help">Nêu hành vi cần kiểm thử và kết quả bạn muốn kiểm chứng.</span><span id="request-count">0 / 4000</span></div>
+        <div class="request-options"><fieldset><legend class="field-label">Phạm vi</legend><div class="inline-checks"><label><input type="checkbox" id="request-endpoint" checked> Endpoint</label><label><input type="checkbox" id="request-web"> Dịch vụ web</label></div></fieldset><div><label class="field-label" for="request-max-steps">Tối đa số bước</label><input id="request-max-steps" type="number" min="1" max="20" step="1" value="4" required></div></div>
+      </section>
+      <section class="card scenario-card" aria-labelledby="dataset-heading">
+        <div class="section-title"><div><span class="eyebrow">03 · DATASET</span><h2 id="dataset-heading">Nguồn kịch bản</h2><p>Scenario Agent truy xuất catalog và chỉ mục RAG đã dựng trên máy chủ. Kho bên cạnh là thư viện tham khảo.</p></div><button type="button" id="browse-dataset" class="text-button">Mở kho →</button></div>
+        <div id="dataset-groups" class="dataset-groups"></div>
+        <p class="muted-note">Xem kịch bản tham khảo và các ability trong catalog qua menu bên trái.</p>
+        <div id="sample-selection" class="sample-selection"><svg><use href="#file"/></svg><div><strong id="sample-selection-name">Mẫu chuẩn trong final_template</strong><small id="sample-selection-source">scenario_adversary_template.yaml</small></div><button type="button" id="reset-sample" class="text-button" hidden>Dùng mẫu chuẩn</button></div>
+      </section>
+      <div class="scenario-actions"><button type="button" id="preview-sample" class="button primary">Sinh kế hoạch kịch bản <svg><use href="#arrow"/></svg></button><span>Plan được truy xuất từ catalog và kiểm tra trước khi xuất.</span></div>
+    </div>
+    <section class="card output-card" aria-labelledby="yaml-heading">
+      <div class="section-title"><div><span class="eyebrow">SCENARIO OUTPUT</span><h2 id="yaml-heading">Kịch bản YAML</h2><p>ScenarioPlan có nguồn tham chiếu; cần duyệt trước khi tích hợp thực thi CALDERA.</p></div><span class="badge">.yml</span></div>
+      <div id="yaml-empty" class="output-empty"><div class="empty-icon"><svg><use href="#file"/></svg></div><strong>Sẵn sàng lập kế hoạch</strong><p>Thêm hồ sơ, mô tả yêu cầu và bấm “Sinh kế hoạch kịch bản”. Chọn phạm vi và số bước tối đa cho kế hoạch.</p><div class="yaml-skeleton" aria-hidden="true"><span>id: …</span><span>name: …</span><span>description: …</span><span>atomic_ordering:</span><span>  - ability_id</span></div></div>
+      <div id="yaml-result" hidden><div class="sample-banner"><strong>Kế hoạch do Scenario Agent tạo</strong><span>Đã kiểm tra cấu trúc và grounding. Chưa thực thi và chưa đánh giá SOC.</span></div><div class="code-toolbar"><span id="yaml-filename">scenario.sample.yml</span><button type="button" id="copy-yaml" class="text-button">Sao chép</button></div><pre id="yaml-preview" class="yaml-code" tabindex="0" aria-label="Nội dung YAML mẫu"></pre><div class="output-footer"><span id="yaml-step-count"></span><button type="button" id="download-yaml" class="button primary"><svg><use href="#download"/></svg>Tải kế hoạch YAML</button></div></div>
+      <div class="output-footnote"><span class="tiny-dot"></span>Chỉ xem trước và tải file. Chưa gửi kịch bản tới CALDERA.</div>
+    </section>
+  </div>
+</div>
+<div class="content scenario-workspace" id="abilities-view" hidden><div class="page-heading"><div><div class="eyebrow">CATALOG</div><h1>Kho ability</h1><p>Tra cứu hành vi, nền tảng và executor từ catalog đang dùng cho Scenario.</p></div><span class="badge neutral">Chỉ tra cứu</span></div><div class="card"><div class="library-toolbar"><label class="search-field"><svg><use href="#radar"/></svg><input id="ability-search" type="search" aria-label="Tìm ability" placeholder="Tìm tên, ID, kỹ thuật hoặc executor…"></label></div><p id="ability-count" role="status">Đang đọc catalog…</p><div id="ability-list"></div><div class="library-pagination"><button id="ability-prev" class="button secondary">← Trước</button><span id="ability-page"></span><button id="ability-next" class="button secondary">Sau →</button></div></div><dialog id="ability-dialog"><div class="section-title"><h2 id="ability-name"></h2><button id="ability-close" class="button secondary">Đóng</button></div><p id="ability-description"></p><pre id="ability-detail" class="light-code"></pre><p class="help">Thông tin catalog không chứng minh ability phù hợp hoặc đã thực thi trên mục tiêu.</p></dialog></div>
+<div class="content scenario-workspace" id="library-view" hidden>
+  <div class="page-heading"><div><div class="eyebrow">SCENARIO LIBRARY</div><h1>Kho kịch bản</h1><p>Duyệt, tìm kiếm và xem YAML từ dataset hiện có.</p></div><button type="button" id="back-to-scenario" class="button secondary">← Sinh kế hoạch</button></div>
+  <div id="library-notice" class="notice" role="status" aria-live="polite" hidden></div>
+  <div id="library-stats" class="library-stats"></div>
+  <div class="card library-card">
+    <div class="library-toolbar"><div class="search-field"><svg><use href="#radar"/></svg><label class="sr-only" for="library-search">Tìm trong kho kịch bản</label><input type="search" id="library-search" placeholder="Tìm tên, mô tả hoặc ability ID…"></div><select id="library-scope" hidden aria-label="Phạm vi mặc định"><option value="all">Mọi phạm vi</option><option value="endpoint">Có Endpoint</option><option value="web">Có Web</option></select></div>
+    <div id="library-filters" class="filter-pills" role="group" aria-label="Lọc nguồn kịch bản"></div>
+    <div class="library-layout"><div class="library-list-panel"><div class="library-list-caption"><strong id="library-count"></strong><span>Chọn để xem chi tiết</span></div><div id="library-list"></div><div id="library-empty" class="empty-state" hidden><strong>Không tìm thấy kịch bản</strong><p>Thử tên khác hoặc đặt lại bộ lọc.</p><button type="button" id="reset-library-filters" class="text-button">Xóa bộ lọc</button></div><div class="library-pagination"><button type="button" id="library-prev" class="button secondary">← Trước</button><span id="library-page" aria-live="polite"></span><button type="button" id="library-next" class="button secondary">Sau →</button></div></div>
+      <aside class="library-detail-panel" aria-label="Chi tiết kịch bản"><div id="library-detail-empty" class="empty-state"><div class="empty-icon"><svg><use href="#layers"/></svg></div><strong>Khám phá một kịch bản</strong><p>Chọn kịch bản trong danh sách để xem mô tả, thứ tự ability và YAML.</p></div><div id="library-detail" hidden><div class="detail-top"><span id="detail-family" class="badge purple"></span><span id="detail-steps" class="muted-note"></span></div><h2 id="detail-name"></h2><p id="detail-description" class="detail-description"></p><div class="detail-tabs" role="tablist" aria-label="Nội dung kịch bản"><button type="button" id="detail-overview-tab" role="tab" aria-selected="true" aria-controls="detail-overview">Tổng quan</button><button type="button" id="detail-yaml-tab" role="tab" aria-selected="false" aria-controls="detail-yaml-panel" tabindex="-1">YAML</button></div><div id="detail-overview" role="tabpanel" aria-labelledby="detail-overview-tab"><dl class="detail-metadata"><dt>ID</dt><dd id="detail-id"></dd><dt>Nguồn file</dt><dd id="detail-file"></dd><dt>Phạm vi</dt><dd id="detail-scope"></dd></dl><h3>Thứ tự ability</h3><ol id="detail-abilities" class="ability-list"></ol><p class="muted-note">Mở Kho ability để đối chiếu nền tảng, executor và kỹ thuật trong catalog.</p></div><div id="detail-yaml-panel" role="tabpanel" aria-labelledby="detail-yaml-tab" hidden><pre id="detail-yaml" class="yaml-code" tabindex="0"></pre></div><div class="detail-actions"><button type="button" id="use-library-sample" class="button primary">Dùng làm mẫu →</button><button type="button" id="download-library-yaml" class="button secondary">Tải YAML</button></div></div></aside>
+    </div>
+  </div>
+  <p class="library-reference">Tham khảo cách duyệt dữ liệu từ <a href="https://github.com/Baodeptraii/MITRE-ATTACK-Mapper" target="_blank" rel="noopener noreferrer">MITRE ATT&amp;CK Mapper ↗</a>. Các file trong kho chưa được xác nhận thực thi trên lab.</p>
+</div>
+<div class="flow-workspace" id="flow-view" hidden>
+  <div class="flow-page-heading"><div><div class="flow-eyebrow">SOC LAB / SYSTEM FLOW</div><h1>Hệ thống đang hoạt động như thế nào?</h1><p>Quan sát từng bước xử lý, đường đi và dữ liệu trao đổi giữa các thành phần.</p></div><div class="flow-mode-label"><span></span> MÔ PHỎNG</div></div>
+  <div class="flow-control-bar"><div class="flow-controls"><button type="button" id="flow-play" class="flow-button flow-primary">▶ Chạy mô phỏng</button><button type="button" id="flow-step" class="flow-button">Từng bước →</button><button type="button" id="flow-reset" class="flow-button" aria-label="Đặt lại mô phỏng">↺ Đặt lại</button></div><div class="flow-settings"><label for="flow-mode">Tình huống<select id="flow-mode"><option value="normal">Luồng hoàn chỉnh</option><option value="agent_offline">Sandcat offline</option><option value="telemetry_gap">Thiếu telemetry</option></select></label><label for="flow-speed">Tốc độ<select id="flow-speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label></div></div>
+  <div class="flow-dashboard">
+    <section class="flow-canvas-card" aria-labelledby="flow-map-title">
+      <div class="flow-window-bar"><div class="flow-window-dots" aria-hidden="true"><i></i><i></i><i></i></div><strong id="flow-map-title">INTERACTIVE PIPELINE <span></span></strong><span class="flow-window-file">soc.pipeline / demo</span></div>
+      <div class="flow-approval-bar" id="flow-approval-bar" hidden><div><strong>Đang chờ duyệt mô phỏng</strong><span>Sinh kế hoạch kịch bản trước khi mô phỏng bước thực thi.</span></div><button type="button" id="flow-approve" class="flow-button">Phê duyệt mô phỏng →</button></div>
+      <div class="flow-map-scroll"><svg id="flow-map" class="flow-map" viewBox="0 0 1140 680" role="group" aria-label="Sơ đồ mô phỏng luồng SOC. Chọn một khối để xem dữ liệu."><title>Luồng khảo sát, lập kịch bản và đánh giá SOC — mô phỏng</title><defs><filter id="flow-glow"><feGaussianBlur stdDeviation="3"/></filter></defs><g id="flow-edge-layer"></g><g id="flow-node-layer"></g><g id="flow-packet-layer" aria-hidden="true"></g></svg></div>
+      <div class="flow-map-footer"><div class="flow-legend"><span><i class="legend-input"></i>Đầu vào</span><span><i class="legend-tool"></i>Công cụ</span><span><i class="legend-agent"></i>Agent</span><span><i class="legend-data"></i>Dữ liệu</span></div><div class="flow-map-tools"><button type="button" id="flow-zoom-out" aria-label="Thu nhỏ sơ đồ">−</button><span id="flow-zoom-label">100%</span><button type="button" id="flow-zoom-in" aria-label="Phóng to sơ đồ">+</button><button type="button" id="flow-fit">Căn giữa</button><button type="button" id="flow-expand">Mở rộng ↗</button></div></div>
+      <div class="flow-run-summary"><span id="flow-status" role="status" aria-live="polite">Sẵn sàng mô phỏng</span><div><span><b id="flow-completed">0 / 12</b> bước</span><span><b id="flow-packets">0</b> lượt chuyển</span><span><b id="flow-time">0.0s</b> mô phỏng</span></div></div>
+    </section>
+    <aside class="flow-inspector" aria-labelledby="flow-inspector-heading"><div class="flow-inspector-heading"><span>NODE INSPECTOR</span><button type="button" id="flow-follow">Đang theo dõi luồng</button></div><div class="flow-inspector-title"><span id="flow-node-kind" class="flow-kind-tag">INPUT</span><span id="flow-node-status" class="flow-node-status">Chưa chạy</span></div><h2 id="flow-inspector-heading">Mục tiêu khảo sát</h2><p id="flow-inspector-tool" class="flow-monospace">input.target</p><p class="flow-inspector-note" id="flow-inspector-note">Chọn một khối hoặc chạy mô phỏng để xem dữ liệu đi qua hệ thống.</p><div class="flow-data-heading"><span>↙ INPUT</span><small>Dữ liệu minh họa</small></div><pre id="flow-input" class="flow-json" tabindex="0"></pre><div class="flow-data-heading"><span>↗ OUTPUT</span><small id="flow-output-label">Mẫu dự kiến</small></div><pre id="flow-output" class="flow-json" tabindex="0"></pre><p class="flow-inspector-disclaimer">Dữ liệu ở đây phục vụ mô phỏng. Không có lệnh, API CALDERA hay truy vấn Wazuh được thực thi.</p></aside>
+  </div>
+  <section class="flow-events" aria-labelledby="flow-events-heading"><div class="flow-events-heading"><h2 id="flow-events-heading"><span></span> Dòng sự kiện mô phỏng</h2><span id="flow-log-count">0 sự kiện</span></div><div id="flow-log" class="flow-log" tabindex="0"><p>Chờ bắt đầu. Mỗi lần chuyển dữ liệu sẽ xuất hiện tại đây.</p></div></section>
+  <div class="flow-bottom-note"><span>Nhấn vào node để xem input/output · kéo nền để di chuyển · Ctrl + cuộn để zoom.</span><span id="flow-context-label">Sử dụng dữ liệu minh họa</span></div>
+</div>
+</main>
+<dialog id="config-dialog"><div class="section-title"><div><h2>Kết nối hệ thống</h2><p>Cấu hình trên máy đang chạy GUI.</p></div><button id="close-config" class="icon-button" aria-label="Đóng">×</button></div><dl><dt>Ứng dụng chính</dt><dd id="config-root"></dd><dt>Chế độ / model</dt><dd id="config-mode"></dd><dt>CALDERA</dt><dd id="config-url"></dd><dt>Mạng được phép</dt><dd id="config-networks"></dd></dl><p>Đổi URL và phạm vi mạng trong <code>GUI/config.json</code>. API key lấy từ <code>CALDERA_KEY</code> hoặc file cấu hình riêng của lab.</p><p>Khi chạy trên Ubuntu Desktop, mở trình duyệt tại <code>http://127.0.0.1:8765</code>.</p><div class="dialog-note">Bộ kiểm chứng đọc metadata log endpoint và Wazuh Manager theo cấu hình telemetry riêng. Không đọc được hoặc không có bản ghi phù hợp sẽ giữ chưa xác minh.</div></dialog>
+</body></html>

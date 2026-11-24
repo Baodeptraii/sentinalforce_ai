@@ -1,0 +1,62 @@
+id: fixture-plan
+name: Offline Fixture Plan
+description: Minimal plan used by offline GUI tests.
+atomic_ordering:
+  - source-1
+tags:
+  - fixture
+metadata:
+  schema_version: '1.0'
+  request_id: fixture-request
+  target_id: target-example
+  mode: plan_only
+  goal: Offline validation
+  selection:
+    strategy: compose_abilities
+    reason: Fixture only
+    sources:
+      - kind: caldera_ability
+        id: source-1
+        location: fixtures/source.yml
+        revision: verified-revision
+    readiness: needs_information
+    blockers:
+      - Offline fixture
+    assumptions: []
+    steps:
+      - step_index: 1
+        ability_id: source-1
+        name: Process discovery
+        role: test
+        technique_ids:
+          - T1057
+        reason: Fixture only
+        executor:
+          platform: windows
+          name: psh
+          privilege: null
+        parameters: {}
+        prerequisites: []
+        readiness: needs_information
+        behavior_verification: []
+        expected_telemetry: []
+        baseline: []
+        cleanup_and_rollback: []
+        health_checks: []
+        sources:
+          - kind: caldera_ability
+            id: source-1
+            location: fixtures/source.yml
+            revision: verified-revision
+  steps: []
+  blockers:
+    - Offline fixture
+  assumptions: []
+  limitations:
+    - Fixture only; no execution.
+execution_context:
+  planner: null
+  agent_group: null
+  agent_paw: null
+limitations:
+  - Fixture only; no execution.

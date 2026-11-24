@@ -1,0 +1,13 @@
+id: 9c1791ec-f302-59eb-8e2b-66e0273d7a36
+name: '[SCENARIO-61] SEO Poisoning / Malvertising dẫn đến Malware Download'
+description: Trong kịch bản này, tác nhân chuẩn bị một trang web hoặc quảng cáo giả
+  mạo liên quan đến phần mềm hợp lệ, tài liệu phổ biến, công cụ quản trị hoặc từ khóa
+  đang được nhiều người tìm kiếm. Người dùng truy cập kết quả tìm kiếm hoặc quảng
+  cáo, tải về một file nhìn giống phần mềm hợp lệ, sau đó mở file và kích hoạt loader
+  hoặc downloader. Actor thường là nhóm cybercrime, initial access broker hoặc
+atomic_ordering:
+- a1b2c3d4-dvwa-0008-xssr-000000000008
+- cd0fe01c-7bdc-54a1-9e59-333088b4d71a
+- cd0fe01c-7bdc-54a1-9e59-333088b4d71a
+- af703dae-feaa-51f3-9ab8-e337da316a3a
+- af703dae-feaa-51f3-9ab8-e337da316a3a

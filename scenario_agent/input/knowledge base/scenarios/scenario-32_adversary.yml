@@ -1,0 +1,13 @@
+id: bb6f665a-297b-5256-8f8f-21cb419c0eb3
+name: '[SCENARIO-32] Browser Credential Theft – Đánh cắp mật khẩu lưu trên trình duyệt'
+description: Trong kịch bản này, malware hoặc tác nhân hậu khai thác đọc credential
+  store của Chrome, Edge hoặc Firefox trong profile người dùng, sau đó lợi dụng ngữ
+  cảnh người dùng hiện tại để giải mã dữ liệu được bảo vệ bởi cơ chế hệ điều hành
+  hoặc profile key liên quan. Actor thường là stealer malware, initial access broker
+  hoặc operator muốn chuyển nhanh từ foothold trên một máy sang chiếm trình duyệt,
+  tài khoản web và session cloud;
+atomic_ordering:
+- 90c2efaa-8205-480d-8bb6-61d90dbaf81b
+- a1b2c3d4-dvwa-0010-weak-000000000010
+- 234f9b7c-b53d-4f32-897b-b880a6c9ea7b
+- 8c05b133-d438-47ca-a630-19cc464c4622

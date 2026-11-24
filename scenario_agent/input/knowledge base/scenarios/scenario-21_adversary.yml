@@ -1,0 +1,12 @@
+id: b2318703-0d24-591b-9c29-bb1a27cddfe2
+name: '[SCENARIO-21] LSASS Memory Dumping – Mimikatz-style'
+description: Sau khi có quyền quản trị cục bộ hoặc khả năng truy cập handle tới tiến
+  trình LSASS, kẻ tấn công thực hiện dump bộ nhớ hoặc trích xuất credential material
+  từ tiến trình này bằng công cụ quen thuộc hoặc binary sống nhờ hệ thống. Điều kiện
+  tiên quyết là đặc quyền đủ cao trên endpoint. Kết quả mong muốn là thu được NTLM
+  hash, plaintext credential, ticket material hoặc dữ liệu xác thực đủ để tiếp tục
+  sang
+atomic_ordering:
+- 96345bfc-8ae7-4b6a-80b7-223200f24ef9
+- 0ef4cc7b-611c-4237-b20b-db36b6906554
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36

@@ -1,0 +1,12 @@
+id: ed3ba093-eae7-59fb-af20-6cab477fdece
+name: '[SCENARIO-67] OT/ICS Pivot – Từ IT Network sang Operational Technology'
+description: Trong kịch bản này, tác nhân đã có foothold trong IT network, sau đó
+  tìm các jump host, historian server, engineering workstation, tài khoản bảo trì
+  hoặc firewall rule cho phép đi vào OT/ICS. Actor có thể là nation-state, destructive
+  actor hoặc ransomware group nhắm vào vận hành; điều kiện tiên quyết là tồn tại kết
+  nối IT-OT hoặc tài khoản/host trung gian có quyền truy cập OT; kết quả mong muốn
+  là quan sát, gián đoạn hoặc thao túng
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 134b49a3-3f93-41bd-85f4-563eadbb6055
+- d1ae594d-3c63-5db3-a0ce-137b1939021b

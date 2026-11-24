@@ -1,0 +1,12 @@
+id: 3399578b-59ff-5dfd-986e-a2bfb9a02df2
+name: '[SCENARIO-29] UAC Bypass – Thực thi đặc quyền cao không hiển thị dialog'
+description: Kẻ tấn công đã hiện diện trên máy của người dùng có quyền admin cục bộ
+  hoặc trong một ngữ cảnh có thể tác động tới cơ chế auto-elevate. Actor thường là
+  malware hoặc operator muốn nâng tiến trình từ medium integrity lên high integrity
+  một cách êm hơn để tránh người dùng nghi ngờ. Điều kiện tiên quyết là máy đích sử
+  dụng UAC và có các đường auto-elevate / association / registry hijack tương ứng
+  chưa được harden.
+atomic_ordering:
+- 36fd74b1-50e7-4646-929e-1cc384ff2e36
+- 7f6ea111-1528-4bf7-9ae1-3ee9c3eb3218
+- 665432a4-42e7-4ee1-af19-a9a8c9455d0c

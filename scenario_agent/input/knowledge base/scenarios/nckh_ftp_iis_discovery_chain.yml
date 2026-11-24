@@ -1,0 +1,8 @@
+id: d1e2f3a4-nckh-ftp-iis-discovery-0001
+name: FTP IIS Discovery and Enumeration Chain
+description: Chuỗi kịch bản khám phá dịch vụ FTP và máy chủ IIS, kiểm tra cấu hình
+  dịch vụ mạng.
+atomic_ordering:
+- 5a4cb2be-2684-4801-9355-3a90c91e0004
+- 29451844-9b76-4e16-a9ee-d6feab4b24db
+- 05cda6f6-2b1b-462e-bff1-845af94343f7

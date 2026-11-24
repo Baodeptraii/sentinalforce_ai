@@ -1,0 +1,14 @@
+id: 416d9abb-191e-5005-ac45-44928ebabdc6
+name: '[SCENARIO-41] Lateral Movement qua RDP – Brute Force và Session Hijacking'
+description: Trong kịch bản này, kẻ tấn công dùng credential đánh cắp, brute-force
+  nội bộ, hoặc một phiên người dùng còn sống để mở RDP sang máy khác trong mạng và
+  thao tác trực tiếp như một người quản trị hoặc người dùng hợp lệ. Actor thường là
+  operator hậu khai thác, ransomware affiliate hoặc kẻ xâm nhập AD đang cần tương
+  tác GUI để đi nhanh; điều kiện tiên quyết là có credential hợp lệ hoặc quyền đủ
+  để lợi
+atomic_ordering:
+- 5f7b0189-fdb5-5c79-9b56-3602f9c866a0
+- 355d4632-8cb9-449d-91ce-b566d0253d3e
+- a1b2c3d4-dvwa-0001-init-000000000001
+- 8a1c7665-3fd0-5164-ae8e-62430e2b8c5f
+- a37ac520-b911-458e-8aed-c5f1576d9f46

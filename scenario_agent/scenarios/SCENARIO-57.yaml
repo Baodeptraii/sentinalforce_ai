@@ -1,0 +1,56 @@
+id: SCENARIO-57
+name: Microsoft 365 – Teams/SharePoint Data Collection
+source: source-dataset/NCKH/69 kịch bản/attack_scenarios_part4.md
+format: scenario_description
+executable: false
+content: "**Kịch bản 57 – Microsoft 365 – Teams/SharePoint Data Collection**\n\n**Giới\
+  \ thiệu chung**\n\nMicrosoft 365 là kho dữ liệu cộng tác khổng lồ của doanh nghiệp\
+  \ hiện đại. Khi một tài khoản hoặc token bị chiếm, việc thu thập dữ liệu từ Teams,\
+  \ SharePoint, OneDrive for Business và các thư viện tài liệu liên quan thường cho\
+  \ giá trị rất cao mà không cần chạm sâu vào endpoint hay file server truyền thống.\n\
+  \n**Mô tả kịch bản**\n\nTrong kịch bản này, tác nhân đã có tài khoản Microsoft 365\
+  \ hoặc token hợp lệ và dùng quyền đó để duyệt Teams, SharePoint site, thư viện tài\
+  \ liệu, lịch sử cộng tác và file nhạy cảm, tập trung vào những workspace có giá\
+  \ trị kinh doanh hoặc kỹ thuật cao. Actor thường là espionage actor, cloud intruder\
+  \ hoặc post-exploitation operator; điều kiện tiên quyết là tài khoản có quyền truy\
+  \ cập hợp lệ vào ít nhất một phần tài nguyên cộng tác và tenant chưa có kiểm soát\
+  \ tốt về anomaly detection theo site/file/client app; kết quả mong muốn là nhanh\
+  \ chóng xây dựng được tập dữ liệu chiến lược mà không cần phát sinh hành vi malware\
+  \ truyền thống trên endpoint.\n\n**Dòng tấn công end-to-end**\n\n```text\nCó tài\
+  \ khoản hoặc token M365 hợp lệ\n→ Liệt kê Team, site và document library có thể\
+  \ truy cập\n→ Ưu tiên workspace / thư viện giá trị cao\n→ Tải hoặc đồng bộ dữ liệu\
+  \ theo lô\n→ Tổng hợp dữ liệu phục vụ exfiltration hoặc khai thác tiếp theo\n→ Duy\
+  \ trì collection trong môi trường SaaS\n```\n\n1. **Có điểm vào cloud hợp lệ:**\
+  \ Tài khoản hoặc token đã bị chiếm trong tenant.\n2. **Khảo sát tài nguyên cộng\
+  \ tác:** Teams, SharePoint sites, file library và quyền liên quan được duyệt.\n\
+  3. **Tập trung vào dữ liệu giá trị:** Tài liệu dự án, tài chính, R&D, lãnh đạo hoặc\
+  \ chiến lược được ưu tiên.\n4. **Tải dữ liệu hàng loạt:** Download hoặc sync xảy\
+  \ ra ở quy mô lớn hơn baseline.\n5. **Làm giàu giai đoạn sau:** Dữ liệu này được\
+  \ dùng cho exfiltration, tống tiền hoặc phân tích tiếp theo.\n\n**MITRE ATT&CK Mapping**\n\
+  \n| Tactic | Technique | Mô tả |\n|--------|-----------|-------|\n| Collection |\
+  \ T1213 | T1213.002 – SharePoint |\n| Collection | T1213 | Data from Information\
+  \ Repositories |\n| Collection | T1530 | Data from Cloud Storage Object |\n\n**Log\
+  \ / Telemetry / Observable**\n\n- **Microsoft 365 Unified Audit Log:** Tăng mạnh\
+  \ sự kiện truy cập, tải file, share/export hoặc Graph/API access tới SharePoint\
+  \ và Teams.\n- **Cloud App Security / Defender for Cloud Apps:** Một người dùng\
+  \ truy cập nhiều site/library hơn bình thường trong thời gian ngắn.\n- **Client\
+  \ app anomaly:** Download phát sinh từ thiết bị, app, browser hoặc geo chưa từng\
+  \ thấy.\n- **Data sensitivity pattern:** Nhiều file có sensitivity label hoặc thuộc\
+  \ site quan trọng bị truy cập liên tục.\n- **Cross-workspace behavior:** Cùng một\
+  \ tài khoản chạm tới nhiều Team/site không liên quan vai trò nghiệp vụ.\n\n**Gợi\
+  \ ý Detection / Hunting**\n\n```text\nM365FileDownloadVolume > baseline\nAND DistinctSharePointSitesOrTeams\
+  \ > threshold\nAND (\n  UnusualClientApp = true\n  OR NewGeoOrDevice = true\n  OR\
+  \ DownloadsIncludeSensitiveLabels = true\n  OR AccessAcrossUnrelatedBusinessUnits\
+  \ = true\n)\n```\n\n- **Alert:** Tài khoản người dùng tải dữ liệu từ nhiều site/Team\
+  \ hơn baseline lịch sử cá nhân.\n- **Hunt:** Kết hợp `unusual sign-in/token use`\
+  \ với `SharePoint/Teams download surge` trên cùng tài khoản.\n- **Alert:** Tải dữ\
+  \ liệu gắn nhãn nhạy cảm từ thiết bị hoặc ứng dụng không nằm trong managed device\
+  \ baseline.\n- **Governance:** Phân tầng site quan trọng, sensitivity label và chính\
+  \ sách download trên unmanaged devices để tăng giá trị phát hiện.\n\n**Vì sao đáng\
+  \ ưu tiên 2024–2026**\n\nScenario này phản ánh đúng trọng tâm của phòng thủ Microsoft\
+  \ 365 hiện đại: dữ liệu giá trị không còn chỉ nằm trong file server mà nằm rất nhiều\
+  \ trên nền tảng cộng tác SaaS. Nếu không săn được mô hình collection trong Teams/SharePoint,\
+  \ tổ chức sẽ bỏ lọt một phần rất lớn của cloud compromise.\n\n**Độ tin cậy:** Cao\
+  \ – unified audit, cloud app telemetry và context người dùng đủ để dựng use case\
+  \ mạnh.\n\n**Tài liệu tham khảo**\n- Mandiant UNC2452\n- Microsoft\n- MITRE ATT&CK\
+  \ T1213.002, T1213, T1530"
