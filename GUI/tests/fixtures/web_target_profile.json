@@ -7,7 +7,7 @@
     "hostname": "DESKTOP-KDAB44M",
     "status": "observed"
   },
-  "address": "192.0.2.10",
+  "address": "192.168.73.130",
   "services": [
     {
       "name": "Sysmon64",
@@ -33,7 +33,7 @@
       "applications": [
         {
           "name": "XAMPP",
-          "base_url": "http://192.0.2.10/dashboard/",
+          "base_url": "http://192.168.73.130/dashboard/",
           "application_identified": true,
           "session_ready": null,
           "current_security_level": null,
@@ -42,7 +42,7 @@
         },
         {
           "name": "DVWA",
-          "base_url": "http://192.0.2.10/dvwa/",
+          "base_url": "http://192.168.73.130/dvwa/",
           "application_identified": true,
           "session_ready": null,
           "current_security_level": null,
@@ -52,7 +52,7 @@
       ],
       "evidence_ref": "web_evidence.json#/origins/0",
       "status": "observed",
-      "url": "http://192.0.2.10/"
+      "url": "http://192.168.73.130/"
     }
   ],
   "capabilities": {

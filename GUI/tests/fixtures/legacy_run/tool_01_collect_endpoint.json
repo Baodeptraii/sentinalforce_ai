@@ -1,7 +1,7 @@
 {
   "tool": "collect_endpoint",
   "arguments": {},
-  "target_ip": "192.0.2.10",
+  "target_ip": "192.168.73.130",
   "started_at": "2026-11-12T02:49:13.452070+00:00",
   "status": "ok",
   "data": {
@@ -144,7 +144,7 @@
           "OwningProcess": 8772
         },
         {
-          "LocalAddress": "192.0.2.10",
+          "LocalAddress": "192.168.73.130",
           "LocalPort": 139,
           "OwningProcess": 4
         },

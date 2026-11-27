@@ -4,23 +4,16 @@ import copy
 import json
 import tempfile
 import unittest
-import sys
 from datetime import datetime,timezone,timedelta
 from pathlib import Path
 from urllib.error import HTTPError
 from unittest.mock import Mock,patch
 from engine import scenario_execution as execution, scenario_bridge as bridge
-
-
-def runtime_python():
-    runtime=Path('scenario_agent')
-    candidate=runtime/'.venv'/'Scripts/python.exe' if sys.platform == 'win32' else runtime/'.venv/bin/python'
-    return str(candidate if candidate.is_file() else Path(sys.executable))
 from engine.runner import save
 
 
 def fixture_context(kind='process'):
-    command={'process':'Get-Process','network':'Get-NetTCPConnection','web':'curl.exe http://192.0.2.10/health'}[kind]
+    command={'process':'Get-Process','network':'Get-NetTCPConnection','web':'curl.exe http://192.168.1.150/health'}[kind]
     source={'kind':'caldera_ability','id':'source-1','location':'fixtures/source.yml','revision':'verified-revision'}
     ex={'name':'psh','platform':'windows','command':command,'timeout':30,'cleanup':[],'parsers':[],'payloads':[]}
     step={'step_index':1,'ability_id':'source-1','name':kind,'executor':{'name':'psh','platform':'windows','privilege':None},
@@ -28,7 +21,7 @@ def fixture_context(kind='process'):
     record={'canonical_id':'source-1','provenance':source,'ability':{'name':kind,'privilege':None,'requirements':[],
         'executors':[ex],'tactic':'discovery','technique_id':'T1057','technique_name':'Process Discovery'}}
     return {'plan':{'id':'plan','metadata':{'readiness':'ready','blockers':[]}},
-        'profile':{'id':'target','address':'192.0.2.10','os':{'hostname':'example-host'},'services':[{'url':'http://192.0.2.10/'}]},
+        'profile':{'id':'target','address':'192.168.1.150','os':{'hostname':'PTIT'},'services':[{'url':'http://192.168.1.150/'}]},
         'policy':{'planning_scope':['web'] if kind=='web' else ['endpoint']},
         'evidence':{'verified':True,'survey_run_id':'survey','finished_at':execution.now(),'scope':['endpoint','web']},
         'artifacts':[{'file':'scenario_plan.yml','sha256':execution.hashlib.sha256(b'mock-plan').hexdigest()}],
@@ -37,7 +30,7 @@ def fixture_context(kind='process'):
 
 class FakeAPI:
     def __init__(self,ctx):
-        self.agent={'paw':'paw','host':'example-host','host_ip_addrs':['192.0.2.10'],'group':'original','platform':'windows',
+        self.agent={'paw':'paw','host':'PTIT','host_ip_addrs':['192.168.1.150'],'group':'original','platform':'windows',
             'trusted':True,'last_seen':execution.now(),'executors':['psh'],'privilege':'Elevated'}
         self.abilities={'source-1':copy.deepcopy(ctx['steps'][0]['record']['ability'])}
         self.adv={};self.op=None;self.links=[];self.calls=[];self.busy=[]
@@ -106,7 +99,7 @@ class ExecutionTests(unittest.TestCase):
         source=bridge.OUTPUTS/('a'*32);source.mkdir(parents=True)
         (source/'scenario_plan.yml').write_bytes(b'mock-plan');save(source/'job.json',{'id':'a'*32,'status':'completed'})
         self.ctx=fixture_context();self.api=FakeAPI(self.ctx)
-        self.config={'allowed_networks':['192.0.2.0/24'],'caldera_url':'http://fixture'}
+        self.config={'allowed_networks':['192.168.1.0/24'],'caldera_url':'http://fixture'}
         for name,value in [('context_for',lambda *a,**kw:copy.deepcopy(self.ctx)),('api_for',lambda *a:self.api),
                            ('endpoint_runner_path',lambda ip:self.root/'runner.lock'),('endpoint_activity_path',lambda ip:self.root/'activity.lock')]:
             p=patch.object(execution,name,value);p.start();self.addCleanup(p.stop)
@@ -243,17 +236,17 @@ class ExecutionTests(unittest.TestCase):
     def test_duplicate_confirmation_and_concurrent_preview_do_not_create_duplicate_operation(self):
         value=self.preview()
         with patch.object(execution.threading,'Thread') as thread:
-            body={'confirmed':True,'target_ip':'192.0.2.10','plan_sha256':value['plan_sha256']}
+            body={'confirmed':True,'target_ip':'192.168.1.150','plan_sha256':value['plan_sha256']}
             execution.confirm(value['id'],body,self.config);execution.confirm(value['id'],body,self.config)
             self.assertEqual(thread.call_count,1)
         other=self.preview();self.assertEqual(other['state'],'blocked')
         self.assertFalse(any(m=='POST' for _,m,_ in self.api.calls))
     def test_wrong_target_hash_or_expired_confirmation_is_rejected(self):
         value=self.preview()
-        for body in ({'confirmed':True,'target_ip':'other','plan_sha256':value['plan_sha256']}, {'confirmed':True,'target_ip':'192.0.2.10','plan_sha256':'wrong'}):
+        for body in ({'confirmed':True,'target_ip':'other','plan_sha256':value['plan_sha256']}, {'confirmed':True,'target_ip':'192.168.1.150','plan_sha256':'wrong'}):
             with self.assertRaises(ValueError):execution.confirm(value['id'],body,self.config)
         value['created_at']=(datetime.now(timezone.utc)-timedelta(hours=1)).isoformat();execution.write(value)
-        with self.assertRaisesRegex(ValueError,'hết hạn'):execution.confirm(value['id'],{'confirmed':True,'target_ip':'192.0.2.10','plan_sha256':value['plan_sha256']},self.config)
+        with self.assertRaisesRegex(ValueError,'hết hạn'):execution.confirm(value['id'],{'confirmed':True,'target_ip':'192.168.1.150','plan_sha256':value['plan_sha256']},self.config)
     def test_mutated_plan_or_revision_is_blocked_before_registration(self):
         value=self.preview();self.ctx['artifacts'][0]['sha256']='changed'
         result=self.confirm_sync(value)
@@ -285,9 +278,9 @@ class ExecutionTests(unittest.TestCase):
         baseline=fixture_context()
         cases=[lambda c:c['steps'][0]['executor'].update(payloads=['missing.bin']),
                lambda c:c['steps'][0]['step'].update(parameters={'path':'C:\\; evil'}),
-               lambda c:c['steps'][0]['executor'].update(command='curl http://192.0.2.10/ -H "Cookie: SESSION=SECRET"'),
+               lambda c:c['steps'][0]['executor'].update(command='curl http://192.168.1.150/ -H "Cookie: SESSION=SECRET"'),
                lambda c:c['steps'][0]['executor'].update(command='Get-Content #{missing}'),
-               lambda c:c['steps'][0]['executor'].update(command='curl http://192.0.2.22/'),
+               lambda c:c['steps'][0]['executor'].update(command='curl http://192.168.1.222/'),
                lambda c:c['steps'][0]['executor'].update(cleanup=['Remove-Item C:\\unknown'])]
         for change in cases:
             self.ctx=copy.deepcopy(baseline);change(self.ctx);self.api=FakeAPI(self.ctx)
@@ -339,7 +332,7 @@ class ExecutionTests(unittest.TestCase):
         import shutil
         import yaml
         from engine.scenario_actions import inspect_plan
-        runtime=Path('scenario_agent')
+        runtime=Path('/home/soc/build_scenario_agent')
         original=Path(__file__).resolve().parents[1]/'scenario_outputs/f987d00f4905481ea3ab7a1f794f7382'
         target=bridge.OUTPUTS/('b'*32)
         shutil.copytree(original,target)
@@ -349,13 +342,13 @@ class ExecutionTests(unittest.TestCase):
         value['metadata']['steps'][0]['sources'][0]['revision']='bad-revision'
         path.write_text(yaml.safe_dump(value,allow_unicode=True))
         import subprocess
-        response=subprocess.run([runtime_python(),'-B',str(Path(execution.__file__).with_name('execution_context.py')),str(runtime),str(target)],capture_output=True,text=True,timeout=25)
+        response=subprocess.run([str(runtime/'.venv/bin/python'),'-B',str(Path(execution.__file__).with_name('execution_context.py')),str(runtime),str(target)],capture_output=True,text=True,timeout=25)
         self.assertEqual(response.returncode,0,response.stdout+response.stderr)
         exported=json.loads(response.stdout)
         self.assertTrue(any('Revision' in b for b in exported['steps'][0]['blockers']))
-        profile=json.loads((target/'planning_target.json').read_text());profile['address']='192.0.2.22'
+        profile=json.loads((target/'planning_target.json').read_text());profile['address']='192.168.1.222'
         save(target/'planning_target.json',profile)
-        response=subprocess.run([runtime_python(),'-B',str(Path(execution.__file__).with_name('execution_context.py')),str(runtime),str(target)],capture_output=True,text=True,timeout=25)
+        response=subprocess.run([str(runtime/'.venv/bin/python'),'-B',str(Path(execution.__file__).with_name('execution_context.py')),str(runtime),str(target)],capture_output=True,text=True,timeout=25)
         self.assertTrue(any('Target' in b for b in json.loads(response.stdout)['blockers']))
 
     def test_endpoint_lock_is_shared_and_blocks_before_registration(self):
@@ -371,8 +364,8 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(value['detection'],'unknown')
 
     def test_semicolon_injection_and_dynamic_shell_are_not_supported(self):
-        for command in ('Get-Process; whoami','Get-Process | Invoke-Expression','curl.exe http://192.0.2.10/; evil','Invoke-WebRequest $remote'):
-            self.assertTrue(execution.command_blockers(command,'192.0.2.10'))
+        for command in ('Get-Process; whoami','Get-Process | Invoke-Expression','curl.exe http://192.168.1.150/; evil','Invoke-WebRequest $remote'):
+            self.assertTrue(execution.command_blockers(command,'192.168.1.150'))
 
     def test_http_confirmation_and_stop_keep_csrf_and_origin_controls(self):
         import app,io
@@ -394,7 +387,7 @@ class ExecutionTests(unittest.TestCase):
         sent=[b for p,m,b in self.api.calls if '/links/' in p and m=='PATCH' and b=={'status':-3}]
         self.assertEqual(len(sent),2)
         import subprocess
-        runtime=Path('scenario_agent/.venv/bin/python')
+        runtime=Path('/home/soc/build_scenario_agent/.venv/bin/python')
         schema_root=Path(__file__).resolve().parents[1]/'schemas/execution_v1'
         script="import json,sys; from jsonschema import Draft202012Validator; from pathlib import Path; root=Path(sys.argv[1]); folder=Path(sys.argv[2]); [Draft202012Validator(json.loads((root/(kind+'.schema.json')).read_text())).validate(json.loads((folder/name).read_text())) for kind,name in [('execution_record','execution_result.json'),('execution_manifest','execution_manifest.json')]]"
         check=subprocess.run([str(runtime),'-c',script,str(schema_root),str(execution.folder(result['id']))],capture_output=True,text=True,timeout=20)
@@ -405,7 +398,7 @@ class ExecutionTests(unittest.TestCase):
         for i in range(101):
             row=copy.deepcopy(value);row.update(id=format(i+1000,'032x'),state='blocked',created_at=execution.now());execution.write(row)
         self.assertEqual(len(execution.history()),100)
-        self.assertEqual(execution.pending('192.0.2.10')[0]['id'],value['id'])
+        self.assertEqual(execution.pending('192.168.1.150')[0]['id'],value['id'])
 
     def test_artifact_tamper_between_preview_and_dispatch_is_rejected(self):
         value=self.preview()
@@ -417,7 +410,7 @@ class ExecutionTests(unittest.TestCase):
         self.assertFalse(any(b=={'status':-3} for _,_,b in self.api.calls))
 
     def test_unobserved_web_port_is_a_specific_blocker(self):
-        self.ctx=fixture_context('web');self.ctx['profile']['services']=[{'url':'http://192.0.2.10:8080/'}];self.api=FakeAPI(self.ctx)
+        self.ctx=fixture_context('web');self.ctx['profile']['services']=[{'url':'http://192.168.1.150:8080/'}];self.api=FakeAPI(self.ctx)
         value=self.preview();self.assertEqual(value['state'],'blocked')
         self.assertTrue(any('origin/port' in x for x in value['preflight']['blockers']))
 

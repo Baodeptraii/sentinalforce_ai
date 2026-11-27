@@ -41,8 +41,8 @@ class OperationProjectionTests(unittest.TestCase):
 
     def test_preflight_busy_and_finished_history(self):
         config = survey.load_config()
-        config.update(orchestration_mode='scripts', allowed_networks=['192.0.2.0/24'])
-        request = {'target_ip': '192.0.2.11', 'survey_scope': ['endpoint']}
+        config.update(orchestration_mode='scripts', allowed_networks=['192.168.73.0/24'])
+        request = {'target_ip': '192.168.73.199', 'survey_scope': ['endpoint']}
         for state, ready in [('running', False), ('paused', False), ('finished', True), ('out_of_time', True)]:
             fake = FakeAPI()
             original = fake.call

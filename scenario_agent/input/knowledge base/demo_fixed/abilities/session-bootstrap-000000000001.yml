@@ -1,0 +1,42 @@
+- id: session-bootstrap-000000000001
+  name: DVWA Session Bootstrap with CSRF Token
+  description: >-
+    Authenticates to the target DVWA instance using lab account values read from a victim-local login file, solves the login CSRF token, sets the security level to low and verifies the session. Writes the session jar used by the following web probes.
+  technique_id: T1078
+  technique_name: Valid Accounts
+  repeatable: false
+  executors:
+    - name: psh
+      platform: windows
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $base = 'http://192.168.1.150:8080/dvwa'
+        $dir = 'C:\SOC-Lab\WEB\demo'
+        New-Item -ItemType Directory -Force -Path $dir | Out-Null
+        $jar = "$dir\session.txt"
+        if (Test-Path $jar) { Remove-Item -LiteralPath $jar -Force }
+        $loginData = 'C:\SOC-Lab\config\dvwa_login.json'
+        if (-not (Test-Path $loginData)) { Write-Output 'DVWA_SESSION_ERROR login_file_missing'; exit 1 }
+        $cred = Get-Content -Raw -LiteralPath $loginData | ConvertFrom-Json
+        if (-not $cred.user -or -not $cred.pwd) { Write-Output 'DVWA_SESSION_ERROR login_file_incomplete'; exit 1 }
+        $page = curl.exe -s -c $jar "$base/login.php"
+        $html = $page -join "`n"
+        $token = [regex]::Match($html, 'user_token['']?\s*value=['']([a-f0-9]+)['']').Groups[1].Value
+        if (-not $token) { Write-Output 'DVWA_SESSION_ERROR csrf_token_missing'; exit 1 }
+        curl.exe -s -c $jar -b $jar --data "username=$($cred.user)&password=$($cred.pwd)&Login=Login&user_token=$token" "$base/login.php" | Out-Null
+        $index = curl.exe -s -b $jar -c $jar "$base/index.php"
+        $ihtml = $index -join "`n"
+        if ($ihtml -notmatch 'Logout') { Write-Output 'DVWA_SESSION_ERROR login_unverified'; exit 1 }
+        $secPage = curl.exe -s -b $jar "$base/security.php"
+        $shtml = $secPage -join "`n"
+        $secToken = [regex]::Match($shtml, 'user_token['']?\s*value=['']([a-f0-9]+)['']').Groups[1].Value
+        if ($secToken) {
+          curl.exe -s -b $jar --data "security=low&seclev_submit=Submit&user_token=$secToken" "$base/security.php" | Out-Null
+        } else {
+          curl.exe -s -b $jar --data "security=low&seclev_submit=Submit" "$base/security.php" | Out-Null
+        }
+        $final = (curl.exe -s -b $jar "$base/security.php") -join "`n"
+        if ($final -notmatch 'low.{0,6}selected') { Write-Output 'DVWA_SESSION_ERROR security_level_unverified'; exit 1 }
+        Write-Output 'DVWA_SESSION_OK login_verified security=low'
+        exit 0
+      timeout: 90

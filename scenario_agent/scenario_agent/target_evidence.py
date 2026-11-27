@@ -36,34 +36,60 @@ def catalog_handles(retrieval):
     return result
 
 
-def select_context(envelope, text, scope, records=None, budget=BUDGET):
-    c = envelope['survey_context']
-    # Retain negative, unknown, inferred and conflicting facts; status is never a selection gate.
+def select_context(envelope, text, scope, records=None, budget=BUDGET, assessments=None):
+    from .requirement_registry import registry, BASE_PREDICATES
+    c = envelope['survey_context']; reg = registry(envelope)
     requested = set(scope) | {'authentication', 'runner', 'telemetry'}
-    if 'endpoint' not in scope: requested.discard('endpoint')
     tokens = set(re.findall(r'[a-z0-9_]{3,}', text.lower()))
-    source = ' '.join(str(r['ability'].get('name', ''))+' '+json.dumps(r['ability'].get('executors', [])) for r in (records or {}).values()).lower()
+    required, links = set(), {}
+    for row in (assessments or {}).get('candidates', []):
+        if row['compatibility'] == 'incompatible': continue
+        for req in row.get('requirements', []):
+            for identifier in req['fact_ids']:
+                required.add(identifier)
+                links.setdefault(identifier, []).append({'ability_id': row['ability_id'], 'executor': row['executor'],
+                    'requirement_id': req['id'], 'kind': req['kind'], 'subject': req['subject']})
+    if records and not assessments:
+        report = assess_candidates({'abilities':[{'record':r} for r in records.values()], 'adversaries':[]}, envelope, {'text':text})
+        return select_context(envelope, text, scope, records, budget, report)
+    conflicts = {i for row in c['conflicts'] for i in row['observation_ids']}
     ranked = []
-    for f in c['observations']:
-        if f['domain'] not in requested: continue
+    for f in reg['observations']:
+        if f['domain'] not in requested and f['id'] not in required and f['predicate'] not in BASE_PREDICATES: continue
         relevance = sum(t in (f['subject']+' '+str(f['value'])).lower() for t in tokens)
-        needed = f['predicate'] in ('application_location', 'survey_session', 'os_name', 'architecture', 'executors', 'privilege')
-        needed |= f['predicate'] == 'module_access_and_forms' and f['value'].get('path', '\x00') in source
-        ranked.append((-(100 if needed else 0)-relevance, f['id'], f))
-    base = {'schema_version': '2.0', 'survey_run_id': c['survey_run_id'], 'target_id': c['target_id'], 'target_ip': c['target_ip'],
-            'started_at': c['started_at'], 'finished_at': c['finished_at'], 'status': c['status'],
-            'gaps': c['gaps'], 'conflicts': c['conflicts'], 'coverage': c['coverage'], 'observations': []}
-    # Non-fact diagnostics are retained or explicitly refused, never silently discarded.
+        # Inventory entries need a requirement/resource association; the root inventory ref retains coverage.
+        if f['predicate'] in ('process','service') and f['id'] not in required:
+            name = str(f['value'].get('name') or '').casefold()
+            if not name or name not in text.casefold(): continue
+        if f['predicate']=='module_access_and_forms' and f['id'] not in required and f['id'] not in conflicts and f['status']!='unknown':
+            value=f['value'];name=value.get('path','').strip('/').rsplit('/',1)[-1]
+            negative=value.get('authenticated') is False or (value.get('http_status') or 0)>=400
+            named=bool(name and re.search(r'(?<!\w)'+re.escape(name)+r'(?!\w)',text,re.I))
+            if not negative and not named: continue
+        priority = (1000 if f['id'] in required else 0) + (500 if f['id'] in conflicts or f['status']=='unknown' or f['value'] is False else 0)
+        priority += 100 if f['predicate'] in BASE_PREDICATES or f['predicate'] in ('application_location','survey_session') else 0
+        ranked.append((-priority-relevance, f['id'], f))
+    base = {k:c[k] for k in ('survey_run_id','target_id','target_ip','started_at','finished_at','status','conflicts','coverage')}
+    base.update(schema_version='1.0',context_kind='scenario_selected_context',source_schema_version=c['schema_version'],
+                registry_version='1.0',selected_scope=sorted(set(scope)))
+    base.update(gaps=reg['gaps'], observations=[])
     if len(canonical(base)) > budget: raise ValueError('Survey diagnostics exceed context budget; manual review required')
-    omitted = []
+    omitted = set()
     for _, _, f in sorted(ranked):
-        if len(canonical(base))+len(canonical(f))+1 > budget: omitted.append(f['id'])
+        if len(canonical(base))+len(canonical(f))+1 > budget: omitted.add(f['id'])
         else: base['observations'].append(f)
     selected = {f['id'] for f in base['observations']}
-    report = {'schema_version': '2.0', 'adapter_version': ADAPTER, 'budget_bytes': budget, 'used_bytes': len(canonical(base)),
-              'included': [{'id': f['id'], 'reason': 'requested_domain_or_ability_prerequisite'} for f in base['observations']],
-              'omitted': [{'id': f['id'], 'reason': 'budget' if f['id'] in omitted else 'unrelated_domain'} for f in c['observations'] if f['id'] not in selected],
-              'truncated': bool(omitted), 'known_but_omitted_is_not_absent': True, 'selection_sha256': sha(canonical(base))}
+    report = {'schema_version':'2.0','adapter_version':ADAPTER,'registry_version':'1.0','budget_bytes':budget,'used_bytes':len(canonical(base)),
+        'included':[{'id':f['id'],'reason':'ability_requirement' if f['id'] in required else 'shared_target_or_requested_domain',
+                     'requirement_links':links.get(f['id'],[])} for f in base['observations']],
+        'omitted':[{'id':f['id'],'reason':'budget' if f['id'] in omitted else 'unrelated_domain_or_resource'} for f in reg['observations'] if f['id'] not in selected]
+                  + [{'id':f['id'],'reason':'unsupported_normalizer'} for f in reg.get('opaque_observations',[])],
+        'truncated':bool(omitted),'known_but_omitted_is_not_absent':True,
+        'required_but_unselected':sorted(required-selected), 'selection_sha256':sha(canonical(base)),
+        'expansion':{'rounds':2 if assessments or records else 1,'bound':2,'sources':reg.get('expanded_sources',[]),
+                     'derived_fact_count':reg.get('derived_fact_count',0),'network_collection':False}}
+    from .survey_input import validate_schema
+    validate_schema(base,'selected_context')
     return base, report
 
 
@@ -73,148 +99,8 @@ def fact_check(f):
 
 
 def evaluate(record, executor, envelope, request):
-    """Source-level constraints; unknown constructs remain manual review."""
-    c = envelope['survey_context']; policy = envelope['policy']
-    facts = c['observations']; by_id = {f['id']: f for f in facts}
-    command = executor.get('command') or executor.get('code') or ''
-    lower = command.lower(); meta = record['ability']
-    reasons, blockers, support = [], [], []
-    locations = [f for f in facts if f['predicate'] == 'application_location' and f['status'] == 'observed']
-    modules = [f for f in facts if f['predicate'] == 'module_access_and_forms' and f['status'] == 'observed']
-    sessions = [f for f in facts if f['predicate'] == 'survey_session' and f['status'] == 'observed']
-    os_facts = [f for f in facts if f['predicate'] == 'os_name' and f['status'] == 'observed']
-    expected_os = ('windows' if any('windows' in str(f['value']).lower() for f in os_facts) else
-                   'linux' if any('linux' in str(f['value']).lower() for f in os_facts) else None)
-    if expected_os and executor['platform'] != expected_os: reasons.append('executor_platform_mismatch')
-    if not expected_os: blockers.append('Confirm runner OS; no observed OS fact')
-    runner = [f for f in facts if f['predicate'] == 'executors' and f['domain'] == 'runner']
-    if runner and not any(executor['name'] in (f['value'] or []) for f in runner): blockers.append('Selected executor is not in configured CALDERA runner metadata')
-    blockers.append('Revalidate runner identity, executor availability and privilege before execution')
-    if meta.get('privilege') in (None, ''): blockers.append('Required privilege is unspecified in catalog; manual review')
-    elevated = str(meta.get('privilege', '')).lower() in ('elevated', 'admin', 'administrator', 'system', 'root')
-    if elevated:
-        elevated_obs = [f for f in facts if f['predicate'] == 'is_elevated']
-        if any(f['value'] is False for f in elevated_obs): reasons.append('required_privilege_not_observed')
-        else: blockers.append('Verify elevated runner privilege')
-    web = bool(re.search(r'https?://|invoke-webrequest|curl(?:\.exe)?\b', command, re.I))
-    if web and 'web' not in policy['planning_scope']: reasons.append('web_command_outside_planning_scope')
-    if not web and 'endpoint' not in policy['planning_scope']: reasons.append('endpoint_command_outside_planning_scope')
-    # Prevent common compound SQLi+XSS/fuzzing candidates being smuggled into an SQLi-only request.
-    intent = (request.get('text', '')+' '+(request.get('objective') or '')).lower()
-    if re.search(r'sqli|sql\s*injection', intent):
-        for marker, pattern in [('xss', r'<script|onerror\s*=|javascript:|\$xss'), ('fuzz', r'fuzz|for\s*\(')]:
-            if re.search(pattern, command, re.I) and marker not in intent: reasons.append('extra_behavior_'+marker)
-    placeholders = executor.get('fact_placeholders', [])
-    bindings, env_bindings = {}, {}
-    identity = {'value': c['target_ip'], 'type': 'ip_address', 'source': 'survey_context.target_ip', 'fact_ids': []}
-    # Each supported alias has explicit semantics; arbitrary placeholder names remain unresolved.
-    semantics = {'target_ip': 'ip', 'target.ip': 'ip', 'victim_ip': 'ip', 'base_url': 'base', 'dvwa_url': 'base',
-                 'target_url': 'base', 'scheme': 'scheme', 'port': 'port', 'target_port': 'port', 'module_path': 'module'}
-    app = locations[0] if len({f['value']['base_url'] for f in locations}) == 1 and locations else None
-    if locations and not app: blockers.append('Multiple observed application locations; select an application explicitly')
-    for name in placeholders:
-        semantic = semantics.get(name.lower())
-        binding = {'value': None, 'type': 'unknown', 'source': None, 'fact_ids': []}
-        if semantic == 'ip': binding = copy.deepcopy(identity)
-        elif app and semantic in ('base', 'scheme', 'port'):
-            value = app['value']; url = urlsplit(value['base_url'])
-            resolved = {'base': value['base_url'], 'scheme': url.scheme, 'port': str(url.port or (443 if url.scheme == 'https' else 80))}[semantic]
-            binding = {'value': resolved, 'type': {'base': 'url', 'scheme': 'scheme', 'port': 'port'}[semantic], 'source': app['id'], 'fact_ids': [app['id']]}
-            support.append(app['id'])
-        if binding['value'] is None: blockers.append('Resolve required parameter '+name+' from appropriate target evidence')
-        bindings[name] = binding
-    # Recognize URL defaults with an explicit environment override. Never rewrite commands.
-    overrides = []
-    psh_override = re.compile(r"(?P<var>\$[A-Za-z_][A-Za-z0-9_]*)\s*=\s*if\s*\(\$env:(?P<env>[A-Za-z_][A-Za-z0-9_]*)\)\s*\{\s*\$env:(?P=env)\s*\}\s*else\s*\{\s*[\"'](?P<url>https?://[^\"']+)[\"']\s*\}", re.I)
-    bash_override = re.compile(r'(?P<var>[A-Za-z_][A-Za-z0-9_]*)="\$\{(?P<env>[A-Za-z_][A-Za-z0-9_]*):-' + r'(?P<url>https?://[^"}]+)\}"')
-    for pattern in (psh_override, bash_override):
-        for match in pattern.finditer(command):
-            variable = match['var'] if match['var'].startswith('$') else '$'+match['var']
-            if variable+'/' in command[match.end():]: overrides.append(match.groupdict())
-    env_names = sorted({item['env'] for item in overrides})
-    fallback_urls = {item['url'] for item in overrides}
-    if env_names and app:
-        for name in env_names:
-            env_bindings[name] = {'value': app['value']['base_url'].rstrip('/'), 'type': 'url', 'source': app['id'],
-                                  'fact_ids': [app['id']], 'transform': 'remove_trailing_slash_for_source_suffix', 'status': 'proposed_setup'}
-            support.append(app['id']); blockers.append('Configure and verify runner environment '+name+' using proposed binding; source fallback must not be used')
-    elif env_names: blockers.append('Resolve application URL for environment override '+','.join(env_names))
-    fixed_urls = re.findall(r'https?://[^\s\x22\x27<>;`]+', command)
-    inspected_urls = []
-    for raw in fixed_urls:
-        raw = raw.rstrip(')\\,')
-        # Unresolved external URLs remain conservative scope constraints.
-        try: u = urlsplit(raw)
-        except ValueError:
-            blockers.append('Manual review of dynamic URL expression'); continue
-        host = u.hostname or ''
-        dynamic = host.startswith('$') or '#{' in raw
-        fallback = raw.rstrip('}') in fallback_urls
-        inspected_urls.append({'url': raw.split('?')[0], 'environment_fallback': fallback})
-        if fallback: continue
-        if not dynamic and host != c['target_ip']:
-            blockers.append('External source dependency or hardcoded other host requires scope review: '+host)
-            reasons.append('unapproved_external_or_fixed_host')
-            continue
-        try: port = u.port or (443 if u.scheme == 'https' else 80)
-        except ValueError: blockers.append('Unresolved dynamic URL port'); continue
-        if app:
-            a = urlsplit(app['value']['base_url'])
-            if u.scheme != a.scheme or port != (a.port or (443 if a.scheme == 'https' else 80)):
-                reasons.append('hardcoded_origin_or_port_mismatch')
-        path = u.path
-        if path and path != '/' and '$' not in path and '#{' not in path:
-            observed = any(urlsplit(f['subject']).path == path for f in modules)
-            observed |= any(f['predicate'] == 'http_access' and isinstance(f['value'], dict) and
-                            urlsplit(f['value'].get('url', '')).path == path for f in facts)
-            if not observed: blockers.append('Endpoint '+path+' is unobserved; verify its existence and request contract')
-    # Relative module suffixes in actual command, independent of application name or ability ID.
-    paths = sorted(set(re.findall(r'(?:\$[A-Za-z_][A-Za-z0-9_]*|\$\{[A-Za-z_][A-Za-z0-9_]*\}|#\{[A-Za-z_][A-Za-z0-9_.]*\})(/[A-Za-z0-9_./-]+)', command))) if web else []
-    matched_modules = []
-    for path in paths:
-        matches = [f for f in modules if urlsplit(f['subject']).path.endswith(path)]
-        if not matches: blockers.append('Required module '+path+' has no observed form contract')
-        else:
-            matched_modules.extend(matches)
-            for f in matches:
-                support.append(f['id'])
-                if (f['value'].get('http_status') or 0) >= 400: reasons.append('module_access_unavailable_in_survey')
-                if f['value'].get('forms_truncated'): blockers.append('Observed form metadata is truncated; verify the full request contract')
-                forms = f['value'].get('forms', [])
-                if not forms: blockers.append('Module has no observed forms; review request method/parameters')
-                # Source templates here either use curl GET or an explicit POST/data flag.
-                method = 'POST' if re.search(r'(?i)(?:-Method\s+POST|(?:\s|^)-d\s|--data\b|-X\s+POST)', command) else 'GET'
-                if forms and method not in {form.get('method', '').upper() for form in forms}: reasons.append('observed_form_method_mismatch')
-                matching_forms = [form for form in forms if form.get('method', '').upper() == method]
-                if matching_forms and all(urlsplit(urljoin(f['subject'], form.get('action_path') or '')).path != urlsplit(f['subject']).path for form in matching_forms):
-                    blockers.append('Observed form action differs from source endpoint; verify routing before execution')
-                query_names = set()
-                for query in re.findall(r'\?([^\s\x22\x27]+)', command): query_names.update(parse_qs(query, keep_blank_values=True).keys())
-                allowed = {i.get('name') for form in forms for i in form.get('inputs', [])}
-                if query_names and not query_names.issubset(allowed): reasons.append('observed_form_parameter_mismatch')
-                if f['value'].get('authenticated') is False: blockers.append('Module authentication was not established')
-    if app and paths: support.append(app['id'])
-    for f in sessions:
-        if app and f['subject'] == app['subject']:
-            support.append(f['id']); blockers.append('Survey session is historical; obtain and verify execution session reference separately')
-            level = re.search(r'security=(low|medium|high|impossible)', command, re.I)
-            if level and f['value'].get('current_security_level') is None: blockers.append('Verify application security level required by source: '+level.group(1).lower())
-            elif level and f['value'].get('current_security_level') != level.group(1).lower(): reasons.append('observed_security_level_mismatch')
-    if re.search(r'cookie(file|_file)|-b\s', command, re.I): blockers.append('Resolve and validate execution cookie/session file reference; no Survey secret is transferred')
-    if meta.get('requirements'): blockers.append('Validate catalog dependencies: '+json.dumps(meta['requirements'], ensure_ascii=False)[:800])
-    blockers.append('Manual review source effects, baseline, health checks and cleanup/rollback; absence of cleanup commands is not proof none is needed')
-    conflicts = {i for conflict in c['conflicts'] for i in conflict['observation_ids']}
-    for identifier in support:
-        if identifier in conflicts: blockers.append('Resolve conflicting Survey evidence for '+identifier)
-        if by_id[identifier]['observed_at'] is None: blockers.append('Observation time unknown for '+identifier)
-    if any(g['reason'] in ('stale', 'truncated', 'tool_error') for g in c['gaps']): blockers.append('Review Survey stale/truncated/error gaps; unobserved is not absent')
-    return {'ability_id': record['canonical_id'], 'executor': {'platform': executor['platform'], 'name': executor['name']},
-            'compatibility': 'incompatible' if reasons else 'needs_information' if blockers else 'compatible',
-            'reasons': sorted(set(reasons)), 'blockers': sorted(set(blockers)), 'bindings': bindings, 'environment_bindings': env_bindings,
-            'supporting_fact_ids': sorted(set(support)), 'survey_checks': [fact_check(by_id[i]) for i in sorted(set(support))],
-            'source': record['provenance'], 'source_requirements': {'requirements': meta.get('requirements', []), 'cleanup': executor.get('cleanup', []),
-                'payloads': executor.get('payloads', []), 'command_sha256': sha(command.encode()), 'inspected_urls': inspected_urls},
-            'manual_review': True}
+    from .requirement_registry import evaluate_requirements
+    return evaluate_requirements(record, executor, envelope, request)
 
 
 def assess_candidates(retrieval, envelope, request):
@@ -239,10 +125,11 @@ def filter_retrieval(retrieval, report):
 
 
 def validate_evidence_plan(plan, envelope, report, selected_context):
-    policy = envelope['policy']; c = envelope['survey_context']
+    from .requirement_registry import registry
+    policy = envelope['policy']; c = envelope['survey_context']; reg = registry(envelope)
     if plan['metadata']['mode'] != 'plan_only' or len(plan['metadata']['steps']) > policy['max_steps']: raise ValueError('Plan violates pinned policy')
     if plan['metadata']['target_id'] != policy['target_id']: raise ValueError('Plan target differs from snapshot')
-    facts = {f['id']: f for f in c['observations']}
+    facts = {f['id']: f for f in reg['observations']}
     selected = {f['id'] for f in selected_context['observations']}
     step_reports = []
     for step in plan['metadata']['steps']:
@@ -268,9 +155,11 @@ def validate_evidence_plan(plan, envelope, report, selected_context):
         if any(t['availability'] == 'verified' for t in step['expected_telemetry']): raise ValueError('Expected telemetry cannot assert verified detection/ingestion')
         if not step['behavior_verification']: raise ValueError('Behavior verification criteria required')
         step_reports.append({'step_index': step['step_index'], **assessment,
-                             'telemetry': {'local_sources': [f['id'] for f in c['observations'] if f['predicate'] == 'local_event'],
-                                           'manager_ingestion': [f['id'] for f in c['observations'] if f['predicate'] == 'manager_ingestion'],
+                             'telemetry': {'local_sources': sorted({i for req in assessment['requirements'] if req['kind'].startswith('telemetry.') for i in req['fact_ids'] if facts[i]['predicate']=='local_event'}),
+                                           'manager_ingestion': sorted({i for req in assessment['requirements'] if req['kind'].startswith('telemetry.') for i in req['fact_ids'] if facts[i]['predicate']=='manager_ingestion'}),
+                                           'requirement_sources': [{'kind':req['kind'],'subject':req['subject'],'fact_ids':req['fact_ids'],'status':req['status']} for req in assessment['requirements'] if req['kind'].startswith('telemetry.')],
                                            'detection': 'unknown', 'expected_signals_are_not_observed_results': True},
+                             'behavior_requirements': [row['behavior_id'] for row in (report.get('behavior_coverage') or {}).get('coverage', []) if any(m['ability_id']==step['ability_id'] for m in row['matches'])],
                              'execution_readiness': 'conditional_manual_review', 'behavior_verification': 'manual_review; HTTP status or request log alone does not prove exploit success'})
     return {'schema_version': '2.0', 'adapter_version': ADAPTER, 'survey_run_id': c['survey_run_id'],
             'target_id': c['target_id'], 'target_ip': c['target_ip'], 'snapshot_file': 'input/input_manifest.json', 'plan_valid': True, 'execution_authorized': False,

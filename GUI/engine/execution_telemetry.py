@@ -1,9 +1,5 @@
 """Bounded evidence collection and deterministic reports, independent of execution dispatch."""
-try:
-    import fcntl
-except ImportError:  # Windows
-    fcntl = None
-    import msvcrt
+import fcntl
 import hashlib
 import html
 import json
@@ -20,6 +16,8 @@ from .scenario_execution import safe_text
 ROOT=Path(__file__).resolve().parents[1]
 LOCK=threading.RLock()
 THREADS={}
+TERMINAL={"completed","failed","stopped","blocked"}
+ACTIVE={"confirmed","registering","creating_operation","running","stop_requested","recovery_required"}
 PUBLIC={'report.json','report.md','telemetry_state.json'}
 SAFE=re.compile(r'^[\w .:/@+{}()\[\]\\-]{0,240}$',re.ASCII)
 
@@ -36,6 +34,28 @@ def timestamp(value):
 
 
 def iso(value):return value.isoformat().replace('+00:00','Z')
+
+
+def recorded_identity(prior, record):
+    """Reuse a per-execution observation, never today's directory as historical proof."""
+    saved=prior.get('identity_attestation')
+    if saved:
+        if saved.get('execution_id')==record['id'] and saved.get('target')==record['target']['ip']:
+            return saved
+        return None
+    policy=prior.get('identity_policy',{})
+    agent=prior.get('identity') or {}
+    if policy.get('kind')!='live_api' or not policy.get('verified') or not agent.get('id'):
+        return None
+    try:
+        captured=datetime.fromtimestamp(prior['last_attempt_epoch'],timezone.utc)
+        start=timestamp(record.get('confirmed_at') or record['created_at'])-timedelta(seconds=300)
+        end=timestamp(record.get('updated_at') or record['created_at'])+timedelta(seconds=1200)
+        if start<=captured<=end and agent.get('ip')==record['target']['ip']:
+            return {'agent':agent,'target':agent['ip'],'execution_id':record['id'],
+                    'captured_at':iso(captured),'origin':'persisted_live_api_observation'}
+    except (KeyError,TypeError,ValueError,OverflowError):pass
+    return None
 
 
 def config():
@@ -69,16 +89,17 @@ def save(path,value):
 def window_for(record,settings,previous=None):
     if previous:return previous
     start=timestamp(record.get('confirmed_at') or record['created_at'])
-    end=timestamp(record.get('updated_at') or record['created_at'])
+    end=(datetime.now(timezone.utc) if record.get('state') in ACTIVE else
+         timestamp(record.get('updated_at') or record['created_at']))
     lookback=min(300,max(0,int(settings.get('lookback_seconds',30))))
     skew=min(300,max(0,int(settings.get('clock_skew_seconds',10))))
     grace=min(900,max(0,int(settings.get('ingest_grace_seconds',120))))
     maximum=min(86400,max(60,int(settings.get('max_window_seconds',3600))))
     first=start-timedelta(seconds=lookback+skew)
-    last=end+timedelta(seconds=grace+skew)
+    last=end+timedelta(seconds=skew)
     oversized=(last-first).total_seconds()>maximum
     # Never silently narrow an execution: refuse oversized windows.
-    return {'start':iso(first),'end':iso(last),'ingest_deadline':iso(last),
+    return {'start':iso(first),'end':iso(last),'ingest_deadline':iso(last+timedelta(seconds=grace)), 'policy':'event_window_v2',
             'lookback_seconds':lookback,'clock_skew_seconds':skew,'ingest_grace_seconds':grace,
             'oversized':oversized}
 
@@ -127,6 +148,7 @@ def normalize(hit,record):
             'source_timestamp':text(system.get('systemTime') or soc.get('timestamp') or web.get('timestamp')),
             'agent':{k:text((source.get('agent') or {}).get(k)) for k in ('id','name','ip')},
             'rule':{'id':text(rule.get('id')),'level':rule.get('level') if type(rule.get('level')) is int else None,
+                    'mitre_ids':sorted({v for v in (rule.get('mitre') or {}).get('id',[]) if isinstance(v,str) and re.fullmatch(r'T[0-9]{4}(?:\.[0-9]{3})?',v)}),
                     'description':safe_text(str(rule.get('description','')),limit=500),'description_sha256':hashlib.sha256(str(rule.get('description','')).encode()).hexdigest()},
             'source':{'channel':text(system.get('channel')),'event_id':text(system.get('eventID')),
                       'record_id':text(system.get('eventRecordID')),'computer':text(system.get('computer')),
@@ -190,6 +212,8 @@ def build_report(record,state,events):
     execution_contracts.verify_expected(contract,record)
     report['expected_reality'] = execution_contracts.comparison(record, contract, state, events)
     report['expected_contract'] = contract
+    report['assessment'] = assessment(report, alerts)
+    report['execution_state'] = record.get('state')
     report['counts_v2'] = document_counts(events, state)
     report['operations'] = {'collection_seconds':state.get('duration_seconds'), 'query_count':state.get('query_count'),
         'identity':state.get('identity_policy'), 'api_health':state.get('api_health','unknown'),
@@ -242,6 +266,7 @@ def markdown(report):
            '; telemetry: '+report['telemetry_status']+'; detection: '+report['detection_status'],
            '', 'Chế độ: '+str(report['collection'].get('mode','unknown')),
            'Query window: '+md(report['collection'].get('window')),
+           'Đánh giá Python: '+md(report.get('assessment',{})),
            'Counts: '+md(report['counts']), '', '| Bước | Lệnh | Hành vi | Telemetry | Detection |',
            '|---|---|---|---|---|']
     for row in report['steps']:lines.append('| '+ ' | '.join(md(row.get(k,'')) for k in ('index','command_status','behavior_status','telemetry_status','detection_status'))+' |')
@@ -282,24 +307,16 @@ def collect(identifier, connector_factory=wazuh_connector.Connector):
     path=directory(identifier)
     fd=os.open(path/'.lock',os.O_CREAT|os.O_RDWR|os.O_NOFOLLOW,0o600)
     with os.fdopen(fd,'a') as lock:
-        try:
-            if fcntl is not None:
-                fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-            else:
-                lock.seek(0, 2)
-                if lock.tell() == 0:
-                    lock.write('\0')
-                    lock.flush()
-                lock.seek(0)
-                msvcrt.locking(lock.fileno(),msvcrt.LK_NBLCK,1)
-        except (BlockingIOError,OSError):return
+        try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError:return
         started=time.monotonic()
         record=scenario_execution.read(identifier);settings=config()
         prior=load(path/'telemetry_state.json',{})
-        if prior.get('last_attempt_epoch') and time.time()-prior['last_attempt_epoch']<max(10,settings.get('refresh_cooldown_seconds',30)):return
+        if prior.get('last_attempt_epoch') and time.time()-prior['last_attempt_epoch']<max(3,min(60,settings.get('poll_interval_seconds',5))):return
         window=window_for(record,settings,prior.get('window') if prior.get('execution_terminal') else None)
         state={'schema_version':'telemetry_collection_v1','status':'collecting','window':window,
-               'execution_terminal':record.get('state') in ('completed','failed','stopped','blocked'),
+               'execution_terminal':record.get('state') in TERMINAL,
+               'execution_state':record.get('state'), 'attempt_count':prior.get('attempt_count',0)+1,
                'last_attempt_epoch':time.time(),'mode':prior.get('mode','unknown'),
                'ingest_pending':datetime.now(timezone.utc)<timestamp(window['ingest_deadline']),
                'truncated':False,'error':None,'source_states':{'configured':'unknown','observed_at_source':'unknown',
@@ -315,7 +332,7 @@ def collect(identifier, connector_factory=wazuh_connector.Connector):
                 identity=client.identity(record['target'])
                 # A live directory does not attest the identity during a historical window.
                 recent=(datetime.now(timezone.utc)-timestamp(window['end'])).total_seconds() <= 300
-                verified=recent
+                verified=recent and record.get('state') != 'ready'
                 state['api_health']='available'
                 if binding and any(identity.get(k)!=binding['agent'].get(k) for k in ('id','ip','name')):
                     raise wazuh_connector.ConnectorError('identity_binding_drift')
@@ -323,10 +340,19 @@ def collect(identifier, connector_factory=wazuh_connector.Connector):
                 if error.code=='identity_binding_drift':raise
                 state['api_health']=error.code
                 identity={'ip':record['target']['ip']};verified=False
+            attestation=recorded_identity(prior,record)
+            if attestation and attestation.get('target')==record['target']['ip']:
+                saved=attestation['agent']
+                if identity.get('id') and any(identity.get(k)!=saved.get(k) for k in ('id','ip','name')):
+                    raise wazuh_connector.ConnectorError('identity_binding_drift')
+                identity=saved;verified=True
             if binding:
                 identity=binding['agent'];verified=True
+            if verified:
+                state['identity_attestation']=attestation or {'agent':identity,'target':record['target']['ip'],
+                    'captured_at':now(),'execution_id':identifier,'origin':'historical_binding' if binding else 'live_api'}
             state['identity_policy']={'verified':verified,
-                'kind':'historical_binding' if binding else 'live_api' if verified else 'candidate_only',
+                'kind':'historical_binding' if binding else 'execution_snapshot' if attestation else 'live_api' if verified else 'candidate_only',
                 'binding':binding, 'live_health_inferred_from_logs':False}
             result=client.collect(identity,window)
             record=dict(record)
@@ -338,7 +364,11 @@ def collect(identifier, connector_factory=wazuh_connector.Connector):
                     if start<=timestamp(window['end']) and end>=timestamp(window['start']):record['_overlapping_execution']=True
                 except (KeyError,ValueError,TypeError):record['_overlapping_execution']=True
             by_id={(e['index'],e['document_id']):e for e in events}
-            for hit in result.pop('hits'):
+            if not verified:
+                for e in by_id.values():
+                    e['correlation']={'method':'unverified_identity_candidate','matched_fields':[],
+                        'confidence':'none','ambiguous':True,'step_index':None}
+            for hit in result.pop('hits'): 
                 e=normalize(hit,record)
                 if e['document_id'] is None or e['index'] is None:raise wazuh_connector.ConnectorError('invalid_document_identity')
                 # Defense in depth: server filters are not sufficient identity verification.
@@ -348,19 +378,23 @@ def collect(identifier, connector_factory=wazuh_connector.Connector):
                 if not verified:
                     e['correlation']={'method':'unverified_identity_candidate','matched_fields':[],
                         'confidence':'none','ambiguous':True,'step_index':None}
+                e['first_observed_by_collector_at']=by_id.get((e['index'],e['document_id']),{}).get('first_observed_by_collector_at') or now()
                 by_id[(e['index'],e['document_id'])]=e
             maximum=min(5000,max(1,settings.get('max_events',1000)))
             events=list(by_id.values())
             if len(events)>maximum:result['truncated']=True;events=events[:maximum]
-            state.update(result,identity=identity,status='waiting_ingest' if state['ingest_pending'] else 'complete')
+            state.update(result,identity=identity,status='watching_execution' if not state['execution_terminal'] else 'waiting_ingest' if state['ingest_pending'] else 'complete')
             if events:state['source_states'].update(received_by_wazuh='observed',indexed='observed')
         except wazuh_connector.ConnectorError as error:
             state.update(status='degraded',error={'code':error.code,'http_status':error.status})
+            if error.code in ('identity_binding_drift','hit_identity_drift'):
+                events=[];state['identity_policy']={'verified':False,'kind':'identity_drift'}
         except Exception:
             state.update(status='degraded',error={'code':'local_collection_failure','http_status':None})
         save(path/'events.json',events)
         state.update(completed_at=now(),event_document_ids=[{'index':e['index'],'id':e['document_id']} for e in events],
                      cursor={'strategy':'requery_frozen_window_and_dedup','seen_count':len(events)})
+        state['total_query_count']=prior.get('total_query_count',0)+int(getattr(locals().get('client'),'query_count',0) or 0) if isinstance(getattr(locals().get('client'),'query_count',0),int) else prior.get('total_query_count',0)
         state['duration_seconds']=round(time.monotonic()-started,3)
         state['query_count']=getattr(locals().get('client'), 'query_count', None)
         if not isinstance(state['query_count'],int):state['query_count']=None
@@ -369,8 +403,12 @@ def collect(identifier, connector_factory=wazuh_connector.Connector):
             contract=load(scenario_execution.folder(identifier)/'execution_expected.json') or historical_expected(record)
             save(expected_path,contract)
         report=build_report(record,state,events)
-        snapshot=path/('snapshot-'+str(time.time_ns())+'.json')
-        save(snapshot,report)
+        # Keep periodic audit snapshots without multiplying full reports every poll.
+        snapshot_due=(time.time()-prior.get('last_snapshot_epoch',0)>=60
+                      or state['status'] in ('complete','degraded'))
+        state['last_snapshot_epoch']=time.time() if snapshot_due else prior.get('last_snapshot_epoch',0)
+        if snapshot_due:
+            save(path/('snapshot-'+str(time.time_ns())+'.json'),report)
         save(path/'telemetry_state.json',state);save(path/'report.json',report);save(path/'report.md',markdown(report))
         return report
 
@@ -378,41 +416,91 @@ def collect(identifier, connector_factory=wazuh_connector.Connector):
 def read(identifier):
     from . import scenario_execution
     record=scenario_execution.read(identifier)  # Validate execution ownership/existence, never dispatch.
-    return load(directory(identifier)/'report.json') or build_report(record,{'status':'not_collected','mode':'unknown','error':None},[])
+    path=directory(identifier)
+    report=load(path/'report.json') or build_report(record,{'status':'not_collected','mode':'unknown','error':None},[])
+    state=load(path/'telemetry_state.json',{})
+    if state.get('status')=='collecting':
+        report['collection']['status']='collecting'
+        report['collection']['refresh_in_progress']=True
+    report['execution_state']=record.get('state')
+    return report
 
 
 def enqueue(identifier):
+    """One bounded background watcher per execution; never dispatch CALDERA."""
     from . import scenario_execution
     record=scenario_execution.read(identifier)
-    if record.get('state') not in ('completed','failed','stopped','blocked'):
-        return {'status':'waiting_execution_end','execution_id':identifier}
+    if record.get('state') not in ACTIVE|TERMINAL:
+        return {'status':'waiting_confirmation','execution_id':identifier}
     with LOCK:
-        if identifier in THREADS and THREADS[identifier].is_alive():return {'status':'collecting','execution_id':identifier}
+        if identifier in THREADS and THREADS[identifier].is_alive():
+            return {'status':'collecting','execution_id':identifier}
+        path=directory(identifier)
+        if not (path/'telemetry_state.json').exists():
+            state={'status':'queued','mode':'unknown','error':None,'execution_state':record['state']}
+            save(path/'telemetry_state.json',state)
+            save(path/'report.json',build_report(record,state,[]))
         def worker():
             try:
-                report=collect(identifier)
-                state=(report or {}).get('collection') or load(directory(identifier)/'telemetry_state.json',{})
-                if state.get('ingest_pending') and not state.get('error') and config().get('enabled'):
-                    delay=max(0,min(910,(timestamp(state['window']['ingest_deadline'])-datetime.now(timezone.utc)).total_seconds()))
-                    # One final bounded query after ingest grace. No repeated network polling.
-                    time.sleep(delay+1)
-                    collect(identifier)
+                failures=0
+                deadline=time.monotonic()+min(86400,max(60,int(config().get('max_window_seconds',3600))))+910
+                while True:
+                    report=collect(identifier)
+                    state=(report or {}).get('collection') or load(path/'telemetry_state.json',{})
+                    failures=failures+1 if state.get('error') else 0
+                    if not config().get('enabled') or state.get('status')=='complete':break
+                    if failures>=3 or time.monotonic()>=deadline or state.get('window',{}).get('oversized'):break
+                    interval=max(3,min(60,int(config().get('poll_interval_seconds',5))))
+                    time.sleep(min(60,interval*(2**failures)))
+            except Exception:
+                # A reporting failure must never fail execution or cause a redispatch.
+                state=load(path/'telemetry_state.json',{})
+                state.update(status='degraded',error={'code':'report_worker_failure','http_status':None})
+                save(path/'telemetry_state.json',state)
             finally:
-                with LOCK:THREADS.pop(identifier,None)
+                try:
+                    state=load(path/'telemetry_state.json',{})
+                    state['watcher_active']=False
+                    if state.get('status') not in ('complete','degraded'):
+                        state.update(status='degraded',error={'code':'collection_budget_exhausted','http_status':None})
+                    save(path/'telemetry_state.json',state)
+                    latest=scenario_execution.read(identifier)
+                    report=build_report(latest,state,load(path/'events.json',[]))
+                    save(path/'report.json',report);save(path/'report.md',markdown(report))
+                finally:
+                    with LOCK:THREADS.pop(identifier,None)
         thread=threading.Thread(target=worker,daemon=True,name='telemetry-'+identifier[:8])
         THREADS[identifier]=thread;thread.start()
     return {'status':'queued','execution_id':identifier}
 
 
 def initialize():
-    """Resume unfinished collection journals only; never execute or modify old executions."""
+    """Resume journals and active executions only; no historical backfill/dispatch."""
+    from . import scenario_execution
     root=ROOT/'telemetry_reports'
     if root.is_symlink():return
+    ids=set()
     for path in list(root.glob('*/telemetry_state.json'))[:100]:
         state=load(path,{})
-        if state.get('status') in ('collecting','waiting_ingest'):
-            try:enqueue(path.parent.name)
-            except (ValueError,OSError):pass
+        if state.get('status') in ('queued','collecting','watching_execution','waiting_ingest'):
+            ids.add(path.parent.name)
+    for record in scenario_execution.history(limit=None):
+        if record.get('state') in ACTIVE:ids.add(record['id'])
+    for identifier in sorted(ids)[:100]:
+        try:enqueue(identifier)
+        except (ValueError,OSError):pass
+
+
+def assessment(report, alerts):
+    """Rule tags are evidence metadata, never a behavioral detection verdict."""
+    expected=set(report['expected_reality'].get('techniques',{}).get('expected',[]))
+    observed=set(v for e in alerts for v in e['rule'].get('mitre_ids',[]))
+    launch=[e for e in alerts if e['source'].get('event_id') in ('1','4688')]
+    return {'schema_version':'deterministic_assessment_v1','processor':'python','llm_requests':0,
+        'associated_alerts':len(alerts),'process_launch_alerts':len(launch),
+        'rule_technique_tags':sorted(observed),'expected_technique_tags':sorted(expected),
+        'matching_rule_tags':sorted(expected & observed),'technique_detection':'not_evaluable',
+        'explanation':'Alert tương quan cho biết hoạt động liên quan tới execution. Process launch và MITRE tag không tự chứng minh phát hiện kỹ thuật; cần tiêu chí rule/hành vi đã kiểm chứng.'}
 
 
 def document_counts(events, state):
@@ -426,7 +514,7 @@ def document_counts(events, state):
         elif all(source.get(k) for k in ('record_id','channel','computer')):
             identities.add((e['agent']['id'],source['computer'],source['channel'],source['record_id'],e.get('source_timestamp')))
         else: unresolved += 1
-    success = state.get('status') in ('complete','waiting_ingest') and not state.get('error')
+    success = state.get('status') in ('complete','waiting_ingest','watching_execution') and not state.get('error')
     exact = success and not state.get('truncated')
     return {'candidate_alert_documents':len(alerts) if success or alerts else None,
         'correlated_alert_documents':len(correlated) if state.get('identity_policy',{}).get('verified') and (success or correlated) else None,

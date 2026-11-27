@@ -16,7 +16,7 @@ class TestMergeDownloads(unittest.TestCase):
     def test_download_name_uses_recorded_utc_time_and_full_run_id(self):
         with tempfile.TemporaryDirectory() as temp:
             directory = Path(temp)
-            job = {'id': '1258e4a1534541a49a17557578bf6c13', 'request': {'target_ip': '192.0.2.10'},
+            job = {'id': '1258e4a1534541a49a17557578bf6c13', 'request': {'target_ip': '192.168.73.130'},
                    'report': {'finished_at': '2026-11-11T00:57:14-08:00'}}
             expected = 'target_profile_192-168-73-130_20261111T085714Z_1258e4a1534541a49a17557578bf6c13.json'
             self.assertEqual(download_name(job, directory), expected)
@@ -31,7 +31,7 @@ class TestMergeDownloads(unittest.TestCase):
                 'stop_reason': 'llm_error', 'finished_at': '2026-11-11T08:57:14Z'}))
             (directory / 'ai_trace.json').write_text(json.dumps([{'event': 'llm_error', 'message': 'LLM HTTP 400', 'at': '2026-11-11T08:57:14Z'}]))
             (directory / 'target_profile.json').write_text('{}')
-            job = hydrate({'id': 'a' * 32, 'status': 'completed', 'request': {'target_ip': '192.0.2.10'}}, directory)
+            job = hydrate({'id': 'a' * 32, 'status': 'completed', 'request': {'target_ip': '192.168.73.130'}}, directory)
             self.assertEqual(job['status'], 'partial')
             self.assertEqual(job['report']['failure']['turn'], 2)
             self.assertTrue(job['events'])
@@ -42,7 +42,7 @@ class TestMergeDownloads(unittest.TestCase):
             root = Path(temp); identifier = 'd' * 32; directory = root / identifier; directory.mkdir()
             original = b'{ "id": "existing", "capabilities": {"art_ready": null} }\n'
             (directory / 'target_profile.json').write_bytes(original)
-            job = {'id': identifier, 'status': 'partial', 'created_at': '2026-11-11T08:57:14Z', 'request': {'target_ip': '192.0.2.10'}}
+            job = {'id': identifier, 'status': 'partial', 'created_at': '2026-11-11T08:57:14Z', 'request': {'target_ip': '192.168.73.130'}}
             before = sorted(p.name for p in directory.iterdir())
             names = []
             with patch.object(app, 'OUTPUTS', root), patch.object(app, 'JOBS', {identifier: job}):

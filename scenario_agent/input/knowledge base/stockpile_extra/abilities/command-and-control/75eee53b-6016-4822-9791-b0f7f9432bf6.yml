@@ -1,7 +1,7 @@
 - id: 75eee53b-6016-4822-9791-b0f7f9432bf6
   name: TeamViewer Files Detected Test on Windows (Generated from Atomic Red Team)
   description: |
-    Ability for Remote Access Tools (ATT&CK T1219).
+    Ability for Remote Access Tools (ATT&CK T1219). 
     Downloads, installs, and executes TeamViewer on the victim machine.
     Generated from Atomic Red Team procedures (8ca3b96d-8983-4a7f-b125-fc98cc0a2aa0); review and test safely before use.
   tactic: command-and-control

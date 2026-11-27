@@ -1,0 +1,28 @@
+- id: xss-browser-proof-000000000003
+  name: DVWA Reflected XSS Execution Proof via Headless Browser
+  description: >-
+    Sends a harmless script marker to the DVWA reflected XSS module, records the HTTP-side reflection, then runs a versioned headless-browser verifier that reports whether the marker JavaScript actually executed. Reflection alone is never a success verdict.
+  technique_id: T1059.007
+  technique_name: JavaScript/JScript
+  repeatable: false
+  executors:
+    - name: psh
+      platform: windows
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $base = 'http://192.168.1.150:8080/dvwa'
+        $jar = 'C:\SOC-Lab\WEB\demo\session.txt'
+        $helper = 'C:\SOC-Lab\config\xss_browser_verifier.ps1'
+        if (-not (Test-Path $jar)) { Write-Output 'WEB01_XSS_ERROR session_missing'; exit 1 }
+        if (-not (Test-Path $helper)) { Write-Output 'WEB01_XSS_ERROR browser_verifier_missing'; exit 1 }
+        $payload = '<script>document.title="XSS_EXEC_MARKER";document.documentElement.setAttribute("data-demo","xss-exec");</script>'
+        $encoded = [uri]::EscapeDataString($payload)
+        $http = (curl.exe -s -b $jar "$base/vulnerabilities/xss_r/?name=$encoded") -join "`n"
+        $reflected = $http.Contains('XSS_EXEC_MARKER')
+        Write-Output ("WEB01_XSS http_reflection_recorded=" + $reflected + " (reflection alone is not execution proof)")
+        $verdict = & $helper -BaseUrl $base -JarPath $jar -Payload $payload
+        Write-Output $verdict
+        if ("$verdict" -match 'XSS_BROWSER_OK') { Write-Output 'WEB01_XSS_OK marker_executed_in_browser'; exit 0 }
+        Write-Output 'WEB01_XSS_VERDICT_NEGATIVE browser_execution_not_proven'
+        exit 1
+      timeout: 150

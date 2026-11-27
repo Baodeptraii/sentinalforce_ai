@@ -12,9 +12,7 @@
         DVWA_URL="${DVWA_URL:-http://127.0.0.1:80/dvwa}"
         COOKIE_FILE="/tmp/dvwa_cookie.txt"
         curl -s -c "$COOKIE_FILE" -b "$COOKIE_FILE" "$DVWA_URL/login.php" > /dev/null
-        DVWA_USER="${DVWA_USER:-admin}"
-        : "${DVWA_PASSWORD:?DVWA_PASSWORD must be set outside the package}"
-        curl -s -c "$COOKIE_FILE" -b "$COOKIE_FILE" -d "username=$DVWA_USER&password=$DVWA_PASSWORD&Login=Login" "$DVWA_URL/login.php" > /dev/null
+        curl -s -c "$COOKIE_FILE" -b "$COOKIE_FILE" -d "username=admin&password=password&Login=Login" "$DVWA_URL/login.php" > /dev/null
         curl -s -c "$COOKIE_FILE" -b "$COOKIE_FILE" "$DVWA_URL/security.php" -d "security=low&seclev_submit=Submit" > /dev/null
         echo "[+] Initialized DVWA session with security=low"
         exit 0
@@ -25,9 +23,7 @@
         $DvwaUrl = if ($env:DVWA_URL) { $env:DVWA_URL } else { "http://127.0.0.1:80/dvwa" }
         $CookieFile = "$env:TEMP\dvwa_cookie.txt"
         curl.exe -s -c "$CookieFile" -b "$CookieFile" "$DvwaUrl/login.php" | Out-Null
-        $DvwaUser = if ($env:DVWA_USER) { $env:DVWA_USER } else { "admin" }
-        if (-not $env:DVWA_PASSWORD) { throw "DVWA_PASSWORD must be set outside the package" }
-        curl.exe -s -c "$CookieFile" -b "$CookieFile" -d "username=$DvwaUser&password=$env:DVWA_PASSWORD&Login=Login" "$DvwaUrl/login.php" | Out-Null
+        curl.exe -s -c "$CookieFile" -b "$CookieFile" -d "username=admin&password=password&Login=Login" "$DvwaUrl/login.php" | Out-Null
         curl.exe -s -c "$CookieFile" -b "$CookieFile" "$DvwaUrl/security.php" -d "security=low&seclev_submit=Submit" | Out-Null
         Write-Output "[+] Initialized DVWA session with security=low"
         exit 0

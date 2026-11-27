@@ -18,7 +18,6 @@ from .runner import save
 from .survey import ROOT, now
 from .contracts import TargetProfile
 from .llm import redact
-from .runtime_paths import resolve_runtime
 
 OUTPUTS = ROOT / 'scenario_outputs'
 LOCK = threading.RLock()
@@ -30,10 +29,7 @@ DOWNLOADS = {'token_metrics.json','grounding_diagnostics.json', 'behavior_analys
 
 
 def input_module(root):
-    runtime = root / 'scenario_agent'
-    spec = importlib.util.spec_from_file_location('_scenario_survey_input', runtime/'survey_input.py')
-    if spec is None or spec.loader is None:
-        raise ValueError('Survey input module unavailable.')
+    spec = importlib.util.spec_from_file_location('_scenario_survey_input', root/'scenario_agent/survey_input.py')
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -198,7 +194,8 @@ def evidence_for(profile):
 
 def start(data, config, resume_id=None):
     global ACTIVE
-    root, python = resolve_runtime(config)
+    root = Path(config.get('scenario_root', '/home/soc/build_scenario_agent')).resolve()
+    python = root / '.venv/bin/python'
     if not python.is_file() or not (root / 'data/catalog.sqlite').is_file():
         raise ValueError('Scenario runtime/catalog unavailable.')
     with LOCK:
@@ -225,6 +222,17 @@ def start(data, config, resume_id=None):
             loader = input_module(root)
             if data.get('input_kind') == 'survey_v2' and not data.get('survey_run_id'): raise ValueError('Survey v2 cần survey_run_id; không hạ xuống profile_only.')
             source = survey_snapshot(data['survey_run_id'], loader) if data.get('survey_run_id') else None
+            from . import fixed_case_registry
+            from .runtime_fixed_cases import CASE_SCOPE, CASE_CHAINS, CASE_TITLES, CASE_REQUEST_TEXT
+            if data.get('case_id'):
+                fixed = fixed_case_registry.resolve_case(data['case_id'])
+            else:
+                fixed = fixed_case_registry.classify_case(data.get('text') or '')
+            user_text = data.get('text')
+            if fixed:
+                case_id = fixed['case_id']
+                data = dict(data, text=CASE_REQUEST_TEXT[case_id], scope=list(CASE_SCOPE[case_id]),
+                            max_steps=len(CASE_CHAINS[case_id]))
             incoming = dict(data)
             if source: incoming['profile'] = loader.planning_target(source)
             profile, adapted, policy = adapt(incoming, config)
@@ -241,6 +249,10 @@ def start(data, config, resume_id=None):
             identifier = uuid.uuid4().hex
             folder = directory(identifier)
             folder.mkdir(parents=True)
+            if fixed:
+                save(folder / 'fixed_case.json', {'case_id': fixed['case_id'], 'spec_version': fixed['spec_version'],
+                     'matched_by': fixed['matched_by'], 'user_text': user_text,
+                     'title': CASE_TITLES[fixed['case_id']]})
             for name, value in [('target_profile.json', profile), ('planning_target.json', adapted),
                                 ('policy.json', policy), ('provenance.json', provenance),
                                 ('request.json', {'text': data['text'], 'scope': policy['planning_scope'], 'max_steps': policy['max_steps'], 'survey_run_id':data.get('survey_run_id'), 'input_kind':'survey_v2' if source else 'profile_only'})]:
@@ -248,7 +260,9 @@ def start(data, config, resume_id=None):
             input_manifest = loader.snapshot(source, folder/'input', {'text': data['text']}, policy) if source else None
             job = {'id': identifier, 'status': 'running', 'created_at': now(),
                    'target_id': profile['id'], 'target_ip': profile['address'], 'text': data['text'],
-                   'mode': 'plan_only', 'execution_authorized': False}
+                   'mode': 'plan_only', 'execution_authorized': False,
+                   'fixed_case': {'case_id': fixed['case_id'], 'title': CASE_TITLES[fixed['case_id']],
+                                  'matched_by': fixed['matched_by']} if fixed else None}
             if input_manifest:
                 job.update(adapter_version=loader.ADAPTER, input_manifest_sha256=hashlib.sha256((folder/'input/input_manifest.json').read_bytes()).hexdigest())
         save(folder / 'job.json', job)
@@ -288,7 +302,8 @@ def delete(identifier):
 def regenerate(identifier, config):
     """New job, same frozen Survey/profile and effective clarified request."""
     global ACTIVE
-    root, python = resolve_runtime(config)
+    root = Path(config.get('scenario_root', '/home/soc/build_scenario_agent')).resolve()
+    python = root/'.venv/bin/python'
     if not python.is_file() or not (root/'data/catalog.sqlite').is_file():
         raise ValueError('Scenario runtime/catalog unavailable.')
     with LOCK:
@@ -301,6 +316,11 @@ def regenerate(identifier, config):
         adapt(dict(request, profile=profile), config)  # Enforce current target allowlist.
         names = ['target_profile.json', 'planning_target.json', 'policy.json', 'provenance.json', 'request.json']
         for name in names: checked_download(source, name)
+        marker = source / 'fixed_case.json'
+        if marker.is_file():
+            if marker.is_symlink() or source.resolve() not in marker.resolve().parents:
+                raise ValueError('Invalid marker path')
+            names.append('fixed_case.json')
         frozen = source/'input'
         if original.get('adapter_version') and not frozen.is_dir(): raise ValueError('Input snapshot missing.')
         if frozen.exists():

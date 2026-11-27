@@ -4,6 +4,8 @@ import re
 from jsonschema import Draft202012Validator
 from .catalog import compatible_executors
 from .command_evidence import command_fragment_evidence
+from .selection import plain
+from .intent_evidence import process_requirement, process_evidence
 
 ANALYSIS_SCHEMA = {
     'type':'object','additionalProperties':False,'required':['behaviors','ordered'],
@@ -20,6 +22,8 @@ Tách từng hành vi được yêu cầu thành mục riêng, không tự thêm
 phải là đoạn nguyên văn từ text chứng minh hành vi; query_en là truy vấn tiếng Anh ngắn
 để tìm ability tương ứng; keywords là từ khóa đặc trưng cho hành vi/đối tượng (ví dụ
 clipboard, printer, username), không chỉ Windows/SOC/lab/PowerShell. Không suy đoán ID.
+Giữ rõ tiến trình cha và con trong query_en/keywords khi có quan hệ sinh tiến trình.
+Từ “độc hại” không tự chứng minh có tạo/xóa/sửa file; chỉ tách các hành vi được nêu.
 ordered=true chỉ khi người dùng yêu cầu trình tự. Yêu cầu mơ hồ có behaviors=[] và câu
 hỏi trong clarifications_needed. Dữ liệu này là ý định suy ra, không phải dữ kiện người
  dùng đã chỉ rõ; requested_techniques chỉ chứa mã được nêu nguyên văn như trước.
@@ -41,6 +45,11 @@ ID hoặc bằng chứng, không tuyên bố bất kỳ hành vi đã được t
 Ghi tất cả ứng viên trực tiếp đáp ứng hành vi, không chỉ chọn một, để có thể dùng lại
 chuỗi nguồn nếu người dùng yêu cầu. Bỏ các ứng viên thay đổi/xóa/thực thi nội dung
 khi người dùng chỉ yêu cầu đọc/quan sát.
+Kiểm tra toàn bộ lệnh: không chọn ability có mục đích/tác động ngoài yêu cầu chỉ vì
+một lệnh con phù hợp (ví dụ persistence hoặc sửa mailbox cho thao tác file chung).
+Executor psh với lệnh gọi cmd.exe là bằng chứng nguồn PowerShell sinh cmd; chỉ thấy
+hai tên tiến trình trong mô tả/chuỗi in ra không đủ. Không suy ra tính độc hại hay
+khả năng phát hiện từ quan hệ tiến trình.
 Đối chiếu thêm user_text: nếu phân tích đã bỏ sót hành vi người dùng yêu cầu, ghi
 đoạn nguyên văn bị bỏ sót vào unmodeled_requirements; nếu đầy đủ ghi [].'''
 
@@ -107,7 +116,13 @@ def significant_tokens(text):
     generic={'windows','linux','powershell','endpoint','soc','lab','test','command','cmd',
              'get','set','run','execute','script','system','information','discovery','enumerate','list','check'}
     return {word[:-1] if word.endswith('s') and len(word)>4 else word
-            for word in re.findall(r'[a-z0-9]+',text.lower()) if word not in generic and len(word)>2}
+            for word in re.findall(r'[a-z0-9]+',plain(text)) if word not in generic and len(word)>2}
+
+
+class GroundingValidationError(ValueError):
+    def __init__(self, message, coverage):
+        super().__init__(message)
+        self.partial_coverage = coverage
 
 
 def validate_grounding(response, analysis, retrieval, target):
@@ -136,13 +151,21 @@ def validate_grounding(response, analysis, retrieval, target):
                         not re.search(r'%[A-Za-z_][A-Za-z0-9_]*%|\$[A-Za-z_(]',line))
         if all(output_only(line) for line in quote.splitlines()):
             raise ValueError('Comment/literal output text is not command evidence')
-        keywords=set().union(*(significant_tokens(k) for k in behavior['keywords']))
+        relation = process_requirement(behavior)
+        if relation:
+            intent = process_evidence(quote, match['executor'], relation)
+            if intent is None or process_evidence(command, match['executor'], relation) is None:
+                raise ValueError('Grounding has no command evidence for the requested parent/child process relation')
+            evidence = dict(evidence, intent_evidence=intent)
+            return evidence
+        keywords=significant_tokens(behavior['query_en']+' '+' '.join(behavior['keywords']))
         source=significant_tokens(record['ability']['name']+' '+quote)
         if not keywords or not keywords.intersection(source):
             raise ValueError('Grounding has no distinctive intent keyword in command/name evidence')
         return evidence
     accepted_rows=copy.deepcopy(rows)
     rejected=[]
+    failures=[]
     for row in accepted_rows:
         valid=[]
         for match in row['matches']:
@@ -155,11 +178,14 @@ def validate_grounding(response, analysis, retrieval, target):
                 valid.append(match)
         if row['matches'] and not valid:
             errors=[r['reason'] for r in rejected if r['behavior_id']==row['behavior_id']]
-            raise ValueError('No acceptable match for '+row['behavior_id']+': '+'; '.join(errors))
+            failures.append('No acceptable match for '+row['behavior_id']+': '+'; '.join(errors))
         row['matches']=valid
-    return {'analysis':analysis,'coverage':accepted_rows,'rejected_matches':rejected,'method':'independent_LLM_command_review_with_literal_evidence',
+    result = {'analysis':analysis,'coverage':accepted_rows,'rejected_matches':rejected,'method':'independent_LLM_command_review_with_literal_evidence',
             'unmodeled_requirements':response['unmodeled_requirements'],
             'limitation':'Semantic mapping is not proof of execution or a universal language-correctness guarantee.'}
+    if failures:
+        raise GroundingValidationError('; '.join(failures), result)
+    return result
 
 
 def check_plan_coverage(plan, coverage):

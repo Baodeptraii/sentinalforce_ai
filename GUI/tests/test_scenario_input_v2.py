@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from engine import scenario_bridge as bridge
 from engine.survey import load_config
 
-RUNTIME = Path('scenario_agent')
+RUNTIME = Path('/home/soc/build_scenario_agent')
 GUI = Path(__file__).resolve().parents[1]
 BUNDLE = GUI/'review/survey-v2-8722'
 

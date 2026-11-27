@@ -62,7 +62,7 @@ class TestLLMProtocol(unittest.TestCase):
 
     def test_agent_roundtrip_metadata_is_memory_only_and_profile_is_evidence(self):
         client = self.client([tool(), tool('finish_survey', 'two')])
-        request = {'target_ip': '192.0.2.11', 'survey_scope': ['endpoint'], 'web_checks': []}
+        request = {'target_ip': '192.168.73.199', 'survey_scope': ['endpoint'], 'web_checks': []}
         agent = {'host': 'FIXTURE', 'platform': 'windows', 'paw': 'fixture', 'privilege': 'User'}
         with tempfile.TemporaryDirectory() as temp, patch.object(survey, 'collect_endpoint', return_value=endpoint()):
             directory = Path(temp)
@@ -78,7 +78,7 @@ class TestLLMProtocol(unittest.TestCase):
         body = {'error': {'status': 'INVALID_ARGUMENT', 'message': 'Missing thought_signature. key-fixture-secret OPAQUE-SIGNATURE ' + 'x' * 4000}}
         error = HTTPError('http://fixture', 400, '', {}, io.BytesIO(json.dumps(body).encode()))
         client = self.client([tool(), error])
-        request = {'target_ip': '192.0.2.11', 'survey_scope': ['endpoint'], 'web_checks': []}
+        request = {'target_ip': '192.168.73.199', 'survey_scope': ['endpoint'], 'web_checks': []}
         agent = {'host': 'FIXTURE', 'platform': 'windows', 'paw': 'fixture', 'privilege': 'User'}
         with tempfile.TemporaryDirectory() as temp, patch.object(survey, 'collect_endpoint', return_value=endpoint()) as collect:
             directory = Path(temp)

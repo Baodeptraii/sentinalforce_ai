@@ -1,5 +1,5 @@
 {
-  "target_ip": "192.0.2.10",
+  "target_ip": "192.168.73.130",
   "survey_scope": [
     "endpoint",
     "web"

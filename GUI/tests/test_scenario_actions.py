@@ -3,7 +3,6 @@ import hashlib
 import json
 import shutil
 import subprocess
-import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,13 +11,8 @@ from engine import scenario_bridge as bridge, scenario_actions as actions
 from engine.runner import save
 
 GUI=Path(__file__).resolve().parents[1]
-RUNTIME=GUI.parent/'scenario_agent'
-PLAN=GUI/'tests/fixtures/scenario_plan.yml'
-
-
-def runtime_python():
-    candidate=RUNTIME/'.venv'/'Scripts/python.exe' if sys.platform == 'win32' else RUNTIME/'.venv/bin/python'
-    return Path(candidate) if candidate.is_file() else Path(sys.executable)
+RUNTIME=Path('/home/soc/build_scenario_agent')
+PLAN=GUI/'scenario_outputs/dda60b6b52f64d4d864f6bd681d78820/runs/20261118_070601_thuc-thi-tien-trinh-powershell-sinh-tien-trinh-cmd_35401a0c/scenario_plan.yml'
 
 
 class ScenarioActionsTests(unittest.TestCase):
@@ -30,7 +24,7 @@ class ScenarioActionsTests(unittest.TestCase):
             p=patch.object(bridge,name,value);p.start();self.addCleanup(p.stop)
         self.identifier='a'*32;self.folder=bridge.directory(self.identifier);self.folder.mkdir(parents=True)
         profile=json.loads((GUI/'static/scenario-data.json').read_text())['profiles'][0]['profile']
-        self.config={'scenario_root':str(RUNTIME),'allowed_networks':['192.0.2.0/24']}
+        self.config={'scenario_root':str(RUNTIME),'allowed_networks':['192.168.73.0/24','192.168.1.0/24']}
         request={'text':'PowerShell sinh cmd','scope':['endpoint'],'max_steps':4}
         profile,adapted,policy=bridge.adapt(dict(request,profile=profile),self.config)
         for name,value in [('job.json',{'id':self.identifier,'status':'completed','created_at':'2026-01-01','target_id':profile['id'],'target_ip':profile['address'],'text':request['text']}),
@@ -124,7 +118,7 @@ class ScenarioActionsTests(unittest.TestCase):
         self.assertEqual(bridge.cancel(self.identifier)['status'],'cancelling')
         with self.assertRaises(ValueError):bridge.delete(self.identifier)
         with patch.object(bridge.subprocess,'Popen') as process:
-            bridge.run_worker(self.folder,RUNTIME,runtime_python(),False)
+            bridge.run_worker(self.folder,RUNTIME,RUNTIME/'.venv/bin/python',False)
         process.assert_not_called()
         self.assertEqual(bridge.public(self.identifier)['status'],'cancelled')
         self.assertIsNone(bridge.ACTIVE)
@@ -138,7 +132,7 @@ class ScenarioActionsTests(unittest.TestCase):
             bridge.cancel(self.identifier)
             return process
         with patch.object(bridge.subprocess,'Popen',side_effect=start),patch.object(bridge.os,'killpg') as kill:
-            bridge.run_worker(self.folder,RUNTIME,runtime_python(),False)
+            bridge.run_worker(self.folder,RUNTIME,RUNTIME/'.venv/bin/python',False)
         kill.assert_called_once_with(process.pid,bridge.signal.SIGTERM)
         self.assertEqual(bridge.public(self.identifier)['status'],'cancelled')
 
@@ -206,7 +200,7 @@ with patch.object(Workflow,'run',fake_run):
 llm.generate.assert_not_called()
 print(json.dumps({'text':state['text'],'request_id':state['request_id']}))
 """
-        response=subprocess.run([str(runtime_python()),'-c',script,str(GUI),str(RUNTIME),str(folder)],capture_output=True,text=True,timeout=20)
+        response=subprocess.run([str(RUNTIME/'.venv/bin/python'),'-c',script,str(GUI),str(RUNTIME),str(folder)],capture_output=True,text=True,timeout=20)
         self.assertEqual(response.returncode,0,response.stderr)
         state=json.loads(response.stdout)
         self.assertEqual(state['text'],bridge.read(self.folder/'result.json')['effective_request_text'])

@@ -249,7 +249,7 @@ test('a second submit is blocked while the first create request is unresolved', 
   const { context, elements: e } = boot();
   await new Promise(resolve => setImmediate(resolve));
   context.document.querySelector = () => ({value: 'endpoint'});
-  e['target-ip'].value = '192.0.2.10';
+  e['target-ip'].value = '192.168.73.130';
   vm.runInContext('validated=JSON.stringify(payload()); poll=()=>{};', context);
   let posts = 0, resolveCreate;
   context.fetch = async (url, options) => {
@@ -274,7 +274,7 @@ test('legacy web profiles group services for Scenario and keep raw input intact'
   const normalized = core.validateProfile(original, schema);
   assert.equal(original.services.length, 9);
   assert.equal(normalized.services.length, 4);
-  assert.equal(normalized.services.at(-1).url, 'http://192.0.2.10/');
+  assert.equal(normalized.services.at(-1).url, 'http://192.168.73.130/');
   assert.deepEqual(normalized.services.at(-1).applications.map(a => a.name), ['XAMPP', 'DVWA']);
   assert.equal(normalized.services.at(-1).applications[1].session_ready, null);
   assert.equal(JSON.stringify(original), before);
@@ -461,7 +461,7 @@ test('execute opens blocked preflight without claiming execution',async()=>{
 
 function executionFixture(state='ready') {
   return {id:'e'.repeat(32),scenario_job_id:'a'.repeat(32),state,created_at:'2026-11-21T00:00:00Z',
-    target:{host:'example-host',ip:'192.0.2.10',paw:'example-paw'},plan_sha256:'plan-hash',operation_id:null,
+    target:{host:'PTIT',ip:'192.168.1.150',paw:'datnptit'},plan_sha256:'plan-hash',operation_id:null,
     command_status:'not_run',behavior_evidence:'not_evaluated',detection:'unknown',
     preflight:{blockers:[],warnings:[],steps:[{index:1,source_ability_id:'source',executor:{name:'psh',platform:'windows'},command:'Get-Process',cleanup:[],parameters:{},registration:'matched',blockers:[]}]},
     steps:[{index:1,name:'Process discovery',state:'not_run'}]};
@@ -489,6 +489,8 @@ test('validate button requests preview only and waits for confirmation',async()=
 test('execution requires explicit IP and acknowledgement; confirm polls the same execution',async()=>{
   const {context,elements:e}=boot();await new Promise(resolve=>setImmediate(resolve));await completeScenario(context,e);
   const original=context.fetch,posts=[];let poll;
+  let reportUrl=null;
+  context.window.open=()=>({document:{},location:{replace:url=>{reportUrl=url;}},close(){}});
   context.setTimeout=(fn)=>{poll=fn;return 999999;};context.clearTimeout=()=>{};
   context.fetch=async(url,options)=>{
     if(url.endsWith('/execute'))return {ok:true,json:async()=>executionFixture()};
@@ -500,9 +502,10 @@ test('execution requires explicit IP and acknowledgement; confirm polls the same
   assert.equal(e['execution-confirm'].disabled,true);
   e['execution-target-confirm'].value='wrong';e['execution-ack'].checked=true;e['execution-ack'].onchange();
   assert.equal(e['execution-confirm'].disabled,true);
-  e['execution-target-confirm'].value='192.0.2.10';e['execution-target-confirm'].oninput();
+  e['execution-target-confirm'].value='192.168.1.150';e['execution-target-confirm'].oninput();
   assert.equal(e['execution-confirm'].disabled,false);
   await e['execution-confirm'].onclick();assert.equal(posts.length,1);
+  assert.equal(reportUrl,'/report.html?execution='+'e'.repeat(32));
   assert.equal(posts[0].plan_sha256,'plan-hash');assert.equal(posts[0].confirmed,true);
   await poll();assert.equal(e['execution-status'].textContent,'Các lệnh đã hoàn tất');
   assert.match(e['execution-detection'].textContent,/Detection: unknown/);

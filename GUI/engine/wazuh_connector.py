@@ -140,7 +140,7 @@ class Connector:
         query={'size':size,'sort':['_doc'],'query':{'bool':{'filter':[
             *([{'term':{'agent.id':identity['id']}}] if identity.get('id') else []),{'term':{'agent.ip':identity['ip']}},
             {'range':{'timestamp':{'gte':window['start'],'lte':window['end']}}}]}},
-            '_source':['timestamp','@timestamp','agent','rule.id','rule.level','rule.description','data.soc',
+            '_source':['timestamp','@timestamp','agent','rule.id','rule.level','rule.description','rule.mitre.id','data.soc',
                        'data.win.system.eventID','data.win.system.channel','data.win.system.systemTime','data.win.system.eventRecordID','data.win.system.computer',
                        'data.win.eventdata.processId','data.win.eventdata.newProcessId','data.win.eventdata.parentProcessId','data.win.eventdata.processGuid',
                        'data.win.eventdata.parentProcessGuid','data.soc_web','location','decoder.name']}

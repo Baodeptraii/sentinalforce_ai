@@ -2,7 +2,7 @@
   "caldera_url": "http://127.0.0.1:8888",
   "key_file": "~/.config/caldera-survey/api-key",
   "allowed_networks": [
-    "192.0.2.0/24"
+    "192.168.73.0/24"
   ],
   "agent_max_age_seconds": 180,
   "operation_timeout_seconds": 240,

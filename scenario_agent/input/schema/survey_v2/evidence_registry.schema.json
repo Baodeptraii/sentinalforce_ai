@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scenario local evidence registry",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "Fact": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "domain": {
+          "title": "Domain",
+          "type": "string"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "predicate": {
+          "title": "Predicate",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value"
+        },
+        "status": {
+          "enum": [
+            "observed",
+            "configured",
+            "inferred",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed At"
+        },
+        "time_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Time Reason"
+        },
+        "evidence_refs": {
+          "items": {
+            "$ref": "#/$defs/Ref"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Basis"
+        }
+      },
+      "required": [
+        "id",
+        "domain",
+        "subject",
+        "predicate",
+        "value",
+        "status",
+        "observed_at",
+        "time_reason",
+        "evidence_refs"
+      ],
+      "title": "Fact",
+      "type": "object"
+    },
+    "Gap": {
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "not_checked",
+            "out_of_scope",
+            "tool_error",
+            "truncated",
+            "stale",
+            "invalid_evidence",
+            "missing_time",
+            "insufficient_evidence"
+          ],
+          "title": "Reason",
+          "type": "string"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject",
+        "reason",
+        "detail"
+      ],
+      "title": "Gap",
+      "type": "object"
+    },
+    "Ref": {
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "pointer": {
+          "title": "Pointer",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "file",
+        "pointer",
+        "sha256",
+        "source"
+      ],
+      "title": "Ref",
+      "type": "object"
+    }
+  },
+  "required": [
+    "survey_run_id",
+    "target_id",
+    "target_ip",
+    "schema_version",
+    "evidence_root",
+    "survey_manifest_sha256",
+    "observations",
+    "opaque_observations",
+    "gaps",
+    "expanded_sources",
+    "source_fact_count",
+    "derived_fact_count"
+  ],
+  "properties": {
+    "survey_run_id": {
+      "type": "string"
+    },
+    "target_id": {
+      "type": "string"
+    },
+    "target_ip": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "evidence_root": {
+      "const": "input/survey"
+    },
+    "survey_manifest_sha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Fact"
+      }
+    },
+    "opaque_observations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Fact"
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "subject",
+          "reason",
+          "detail"
+        ],
+        "properties": {
+          "subject": {
+            "type": "string"
+          },
+          "reason": {
+            "enum": [
+              "not_checked",
+              "out_of_scope",
+              "tool_error",
+              "truncated",
+              "stale",
+              "invalid_evidence",
+              "missing_time",
+              "insufficient_evidence",
+              "unsupported_normalizer"
+            ]
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "expanded_sources": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "source_fact_count": {
+      "type": "integer"
+    },
+    "derived_fact_count": {
+      "type": "integer"
+    }
+  }
+}

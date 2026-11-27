@@ -2,7 +2,7 @@
 
 Survey có thể đăng nhập DVWA khi chọn khảo sát DVWA và `dvwa_auth.enabled=true`. Chế độ AI gọi bước này trong `probe_dvwa`, tối đa một lần cho mỗi lượt khảo sát; scripts dùng cùng bộ kiểm tra. Backend sinh Scenario chưa được triển khai trong thay đổi này.
 
-Cấu hình `dvwa_auth` chứa `base_url`, `enabled`, `credentials_file`. Tài khoản do người dùng cung cấp đã đặt trong `GUI/.secrets/dvwa.json`, quyền 0600; thư mục quyền 0700 và được loại khỏi Git. Không đưa credential vào profile, LLM, artifact hay UI. Cấu hình CALDERA, LLM và lịch sử được giữ. Backup trước thay đổi: `backups/dvwa-session-20261112T033758Z/source.tar.gz`.
+Cấu hình `dvwa_auth` chứa `base_url`, `enabled`, `credentials_file`. Credential file phải nằm ngoài package và được loại khỏi Git. Khi triển khai, giới hạn quyền đọc: Unix dùng file 0600 và thư mục cha 0700; Windows dùng ACL chỉ cấp quyền cho tài khoản chạy GUI. Bộ kiểm tra DVWA đọc credential theo cấu hình nhưng không thay thế kiểm tra quyền triển khai. Không đưa credential vào profile, LLM, artifact hay UI. Cấu hình CALDERA, LLM và lịch sử được giữ. Backup lịch sử nằm trong kho backup riêng, không phát hành cùng package; người vận hành phải giữ đường dẫn kho đó ngoài Git.
 
 Quy trình: GET login lấy CSRF; POST form login một lần với cookie jar; GET index bằng cùng cookie và xác minh đúng đường dẫn cùng dấu hiệu logout; GET security.php đọc option security được chọn. Không POST đổi security level và không chạy payload. Chỉ chấp nhận chuyển hướng cùng origin và các trang login/index/security trong base URL cấu hình. TLS luôn xác minh. Cookie tồn tại trong bộ nhớ suốt phép kiểm tra rồi được xóa.
 

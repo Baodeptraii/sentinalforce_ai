@@ -1,18 +1,37 @@
 {
-  "id": "target-example",
+  "id": "target-192-168-73-130",
   "os": {
-    "name": "Microsoft Windows",
-    "version": null,
-    "architecture": null,
-    "hostname": null,
-    "status": "unknown"
+    "name": "Microsoft Windows 10 Pro",
+    "version": "10.0.19045",
+    "architecture": "64-bit",
+    "hostname": "DESKTOP-KDAB44M",
+    "status": "observed"
   },
-  "address": "192.0.2.10",
-  "services": [],
+  "address": "192.168.73.130",
+  "services": [
+    {
+      "name": "Sysmon64",
+      "service_name": "Sysmon64",
+      "state": "Running",
+      "status": "observed"
+    },
+    {
+      "name": "Wazuh",
+      "service_name": "WazuhSvc",
+      "state": "Running",
+      "status": "observed"
+    },
+    {
+      "name": "Sandcat",
+      "paw": "sxzmzk",
+      "privilege": "Elevated",
+      "status": "observed"
+    }
+  ],
   "capabilities": {
-    "sandcat_online": null,
-    "powershell_ready": null,
-    "admin_ready": null,
+    "sandcat_online": true,
+    "powershell_ready": true,
+    "admin_ready": true,
     "web_runner_ready": null,
     "web_reachable": null,
     "dvwa_session_ready": null

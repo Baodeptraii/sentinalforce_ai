@@ -16,14 +16,14 @@ from engine.evidence_refs import resolve, validate_profile_refs
 from engine.readiness import assess
 from final_template.web_profile import aggregate_web
 
-IP='192.0.2.10'
+IP='192.168.73.130'
 CONFIG={'web_ports':[80,443,8080,8000,8443], 'max_web_ports':12,'max_web_pages':4,
         'web_scope_by_target':{IP:[{'scheme':'http','port':80}]},'web_paths':['/']}
 class Response:
     code=200; headers={}
     def __init__(self,url):self.url=url
     def geturl(self):return self.url
-    def read(self,_):return b'<title>DVWA</title><a href="https://192.0.2.10/">TLS</a><a href="http://192.0.2.10:8080/">other</a>'
+    def read(self,_):return b'<title>DVWA</title><a href="https://192.168.73.130/">TLS</a><a href="http://192.168.73.130:8080/">other</a>'
     def __enter__(self):return self
     def __exit__(self,*a):pass
 
@@ -34,10 +34,10 @@ class TestScope(unittest.TestCase):
                 build.return_value.open.side_effect=URLError('fixture error') if failure else lambda req,**kw:Response(req.full_url)
                 raw=survey.probe_web(IP,{'data':{'listeners':[{'LocalPort':p} for p in (443,8080,8000,8443,9999)]}},CONFIG,lambda _:None)
                 urls=[c.args[0].full_url for c in build.return_value.open.call_args_list]
-                self.assertEqual(urls,['http://192.0.2.10/'])
+                self.assertEqual(urls,['http://192.168.73.130/'])
                 self.assertEqual(raw['scope'],[{'scheme':'http','port':80}])
                 redirect=build.call_args.args[1]
-                for url in ['https://192.0.2.10/','https://192.0.2.10:80/','http://192.0.2.10:443/','http://192.0.2.10:8080/','http://192.0.2.12/']:
+                for url in ['https://192.168.73.130/','https://192.168.73.130:80/','http://192.168.73.130:443/','http://192.168.73.130:8080/','http://192.168.73.131/']:
                     with self.assertRaises(survey.RedirectScopeError):redirect.redirect_request(Request(urls[0]),None,302,'',{},url)
     def test_both_agent_tools_and_sources_obey_http_scope(self):
         from engine.agent import SurveyTools
@@ -54,23 +54,23 @@ class TestScope(unittest.TestCase):
                     self.assertEqual(runtime.invoke(call,30)['status'],'ok' if source == 'configured' else 'rejected')
             urls=[call.args[0].full_url for call in build.return_value.open.call_args_list]
             self.assertTrue(urls)
-            self.assertTrue(all(url.startswith('http://192.0.2.10/') for url in urls))
+            self.assertTrue(all(url.startswith('http://192.168.73.130/') for url in urls))
 
     def test_other_target_can_use_https(self):
         config=dict(CONFIG,web_scope=[{'scheme':'https','port':8443}])
         with patch.object(survey,'build_opener') as build:
             build.return_value.open.side_effect=lambda req,**kw:Response(req.full_url)
-            raw=survey.probe_web('192.0.2.12',{},config,lambda _:None)
-            self.assertEqual([c.args[0].full_url for c in build.return_value.open.call_args_list],['https://192.0.2.12:8443/'])
+            raw=survey.probe_web('192.168.73.131',{},config,lambda _:None)
+            self.assertEqual([c.args[0].full_url for c in build.return_value.open.call_args_list],['https://192.168.73.131:8443/'])
             self.assertTrue(raw['requests'][0]['tls_verified'])
     def test_auth_scope_blocks_before_credentials_or_network(self):
-        for base in ['https://192.0.2.10/dvwa/','http://192.0.2.10:8080/dvwa/']:
+        for base in ['https://192.168.73.130/dvwa/','http://192.168.73.130:8080/dvwa/']:
             config=dict(CONFIG,dvwa_auth={'enabled':True,'base_url':base,'credentials_file':'/nonexistent'})
             with patch('engine.dvwa_session.build_opener') as build:
                 result=verify_session(IP,config)
                 self.assertEqual(result['status'],'out_of_scope');build.assert_not_called()
     def test_authentication_reference_and_all_profile_pointers(self):
-        auth={'base_url':'http://192.0.2.10/dvwa/','session_ready':True,'current_security_level':'low','status':'verified'}
+        auth={'base_url':'http://192.168.73.130/dvwa/','session_ready':True,'current_security_level':'low','status':'verified'}
         data={'authentication':auth,'requests':[{'url':auth['base_url']+'login.php','http_status':200,'title':'DVWA'}]}
         evidence=aggregate_web([('tool_03_probe_dvwa.json#/data',data)])
         app=evidence['services'][0]['applications'][0]

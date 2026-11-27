@@ -14,16 +14,16 @@ class TelemetryTests(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
         self.root=Path(self.tmp.name)
         self.addCleanup(patch.stopall)
-        patch.object(t,'ROOT',self.root).start();patch.object(audit,'ROOT',self.root).start()
+        patch('engine.scenario_execution.history',return_value=[]).start();patch.object(t,'ROOT',self.root).start();patch.object(audit,'ROOT',self.root).start()
         self.record={'id':'a'*32,'scenario_job_id':'b'*32,'created_at':'2026-11-22T10:00:00Z',
-                     'updated_at':'2026-11-22T10:01:00Z','operation_id':'op','target':{'ip':'192.0.2.10','host':'example-host'},
+                     'updated_at':'2026-11-22T10:01:00Z','operation_id':'op','target':{'ip':'192.168.1.150','host':'PTIT'},
                      'state':'completed','command_status':'completed','steps':[{'index':1,'state':'completed','exit_code':0,'link_id':'link'}]}
         self.settings={'enabled':True,'refresh_cooldown_seconds':0,'max_events':10}
         (self.root/'telemetry_report.json').write_text(json.dumps(self.settings))
 
     def hit(self,**soc):
         return {'_id':'doc1','_index':'wazuh-alerts-4.x-test','_source':{'timestamp':'2026-11-22T10:00:30Z',
-            'agent':{'id':'009','ip':'192.0.2.10'},'rule':{'id':'1','level':3,'description':'password=Secret123; observed'},
+            'agent':{'id':'009','ip':'192.168.1.150'},'rule':{'id':'1','level':3,'description':'password=Secret123; observed'},
             'data':{'soc':soc}}}
 
     def test_audit_append_and_rotation_no_prompt(self):
@@ -71,7 +71,7 @@ class TelemetryTests(unittest.TestCase):
     def test_windows_late_events_restart_dedup_and_no_mutation(self):
         original=copy.deepcopy(self.record)
         factory=Mock();client=factory.return_value
-        client.identity.return_value={'id':'009','ip':'192.0.2.10'}
+        client.identity.return_value={'id':'009','ip':'192.168.1.150'}
         client.collect.side_effect=[{'hits':[self.hit(execution_id=self.record['id'])],'mode':'alerts_only','truncated':False},
                                     {'hits':[self.hit(execution_id=self.record['id']),dict(self.hit(),_id='late')],'mode':'alerts_only','truncated':False}]
         with patch('engine.scenario_execution.read',return_value=self.record):
@@ -100,11 +100,11 @@ class TelemetryTests(unittest.TestCase):
                                  {'_scroll_id':'s1','hits':{'hits':[hit,hit]}},
                                  {'_scroll_id':'s2','hits':{'hits':[]}}]
         connector.request=Mock(side_effect=responses)
-        result=connector.collect({'id':'009','ip':'192.0.2.10'},{'start':'a','end':'b'})
+        result=connector.collect({'id':'009','ip':'192.168.1.150'},{'start':'a','end':'b'})
         self.assertEqual(1,len(result['hits']));self.assertEqual('alerts_only',result['mode'])
         q=connector.request.call_args_list[2].args[2]
         self.assertIn({'term':{'agent.id':'009'}},q['query']['bool']['filter'])
-        self.assertIn({'term':{'agent.ip':'192.0.2.10'}},q['query']['bool']['filter'])
+        self.assertIn({'term':{'agent.ip':'192.168.1.150'}},q['query']['bool']['filter'])
         self.assertEqual(['_doc'],q['sort'])
 
     def test_identity_mapping_and_ambiguous(self):
@@ -137,7 +137,7 @@ class TelemetryTests(unittest.TestCase):
     def test_refresh_duplicate_thread_and_no_execution_dispatch(self):
         import threading
         gate=threading.Event()
-        with patch('engine.scenario_execution.read',return_value=self.record),patch.object(t,'collect',side_effect=lambda i:(gate.wait(2) and None)),patch('engine.scenario_execution.run') as run:
+        with patch('engine.scenario_execution.read',return_value=self.record),patch.object(t,'collect',side_effect=lambda i:(gate.wait(2) and {'collection':{'status':'complete'}})),patch('engine.scenario_execution.run') as run:
             first=t.enqueue(self.record['id']);second=t.enqueue(self.record['id']);gate.set()
             for thread in list(t.THREADS.values()):thread.join(3)
             run.assert_not_called();self.assertIn(second['status'],('collecting','queued'))
@@ -153,7 +153,7 @@ class TelemetryTests(unittest.TestCase):
     def test_page_budget_and_archive_permission_denial(self):
         c=object.__new__(w.Connector);c.config={'max_pages':1}
         c.request=Mock(side_effect=[{'version':{'distribution':'opensearch'}},w.ConnectorError('http_403',403),{'_scroll_id':'s','hits':{'hits':[self.hit()]}}])
-        result=c.collect({'id':'009','ip':'192.0.2.10'},{'start':'a','end':'b'})
+        result=c.collect({'id':'009','ip':'192.168.1.150'},{'start':'a','end':'b'})
         self.assertTrue(result['truncated']);self.assertEqual('permission_denied',result['archive_status'])
 
     def test_running_window_can_extend_then_freeze_terminal(self):

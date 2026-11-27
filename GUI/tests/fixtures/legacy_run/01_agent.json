@@ -12,6 +12,6 @@
   ],
   "privilege": "Elevated",
   "host_ip_addrs": [
-    "192.0.2.10"
+    "192.168.73.130"
   ]
 }

@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
-"""SOC Console. Start with GUI/start.sh after local setup."""
+"""SOC Console. Start with ~/DATN/GUI/start.sh (GUI virtualenv and fixed config)."""
 import argparse
 import json
 import mimetypes
 import os
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
 import re
 import secrets
 import sqlite3
 import threading
+import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import urlsplit
 
 from engine.survey import ROOT, execute, load_config, normalize_request, now, preflight
@@ -33,6 +30,7 @@ JOBS = {}
 TOKEN = secrets.token_urlsafe(32)
 ACTIVE = None
 WORKER = None
+REPORT_STREAMS = threading.BoundedSemaphore(16)
 
 
 def load_jobs():
@@ -143,11 +141,38 @@ class Handler(BaseHTTPRequestHandler):
         try: self.wfile.write(body)
         except (BrokenPipeError, ConnectionResetError): pass
 
+    def report_stream(self, identifier):
+        # Cache only: opening a page must never call Wazuh, CALDERA or an LLM.
+        try: execution_telemetry.read(identifier)
+        except (OSError,ValueError): return self.send({'error':'Report not found'},404)
+        if not REPORT_STREAMS.acquire(blocking=False):
+            return self.send({'error':'Too many report viewers'},503)
+        try:
+            self.connection.settimeout(10)
+            self.send_response(200)
+            self.send_header('Content-Type','text/event-stream; charset=utf-8')
+            self.send_header('Cache-Control','no-store')
+            self.send_header('X-Accel-Buffering','no')
+            self.end_headers()
+            previous=None
+            for _ in range(30):
+                report=execution_telemetry.read(identifier)
+                payload=json.dumps(report,ensure_ascii=False,separators=(',',':'))
+                if payload!=previous:
+                    self.wfile.write(('event: report\ndata: '+payload+'\n\n').encode())
+                    previous=payload
+                else:self.wfile.write(b': heartbeat\n\n')
+                self.wfile.flush()
+                time.sleep(2)
+        except (OSError,ValueError):pass
+        finally:
+            self.close_connection=True
+            REPORT_STREAMS.release()
+
     def do_GET(self):
         path = urlsplit(self.path).path
         if path == '/api/abilities':
-            catalog_root = Path(load_config().get('scenario_root', str(ROOT.parent / 'scenario_agent'))).expanduser()
-            catalog = catalog_root / 'data/catalog.sqlite'
+            catalog = Path(load_config().get('scenario_root', '/home/soc/build_scenario_agent')) / 'data/catalog.sqlite'
             try:
                 with sqlite3.connect(catalog.as_uri() + '?mode=ro', uri=True) as db:
                     db.row_factory = sqlite3.Row
@@ -160,6 +185,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send({'items': rows, 'total': len(rows)})
             except (OSError, sqlite3.Error):
                 return self.send({'error': 'Không đọc được catalog ability.'}, 503)
+        stream_match = re.fullmatch(r'/api/executions/([a-f0-9]{32})/telemetry/stream',path)
+        if stream_match:return self.report_stream(stream_match[1])
         report_match = re.fullmatch(r'/api/executions/([a-f0-9]{32})/telemetry(?:/(report\.json|report\.md))?',path)
         if report_match:
             try:
@@ -167,11 +194,12 @@ class Handler(BaseHTTPRequestHandler):
                 if report_match[2]:
                     name=report_match[2]
                     payload=execution_telemetry.markdown(report) if name=='report.md' else json.dumps(report,ensure_ascii=False)
-                    return self.send(payload.encode(),content_type='text/markdown; charset=utf-8' if name=='report.md' else 'application/json',attachment=name)
+                    stamp=re.sub('[^0-9TZ]','',report.get('generated_at',''))[:22]
+                    return self.send(payload.encode(),content_type='text/markdown; charset=utf-8' if name=='report.md' else 'application/json',attachment=report_match[1]+'_'+stamp+'_'+name)
                 return self.send(report)
             except (ValueError,OSError):return self.send({'error':'Telemetry/report unavailable'},404)
         if path == '/api/telemetry/diagnostic':
-            return self.send(read_json(ROOT/'telemetry_diagnostic.json',{'status':'not_checked'}))
+            return self.send(read_json(ROOT/'review/wazuh-auth-fix/live-diagnostic.json',{'status':'not_checked'}))
         if path == '/api/executions':
             return self.send({'items':scenario_execution.history()})
         execution = re.fullmatch(r'/api/executions/([a-f0-9]{32})(?:/files/([a-z_-]+\.json))?',path)
@@ -239,7 +267,7 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 body = target.read_bytes()
             return self.send(body, content_type='application/octet-stream', attachment=job['download_name'] if target.name == 'target_profile.json' else target.name)
-        files = {'/console.js': 'console.js', '/console.css': 'console.css', '/': 'index.html', '/app.js': 'app.js', '/style.css': 'style.css',
+        files = {'/report.html':'report.html', '/report.js':'report.js', '/report.css':'report.css', '/console.js': 'console.js', '/console.css': 'console.css', '/': 'index.html', '/app.js': 'app.js', '/style.css': 'style.css',
                  '/scenario.js': 'scenario.js', '/scenario-execution.js':'scenario-execution.js', '/scenario-core.js': 'scenario-core.js',
                  '/scenario-data.json': 'scenario-data.json', '/flow.js': 'flow.js',
                  '/flow-core.js': 'flow-core.js', '/flow.css': 'flow.css'}

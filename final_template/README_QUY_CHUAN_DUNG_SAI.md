@@ -60,16 +60,17 @@ Các file adversary hiện là mẫu/ứng viên có cấu trúc. Schema ART và
 
 ## Kiểm tra
 
-Chạy tại thư mục dự án:
+Chạy tại thư mục dự án. Windows dùng `python`; Unix có thể thay bằng `python3` nếu `python` không tồn tại:
 
 ```bash
-python3 final_template/validate_all_templates.py
-python3 final_template/validate_all_templates.py --project
-python3 -B -m unittest discover -s GUI/tests -v
+python final_template/validate_all_templates.py
+python final_template/validate_all_templates.py --project
+cd GUI
+python -B -m unittest discover -s tests -v
 ```
 
 GUI và kiểm tra profile JSON không cần pip. Đọc YAML trong validator/migration cần PyYAML (đã có ở môi trường hiện tại). `jsonschema` không bắt buộc: `contracts.py` kiểm tra tập keyword hiện dùng và từ chối keyword chưa hỗ trợ. Các schema JSON vẫn có thể dùng với thư viện JSON Schema độc lập khi môi trường có thư viện đó.
 
 `--project` kiểm tra template, profile, request và adversary đã cung cấp, gồm tính duy nhất của bước và giới hạn `max_steps`. Không gọi API CALDERA, không kiểm tra ID mục tiêu giữa các nguồn và không tuyên bố kết quả lab.
 
-`normalize_project.py` chỉ chạy khi muốn áp dụng lại migration. Nó ưu tiên profile cùng tên trong `generated_adversaries/target_profiles/`, giữ nguyên ID mục tiêu/ability, bỏ yêu cầu ART, loại bước lặp theo lần xuất hiện đầu tiên và đồng bộ `max_steps` của request tương ứng. Bản sao dữ liệu trước lượt chỉnh sửa này nằm trong `.backups/input-sync-before.tar.gz`.
+`normalize_project.py` chỉ chạy khi muốn áp dụng lại migration. Nó ưu tiên profile cùng tên trong `generated_adversaries/target_profiles/`, giữ nguyên ID mục tiêu/ability, bỏ yêu cầu ART, loại bước lặp theo lần xuất hiện đầu tiên và đồng bộ `max_steps` của request tương ứng. Bản sao dữ liệu trước lượt chỉnh sửa này phải được giữ trong kho backup riêng ngoài package; ghi đường dẫn kho trong hồ sơ triển khai riêng, không commit vào source và không xóa trước khi xác minh migration.

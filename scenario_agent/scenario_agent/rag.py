@@ -7,8 +7,11 @@ import re
 from pathlib import Path
 from collections import Counter
 import numpy as np
-from .catalog import ability, adversary, compatible_executors, connect, corpus
+from .catalog import ability, adversary, compatible_executors, connect, corpus, technique_abilities
 from .config import digest, sha256, write_json
+from .behaviors import significant_tokens
+from .intent_evidence import INTENT_VERSION, process_requirement, process_evidence
+import math
 
 def prepare(config):
     before = sha256(config.catalog)
@@ -126,11 +129,14 @@ def eligible(config, passages, target, request):
                         result[i] = record
                 else:
                     record = adversary(db, passage['id'])
-                    # A complete chain must fit the target; don't silently drop steps.
-                    if all(compatible_executors(a, target) for a in record['abilities']):
+                    compatible = [a['canonical_id'] for a in record['abilities'] if compatible_executors(a, target)]
+                    if compatible:
                         limit = request.get('max_tests')
-                        if limit is None or len(record['ordering']) <= limit:
-                            result[i] = record
+                        record['compatible_ordering'] = compatible
+                        record['reuse_eligible'] = (len(compatible) == len(record['ordering'])
+                                                   and (limit is None or len(record['ordering']) <= limit))
+                        record['adaptation_required'] = not record['reuse_eligible']
+                        result[i] = record
             except LookupError:
                 continue
     return result
@@ -146,12 +152,21 @@ def retrieve(config, request, target, mode='hybrid', limit=8):
     exact_ids = set(re.findall(r'[a-fA-F0-9]{8}-[a-fA-F0-9-]{27,}', query))
     # Resolve original Atomic GUIDs to canonical catalog IDs before exact boost.
     with connect(config.catalog) as db:
+        exact_techniques = technique_abilities(db, request.get('requested_techniques', []), target)
         for ref in list(exact_ids):
             try:
                 exact_ids.add(ability(db, ref)['canonical_id'])
             except LookupError:
                 pass
+    ability_indices = {passages[i]['id']: i for i in candidates if passages[i]['kind'] == 'ability'}
+    technique_indices = {}
+    for technique, records in exact_techniques.items():
+        if any(identifier not in ability_indices for identifier in records):
+            raise ValueError('Technique lookup missing from eligible corpus; rebuild corpus/index')
+        technique_indices[technique] = [ability_indices[identifier] for identifier in records]
     dense = {}
+    behavior_dense = {}
+    behaviors = request.get('_behavior_queries', [])
     if mode == 'hybrid':
         import faiss
         manifest, full_index, vectors = load_index(config)
@@ -160,11 +175,18 @@ def retrieve(config, request, target, mode='hybrid', limit=8):
             # Apply SQL-backed eligibility before FAISS nearest-neighbour search.
             subset = faiss.IndexIDMap(faiss.IndexFlatIP(vectors.shape[1]))
             subset.add_with_ids(np.ascontiguousarray(vectors[ids]), ids)
-            q = encoder(config, manifest['model_revision']).encode(['query: ' + query], normalize_embeddings=True)
+            queries = [query] + [b['query_en'] for b in behaviors]
+            q = encoder(config, manifest['model_revision']).encode(['query: ' + value for value in queries], normalize_embeddings=True)
             scores, found = subset.search(np.asarray(q, dtype=np.float32), len(ids))
             dense = {int(i): float(s) for s, i in zip(scores[0], found[0]) if i >= 0}
+            behavior_dense = {b['id']: {int(i): float(s) for s, i in zip(scores[n], found[n]) if i >= 0}
+                              for n, b in enumerate(behaviors, 1)}
     output = {'mode': mode, 'catalog_sha256': cm['catalog_sha256'], 'eligible': len(candidates),
               'abilities': [], 'adversaries': [], 'execution_authorized': False}
+    output['technique_lookup'] = {
+        'requested': list(exact_techniques),
+        'eligible_ids': {technique: list(records) for technique, records in exact_techniques.items()},
+        'missing_compatible': [technique for technique, records in exact_techniques.items() if not records]}
     for kind, out_key in (('ability', 'abilities'), ('adversary', 'adversaries')):
         members = [i for i in candidates if passages[i]['kind'] == kind]
         ranks = Counter()
@@ -175,6 +197,77 @@ def retrieve(config, request, target, mode='hybrid', limit=8):
         for i in members:
             if passages[i]['id'] in exact_ids:
                 ranks[i] += 100
-        for i, score in sorted(ranks.items(), key=lambda item: (-item[1], item[0]))[:limit]:
-            output[out_key].append({'score': score, 'record': candidates[i]})
+        pinned = set()
+        if kind == 'ability':
+            for indices in technique_indices.values():
+                for i in indices:
+                    ranks[i] += 50
+                if indices:
+                    pinned.add(min(indices, key=lambda i: (-ranks[i], i)))
+            pinned.update(i for i in members if passages[i]['id'] in exact_ids)
+        # Reserve at least one candidate per available requested technique and
+        # every explicit ability ID. The normal limit is a soft retrieval budget,
+        # independent of the maximum tests permitted in the final plan.
+        ordered = sorted(ranks, key=lambda i: (-ranks[i], i))
+        selected = sorted(pinned, key=lambda i: (-ranks[i], i))
+        selected += [i for i in ordered if i not in pinned][:max(0, limit - len(selected))]
+        for i in selected:
+            output[out_key].append({'score': ranks[i], 'record': candidates[i]})
+    if behaviors:
+        members = [i for i in candidates if passages[i]['kind'] == 'ability']
+        # English query rewriting plus command-aware BM25. Source YAML/vector
+        # files stay unchanged; generic Vietnamese wrapper words cannot dominate
+        # each individual behavior's lexical ranking.
+        docs = {i: Counter(significant_tokens(
+            str(candidates[i]['ability'].get('name') or '') + ' ' +
+            str(candidates[i]['ability'].get('description') or '') + ' ' +
+            ' '.join(str(ex.get('command') or ex.get('code') or '')
+                     for ex in compatible_executors(candidates[i], target)))) for i in members}
+        df = Counter(token for doc in docs.values() for token in doc)
+        avg = sum(sum(doc.values()) for doc in docs.values()) / max(1, len(docs)) or 1
+        output['behavior_candidates'] = {}
+        output['behavior_retrieval_version'] = INTENT_VERSION
+        output['intent_candidates'] = {}
+        existing = {x['record']['canonical_id'] for x in output['abilities']}
+        explicit = {i for i in members if passages[i]['id'] in exact_ids}
+        for item in output['adversaries']:
+            if item['record']['id'] in exact_ids:
+                explicit.update(ability_indices[a['canonical_id']] for a in item['record']['abilities'] if a['canonical_id'] in ability_indices)
+        for behavior in behaviors:
+            terms = significant_tokens(behavior['query_en'] + ' ' + ' '.join(behavior['keywords']))
+            lexical = {}
+            for i, doc in docs.items():
+                length = sum(doc.values())
+                score = sum(math.log(1 + (len(docs) - df[t] + .5) / (df[t] + .5)) *
+                            doc[t] * 2.2 / (doc[t] + 1.2 * (.25 + .75 * length / avg))
+                            for t in terms if doc[t])
+                if score: lexical[i] = score
+            ranks = Counter()
+            for scores in (lexical, behavior_dense.get(behavior['id'], {})):
+                for rank, i in enumerate(sorted((i for i in scores if i in docs), key=lambda i: (-scores[i], i)), 1):
+                    ranks[i] += 1 / (60 + rank)
+            # Reserve bounded slots for literal parent/child launches in eligible
+            # source commands. Actor names alone are not evidence of a launch.
+            relation = process_requirement(behavior)
+            direct = {}
+            if relation:
+                for i in members:
+                    for ex in compatible_executors(candidates[i], target):
+                        command = str(ex.get('command') or ex.get('code') or '')
+                        proof = process_evidence(command, ex['name'], relation)
+                        if proof and len(command) <= 16000:
+                            dependencies = len(ex.get('payloads') or []) + len(re.findall(r'(?i)PathToAtomicsFolder|Invoke-AtomicTest', command))
+                            direct[i] = (command.count('#{') + dependencies, len(command), proof)
+                            break
+            reserved = sorted(direct, key=lambda i: (direct[i][0], direct[i][1], i))[:3]
+            selected = reserved + [i for i in sorted(ranks, key=lambda i: (-ranks[i], i)) if i not in reserved][:6-len(reserved)]
+            output['intent_candidates'][behavior['id']] = [
+                {'ability_id': candidates[i]['canonical_id'], 'evidence': direct[i][2]} for i in reserved]
+            selected += sorted(explicit - set(selected))
+            output['behavior_candidates'][behavior['id']] = [candidates[i]['canonical_id'] for i in selected]
+            for i in selected:
+                record = candidates[i]
+                if record['canonical_id'] not in existing:
+                    output['abilities'].append({'score': ranks[i], 'record': record})
+                    existing.add(record['canonical_id'])
     return output

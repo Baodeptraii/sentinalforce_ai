@@ -1,5 +1,6 @@
 """Bounded, key-redacted diagnostics without logging HTTP headers or prompts."""
 import os
+import re
 
 
 def redact_error(value, limit=2000):
@@ -8,11 +9,14 @@ def redact_error(value, limit=2000):
         key = os.getenv(name)
         if key:
             message = message.replace(key, '[REDACTED]')
+    message=re.sub(r'(?i)(Bearer\s+|(?:password|cookie|api[_-]?key|secret|access[_-]?token)\s*[=:]\s*)[^\s,;]+',r'\1[REDACTED]',message)
     return message[:limit]
 
 
 class GeminiAPIError(RuntimeError):
-    def __init__(self, code, status, message):
+    def __init__(self, code, status, message, retry_after=None, details=None):
+        self.retry_after = retry_after
+        self.details = details or {}
         self.code = code
         self.status = redact_error(status or 'UNKNOWN', 100)
         super().__init__(redact_error(f'Gemini HTTP {code} {self.status}: {message or "No API error message"}'))

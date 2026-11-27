@@ -1,0 +1,20 @@
+- id: lab-dir-baseline-000000000001
+  name: Create Lab Directory with Baseline Sample Files
+  description: >-
+    Creates a dedicated lab directory with a run manifest and two sample text files, then prints SHA256 hashes as the before-mutation baseline for the following steps.
+  repeatable: false
+  executors:
+    - name: psh
+      platform: windows
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $ns = 'C:\SOC-Lab\EP02\demo'
+        New-Item -ItemType Directory -Force -Path $ns | Out-Null
+        Set-Content -LiteralPath "$ns\manifest.txt" -Value ("EP02 demo namespace; created " + (Get-Date -Format o) + "; simulation only, no real encryption")
+        Set-Content -LiteralPath "$ns\a_master.txt" -Value 'DEMO-ORIGINAL-CONTENT-A'
+        Set-Content -LiteralPath "$ns\b_master.txt" -Value 'DEMO-ORIGINAL-CONTENT-B'
+        $hashes = Get-FileHash -Algorithm SHA256 -Path "$ns\*.txt"
+        Write-Output ("EP02_SETUP_OK files=" + $hashes.Count)
+        $hashes | ForEach-Object { Write-Output ($_.Hash + '  ' + $_.Path) }
+        exit 0
+      timeout: 60

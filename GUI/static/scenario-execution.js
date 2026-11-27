@@ -79,6 +79,7 @@
       const a=node('a',name);a.href='/api/executions/'+record.id+'/files/'+name;a.download=name;
       el('execution-artifacts').append(a,document.createTextNode(' · '));
     }
+    const reportLink=node('a','Mở báo cáo trực tiếp');reportLink.href='/report.html?execution='+record.id;reportLink.target='_blank';reportLink.rel='noopener';el('execution-artifacts').append(reportLink);
     controls();
     loadTelemetry(record.id);
   }
@@ -121,12 +122,17 @@
     controls();
     if(name==='confirm' && el('execution-confirm').disabled)return;
     busy=true;controls();const version=generation;
+    let reportTab=null;
+    try { if(name==='confirm' && typeof window.open==='function')reportTab=window.open('about:blank','_blank'); } catch(_) { /* The persistent report link remains available. */ }
+    if(reportTab){reportTab.opener=null;reportTab.document.title='Preparing execution report';}
     try {
       const body=name==='confirm'?{confirmed:true,target_ip:el('execution-target-confirm').value.trim(),plan_sha256:value.plan_sha256}:{};
       const record=await api('/api/executions/'+value.id+'/'+name,body);
+      if(reportTab)reportTab.location.replace('/report.html?execution='+record.id);
       if(version!==generation)return;
       render(record);schedule();
     } catch(error){
+      if(reportTab)reportTab.close();
       if(version===generation) {
         if (name === 'confirm' && error.message.startsWith('Preview hết hạn')) expiredByServer = true;
         el('execution-message').textContent=error.message;
@@ -170,7 +176,7 @@
       }
       el('telemetry-json').href='/api/executions/'+id+'/telemetry/report.json';
       el('telemetry-markdown').href='/api/executions/'+id+'/telemetry/report.md';
-      if(['collecting','waiting_ingest'].includes(c.status)){clearTimeout(telemetryTimer);telemetryTimer=setTimeout(()=>loadTelemetry(id),5000);}
+      if(['queued','collecting','watching_execution','waiting_ingest'].includes(c.status)){clearTimeout(telemetryTimer);telemetryTimer=setTimeout(()=>loadTelemetry(id),5000);}
     } catch(error){if(value?.id===id)el('telemetry-summary').textContent=error.message;}
   }
   el('telemetry-refresh').onclick=async()=>{

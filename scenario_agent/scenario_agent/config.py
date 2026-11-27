@@ -33,13 +33,26 @@ class Config:
         load_dotenv(self.root / '.env', override=False)
         self.catalog = self.root / 'data/catalog.sqlite'
         self.index = self.root / 'data/rag'
-
         self.runs = self.root / 'outputs/runs'
         self.model = os.getenv('GEMINI_MODEL', 'gemini-3.8-flash')
         self.embedding_model = os.getenv('E5_MODEL', 'intfloat/multilingual-e5-small')
         self.embedding_revision = os.getenv('E5_REVISION') or None
         self.cache = self.root / '.cache/huggingface'
         self.free_confirmed = os.getenv('GEMINI_FREE_TIER_CONFIRMED', '').lower() == 'true'
+        timeout = float(os.getenv('GEMINI_TIMEOUT_SECONDS', '300'))
+        if not 1 <= timeout <= 600:
+            raise ValueError('GEMINI_TIMEOUT_SECONDS must be between 1 and 600')
+        self.gemini_timeout_ms = round(timeout * 1000)
+        self.gemini_parse_thinking_level = os.getenv('GEMINI_PARSE_THINKING_LEVEL', 'low').strip().lower()
+        if self.gemini_parse_thinking_level not in ('low', 'medium', 'high', 'default'):
+            raise ValueError('GEMINI_PARSE_THINKING_LEVEL must be low, medium, high or default')
+        self.gemini_max_attempts = int(os.getenv('GEMINI_MAX_ATTEMPTS', '1'))
+        self.gemini_retry_delay = float(os.getenv('GEMINI_RETRY_DELAY_SECONDS', '5'))
+        if not 1 <= self.gemini_max_attempts <= 3:
+            raise ValueError('GEMINI_MAX_ATTEMPTS must be between 1 and 3')
+        if not 0 <= self.gemini_retry_delay <= 60:
+            raise ValueError('GEMINI_RETRY_DELAY_SECONDS must be between 0 and 60')
+        self.gemini_progress = os.getenv('GEMINI_PROGRESS', '0').strip().lower() in ('1', 'true', 'yes')
 
     def contract_hash(self):
         return digest({p.name: sha256(p) for p in (self.root / 'input/schema').glob('*schema*')})

@@ -18,7 +18,7 @@
 <div class="workspace"><span class="workspace-icon">S</span><div><strong>SOC Lab</strong><small>Môi trường khảo sát nội bộ</small></div><span class="dots">···</span></div>
 <button type="button" id="workspace-flow" class="workspace-mode"><span>Ứng dụng / Luồng hệ thống</span><span aria-hidden="true">⇄</span></button>
 <p class="nav-label">KHÔNG GIAN LÀM VIỆC</p>
-<nav aria-label="Điều hướng chính"><div class="nav-group"><button id="nav-survey" class="nav-item selected"><svg><use href="#radar"/></svg>Khảo sát mục tiêu</button><button id="nav-history" class="nav-item nav-child"><svg><use href="#clock"/></svg>Lịch sử khảo sát<span id="history-count" class="count">0</span></button></div><div class="nav-group"><button id="nav-scenario" class="nav-item"><svg><use href="#file"/></svg>Sinh kịch bản</button><button id="nav-library" class="nav-item nav-child"><svg><use href="#layers"/></svg>Kho kịch bản</button><button id="nav-abilities" class="nav-item nav-child"><svg><use href="#layers"/></svg>Kho ability</button></div><button id="nav-flow" hidden>Luồng hệ thống</button><button id="nav-config" class="nav-item"><svg><use href="#settings"/></svg>Cấu hình kết nối</button></nav>
+<nav aria-label="Điều hướng chính"><div class="nav-group"><button id="nav-survey" class="nav-item selected"><svg><use href="#radar"/></svg>Khảo sát mục tiêu</button><button id="nav-history" class="nav-item nav-child"><svg><use href="#clock"/></svg>Lịch sử khảo sát<span id="history-count" class="count">0</span></button></div><div class="nav-group"><button id="nav-scenario" class="nav-item"><svg><use href="#file"/></svg>Sinh kịch bản</button><button id="nav-library" class="nav-item nav-child"><svg><use href="#layers"/></svg>Kho kịch bản</button><button id="nav-abilities" class="nav-item nav-child"><svg><use href="#layers"/></svg>Kho ability</button></div><button id="nav-flow" hidden>Luồng hệ thống</button><a href="/report.html" class="nav-item"><svg><use href="#file"/></svg>Báo cáo thực thi</a><button id="nav-config" class="nav-item"><svg><use href="#settings"/></svg>Cấu hình kết nối</button></nav>
 
 
 <button id="theme-toggle" class="button secondary theme-toggle" type="button" aria-pressed="false">☾ Giao diện tối</button></aside>
@@ -103,7 +103,7 @@
       <p>Lệnh đã giao cho Sandcat có thể tiếp tục chạy sau yêu cầu dừng. Hệ thống không tự bịa lệnh rollback.</p>
       <p id="execution-detection"></p><div id="execution-artifacts"></div>
       <section aria-label="Telemetry và báo cáo">
-        <h4>Telemetry / Báo cáo</h4>
+        <h4>Telemetry / Báo cáo</h4><p><a href="/report.html" class="button secondary">Mở trung tâm báo cáo</a></p>
         <p id="telemetry-summary" role="status" aria-live="polite">Chưa thu thập.</p>
         <p id="telemetry-coverage"></p><section id="expected-reality"><h4>Expected / Reality</h4><div id="telemetry-metrics"></div><div id="telemetry-step-comparison"></div><details><summary>Vận hành và truy vấn</summary><pre id="telemetry-operations"></pre></details></section>
         <button id="telemetry-refresh" type="button" class="button secondary">Thu thập / làm mới log</button>
@@ -128,6 +128,7 @@
         <textarea id="scenario-request" rows="6" maxlength="4000" placeholder="Ví dụ: Kiểm tra khả năng ghi nhận tiến trình PowerShell và hành vi khám phá hệ thống trên máy Windows. Ưu tiên các bước không cần quyền admin." aria-describedby="request-help"></textarea>
         <div class="field-bottom"><span id="request-help">Nêu hành vi cần kiểm thử và kết quả bạn muốn kiểm chứng.</span><span id="request-count">0 / 4000</span></div>
         <div class="request-options"><fieldset><legend class="field-label">Phạm vi</legend><div class="inline-checks"><label><input type="checkbox" id="request-endpoint" checked> Endpoint</label><label><input type="checkbox" id="request-web"> Dịch vụ web</label></div></fieldset><div><label class="field-label" for="request-max-steps">Tối đa số bước</label><input id="request-max-steps" type="number" min="1" max="20" step="1" value="4" required></div></div>
+        
       </section>
       <section class="card scenario-card" aria-labelledby="dataset-heading">
         <div class="section-title"><div><span class="eyebrow">03 · DATASET</span><h2 id="dataset-heading">Nguồn kịch bản</h2><p>Scenario Agent truy xuất catalog và chỉ mục RAG đã dựng trên máy chủ. Kho bên cạnh là thư viện tham khảo.</p></div><button type="button" id="browse-dataset" class="text-button">Mở kho →</button></div>

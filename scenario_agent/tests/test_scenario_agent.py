@@ -17,6 +17,8 @@ from scenario_agent.validation import validate_plan, validate_request
 from scenario_agent.workflow import Workflow, new_state
 from scenario_agent.cli import error_message
 
+from evaluation.fixtures import with_analysis, ground_fixture, coverage_fixture
+
 ABILITY = '30fe7c15-fca4-4af8-aced-4d245bc51c94'
 
 def fixture_request(state):
@@ -49,6 +51,97 @@ def fixture_plan(state, record):
                 'limitations': ['OFFLINE FIXTURE: không gọi Gemini hoặc thực thi ability.']}}
 
 class AgentTests(unittest.TestCase):
+    def test_unknown_catalog_privilege_normalizes_without_mutating_raw_plan(self):
+        plan=fixture_plan(self.state,self.record)
+        plan['metadata']['steps'][0]['executor']['privilege']=''
+        actions=[]
+        normalized=validate_plan(self.config,plan,self.request,self.target,self.retrieval,self.state['plan_id'],actions)
+        self.assertIsNone(normalized['metadata']['steps'][0]['executor']['privilege'])
+        self.assertEqual(plan['metadata']['steps'][0]['executor']['privilege'],'')
+        self.assertEqual(len(actions),1)
+        self.assertEqual(actions[0]['to'],None)
+
+    def test_known_privilege_is_not_silently_replaced(self):
+        from scenario_agent.validation import normalize_catalog_unknowns
+        record=copy.deepcopy(self.record);record['ability']['privilege']='User'
+        retrieval={'abilities':[{'record':record}],'adversaries':[]}
+        plan=fixture_plan(self.state,record);plan['metadata']['steps'][0]['executor']['privilege']=''
+        normalized,actions=normalize_catalog_unknowns(plan,retrieval)
+        self.assertEqual(actions,[])
+        self.assertEqual(normalized['metadata']['steps'][0]['executor']['privilege'],'')
+        with self.assertRaises(Exception):
+            validate_plan(self.config,plan,self.request,self.target,retrieval,self.state['plan_id'])
+
+    def test_failed_api_call_does_not_spend_plan_repair_budget(self):
+        class QuotaLLM:
+            def generate(self,*args):raise QuotaExceeded()
+        state=copy.deepcopy(self.state);state.update(request=self.request,retrieval=self.retrieval)
+        with tempfile.TemporaryDirectory() as d:
+            config=Config();config.runs=Path(d)
+            result=Workflow(config,QuotaLLM()).step('build_plan',state)
+            self.assertEqual(result['status'],'waiting_quota')
+            self.assertEqual(result['plan_attempts'],0)
+
+    @unittest.skipUnless(importlib.util.find_spec('langgraph'), 'LangGraph not installed')
+    def test_resume_invalid_plan_revalidates_without_model_call(self):
+        class NoLLM:
+            def generate(self,*args):raise AssertionError('Should not call Gemini')
+        state=copy.deepcopy(self.state)
+        plan=fixture_plan(state,self.record);plan['metadata']['steps'][0]['executor']['privilege']=''
+        state.update(status='invalid_plan',plan=plan,request=self.request,retrieval=self.retrieval,plan_attempts=2,next='END')
+        with tempfile.TemporaryDirectory() as d:
+            config=Config();config.runs=Path(d);flow=Workflow(config,NoLLM());flow.save(state)
+            result=flow.resume(state['run_id'])
+            self.assertEqual(result['status'],'completed')
+            self.assertEqual(result['plan_attempts'],2)
+            self.assertEqual(result['raw_plan']['metadata']['steps'][0]['executor']['privilege'],'')
+            self.assertIsNone(result['plan']['metadata']['steps'][0]['executor']['privilege'])
+            self.assertTrue(Path(result['output']).exists())
+
+    @unittest.skipUnless(importlib.util.find_spec('google.genai'), 'Gemini SDK not installed')
+    def test_sdk_api_error_keeps_code_status_and_redacts_key(self):
+        from unittest.mock import Mock, patch
+        from types import SimpleNamespace
+        from google.genai import errors
+        from scenario_agent.llm import Gemini
+        from scenario_agent.errors import GeminiAPIError
+        key='test-secret-never-log'
+        sdk_error=errors.ClientError(400, {'error': {'code': 400, 'status': 'INVALID_ARGUMENT', 'message': 'Schema rejected; key='+key}})
+        llm=Gemini.__new__(Gemini);llm.model='test-model'
+        llm.client=SimpleNamespace(models=SimpleNamespace(generate_content=Mock(side_effect=sdk_error)))
+        with patch.dict('os.environ', {'GEMINI_API_KEY': key}):
+            with self.assertRaises(GeminiAPIError) as caught:
+                llm.generate('test', {}, {'type':'object'})
+        self.assertEqual(caught.exception.code,400)
+        self.assertIn('INVALID_ARGUMENT',str(caught.exception))
+        self.assertIn('Schema rejected',str(caught.exception))
+        self.assertNotIn(key,str(caught.exception))
+
+    def test_api_error_detail_survives_checkpoint(self):
+        from scenario_agent.errors import GeminiAPIError
+        class BrokenLLM:
+            def generate(self,*args):
+                raise GeminiAPIError(400,'INVALID_ARGUMENT','Schema rejected')
+        with tempfile.TemporaryDirectory() as d:
+            config=Config();config.runs=Path(d)
+            state=Workflow(config,BrokenLLM()).step('parse',self.state)
+            self.assertEqual(state['status'],'error')
+            self.assertEqual(state['error_code'],400)
+            self.assertIn('Schema rejected',state['error'])
+
+    def test_successful_resumed_node_clears_old_error(self):
+        state=copy.deepcopy(self.state)
+        state.update(error='Previous API error',error_code=400,error_status='INVALID_ARGUMENT')
+        class SuccessfulLLM:
+            def generate(self,*args):
+                return fixture_request(state)
+        with tempfile.TemporaryDirectory() as d:
+            config=Config();config.runs=Path(d)
+            result=Workflow(config,SuccessfulLLM()).step('parse',state)
+            self.assertEqual(result['next'],'validate_request')
+            self.assertNotIn('error',result)
+            self.assertNotIn('error_code',result)
+
     @unittest.skipUnless(importlib.util.find_spec('huggingface_hub'), 'Hugging Face Hub not installed')
     def test_snapshot_commit_uses_cache_without_transformers_private_fields(self):
         from unittest.mock import patch
@@ -79,7 +172,8 @@ class AgentTests(unittest.TestCase):
             cls.record = ability(db, ABILITY)
         cls.state = new_state(cls.config, 'Kiểm tra người dùng Windows T1033, endpoint, tối đa 1 test.', ROOT / 'input/target_profile.json', 'keyword')
         cls.request = fixture_request(cls.state)
-        cls.retrieval = {'abilities': [{'record': cls.record}], 'adversaries': []}
+        cls.retrieval = {'abilities': [{'record': cls.record}], 'adversaries': [],
+                         'behavior_coverage':coverage_fixture(cls.request,[cls.record],cls.target)}
 
     def test_request_matches_schema(self):
         self.assertEqual(validate_request(self.config, self.request, self.target), [])
@@ -157,7 +251,7 @@ class AgentTests(unittest.TestCase):
             s = Workflow(config, QuotaLLM()).step('parse', self.state)
             self.assertEqual(s['status'], 'waiting_quota')
             self.assertEqual(s['resume_phase'], 'parse')
-            saved = json.loads((config.runs / s['run_id'] / 'state.json').read_text())
+            saved = json.loads((config.runs / s['run_folder'] / 'state.json').read_text())
             self.assertEqual(saved['next'], 'END')
 
     @unittest.skipUnless(importlib.util.find_spec('langgraph'), 'LangGraph not installed')
@@ -165,7 +259,8 @@ class AgentTests(unittest.TestCase):
         state, record = copy.deepcopy(self.state), self.record
         class FixtureLLM:
             def generate(self, instruction, data, schema):
-                return fixture_request(state) if 'app_context' in data and 'request' not in data else fixture_plan(state, record)
+                if data.get('task')=='ground_behaviors': return ground_fixture(data)
+                return with_analysis(fixture_request(state),[record]) if 'app_context' in data and 'request' not in data else fixture_plan(state, record)
         with tempfile.TemporaryDirectory() as d:
             config = Config(); config.runs = Path(d)
             # Exact ID ensures the real record is retrieved for the fixture.

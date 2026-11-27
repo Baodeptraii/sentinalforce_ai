@@ -28,14 +28,19 @@ Cài `jsonschema` qua pip gặp lỗi DNS; bộ kiểm tra mặc định dùng v
 
 ## Chạy lại
 
+Từ Windows dùng `python`; trên Unix có thể thay bằng `python3` nếu `python` không tồn tại.
+
 ```bash
 cd project-root
-python3 -B -m unittest discover -s GUI/tests -v
-python3 -B final_template/validate_all_templates.py --project
+cd GUI
+python -B -m unittest discover -s tests -v
+cd ..
+python -B final_template/validate_all_templates.py --project
 node --check GUI/static/app.js
 node --check GUI/static/scenario.js
 node GUI/tests/scenario-ui.test.cjs
-GUI/start.sh
+# Unix: GUI/start.sh
+# Windows PowerShell: python GUI/app.py --port 8765
 ```
 
 Mở `http://127.0.0.1:8765`. Chạy app để xem giao diện không tự tạo operation; chỉ bấm bắt đầu khảo sát khi muốn thực thi trên endpoint được phép.

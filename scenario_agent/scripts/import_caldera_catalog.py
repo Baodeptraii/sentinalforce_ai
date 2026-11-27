@@ -17,7 +17,10 @@ import tempfile
 import yaml
 from jsonschema import Draft202012Validator
 
-from resolve_ability import resolve_ability
+try:
+    from .resolve_ability import resolve_ability
+except ImportError:
+    from resolve_ability import resolve_ability
 
 
 def encode(value):
@@ -191,187 +194,97 @@ def git_revision(path):
     return result.stdout.strip() if result.returncode == 0 else None
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--caldera-root", type=Path, required=True,
-                        help="Path to an existing CALDERA checkout; no default lab path is assumed.")
-    parser.add_argument("--project-root", type=Path, default=Path(__file__).resolve().parents[1])
-    args = parser.parse_args()
-    root, project = args.caldera_root.resolve(), args.project_root.resolve()
-    sources = [("stockpile", root / "plugins/stockpile/data"),
-               ("atomic", root / "plugins/atomic/data"), ("local", root / "data")]
-    extra_sources = {"custom_dvwa", "stockpile_extra", "atomic_extra"}
-    for label in sorted(extra_sources):
-        custom = project / "input/knowledge base" / label
-        if custom.is_dir():
-            sources.append((label, custom))
-    scenario_directory = project / "input/knowledge base/scenarios"
-    if scenario_directory.is_dir():
-        sources.append(("scenarios", scenario_directory))
-    for label, directory in sources:
-        if not directory.is_dir():
-            raise FileNotFoundError(f"Missing CALDERA source: {label}: {directory}")
-    data = project / "data"
-    data.mkdir(exist_ok=True)
-    raw = project / "input/knowledge base/raw"
-    imported_at = datetime.now(timezone.utc).isoformat()
-    report = {"imported_at": imported_at, "caldera_root": str(root),
-              "scope": [label for label, _ in sources], "files": {}, "issues": []}
-    manifest = []
-    scenario_schema = Draft202012Validator(yaml.safe_load((project / "input/schema/scenario_adversary.schema.yaml").read_text()))
-    fd, db_path = tempfile.mkstemp(prefix="catalog-", suffix=".sqlite", dir=data)
+def local_path(root, value):
+    path = Path(value)
+    if path.is_absolute() or '..' in path.parts:
+        raise ValueError('Source paths must be bundle-relative: ' + value)
+    resolved = (root / path).resolve()
+    if not resolved.is_relative_to(root.resolve()):
+        raise ValueError('Source escapes bundle: ' + value)
+    return resolved
+
+
+def rebuild(root, destination=None):
+    root = Path(root).resolve()
+    manifest = json.loads((root / 'data/catalog_manifest.json').read_text())
+    entries = manifest['files']
+    destination = Path(destination) if destination else root / 'data/catalog.sqlite'
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp = tempfile.mkstemp(prefix='catalog-', suffix='.sqlite', dir=destination.parent)
     import os
     os.close(fd)
-    db_path = Path(db_path)
+    temp = Path(temp)
+    scenario_validator = Draft202012Validator(yaml.safe_load((root / 'input/schema/scenario_adversary.schema.yaml').read_text()))
     try:
-        with sqlite3.connect(db_path) as conn:
+        with sqlite3.connect(temp) as conn:
             conn.executescript(DDL)
-            for key, value in {"format_version": "3", "imported_at": imported_at,
-                               "mode": "plan_only", "caldera_root": str(root)}.items():
-                conn.execute("INSERT INTO import_info VALUES (?,?)", (key, value))
-            counts = Counter()
-            for label, directory in sources:
-                revision = None if label in extra_sources or label == "scenarios" else git_revision(directory)
-                for kind in (("adversaries",) if label == "scenarios" else ("abilities", "adversaries")):
-                    kind_directory = directory if label == "scenarios" else directory / kind
-                    paths = sorted(p for p in kind_directory.rglob("*")
-                                   if p.is_file() and p.suffix in (".yml", ".yaml"))
-                    counts[f"{label}/{kind}"] = len(paths)
-                    for path in paths:
-                        content = path.read_bytes()
-                        digest = hashlib.sha256(content).hexdigest()
-                        relative = path.relative_to(kind_directory)
-                        snapshot = None
-                        if label != "scenarios":
-                            snapshot = raw / kind / label / relative.parent / f"{relative.stem}.{digest[:12]}{relative.suffix}"
-                            snapshot.parent.mkdir(parents=True, exist_ok=True)
-                            if snapshot.exists() and snapshot.read_bytes() != content:
-                                raise ValueError(f"Snapshot hash collision or modified snapshot: {snapshot}")
-                            snapshot.write_bytes(content)
-                        entry = {"source": label, "kind": kind, "original_path": str(path),
-                                 "snapshot_path": str(snapshot.relative_to(project)) if snapshot else None,
-                                 "storage_mode": "direct" if label == "scenarios" else "snapshot",
-                                 "sha256": digest, "git_revision": revision, "byte_size": len(content)}
-                        manifest.append(entry)
-                        file_id = conn.execute(
-                            "INSERT INTO source_files(source,kind,original_path,snapshot_path,storage_mode,sha256,git_revision,byte_size) VALUES (?,?,?,?,?,?,?,?)",
-                            tuple(entry[k] for k in ("source", "kind", "original_path", "snapshot_path", "storage_mode", "sha256", "git_revision", "byte_size"))).lastrowid
-                        try:
-                            docs = list(yaml.safe_load_all(content))
-                        except yaml.YAMLError as error:
-                            if label == "scenarios":
-                                raise ValueError(f"Invalid scenario YAML: {path}") from error
-                            report["issues"].append({"type": "yaml_error", "path": str(path), "detail": str(error)})
-                            continue
-                        entry_index = 0
-                        for doc in docs:
-                            records = doc if isinstance(doc, list) else [doc]
-                            for record in records:
-                                entry_index += 1
-                                try:
-                                    if not isinstance(record, dict):
-                                        raise ValueError("YAML record must be an object")
-                                    if label == "scenarios":
-                                        scenario_schema.validate(record)
-                                    normalized = (normalize_ability(record) if kind == "abilities" else normalize_adversary(record))
-                                    if not normalized["id"].strip():
-                                        raise ValueError("Missing record ID")
-                                    normalized_json = encode(normalized)
-                                    normalized_hash = hashlib.sha256(normalized_json.encode()).hexdigest()
-                                except (ValueError, TypeError, AttributeError) as error:
-                                    report["issues"].append({"type": "record_error", "path": str(path), "entry_index": entry_index, "detail": str(error)})
-                                    continue
-                                n = normalized
-                                if kind == "abilities":
-                                    record_id = conn.execute(
-                                        "INSERT INTO abilities(ability_id,file_id,entry_index,source_kind,name,description,tactic,technique_id,technique_name,privilege,requirements_json,normalized_json,normalized_sha256,original_json) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                                        (n["id"], file_id, entry_index, "converted_atomic" if label in ("atomic", "atomic_extra") else "caldera_ability",
-                                         n["name"], n["description"], n["tactic"], n["technique_id"], n["technique_name"], n["privilege"], encode(n["requirements"]), normalized_json, normalized_hash, encode(record))).lastrowid
-                                    if label in extra_sources:
-                                        conn.execute("UPDATE abilities SET review_status='needs_review' WHERE record_id=?", (record_id,))
-                                    for ex in n["executors"]:
-                                        conn.execute("INSERT INTO executors(ability_record_id,platform,name,command,cleanup_json,timeout,payloads_json,placeholders_json,details_json) VALUES (?,?,?,?,?,?,?,?,?)",
-                                                     (record_id, ex["platform"], ex["name"], ex.get("command"), encode(ex["cleanup"]), ex.get("timeout"), encode(ex["payloads"]), encode(ex["fact_placeholders"]), encode(ex)))
-                                    reasons = []
-                                    if not n["executors"]:
-                                        reasons.append("no_executor")
-                                    if any(ex["platform"] == "unknown" for ex in n["executors"]):
-                                        reasons.append("unknown_platform")
-                                    if n["privilege"] in (None, ""):
-                                        reasons.append("privilege_unspecified")
-                                    if reasons:
-                                        report["issues"].append({"type": "incomplete_ability_metadata", "record_id": record_id, "ability_id": n["id"], "reasons": reasons})
-                                else:
-                                    equivalence = adversary_equivalence_hash(n)
-                                    existing = conn.execute("SELECT record_id,normalized_json FROM adversaries WHERE adversary_id=?", (n["id"],)).fetchone()
-                                    if existing:
-                                        record_id = existing[0]
-                                        equivalent = adversary_equivalence_hash(json.loads(existing[1])) == equivalence
-                                        report["issues"].append({"type": "adversary_deduplicated", "id": n["id"], "incoming_path": str(path), "equivalent": equivalent})
-                                        if not equivalent:
-                                            conn.execute("UPDATE adversaries SET review_status='source_conflict' WHERE record_id=?", (record_id,))
-                                    else:
-                                        record_id = conn.execute("INSERT INTO adversaries(adversary_id,file_id,entry_index,name,description,objective,normalized_json,normalized_sha256,original_json) VALUES (?,?,?,?,?,?,?,?,?)",
-                                                     (n["id"], file_id, entry_index, n["name"], n["description"], n["objective"], normalized_json, normalized_hash, encode(record))).lastrowid
-                                    conn.execute("INSERT INTO adversary_variants(adversary_record_id,file_id,entry_index,normalized_json,normalized_sha256,equivalence_sha256,original_json) VALUES (?,?,?,?,?,?,?)",
-                                                 (record_id, file_id, entry_index, normalized_json, normalized_hash, equivalence, encode(record)))
-            alias_path = project / "input/knowledge base/ability_aliases.json"
-            if alias_path.exists():
-                for alias in json.loads(alias_path.read_text())["aliases"]:
-                    if conn.execute("SELECT 1 FROM abilities WHERE ability_id=?", (alias["alias_id"],)).fetchone():
-                        raise ValueError(f"Alias shadows a real ability: {alias['alias_id']}")
-                    matches = conn.execute("SELECT normalized_sha256 FROM ability_sources WHERE ability_id=? AND source_sha256=?", (alias["canonical_id"], alias["target_source_sha256"])).fetchall()
-                    if not matches or len({row[0] for row in matches}) != 1:
-                        raise ValueError(f"Alias target missing or stale: {alias['alias_id']}")
-                    conn.execute("INSERT INTO ability_aliases VALUES (?,?,?,?,?)", (alias["alias_id"], alias["canonical_id"], alias["target_source_sha256"], alias["reason"], encode(alias["evidence"])))
-            report["alias_count"] = conn.execute("SELECT COUNT(*) FROM ability_aliases").fetchone()[0]
-            for table, id_column in (("abilities", "ability_id"), ("adversaries", "adversary_id")):
-                for identifier, count, variants in conn.execute(f"SELECT {id_column},COUNT(*),COUNT(DISTINCT normalized_sha256) FROM {table} GROUP BY {id_column} HAVING COUNT(*)>1"):
-                    report["issues"].append({"type": "duplicate_id", "kind": table, "id": identifier, "records": count, "normalized_variants": variants, "conflict": variants > 1})
-            quarantine = project / "input/knowledge base/quarantine/custom_abilities"
-            placeholders = {p.stem for p in quarantine.glob("*.yml")} if quarantine.is_dir() else set()
-            registry_path = project / "input/knowledge base/unresolved_ability_references.json"
-            registry = json.loads(registry_path.read_text())["references"] if registry_path.exists() else {}
-            for records_table, steps_table, key in (("adversaries", "adversary_steps", "record_id"), ("adversary_variants", "adversary_variant_steps", "variant_id")):
-                for record_id, normalized_json in conn.execute(f"SELECT {key},normalized_json FROM {records_table}").fetchall():
-                    ordering = json.loads(normalized_json)["atomic_ordering"]
-                    complete = bool(ordering)
-                    for position, ability_id in enumerate(ordering, 1):
-                        status, canonical_id, count = classify_reference(conn, ability_id, placeholders, registry)
-                        conn.execute(f"INSERT INTO {steps_table} VALUES (?,?,?,?,?,?)", (record_id, position, ability_id, status, count, canonical_id))
-                        if status not in ("resolved", "alias_resolved"):
-                            complete = False
-                            if records_table == "adversaries":
-                                report["issues"].append({"type": "adversary_reference", "adversary_record_id": record_id, "step_index": position, "ability_id": ability_id, "status": status})
-                    conn.execute(f"UPDATE {records_table} SET reference_status=? WHERE {key}=?", ("complete" if complete else "incomplete", record_id))
-            report["scenario_import"] = {
-                "source_files": counts.get("scenarios/adversaries", 0),
-                "storage_mode": "direct",
-                "source_directory": str(scenario_directory),
-                "snapshot_copies_created": 0,
-                "linked_variants": conn.execute("SELECT COUNT(*) FROM adversary_variant_sources WHERE source='scenarios'").fetchone()[0],
-                "reference_status": dict(conn.execute("SELECT reference_status,COUNT(*) FROM adversary_variant_sources WHERE source='scenarios' GROUP BY reference_status")),
-                "deduplicated_ids": sum(i["type"] == "adversary_deduplicated" for i in report["issues"]),
-                "equivalent_duplicates": sum(i["type"] == "adversary_deduplicated" and i["equivalent"] for i in report["issues"]),
-                "conflicting_ids": [row[0] for row in conn.execute("SELECT adversary_id FROM adversaries WHERE review_status='source_conflict'")],
-                "retrieval_entities_with_complete_references": conn.execute("SELECT COUNT(*) FROM adversary_retrieval").fetchone()[0],
-            }
-            report["files"] = dict(counts)
-            report["totals"] = {table: conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-                                for table in ("source_files", "abilities", "executors", "adversaries", "adversary_variants", "adversary_steps", "adversary_variant_steps")}
-            report["unique_ids"] = {table: conn.execute(f"SELECT COUNT(DISTINCT {column}) FROM {table}").fetchone()[0]
-                                    for table, column in (("abilities", "ability_id"), ("adversaries", "adversary_id"))}
-            report["reference_status"] = dict(conn.execute("SELECT resolution_status,COUNT(*) FROM adversary_steps GROUP BY resolution_status"))
-            report["issue_counts"] = dict(Counter(item["type"] for item in report["issues"]))
-            assert conn.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
-            assert not conn.execute("PRAGMA foreign_key_check").fetchall()
-        db_path.replace(data / "catalog.sqlite")
-        (data / "catalog_manifest.json").write_text(encode({"imported_at": imported_at, "files": manifest}) + "\n")
-        (data / "catalog_import_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+            for key,value in {'format_version':'3', 'source_mode':'portable_manifest', 'mode':'plan_only'}.items():
+                conn.execute('INSERT INTO import_info VALUES (?,?)',(key,value))
+            for entry in entries:
+                relative=entry['original_path']; path=local_path(root, relative)
+                content=path.read_bytes()
+                if hashlib.sha256(content).hexdigest()!=entry['sha256']:
+                    raise ValueError('Source hash mismatch: '+relative)
+                source,kind=entry['source'],entry['kind']
+                file_id=conn.execute('INSERT INTO source_files(source,kind,original_path,snapshot_path,storage_mode,sha256,git_revision,byte_size) VALUES (?,?,?,?,?,?,?,?)',
+                    (source,kind,relative,None,'direct',entry['sha256'],entry.get('git_revision'),len(content))).lastrowid
+                index=0
+                for doc in yaml.safe_load_all(content):
+                    for record in doc if isinstance(doc,list) else [doc]:
+                        index+=1
+                        if source=='scenarios': scenario_validator.validate(record)
+                        n=normalize_ability(record) if kind=='abilities' else normalize_adversary(record)
+                        if not n['id'].strip():raise ValueError('Missing ID: '+relative)
+                        norm=encode(n); normhash=hashlib.sha256(norm.encode()).hexdigest()
+                        if kind=='abilities':
+                            columns='ability_id,file_id,entry_index,source_kind,name,description,tactic,technique_id,technique_name,privilege,requirements_json,normalized_json,normalized_sha256,original_json,review_status'
+                            values=(n['id'],file_id,index,'converted_atomic' if source in ('atomic','atomic_extra') else 'caldera_ability',n['name'],n['description'],n['tactic'],n['technique_id'],n['technique_name'],n['privilege'],encode(n['requirements']),norm,normhash,encode(record),'needs_review' if source in ('custom_dvwa','stockpile_extra','atomic_extra') else 'not_reviewed')
+                            rid=conn.execute('INSERT INTO abilities('+columns+') VALUES ('+','.join('?' for _ in values)+')',values).lastrowid
+                            for ex in n['executors']:
+                                conn.execute('INSERT INTO executors(ability_record_id,platform,name,command,cleanup_json,timeout,payloads_json,placeholders_json,details_json) VALUES (?,?,?,?,?,?,?,?,?)',
+                                    (rid,ex['platform'],ex['name'],ex.get('command'),encode(ex['cleanup']),ex.get('timeout'),encode(ex['payloads']),encode(ex['fact_placeholders']),encode(ex)))
+                        else:
+                            eq=adversary_equivalence_hash(n)
+                            old=conn.execute('SELECT record_id,normalized_json FROM adversaries WHERE adversary_id=?',(n['id'],)).fetchone()
+                            if old:
+                                rid=old[0]
+                                if adversary_equivalence_hash(json.loads(old[1]))!=eq:
+                                    conn.execute("UPDATE adversaries SET review_status='source_conflict' WHERE record_id=?",(rid,))
+                            else:
+                                rid=conn.execute('INSERT INTO adversaries(adversary_id,file_id,entry_index,name,description,objective,normalized_json,normalized_sha256,original_json) VALUES (?,?,?,?,?,?,?,?,?)',
+                                    (n['id'],file_id,index,n['name'],n['description'],n['objective'],norm,normhash,encode(record))).lastrowid
+                            conn.execute('INSERT INTO adversary_variants(adversary_record_id,file_id,entry_index,normalized_json,normalized_sha256,equivalence_sha256,original_json) VALUES (?,?,?,?,?,?,?)',
+                                (rid,file_id,index,norm,normhash,eq,encode(record)))
+            alias_data=json.loads((root/'input/knowledge base/ability_aliases.json').read_text())
+            for alias in alias_data['aliases']:
+                if conn.execute('SELECT 1 FROM abilities WHERE ability_id=?',(alias['alias_id'],)).fetchone():raise ValueError('Alias shadows real ability')
+                matches=conn.execute('SELECT normalized_sha256 FROM ability_sources WHERE ability_id=? AND source_sha256=?',(alias['canonical_id'],alias['target_source_sha256'])).fetchall()
+                if not matches or len({row[0] for row in matches})!=1:raise ValueError('Alias target missing or conflicting')
+                conn.execute('INSERT INTO ability_aliases VALUES (?,?,?,?,?)',(alias['alias_id'],alias['canonical_id'],alias['target_source_sha256'],alias['reason'],encode(alias['evidence'])))
+            quarantine=root/'input/knowledge base/quarantine/custom_abilities'
+            placeholders={p.stem for p in quarantine.glob('*.yml')}
+            registry=json.loads((root/'input/knowledge base/unresolved_ability_references.json').read_text())['references']
+            for table,steps,key in [('adversaries','adversary_steps','record_id'),('adversary_variants','adversary_variant_steps','variant_id')]:
+                for rid,norm in conn.execute('SELECT '+key+',normalized_json FROM '+table).fetchall():
+                    ordering=json.loads(norm)['atomic_ordering']; complete=bool(ordering)
+                    for pos,identifier in enumerate(ordering,1):
+                        status,canonical,count=classify_reference(conn,identifier,placeholders,registry)
+                        conn.execute('INSERT INTO '+steps+' VALUES (?,?,?,?,?,?)',(rid,pos,identifier,status,count,canonical))
+                        complete=complete and status in ('resolved','alias_resolved')
+                    conn.execute('UPDATE '+table+' SET reference_status=? WHERE '+key+'=?',('complete' if complete else 'incomplete',rid))
+            if conn.execute('PRAGMA integrity_check').fetchone()[0]!='ok' or conn.execute('PRAGMA foreign_key_check').fetchall():raise ValueError('Catalog integrity check failed')
+            summary={table:conn.execute('SELECT COUNT(*) FROM '+table).fetchone()[0] for table in ['source_files','abilities','executors','adversaries','adversary_variants','ability_aliases','adversary_retrieval']}
+        temp.replace(destination)
+        return summary
     finally:
-        db_path.unlink(missing_ok=True)
-    print(json.dumps({key: value for key, value in report.items() if key != "issues"}, ensure_ascii=False, indent=2))
+        temp.unlink(missing_ok=True)
 
 
-if __name__ == "__main__":
-    main()
+def main():
+    parser=argparse.ArgumentParser(description='Rebuild catalog from bundle-local manifest/YAML; no external CALDERA required.')
+    parser.add_argument('--project-root',type=Path,default=Path(__file__).resolve().parents[1])
+    parser.add_argument('--output',type=Path)
+    args=parser.parse_args()
+    print(json.dumps(rebuild(args.project_root,args.output),ensure_ascii=False,indent=2))
+
+if __name__=='__main__':main()

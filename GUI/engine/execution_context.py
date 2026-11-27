@@ -16,6 +16,57 @@ REVIEWED_INVENTORY = {
         r'systeminfo && reg query HKLM\SYSTEM\CurrentControlSet\Services\Disk\Enum'),
 }
 
+# Reviewed fixed-demo sources: canonical_id -> (frozenset of cases, pinned
+# catalog revision, pinned executor platform/name). A revision change here is
+# a new review, never an automatic accept.
+FIXED_SOURCES = {
+    'session-bootstrap-000000000001': (frozenset(('WEB-01', 'WEB-02')),
+        'f75fadc0630198820cb6d56975e70f4209d2644b8f25e6d61f80fcc82c28c248', ('windows', 'psh')),
+    'lab-dir-baseline-000000000001': (frozenset(('EP-02',)),
+        '8b398f158e6ba43117a0144834e8b4e9f0b77db5ea962759025b0be38ae1017b', ('windows', 'psh')),
+    'ransom-file-ops-000000000002': (frozenset(('EP-02',)),
+        '11489eff841db197cd2efaacbe4c2288352114e427c41152287ef8f7dc8d707c', ('windows', 'psh')),
+    'scoped-cleanup-000000000003': (frozenset(('EP-02',)),
+        '72cae945e891c57285d39c7e91706952ff0128bf44ac7a1c740b7f86a6911565', ('windows', 'psh')),
+    'http-beacon-000000000001': (frozenset(('EP-03',)),
+        '43426d5ecf65f5ac9d229efb715b402ebced7bab0a5882cf453f6c700e7979c1', ('windows', 'psh')),
+    'file-transfer-000000000002': (frozenset(('EP-03',)),
+        '089386229b6775a89819938a7dc763fa77bd1054fd742152806aa082450a5241', ('windows', 'psh')),
+    'sqli-union-probe-000000000002': (frozenset(('WEB-01',)),
+        '5f66328bb07b995e4b284e64dcde61763743a8e3f3a5958fd4cadce7b2a0bf38', ('windows', 'psh')),
+    'xss-browser-proof-000000000003': (frozenset(('WEB-01',)),
+        'e233ff633214be56be10fc890db42a07485daef16fc2b4b11ae748316e031727', ('windows', 'psh')),
+    'brute-force-bounded-000000000002': (frozenset(('WEB-02',)),
+        'da465e5393ac28a1ef84e91828b34dd2abeb9098f609b2f5b631708150518193', ('windows', 'psh')),
+}
+
+
+def is_reviewed_fixed(record, executor):
+    """Match a fixed-demo source against the pinned revision and executor."""
+    if not record or not executor:
+        return False
+    expected = FIXED_SOURCES.get(record['canonical_id'])
+    return (
+        expected is not None
+        and (executor['platform'], executor['name']) == expected[2]
+        and record['provenance']['revision'] == expected[1]
+    )
+
+
+def fixed_case_for_steps(steps):
+    """The single fixed case shared by all steps, or None (mixed/unpinned)."""
+    import functools
+    sets = []
+    for item in steps:
+        record, executor = item.get('record'), item.get('executor')
+        if not record or not executor or not is_reviewed_fixed(record, executor):
+            return None
+        sets.append(FIXED_SOURCES[record['canonical_id']][0])
+    common = functools.reduce(lambda a, b: a & b, sets) if sets else None
+    if not common or len(common) != 1:
+        return None
+    return next(iter(common))
+
 
 def is_reviewed_inventory(record, executor):
     if not record or not executor:
@@ -103,7 +154,7 @@ def inspect(root, folder):
                 if len(matches)!=1:issues.append('Executor nguồn thiếu/không duy nhất.')
                 else:executor=matches[0]
                 accepted = [provenance]
-                if executor and (is_inventory_command(executor.get('command')) or is_reviewed_inventory(record, executor)):
+                if executor and (is_inventory_command(executor.get('command')) or is_reviewed_inventory(record, executor) or is_reviewed_fixed(record, executor)):
                     published = catalog_handles({'abilities':[{'record':record}]})
                     accepted.append(published['abilities'][0]['record']['provenance'])
                 if not all(any(source in refs for source in accepted)

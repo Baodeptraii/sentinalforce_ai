@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Phase context transport v1",
+  "type":"object",
+  "required":["context_projection_version","context_phase","context_references"],
+  "properties":{
+    "context_projection_version":{"const":"phase_context_v1"},
+    "context_phase":{"enum":["parse","ground_behaviors","build_plan"]},
+    "context_references":{"type":"object","propertyNames":{"pattern":"^CTX_[a-f0-9]{24}$"}},
+    "compatibility_report":{"type":["object","null"]},
+    "survey_context":{"type":"object"},
+    "behaviors":{"type":"array","items":{"type":"object","required":["behavior","candidates"]}},
+    "source_references":{"type":"object"}
+  }
+}

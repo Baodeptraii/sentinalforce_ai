@@ -30,7 +30,7 @@ class TestUpgrade(unittest.TestCase):
         self.directory = Path(self.tmp.name)
         self.config = survey.load_config()
         self.config.update(web_scope=[{'scheme': 'http', 'port': 80}, {'scheme': 'https', 'port': 80}], web_ports=[80], web_scope_by_target={})
-        self.request = {'target_ip': '192.0.2.11', 'survey_scope': ['endpoint', 'web'], 'web_checks': ['dvwa']}
+        self.request = {'target_ip': '192.168.73.199', 'survey_scope': ['endpoint', 'web'], 'web_checks': ['dvwa']}
         self.agent = {'paw': 'fixture', 'host': 'FIXTURE', 'platform': 'windows', 'privilege': 'User'}
 
     def test_no_request_is_not_checked_and_both_protocols_are_attempted(self):
@@ -53,11 +53,11 @@ class TestUpgrade(unittest.TestCase):
 
     def test_body_limit_is_evidence(self):
         response = MagicMock(); response.__enter__.return_value=response; response.code=200
-        response.read.return_value=b'x'*262145; response.geturl.return_value='http://192.0.2.11/'; response.headers={}
+        response.read.return_value=b'x'*262145; response.geturl.return_value='http://192.168.73.199/'; response.headers={}
         config=dict(self.config, web_scope=[{'scheme':'http','port':80}], web_paths=['/'])
         with patch.object(survey, 'build_opener') as build:
             build.return_value.open.return_value=response
-            raw=survey.probe_web('192.0.2.11',{},config,lambda *x:None)
+            raw=survey.probe_web('192.168.73.199',{},config,lambda *x:None)
         self.assertTrue(raw['requests'][0]['body_truncated'])
 
     def test_dynamic_candidates_do_not_expand_scope_or_repeat_ports(self):
@@ -124,21 +124,21 @@ class TestUpgrade(unittest.TestCase):
 
     def test_dvwa_modules_read_only_and_no_values_are_exported(self):
         file=self.directory/'credential.json';file.write_text(json.dumps({'username':'fixture','password':'private-password'}))
-        config={'dvwa_auth_by_target':{'192.0.2.10':{'enabled':True,'base_url':BASE,'credentials_file':str(file)}}}
+        config={'dvwa_auth_by_target':{'192.168.73.130':{'enabled':True,'base_url':BASE,'credentials_file':str(file)}}}
         replies=[Response('login.php',"<input name='user_token' value='private-token'>"),Response('index.php',''),
             Response('index.php',"<a href='logout.php'>Logout</a><a href='vulnerabilities/sqli/'>SQLi</a><a href='setup.php'>setup</a><a href='vulnerabilities/sqli/?id=1'>payload</a><a href='http://outside/vulnerabilities/x/'>outside</a>"),
             Response('security.php',"<a href='logout.php'>Logout</a><select name='security'><option value='low' selected>low</option></select>"),
             Response('vulnerabilities/sqli/',"<a href='../../logout.php'>Logout</a><form method='POST'><input name='id' value='private-value'><input name='user_token' value='private-token'></form>")]
         with patch('engine.dvwa_session.build_opener') as build:
             build.return_value.open.side_effect=replies
-            result=verify_session('192.0.2.10',config,survey_modules=True)
+            result=verify_session('192.168.73.130',config,survey_modules=True)
             requests=[c.args[0] for c in build.return_value.open.call_args_list]
         self.assertEqual([r.get_method() for r in requests],['GET','POST','GET','GET','GET'])
         self.assertEqual(result['modules_planned'],['vulnerabilities/sqli/'])
         self.assertTrue(result['modules'][0]['authenticated'])
         self.assertTrue(result['modules'][0]['forms'][0]['csrf_present'])
         self.assertNotIn('private-',json.dumps(result))
-        self.assertEqual(verify_session('192.0.2.11',config)['status'],'not_configured')
+        self.assertEqual(verify_session('192.168.73.199',config)['status'],'not_configured')
 
     def test_contracts_both_reject_unverified_telemetry(self):
         profile=survey.build_profile(self.request,self.agent,endpoint(),None)
@@ -151,8 +151,8 @@ class TestUpgrade(unittest.TestCase):
 
     def test_recovery_is_target_bound_and_resolved_marker_is_retained(self):
         journal=self.directory/'a'/ 'caldera/summary.json'
-        save(journal,{'cleanup_required':True,'expected_ip':'192.0.2.11','paw':'p','operation_id':'o'})
-        self.assertEqual(pending_recovery(self.directory)[0]['target_ip'],'192.0.2.11')
+        save(journal,{'cleanup_required':True,'expected_ip':'192.168.73.199','paw':'p','operation_id':'o'})
+        self.assertEqual(pending_recovery(self.directory)[0]['target_ip'],'192.168.73.199')
         save(journal,{'cleanup_required':False,'group_restored':True})
         save(journal.parent.parent/'recovery_required.json',{'reason':'watchdog','resolved_at':survey.now()})
         self.assertEqual(pending_recovery(self.directory),[])

@@ -1,0 +1,17 @@
+{
+  "parse_input": 49152,
+  "ground_behaviors_input": 73728,
+  "build_plan_input": 81920,
+  "survey_input": 32768,
+  "parse_output": 2048,
+  "ground_behaviors_output": 4096,
+  "build_plan_output": 12288,
+  "survey_output": 1000,
+  "run_tokens": 180000,
+  "run_requests": 8,
+  "run_seconds": 1800,
+  "window_tokens": 100000,
+  "window_requests": 6,
+  "window_seconds": 60,
+  "lease_seconds": 660
+}

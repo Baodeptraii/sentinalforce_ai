@@ -13,7 +13,7 @@ from engine.survey import RedirectScopeError
 from final_template.web_profile import aggregate_web, llm_web_summary
 from engine.contracts import WebApplication
 
-BASE = 'http://192.0.2.10/dvwa/'
+BASE = 'http://192.168.73.130/dvwa/'
 class Response:
     code = 200
     def __init__(self, path, body): self.path, self.body = path, body
@@ -34,7 +34,7 @@ class TestDVWASession(unittest.TestCase):
     def test_login_csrf_cookie_jar_verification_and_level(self):
         with patch('engine.dvwa_session.build_opener') as build:
             build.return_value.open.side_effect=self.responses()
-            result=verify_session('192.0.2.10',self.config)
+            result=verify_session('192.168.73.130',self.config)
             requests=[c.args[0] for c in build.return_value.open.call_args_list]
             self.assertEqual([r.get_method() for r in requests],['GET','POST','GET','GET'])
             form=parse_qs(requests[1].data.decode()); self.assertEqual(form['user_token'],['fixture-csrf'])
@@ -47,26 +47,26 @@ class TestDVWASession(unittest.TestCase):
         replies=self.responses(); replies[2]=Response('login.php',"<input name='user_token' value='again'>")
         with patch('engine.dvwa_session.build_opener') as build:
             build.return_value.open.side_effect=replies
-            result=verify_session('192.0.2.10',self.config)
+            result=verify_session('192.168.73.130',self.config)
             self.assertIsNone(result['session_ready']); self.assertEqual(result['status'],'authentication_unverified')
             self.assertEqual(build.return_value.open.call_count,3)
     def test_security_error_preserves_verified_login(self):
         replies=self.responses(); replies[-1]=TimeoutError('timeout')
         with patch('engine.dvwa_session.build_opener') as build:
             build.return_value.open.side_effect=replies
-            result=verify_session('192.0.2.10',self.config)
+            result=verify_session('192.168.73.130',self.config)
             self.assertTrue(result['session_ready']); self.assertIsNone(result['current_security_level'])
             self.assertEqual(result['status'],'security_check_failed')
     def test_missing_token_does_not_send_credentials(self):
         with patch('engine.dvwa_session.build_opener') as build:
             build.return_value.open.return_value=Response('login.php','unrelated page')
-            result=verify_session('192.0.2.10',self.config)
+            result=verify_session('192.168.73.130',self.config)
             self.assertEqual(build.return_value.open.call_count,1); self.assertIsNone(result['session_ready'])
     def test_target_binding_and_redirect_guard(self):
         with patch('engine.dvwa_session.build_opener') as build:
-            self.assertEqual(verify_session('192.0.2.11',self.config)['status'],'out_of_scope'); build.assert_not_called()
+            self.assertEqual(verify_session('192.168.73.199',self.config)['status'],'out_of_scope'); build.assert_not_called()
         handler=AuthRedirect(BASE)
-        for dest in ['http://outside.test/','http://192.0.2.10/setup.php',BASE+'../evil',BASE+'%2e%2e/evil','https://192.0.2.10/dvwa/index.php']:
+        for dest in ['http://outside.test/','http://192.168.73.130/setup.php',BASE+'../evil',BASE+'%2e%2e/evil','https://192.168.73.130/dvwa/index.php']:
             with self.subTest(dest=dest), self.assertRaises(RedirectScopeError): handler.redirect_request(Request(BASE+'login.php'),None,302,'',{},dest)
     def test_auth_evidence_applies_only_to_identified_matching_app(self):
         auth={'base_url':BASE,'session_ready':True,'current_security_level':'impossible','status':'verified'}
@@ -75,5 +75,5 @@ class TestDVWASession(unittest.TestCase):
         app=evidence['services'][0]['applications'][0]; WebApplication.model_validate(app)
         self.assertTrue(app['session_ready']); self.assertEqual(app['authentication_ref'],'tool.json#/authentication')
         self.assertEqual(llm_web_summary(raw)['authentication']['current_security_level'],'impossible')
-        raw['authentication']['base_url']='http://192.0.2.11/dvwa/'
+        raw['authentication']['base_url']='http://192.168.73.199/dvwa/'
         self.assertIsNone(aggregate_web([('tool.json',raw)])['services'][0]['applications'][0]['session_ready'])

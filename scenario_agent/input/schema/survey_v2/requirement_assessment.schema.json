@@ -1,0 +1,112 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "type": "object",
+ "required": [
+  "registry_version",
+  "requirements",
+  "supporting_fact_ids",
+  "applications",
+  "compatibility"
+ ],
+ "properties": {
+  "registry_version": {
+   "const": "1.0"
+  },
+  "requirements": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "id",
+     "kind",
+     "subject",
+     "expected",
+     "status",
+     "fact_ids",
+     "detail",
+     "source"
+    ],
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "kind": {
+      "enum": [
+       "catalog.cleanup",
+       "catalog.dependency",
+       "demo_receiver",
+       "endpoint.listener",
+       "endpoint.path",
+       "endpoint.process_inventory",
+       "endpoint.service_inventory",
+       "runner.executor",
+       "runner.privilege",
+       "target.architecture",
+       "target.os",
+       "telemetry.network",
+       "telemetry.process",
+       "telemetry.web",
+       "unsupported",
+       "web.application",
+       "web.authentication",
+       "web.csrf",
+       "web.request"
+      ]
+     },
+     "subject": {
+      "type": "string"
+     },
+     "expected": {},
+     "status": {
+      "enum": [
+       "observed",
+       "configured",
+       "inferred",
+       "unknown",
+       "ambiguous",
+       "conflicting",
+       "unsupported",
+       "incompatible"
+      ]
+     },
+     "fact_ids": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "detail": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "source": {
+      "type": "object"
+     }
+    }
+   }
+  },
+  "supporting_fact_ids": {
+   "type": "array",
+   "items": {
+    "type": "string"
+   }
+  },
+  "applications": {
+   "type": "object"
+  },
+  "compatibility": {
+   "enum": [
+    "compatible",
+    "incompatible",
+    "needs_information"
+   ]
+  }
+ }
+}

@@ -11,7 +11,7 @@ import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
 
-ADAPTER = 'scenario_survey_v2.1'
+ADAPTER = 'scenario_survey_v2.2'
 MAX_BYTES, MAX_FILE, MAX_FILES = 32_000_000, 8_000_000, 512
 SCHEMAS = Path(__file__).resolve().parents[1] / 'input/schema/survey_v2'
 
@@ -168,6 +168,19 @@ def load_directory(root):
         # Typed predicates must match the pointed observation, not just an existing file.
         values = [verify_ref(r) for r in fact['evidence_refs']]
         predicate, value = fact['predicate'], fact['value']
+        if predicate == 'listener':
+            valid = False
+            for ref in fact['evidence_refs']:
+                data = verify_ref(ref)
+                if not isinstance(data,dict) or not isinstance(value,dict): continue
+                listener = value.get('listener')
+                if not isinstance(listener,dict) or listener not in data.get('listeners',[]): continue
+                pid = listener.get('OwningProcess')
+                valid = (fact['subject']==str(listener.get('LocalPort')) and fact['observed_at']==data.get('collected_at')
+                         and all(p in data.get('processes',[]) and p.get('pid')==pid for p in value.get('processes',[]))
+                         and all(s in data.get('services',[]) and s.get('process_id')==pid for s in value.get('services',[])))
+                if valid: break
+            if not valid: raise ValueError('Listener fact differs from its endpoint evidence')
         endpoint_fields = {'os_name', 'os_version', 'architecture', 'hostname', 'is_elevated', 'powershell_version'}
         runner_fields = {'paw', 'executors', 'privilege', 'platform'}
         if predicate in endpoint_fields | runner_fields or predicate.startswith('legacy_os.') or fact['subject'] == 'legacy-survey-capabilities':

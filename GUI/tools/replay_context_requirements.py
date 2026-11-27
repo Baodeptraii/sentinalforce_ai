@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Offline mixed endpoint/web replay: real Survey/catalog, mocked model and retrieval fixture.
 
-Run using scenario_agent/.venv/bin/python. Never executes source commands.
+Run using /home/soc/build_scenario_agent/.venv/bin/python. Never executes source commands.
 """
 import argparse
 import json
@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 GUI=Path(__file__).resolve().parents[1]
-RUNTIME=Path('scenario_agent')
+RUNTIME=Path('/home/soc/build_scenario_agent')
 sys.path[:0]=[str(RUNTIME),str(RUNTIME/'tests'),str(GUI)]
 from test_context_requirements import MixedMock, mixed_retrieval, MIXED
 from engine import scenario_bridge as bridge

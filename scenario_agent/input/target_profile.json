@@ -1,0 +1,209 @@
+{
+  "id": "win10-dvwa-lab",
+  "os": {
+    "name": "Windows 10 Pro",
+    "version": "10.0.19045",
+    "architecture": "amd64",
+    "hostname": "DESKTOP-KDAB44M",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "status": "reported_from_user_evidence"
+  },
+  "address": "192.168.73.130",
+  "services": [
+    {
+      "name": "DVWA",
+      "url": "http://192.168.73.130/dvwa/",
+      "deployment": "XAMPP on Windows",
+      "document_root": "C:\\xampp\\htdocs\\dvwa",
+      "upload_directory": "C:\\xampp\\htdocs\\dvwa\\hackable\\uploads",
+      "version": null,
+      "security_levels": [
+        "low",
+        "medium",
+        "high",
+        "impossible"
+      ],
+      "current_security_level": null,
+      "level_selection": "Generate separate scenario variants for the requested levels; set and verify the session level before each run. The four levels belong to the same DVWA instance.",
+      "authentication": {
+        "login_url": "http://192.168.73.130/dvwa/login.php",
+        "credentials_ref": null,
+        "session_status": "assumed_ready_for_planning"
+      },
+      "status": "http_200_and_access_log_reported"
+    },
+    {
+      "name": "Sandcat",
+      "paw": "spdoxq",
+      "group": "red",
+      "contact": "http",
+      "username": "DESKTOP-KDAB44M\\SOC",
+      "privilege": "User",
+      "executable": "C:\\Users\\Public\\sandcat_agent.exe",
+      "controller_url": "http://192.168.73.128:8888",
+      "status": "alive_trusted_in_user_screenshot"
+    },
+    {
+      "name": "Atomic Red Team",
+      "atomics_directory": "C:\\AtomicRedTeam\\atomics",
+      "module": "Invoke-AtomicRedTeam",
+      "module_version": "2.3.0",
+      "entrypoint": "Invoke-AtomicTest",
+      "execution_route": "Scenario Agent -> CALDERA ability -> Windows Sandcat PowerShell executor -> Invoke-AtomicTest",
+      "status": "assumed_executable_by_user"
+    },
+    {
+      "name": "PowerShell",
+      "version": "5.1.19041.6456",
+      "executor": "psh",
+      "status": "reported"
+    },
+    {
+      "name": "Wazuh Agent",
+      "service_name": "WazuhSvc",
+      "agent_id": "001",
+      "manager_address": "192.168.73.129",
+      "dashboard_url": "https://192.168.73.129",
+      "status": "assumed_collecting_by_user"
+    }
+  ],
+  "capabilities": {
+    "sandcat_online": true,
+    "art_ready": true,
+    "powershell_ready": true,
+    "web_runner_ready": true,
+    "web_reachable": true,
+    "dvwa_session_ready": true,
+    "admin_ready": false,
+    "winrm_ready": null,
+    "nested_atomic_reviewed": null,
+    "nmap_ready": null,
+    "dvwa_endpoints_verified": null,
+    "ssh_target_verified": null,
+    "ftp_target_verified": null,
+    "mail_target_verified": null,
+    "office_ready": null,
+    "interactive_session_ready": null,
+    "planning_context": {
+      "mode": "plan_only",
+      "basis": "User requested assuming ART execution and logging are operational for scenario generation; these assumptions are not live verification.",
+      "assumed_fields": [
+        "art_ready",
+        "web_runner_ready",
+        "dvwa_session_ready"
+      ],
+      "controller_address": "192.168.73.128",
+      "allowed_execution_tools": [
+        "caldera",
+        "atomic_red_team"
+      ],
+      "web_execution": "Use a catalog-backed HTTP ability through CALDERA; select its executor explicitly. Do not infer a Sandcat agent on Ubuntu from curl reachability.",
+      "pre_execution_checks": [
+        "Resolve credentials and session at runtime without embedding secrets.",
+        "Verify selected DVWA level, module routes and form parameters.",
+        "Verify required executor privilege and per-test dependencies.",
+        "Resolve current Sandcat paw; the reported paw can change."
+      ]
+    },
+    "execution_scope": {
+      "target_kind": "isolated_virtual_machine",
+      "allowed_targets": [
+        "192.168.73.130"
+      ],
+      "allowed_surfaces": [
+        "endpoint",
+        "dvwa",
+        "services_on_target"
+      ],
+      "dummy_directory": "C:\\SOC-Lab",
+      "allowed_file_write_roots": [
+        "C:\\SOC-Lab",
+        "C:\\xampp\\htdocs\\dvwa\\hackable\\uploads"
+      ],
+      "cleanup_required": true,
+      "rollback_required": true,
+      "service_disruption_allowed": false,
+      "excluded_behaviors": [
+        "Destructive operations outside approved dummy files.",
+        "System-wide encryption or deletion.",
+        "Stopping DVWA, Wazuh, Sysmon or essential Windows services.",
+        "Reboot, shutdown or operating-system damage."
+      ],
+      "privilege_policy": "Authorization does not grant elevation: select User-compatible tests; flag elevated tests as requiring a different execution context.",
+      "evaluation_goal": "Verify test behavior and SOC visibility; exploitation success is not mandatory."
+    }
+  },
+  "telemetry": {
+    "process_events": true,
+    "network_events": true,
+    "web_access_logs": true,
+    "wazuh_ingestion": true,
+    "status": "assumed_operational_by_user_not_live_verified",
+    "sources": {
+      "apache_access": {
+        "location": "C:\\xampp\\apache\\logs\\access.log",
+        "log_format": "apache",
+        "evidence": "User supplied HTTP 200 access entry for soc_probe=PROFILE_CHECK_001 from 192.168.73.128.",
+        "ingestion_status": "assumed"
+      },
+      "apache_error": {
+        "location": "C:\\xampp\\apache\\logs\\error.log",
+        "log_format": "apache",
+        "ingestion_status": "assumed"
+      },
+      "sysmon": {
+        "channel": "Microsoft-Windows-Sysmon/Operational",
+        "log_format": "eventchannel",
+        "expected_event_ids": [
+          1,
+          3,
+          11
+        ],
+        "file_create_scope": [
+          "C:\\SOC-Lab",
+          "C:\\xampp\\htdocs\\dvwa\\hackable\\uploads"
+        ],
+        "ingestion_status": "assumed"
+      },
+      "powershell": {
+        "channel": "Microsoft-Windows-PowerShell/Operational",
+        "log_format": "eventchannel",
+        "expected_event_ids": [
+          4104
+        ],
+        "ingestion_status": "assumed"
+      },
+      "defender": {
+        "channel": "Microsoft-Windows-Windows Defender/Operational",
+        "log_format": "eventchannel",
+        "ingestion_status": "assumed"
+      },
+      "windows": {
+        "channels": [
+          "Security",
+          "System",
+          "Application"
+        ],
+        "log_format": "eventchannel",
+        "audit_policy": null,
+        "ingestion_status": "assumed"
+      }
+    },
+    "wazuh": {
+      "manager_address": "192.168.73.129",
+      "agent_id": "001",
+      "archives_index": "wazuh-archives-*",
+      "alerts_index": "wazuh-alerts-*",
+      "time_field": "timestamp",
+      "apache_filter_field": "location",
+      "archive_indexing_status": "assumed"
+    },
+    "limitations": [
+      "Apache access logs do not normally contain POST bodies or browser-side execution evidence.",
+      "An ingested event does not imply an alert; detection results remain not_evaluated.",
+      "Sysmon file-create events do not prove coverage of every modification or deletion.",
+      "Security event availability depends on audit policy; do not assume every event ID exists."
+    ],
+    "detection_result": "not_evaluated"
+  }
+}

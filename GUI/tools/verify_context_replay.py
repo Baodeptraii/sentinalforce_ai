@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 GUI=Path(__file__).resolve().parents[1]
-RUNTIME=Path('scenario_agent')
+RUNTIME=Path('/home/soc/build_scenario_agent')
 sys.path.insert(0,str(RUNTIME))
 import yaml
 from jsonschema import Draft202012Validator

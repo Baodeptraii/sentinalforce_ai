@@ -13,7 +13,7 @@ from tests.test_scenario_agent import ABILITY, fixture_plan, fixture_request
 
 def main():
     config = Config()
-    config.runs = ROOT / 'reports/implementation/offline_fixture'
+    config.runs = ROOT / 'outputs/offline_fixture'
     state = new_state(config, 'Windows endpoint T1033 user discovery, 1 test. ' + ABILITY,
                       ROOT / 'input/target_profile.json', 'keyword')
     with connect(config.catalog) as db:

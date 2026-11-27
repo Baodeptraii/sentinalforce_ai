@@ -1,4 +1,5 @@
 """Append-only metadata audit. Never accepts command/output, headers or free text."""
+import fcntl
 import hashlib
 import json
 import os
@@ -9,36 +10,6 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-try:
-    import fcntl
-except ImportError:  # Windows fallback
-    fcntl = None
-    import msvcrt
-
-NOFOLLOW = getattr(os, 'O_NOFOLLOW', 0)
-
-
-def _lock(stream):
-    if fcntl is not None:
-        fcntl.flock(stream.fileno(), fcntl.LOCK_EX)
-        return
-    stream.seek(0, 2)
-    if stream.tell() == 0:
-        stream.write('\0')
-        stream.flush()
-    stream.seek(0)
-    msvcrt.locking(stream.fileno(), msvcrt.LK_LOCK, 1)
-
-
-def _unlock(stream):
-    if fcntl is not None:
-        fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
-        return
-    stream.seek(0)
-    msvcrt.locking(stream.fileno(), msvcrt.LK_UNLCK, 1)
-
-
-# ponytail: retain cross-platform append locking; replace with a shared lock helper only if multi-process audit load grows.
 ROOT = Path(__file__).resolve().parents[1]
 LOCK = threading.RLock()
 ID = re.compile(r'^[\w.:/@+ -]{0,180}$', re.ASCII)
@@ -74,19 +45,16 @@ def emit(component, *, root=None, max_bytes=5_000_000, **values):
     with LOCK:
         lockfile=directory/'.lock'
         if lockfile.is_symlink():raise ValueError('Audit lock symlink refused')
-        fd=os.open(lockfile,os.O_CREAT|os.O_RDWR|NOFOLLOW,0o600)
+        fd=os.open(lockfile,os.O_CREAT|os.O_RDWR|os.O_NOFOLLOW,0o600)
         with os.fdopen(fd,'a') as lock:
-            _lock(lock)
-            try:
-                path=directory/'events.jsonl'
-                if path.is_symlink():raise ValueError('Audit stream symlink refused')
-                if path.exists() and path.stat().st_size+len(encoded)>max_bytes:
-                    path.rename(directory/('events-'+uuid.uuid4().hex+'.jsonl'))
-                fd=os.open(path,os.O_CREAT|os.O_APPEND|os.O_WRONLY|NOFOLLOW,0o640)
-                with os.fdopen(fd,'ab') as stream:
-                    stream.write(encoded);stream.flush();os.fsync(stream.fileno())
-            finally:
-                _unlock(lock)
+            fcntl.flock(lock,fcntl.LOCK_EX)
+            path=directory/'events.jsonl'
+            if path.is_symlink():raise ValueError('Audit stream symlink refused')
+            if path.exists() and path.stat().st_size+len(encoded)>max_bytes:
+                path.rename(directory/('events-'+uuid.uuid4().hex+'.jsonl'))
+            fd=os.open(path,os.O_CREAT|os.O_APPEND|os.O_WRONLY|os.O_NOFOLLOW,0o640)
+            with os.fdopen(fd,'ab') as stream:
+                stream.write(encoded);stream.flush();os.fsync(stream.fileno())
     return event
 
 

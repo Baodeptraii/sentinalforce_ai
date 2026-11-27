@@ -1,0 +1,15 @@
+{
+ "schema_version": "1.0",
+ "note": "Typed config for the EP-03 internal demo receiver. The GUI adapter independently pins the same origin; preflight rejects any mismatch.",
+ "origin": "http://192.168.1.164:18765",
+ "paths": {
+  "beacon": "/beacon",
+  "exfil": "/exfil"
+ },
+ "bounds": {
+  "heartbeat_max": 5,
+  "heartbeat_interval_seconds_min": 3,
+  "file_max_bytes": 65536
+ },
+ "data_policy": "synthetic training markers only; no personal data, no recursive collection"
+}

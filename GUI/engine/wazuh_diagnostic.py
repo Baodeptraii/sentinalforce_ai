@@ -4,7 +4,7 @@ from datetime import datetime,timedelta,timezone
 from .wazuh_connector import Connector,ConnectorError
 
 def parse_dashboard_record(line):
-    match=re.fullmatch(r'Wazuh\s*:\s*https://[^/]+/\s*-\s*user:\s*([^/]+?)/\s*pass: (.*)',line,re.I)
+    match=re.fullmatch(r'Wazuh\s*:\s*https://192\.168\.100\.112/\s*-\s*user:\s*([^/]+?)/\s*pass: (.*)',line,re.I)
     if not match:raise ValueError('Ambiguous dashboard record')
     return {'username':match[1].strip(),'password':match[2]}
 
@@ -18,7 +18,7 @@ def check(config):
     end=datetime.now(timezone.utc);start=end-timedelta(minutes=60)
     window={'start':start.isoformat(),'end':end.isoformat()}
     query={'size':50,'sort':[{'timestamp':'desc'}],'query':{'bool':{'filter':[
-        {'terms':{'agent.ip':['192.0.2.10','192.0.2.12']}},
+        {'terms':{'agent.ip':['192.168.1.150','192.168.1.164']}},
         {'range':{'timestamp':{'gte':window['start'],'lte':window['end']}}}]}},
         '_source':['timestamp','agent.id','agent.name','agent.ip','rule.id','rule.level','data.win.system.channel','data.win.system.eventID']}
     result=client.request('indexer','/wazuh-alerts-*/_search?scroll=1m',query)

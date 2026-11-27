@@ -171,7 +171,7 @@
       "const": "2.0"
     },
     "adapter_version": {
-      "const": "scenario_survey_v2.1"
+      "const": "scenario_survey_v2.2"
     },
     "request": {
       "type": "object",
@@ -201,7 +201,7 @@
       ],
       "properties": {
         "version": {
-          "const": "scenario_survey_v2.1"
+          "const": "scenario_survey_v2.2"
         },
         "mode": {
           "const": "plan_only"

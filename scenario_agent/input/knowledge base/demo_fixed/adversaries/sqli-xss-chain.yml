@@ -1,0 +1,8 @@
+- id: sqli-xss-chain
+  name: DVWA SQL Injection and Reflected XSS Verification
+  description: Establishes an authenticated DVWA session with CSRF handling, runs a verified union SQLi probe against the low-security module, then proves reflected XSS execution with a harmless marker inside a real headless browser.
+  atomic_ordering:
+    - session-bootstrap-000000000001
+    - sqli-union-probe-000000000002
+    - xss-browser-proof-000000000003
+  tags: [demo_fixed, web, dvwa]

@@ -1,0 +1,7 @@
+- id: beacon-exfil-chain
+  name: Beaconing and Simulated Exfiltration to Internal Listener
+  description: Sends five bounded HTTP heartbeats to the approved internal listener, then transfers one small synthetic file with SHA256 headers so receipts on both sides can be compared.
+  atomic_ordering:
+    - http-beacon-000000000001
+    - file-transfer-000000000002
+  tags: [demo_fixed, endpoint, simulation]

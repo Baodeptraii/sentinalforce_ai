@@ -28,12 +28,12 @@ def row(url, code=200, **extra):
 
 
 def request(web=True):
-    return {'target_ip': '192.0.2.10', 'survey_scope': ['endpoint', 'web'] if web else ['endpoint'], 'web_checks': ['dvwa'] if web else []}
+    return {'target_ip': '192.168.73.130', 'survey_scope': ['endpoint', 'web'] if web else ['endpoint'], 'web_checks': ['dvwa'] if web else []}
 
 
 def profile(evidence):
     return {'id': 'test', 'os': {'name': 'fixture', 'hostname': 'fixture', 'version': None, 'architecture': None, 'status': 'observed'},
-            'address': '192.0.2.10', 'services': evidence['services'],
+            'address': '192.168.73.130', 'services': evidence['services'],
             'capabilities': {'sandcat_online': True, 'powershell_ready': True, 'admin_ready': False, 'web_runner_ready': True, 'web_reachable': True if evidence['services'] else None, 'dvwa_session_ready': None},
             'telemetry': dict.fromkeys(['process_events', 'network_events', 'web_access_logs', 'wazuh_ingestion'])}
 
@@ -55,9 +55,9 @@ class TestWebNormalization(unittest.TestCase):
         self.assertNotEqual(canonical_url('http://example.test/A/'), canonical_url('http://example.test/a/'))
 
     def test_login_and_403_and_400_do_not_invent_readiness_or_apps(self):
-        evidence = aggregate_web([('fixture', {'requests': [row('http://192.0.2.10/dvwa/login.php', title='Login :: DVWA', server_banner='Apache/fixture'),
-            row('http://192.0.2.10/phpmyadmin/', 403, title='Forbidden', application_hint='phpMyAdmin'),
-            row('http://192.0.2.10:443/', 400), row('http://192.0.2.10:443/dvwa/', 400)]})])
+        evidence = aggregate_web([('fixture', {'requests': [row('http://192.168.73.130/dvwa/login.php', title='Login :: DVWA', server_banner='Apache/fixture'),
+            row('http://192.168.73.130/phpmyadmin/', 403, title='Forbidden', application_hint='phpMyAdmin'),
+            row('http://192.168.73.130:443/', 400), row('http://192.168.73.130:443/dvwa/', 400)]})])
         self.assertEqual(len(evidence['services']), 1)
         app = evidence['services'][0]['applications'][0]
         self.assertEqual(app['name'], 'DVWA')
@@ -80,11 +80,11 @@ class TestWebNormalization(unittest.TestCase):
         self.assertNotIn('fixture-secret', error['message']); self.assertNotIn('fixture-token', error['message'])
 
     def test_redirects_check_every_hop_and_block_before_request(self):
-        handler = survey.SameHostRedirect('192.0.2.10', 80, [80, 443])
-        req = Request('http://192.0.2.10/')
-        redirected = handler.redirect_request(req, None, 302, '', {}, 'https://192.0.2.10/dvwa/')
-        self.assertEqual(redirected.full_url, 'https://192.0.2.10/dvwa/')
-        for url in ['http://outside.test/', 'http://192.0.2.10:9999/', 'http://user:secret@192.0.2.10/', 'ftp://192.0.2.10/', 'http://192.0.2.10:invalid/']:
+        handler = survey.SameHostRedirect('192.168.73.130', 80, [80, 443])
+        req = Request('http://192.168.73.130/')
+        redirected = handler.redirect_request(req, None, 302, '', {}, 'https://192.168.73.130/dvwa/')
+        self.assertEqual(redirected.full_url, 'https://192.168.73.130/dvwa/')
+        for url in ['http://outside.test/', 'http://192.168.73.130:9999/', 'http://user:secret@192.168.73.130/', 'ftp://192.168.73.130/', 'http://192.168.73.130:invalid/']:
             with self.subTest(url=url), self.assertRaises(survey.RedirectScopeError):
                 handler.redirect_request(redirected, None, 302, '', {}, url)
             self.assertTrue(handler.chain[-1]['blocked'])
@@ -93,14 +93,14 @@ class TestWebNormalization(unittest.TestCase):
     def test_probe_retains_https_error_http400_diagnostics_and_tls_verification(self):
         class Response:
             code = 400; headers = {}
-            def geturl(self): return 'http://192.0.2.10:443/'
+            def geturl(self): return 'http://192.168.73.130:443/'
             def read(self, _): return b'<title>400 Bad Request</title>'
             def __enter__(self): return self
             def __exit__(self, *args): pass
         for error in [ssl.SSLCertVerificationError(1, 'certificate verify failed'), socket.timeout('timed out'), ConnectionRefusedError(111, 'refused')]:
             with self.subTest(error=error), patch.object(survey, 'build_opener') as opener, patch.object(survey.socket, 'create_connection') as tcp:
                 opener.return_value.open.side_effect = [URLError(error), Response()]
-                data = survey.probe_web('192.0.2.10', {}, {'web_ports': [443], 'max_web_ports': 1, 'max_web_pages': 2, 'web_paths': ['/']}, lambda _: None)
+                data = survey.probe_web('192.168.73.130', {}, {'web_ports': [443], 'max_web_ports': 1, 'max_web_pages': 2, 'web_paths': ['/']}, lambda _: None)
                 tcp.assert_not_called()
                 self.assertEqual(len(data['requests']), 2)
                 self.assertIsNotNone(data['requests'][0]['error'])
@@ -111,12 +111,11 @@ class TestWebNormalization(unittest.TestCase):
                 self.assertTrue(https_handler._context.check_hostname)
         with patch.object(survey.ssl, 'create_default_context') as context, patch.object(survey, 'build_opener') as opener:
             opener.return_value.open.side_effect = URLError(socket.timeout('timed out'))
-            ca_file = str(Path(tempfile.gettempdir()) / 'fixture-ca.pem')
-            survey.probe_web('192.0.2.10', {}, {'web_ports': [443], 'max_web_ports': 1, 'max_web_pages': 1, 'web_paths': ['/'], 'web_ca_file': ca_file}, lambda _: None)
-            context.assert_called_once_with(cafile=ca_file)
+            survey.probe_web('192.168.73.130', {}, {'web_ports': [443], 'max_web_ports': 1, 'max_web_pages': 1, 'web_paths': ['/'], 'web_ca_file': '/tmp/fixture-ca.pem'}, lambda _: None)
+            context.assert_called_once_with(cafile='/tmp/fixture-ca.pem')
 
     def test_llm_summary_contains_decision_fields_without_html_cookie_or_credentials(self):
-        data = {'status': 'observed', 'requests': [row('http://192.0.2.10/dvwa/?password=fixture-secret', title='DVWA', application_hint='DVWA', html='<html>private</html>', cookie='fixture-cookie')] * 2}
+        data = {'status': 'observed', 'requests': [row('http://192.168.73.130/dvwa/?password=fixture-secret', title='DVWA', application_hint='DVWA', html='<html>private</html>', cookie='fixture-cookie')] * 2}
         result = llm_web_summary(data)
         serialized = json.dumps(result)
         for secret in ['fixture-secret', 'fixture-cookie', '<html>', 'title']: self.assertNotIn(secret, serialized)
@@ -131,7 +130,7 @@ class TestWebNormalization(unittest.TestCase):
         self.assertEqual(next(x for x in checked['missing_information'] if x['field'] == 'web')['status'], 'out_of_scope')
         self.assertFalse(any(x['field'] == 'https' for x in checked['missing_information']))
         self.assertFalse(any('Không chọn' in x for x in checked['warnings']))
-        evidence = aggregate_web([('fixture', {'requests': [row('https://192.0.2.10/', None, error={'kind': 'timeout', 'message': 'timed out'})]})])
+        evidence = aggregate_web([('fixture', {'requests': [row('https://192.168.73.130/', None, error={'kind': 'timeout', 'message': 'timed out'})]})])
         checked = assess(request(), profile(evidence), evidence, {'probe_web', 'probe_dvwa'})
         self.assertFalse(checked['required_missing'])
         self.assertEqual(checked['web_readiness']['https']['error_kinds'], ['timeout'])
@@ -144,10 +143,10 @@ class TestWebNormalization(unittest.TestCase):
         endpoint = {'data': {'os_name': 'fixture Windows', 'os_version': 'test', 'architecture': '64-bit', 'hostname': 'fixture', 'is_elevated': False, 'services': [], 'limitations': []}}
         agent = {'paw': 'fixture', 'platform': 'windows', 'host': 'fixture', 'privilege': 'User'}
         # Offline fixture policy is independent of config.json and host environment overrides.
-        config = {'orchestration_mode': 'scripts', 'allowed_networks': ['192.0.2.0/24'],
+        config = {'orchestration_mode': 'scripts', 'allowed_networks': ['192.168.73.0/24'],
                   'web_scope': [{'scheme': 'http', 'port': 80}, {'scheme': 'https', 'port': 443}],
                   'dvwa_auth': {'enabled': False}, 'telemetry': {'enabled': False}}
-        raw = {'status': 'observed', 'requests': [row('http://192.0.2.10/dvwa/login.php', title='Login :: DVWA')]}
+        raw = {'status': 'observed', 'requests': [row('http://192.168.73.130/dvwa/login.php', title='Login :: DVWA')]}
         for web in (True, False):
             with self.subTest(web=web), tempfile.TemporaryDirectory() as tmp, patch.object(survey, 'load_config', side_effect=AssertionError('Offline test must not read host config')), patch.object(survey, 'preflight', return_value={'ready': True, 'agent': agent}), patch.object(survey, 'collect_endpoint', return_value=endpoint), patch.object(survey, 'probe_web', return_value=copy.deepcopy(raw)) as probe, patch('engine.telemetry.manager_query') as manager, patch('engine.dvwa_session.build_opener') as auth_network:
                 directory = Path(tmp)

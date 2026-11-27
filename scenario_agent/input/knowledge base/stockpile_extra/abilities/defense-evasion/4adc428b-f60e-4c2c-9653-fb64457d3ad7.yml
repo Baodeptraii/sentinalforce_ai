@@ -1,7 +1,7 @@
 - id: 4adc428b-f60e-4c2c-9653-fb64457d3ad7
   name: LockBit Black - Modify Group policy settings -reg (Generated from Atomic Red Team)
   description: |
-    Ability for Domain or Tenant Policy Modification: Group Policy Modification (ATT&CK T1484.001).
+    Ability for Domain or Tenant Policy Modification: Group Policy Modification (ATT&CK T1484.001). 
     Modifies the group policy settings using reg.exe.
     Generated from Atomic Red Team procedures (9ab80952-74ee-43da-a98c-1e740a985f28); review and test safely before use.
   tactic: defense-evasion

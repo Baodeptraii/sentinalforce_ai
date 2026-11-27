@@ -6,8 +6,6 @@ config.json
 host.txt
 *.key
 *.pem
-*token*
-*secret*
 
 # Environments and caches
 .venv/
@@ -45,3 +43,18 @@ backups/
 *.rar
 .DS_Store
 Thumbs.db
+
+# Private deployment and execution artifacts
+.secrets/
+telemetry_report.json
+telemetry_identity_bindings.json
+telemetry_host_inventory.json
+scenario_outputs/
+executions/
+telemetry_reports/
+audit/
+scenario_library/
+*.credentials.json
+
+# Upstream raw corpus is archived separately; Windows cannot read some entries.
+/scenario_agent/input/knowledge base/raw/

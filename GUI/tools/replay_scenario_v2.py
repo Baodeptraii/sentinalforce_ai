@@ -10,7 +10,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 GUI = Path(__file__).resolve().parents[1]
-RUNTIME = Path('scenario_agent')
+RUNTIME = Path('/home/soc/build_scenario_agent')
 sys.path[:0] = [str(RUNTIME), str(RUNTIME/'tests'), str(GUI)]
 from test_survey_input_v2 import MockGeneration, catalog_fixture, TEXT
 from engine import scenario_bridge as bridge

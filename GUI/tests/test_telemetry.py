@@ -16,11 +16,11 @@ class TelemetryTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
         self.directory = Path(self.tmp.name)
-        self.request = {'target_ip': '192.0.2.11', 'survey_scope': ['endpoint', 'web']}
+        self.request = {'target_ip': '192.168.73.199', 'survey_scope': ['endpoint', 'web']}
         self.agent = {'host': 'FIXTURE', 'paw': 'fixture'}
         self.endpoint = endpoint(); self.endpoint['data']['listeners'] = []
         self.binding = {'agent_id': '001', 'hostname': 'FIXTURE', 'web_log_paths': ['C:\\xampp\\apache\\logs\\access.log']}
-        self.config = {'telemetry': {'enabled': True, 'targets': {'192.0.2.11': self.binding}}}
+        self.config = {'telemetry': {'enabled': True, 'targets': {'192.168.73.199': self.binding}}}
         self.now = datetime.now(timezone.utc).isoformat()
 
     def run_collect(self, config=None):

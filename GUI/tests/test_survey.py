@@ -22,7 +22,7 @@ from final_template.contracts import normalize_profile, validate_document
 
 
 def agent():
-    return {'paw': 'fixture', 'host': 'LAB-FIXTURE', 'host_ip_addrs': ['10.10.10.10', '192.0.2.11'],
+    return {'paw': 'fixture', 'host': 'LAB-FIXTURE', 'host_ip_addrs': ['10.10.10.10', '192.168.73.199'],
             'platform': 'windows', 'trusted': True, 'executors': ['psh'], 'last_seen': survey.now(), 'privilege': 'User', 'group': 'red'}
 
 
@@ -49,11 +49,11 @@ class TestSurvey(unittest.TestCase):
     def setUp(self):
         self.config = survey.load_config()
         self.config['orchestration_mode'] = 'scripts'
-        self.config['allowed_networks'] = ['192.0.2.0/24']
-        self.request = {'target_ip': '192.0.2.11', 'survey_scope': ['endpoint']}
+        self.config['allowed_networks'] = ['192.168.73.0/24']
+        self.request = {'target_ip': '192.168.73.199', 'survey_scope': ['endpoint']}
 
     def test_scope_validation(self):
-        for ip in ['127.0.0.1', '8.8.8.8', '::1', '192.0.2.11;whoami', 'not-an-ip']:
+        for ip in ['127.0.0.1', '8.8.8.8', '::1', '192.168.73.199;whoami', 'not-an-ip']:
             with self.subTest(ip=ip), self.assertRaises(ValueError):
                 survey.normalize_request(dict(self.request, target_ip=ip), self.config)
         for scope in [[], 'endpoint', ['unknown']]:
@@ -81,7 +81,7 @@ class TestSurvey(unittest.TestCase):
 
     def test_profile_uses_selected_ip_and_preserves_unknowns(self):
         result = survey.build_profile(self.request, agent(), endpoint(), None)
-        self.assertEqual(result['address'], '192.0.2.11')
+        self.assertEqual(result['address'], '192.168.73.199')
         self.assertEqual(len(result), 6)
         self.assertNotIn('art_ready', result['capabilities'])
         self.assertTrue(all(v is None for v in result['telemetry'].values()))
@@ -156,7 +156,7 @@ class TestSurvey(unittest.TestCase):
             with self.subTest(status=status), tempfile.TemporaryDirectory() as temp:
                 api = MemoryAPI(status)
                 args = SimpleNamespace(paw='fixture', expected_host='LAB-FIXTURE',
-                                       expected_ip='192.0.2.11', max_age=180,
+                                       expected_ip='192.168.73.199', max_age=180,
                                        timeout=1, output_dir=Path(temp))
                 if status:
                     with self.assertRaises(RuntimeError): run(api, args)
@@ -193,9 +193,9 @@ class TestSurvey(unittest.TestCase):
                 self.assertEqual((directory / 'target_profile.json').read_text(), original)
 
     def test_redirect_cannot_leave_target(self):
-        redirect = survey.SameHostRedirect('192.0.2.11', 80)
+        redirect = survey.SameHostRedirect('192.168.73.199', 80)
         with self.assertRaises(URLError):
-            redirect.redirect_request(Request('http://192.0.2.11/'), None, 302, '', {}, 'http://example.com/')
+            redirect.redirect_request(Request('http://192.168.73.199/'), None, 302, '', {}, 'http://example.com/')
 
     def test_real_runner_pipeline_against_fake_caldera(self):
         state = {'agent': agent(), 'definitions': {}, 'operation': None}

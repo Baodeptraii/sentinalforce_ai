@@ -1,0 +1,7 @@
+- id: brute-force-chain
+  name: DVWA Bounded Brute Force
+  description: Bounded login attempts (at most 5) against the DVWA brute-force module on the lab account, with a success verdict for every attempt.
+  atomic_ordering:
+    - session-bootstrap-000000000001
+    - brute-force-bounded-000000000002
+  tags: [demo_fixed, web, dvwa]

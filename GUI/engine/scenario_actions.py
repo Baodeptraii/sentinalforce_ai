@@ -6,7 +6,6 @@ from pathlib import Path
 from . import scenario_bridge as bridge
 from .runner import save
 from .survey import now
-from .runtime_paths import resolve_runtime
 
 
 def library_folder():
@@ -26,9 +25,9 @@ def library():
 
 
 def inspect_plan(path, config):
-    root, python = resolve_runtime(config)
+    root=Path(config.get('scenario_root','/home/soc/build_scenario_agent')).resolve()
     try:
-        result=subprocess.run([str(python), '-B', str(Path(__file__).with_name('scenario_worker.py')),
+        result=subprocess.run([str(root/'.venv/bin/python'), '-B', str(Path(__file__).with_name('scenario_worker.py')),
              '--inspect-plan',str(root),str(path)],capture_output=True,text=True,timeout=20)
     except (OSError, subprocess.TimeoutExpired):
         raise ValueError('Không kiểm tra được schema kế hoạch; kiểm tra Scenario runtime.') from None

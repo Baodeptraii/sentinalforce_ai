@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "note": "Lookup aliases only; original scenario files remain unchanged. Canonical IDs are needed in any future exported plan.",
+  "aliases": [
+    {
+      "alias_id": "01d75adf-ca1b-4dd1-ac96-7c9550ad1035",
+      "canonical_id": "bbe9b2bbe7c8872aa1fcfefa48ea1c7e",
+      "target_source_sha256": "dd95395b22ad1a0889c9f1679d707f1cdc84a45eb2750e3bdeeddb629037a13b",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1059.007/T1059.007.yaml",
+        "test_name": "JScript execution to gather local computer information via cscript",
+        "technique": "T1059.007",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/execution/bbe9b2bbe7c8872aa1fcfefa48ea1c7e.yml"
+      }
+    },
+    {
+      "alias_id": "0a2ce662-1efa-496f-a472-2fe7b080db16",
+      "canonical_id": "05e196af93cbb6b7a572cd3daf30ad66",
+      "target_source_sha256": "76d52abb4cffc3b38fe2801afe195a1e432648a0f15481392f57b034ea294d6d",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1505.003/T1505.003.yaml",
+        "test_name": "Web Shell Written to Disk",
+        "technique": "T1505.003",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/persistence/05e196af93cbb6b7a572cd3daf30ad66.yml"
+      }
+    },
+    {
+      "alias_id": "0b2f9520-a17a-4671-9dba-3bd034099fff",
+      "canonical_id": "d55b419a683d8b328f8f8d01dfc08148",
+      "target_source_sha256": "77cd0ae9aa314bbd8c93174689fa250037c6dcfc3fa600458f270938dbf832c8",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1611/T1611.yaml",
+        "test_name": "Deploy container using nsenter container escape",
+        "technique": "T1611",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/privilege-escalation/d55b419a683d8b328f8f8d01dfc08148.yml"
+      }
+    },
+    {
+      "alias_id": "0e56bf29-ff49-4ea5-9af4-3b81283fd513",
+      "canonical_id": "aeb4fdbb3453127caaef0ad5c250d838",
+      "target_source_sha256": "bdaca2ad9b33da5440ced8222c21692b8fb80bf062cd04787bda9bc0fd40c68f",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1552.001/T1552.001.yaml",
+        "test_name": "Extracting passwords with findstr",
+        "technique": "T1552.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/aeb4fdbb3453127caaef0ad5c250d838.yml"
+      }
+    },
+    {
+      "alias_id": "114ccff9-ae6d-4547-9ead-4cd69f687306",
+      "canonical_id": "1afaec09315ab71fdfb167175e8a019a",
+      "target_source_sha256": "01f12f4656e2f90c6eb7909cf7a9157a10aed4fe7962fff9cefa11093b6e19b5",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1566.001/T1566.001.yaml",
+        "test_name": "Download Macro-Enabled Phishing Attachment",
+        "technique": "T1566.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/initial-access/1afaec09315ab71fdfb167175e8a019a.yml"
+      }
+    },
+    {
+      "alias_id": "129efd28-8497-4c87-a1b0-73b9a870ca3e",
+      "canonical_id": "31cf0ec60219bc8a36865f2eaddf1fbd",
+      "target_source_sha256": "01f96c90586c61e468106d1cbc70438e8d3fc3e0de6e24f581326444ecb565c7",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1003.006/T1003.006.yaml",
+        "test_name": "DCSync (Active Directory)",
+        "technique": "T1003.006",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/31cf0ec60219bc8a36865f2eaddf1fbd.yml"
+      }
+    },
+    {
+      "alias_id": "1620de42-160a-4fe5-bbaf-d3fef0181ce9",
+      "canonical_id": "f2131e45dbd95e3057bd3494b5aeed41",
+      "target_source_sha256": "4883b572f845b83319a1999dd97040c342717fbabb6cfcda0f18174027e4e7ca",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1059.005/T1059.005.yaml",
+        "test_name": "Visual Basic script execution to gather local computer information",
+        "technique": "T1059.005",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/execution/f2131e45dbd95e3057bd3494b5aeed41.yml"
+      }
+    },
+    {
+      "alias_id": "1700f5d6-5a44-487b-84de-bc66f507b0a6",
+      "canonical_id": "0fccd1bb314f0b3cbffd27c2123ae955",
+      "target_source_sha256": "c9e9db63f804c4c99b7193f16f0546e1cb692fd8ea7d8320decf92325919b594",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1071.004/T1071.004.yaml",
+        "test_name": "DNS Large Query Volume",
+        "technique": "T1071.004",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/command-and-control/0fccd1bb314f0b3cbffd27c2123ae955.yml"
+      }
+    },
+    {
+      "alias_id": "1c91e740-1729-4329-b779-feba6e71d048",
+      "canonical_id": "9999b5c073203122cbe5f1f5438cf637",
+      "target_source_sha256": "50fa53757f7419a039e482c706e53b8485d8179c30275cfa1d5b622407387272",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1055/T1055.yaml",
+        "test_name": "Shellcode execution via VBA",
+        "technique": "T1055",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/9999b5c073203122cbe5f1f5438cf637.yml"
+      }
+    },
+    {
+      "alias_id": "1cdf2fb0-51b6-4fd8-96af-77020d5f1bf0",
+      "canonical_id": "de4fe02f13114076142fd5c99de593e0",
+      "target_source_sha256": "30e1f3c0d0d3633ce3d037f7b71f974bc885c0f9a3f5fa868df0d229a24fc488",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1048.002/T1048.002.yaml",
+        "test_name": "Exfiltrate data HTTPS using curl windows",
+        "technique": "T1048.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/exfiltration/de4fe02f13114076142fd5c99de593e0.yml"
+      }
+    },
+    {
+      "alias_id": "21caf58e-87ad-440c-a6b8-3ac259964003",
+      "canonical_id": "fb827394b296192cb7a81031a2e37ae2",
+      "target_source_sha256": "00a6a57e4c972e6994afb2793291041e994f27e461b60ddfa5cfe4546dc3f390",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1573/T1573.yaml",
+        "test_name": "OpenSSL C2",
+        "technique": "T1573",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/command-and-control/fb827394b296192cb7a81031a2e37ae2.yml"
+      }
+    },
+    {
+      "alias_id": "234f9b7c-b53d-4f32-897b-b880a6c9ea7b",
+      "canonical_id": "935e8026584b85192519c57d7080b048",
+      "target_source_sha256": "0b48b4d4c5f6ff0843e7c1e5e84c7c429c3b3bb161b4c6b7a6735fa5a2e226d6",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1555/T1555.yaml",
+        "test_name": "Extract Windows Credential Manager via VBA",
+        "technique": "T1555",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/935e8026584b85192519c57d7080b048.yml"
+      }
+    },
+    {
+      "alias_id": "31e794c4-48fd-4a76-aca4-6587c155bc11",
+      "canonical_id": "7fa328192c9a6815c2ea93fe54fa0059",
+      "target_source_sha256": "2664dbedf5c67eb44cee641de890bddb9df06014c94bbafb5a11adfb321687ba",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1552.007/T1552.007.yaml",
+        "test_name": "List All Secrets",
+        "technique": "T1552.007",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/7fa328192c9a6815c2ea93fe54fa0059.yml"
+      }
+    },
+    {
+      "alias_id": "3234117e-151d-4254-9150-3d0bac41e38c",
+      "canonical_id": "e947c2f5e248a8bbfe0e26b5bf688109",
+      "target_source_sha256": "1a273ab4aa8287adb08d2811829dce7724ba82de13b483a7afff2ae44f530f4d",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1114.003/T1114.003.yaml",
+        "test_name": "Office365 - Email Forwarding",
+        "technique": "T1114.003",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/collection/e947c2f5e248a8bbfe0e26b5bf688109.yml"
+      }
+    },
+    {
+      "alias_id": "355d4632-8cb9-449d-91ce-b566d0253d3e",
+      "canonical_id": "28ed45c4da059b14a1b2d4f061b912b8",
+      "target_source_sha256": "f2d046c497fe9006f1dd313d017944cc4e1419d7aef4026eb662e112a17771f9",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1021.001/T1021.001.yaml",
+        "test_name": "RDP to DomainController",
+        "technique": "T1021.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/lateral-movement/28ed45c4da059b14a1b2d4f061b912b8.yml"
+      }
+    },
+    {
+      "alias_id": "35eb8d16-9820-4423-a2a1-90c4f5edd9ca",
+      "canonical_id": "029770bd7c3a403daeab3af692af0046",
+      "target_source_sha256": "397c6c679af9bedbc3991d2206861a983b14342519cf1b05aab5b350f5332b42",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1036.005/T1036.005.yaml",
+        "test_name": "Masquerade as a built-in system executable",
+        "technique": "T1036.005",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/defense-evasion/029770bd7c3a403daeab3af692af0046.yml"
+      }
+    },
+    {
+      "alias_id": "385e59aa-113e-4711-84d9-f637aef01f2c",
+      "canonical_id": "8bdb353bbee5378745783ff6f2d49cb0",
+      "target_source_sha256": "ddce8a333be759223db03481da6b0515904a709b6485cb56c0088a7672840682",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1558.002/T1558.002.yaml",
+        "test_name": "Crafting Active Directory silver tickets with mimikatz",
+        "technique": "T1558.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/8bdb353bbee5378745783ff6f2d49cb0.yml"
+      }
+    },
+    {
+      "alias_id": "3b0df731-030c-4768-b492-2a3216d90e53",
+      "canonical_id": "1d2997bdfbc6f3d41f29dc9adc925d25",
+      "target_source_sha256": "60d6db9c756c8b6c474edf12f431d8c5b9f838884a9a0500ae2abef9f98c58ec",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1071/T1071.yaml",
+        "test_name": "Telnet C2",
+        "technique": "T1071",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/command-and-control/1d2997bdfbc6f3d41f29dc9adc925d25.yml"
+      }
+    },
+    {
+      "alias_id": "3c64f177-28e2-49eb-a799-d767b24dd1e0",
+      "canonical_id": "938a659c52ed102a8b35c7b1bb49eb11",
+      "target_source_sha256": "6ab9c7e8a88ba5077c816e6504d4321ce3ef5edaf31f087f59feb759fd94940e",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1546.003/T1546.003.yaml",
+        "test_name": "Persistence via WMI Event Subscription - CommandLineEventConsumer",
+        "technique": "T1546.003",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/938a659c52ed102a8b35c7b1bb49eb11.yml"
+      }
+    },
+    {
+      "alias_id": "3c73d728-75fb-4180-a12f-6712864d7421",
+      "canonical_id": "31a63c6d775c708f307a784f73e1b410",
+      "target_source_sha256": "21a93fbd4c41652c9024707563e06a856570077e5f1d39cacb2911b01004fb97",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1197/T1197.yaml",
+        "test_name": "Bitsadmin Download (cmd)",
+        "technique": "T1197",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/31a63c6d775c708f307a784f73e1b410.yml"
+      }
+    },
+    {
+      "alias_id": "3f1b5096-0139-4736-9b78-19bcb02bb1cb",
+      "canonical_id": "21363f92027047ce1dbfdd47f7a483b5",
+      "target_source_sha256": "7739cf62cd29951ee245864e1530bab28a96ea1ce2db8da75da4e50e53f615da",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1114.001/T1114.001.yaml",
+        "test_name": "Email Collection with PowerShell Get-Inbox",
+        "technique": "T1114.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/collection/21363f92027047ce1dbfdd47f7a483b5.yml"
+      }
+    },
+    {
+      "alias_id": "3f987809-3681-43c8-bcd8-b3ff3a28533a",
+      "canonical_id": "8b5f748da9647a4d9c5a37f20124ba9c",
+      "target_source_sha256": "a3d950787d1fb5b478d0a87d6041f3a23c7f757c6add38a5b7f58eb5c1b10717",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1558.003/T1558.003.yaml",
+        "test_name": "Request for service tickets",
+        "technique": "T1558.003",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/8b5f748da9647a4d9c5a37f20124ba9c.yml"
+      }
+    },
+    {
+      "alias_id": "41410c60-614d-4b9d-b66e-b0192dd9c597",
+      "canonical_id": "8cd2639cb742872b58a2356909628376",
+      "target_source_sha256": "4180d4fd7590e114f724448ed5847c52fe3a3201e0d97edae1d3eef718b6ef02",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1560/T1560.yaml",
+        "test_name": "Compress Data for Exfiltration With PowerShell",
+        "technique": "T1560",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/collection/8cd2639cb742872b58a2356909628376.yml"
+      }
+    },
+    {
+      "alias_id": "43819286-91a9-4369-90ed-d31fb4da2c01",
+      "canonical_id": "153905affadb36241ced3d3b12ba0481",
+      "target_source_sha256": "3833a18fd2377834d38f07a5e78dc1d2206cc1f090535f96834c919cad27332d",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1490/T1490.yaml",
+        "test_name": "Windows - Delete Volume Shadow Copies",
+        "technique": "T1490",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/impact/153905affadb36241ced3d3b12ba0481.yml"
+      }
+    },
+    {
+      "alias_id": "449aa403-6aba-47ce-8a37-247d21ef0306",
+      "canonical_id": "56808524066e0c8753081b83a18df201",
+      "target_source_sha256": "7441cf4f45070a68e0c1817705f46b709f16ad0c1edcfac80de6800e921525ae",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1218.010/T1218.010.yaml",
+        "test_name": "Regsvr32 local COM scriptlet execution",
+        "technique": "T1218.010",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/defense-evasion/56808524066e0c8753081b83a18df201.yml"
+      }
+    },
+    {
+      "alias_id": "476419b5-aebf-4366-a131-ae3e8dae5fc2",
+      "canonical_id": "b74b60096fb49650e27e470047a2b9c9",
+      "target_source_sha256": "7eec37e1ecf10c6ba1627b8cdeddc041d03c653f5e9702b6230342c8a0a0611f",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1485/T1485.yaml",
+        "test_name": "Windows - Overwrite file with SysInternals SDelete",
+        "technique": "T1485",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/impact/b74b60096fb49650e27e470047a2b9c9.yml"
+      }
+    },
+    {
+      "alias_id": "4852c630-87a9-409b-bb5e-5dc12c9ebcde",
+      "canonical_id": "3d7b7a1676afefc4af9506003b2d58d1",
+      "target_source_sha256": "22184cbd8dc71a9be4a6523e90c066169bd8c2106be90d23263b98cad1722710",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1110.004/T1110.004.yaml",
+        "test_name": "Brute Force:Credential Stuffing using Kerbrute Tool",
+        "technique": "T1110.004",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/3d7b7a1676afefc4af9506003b2d58d1.yml"
+      }
+    },
+    {
+      "alias_id": "4c8db261-a58b-42a6-a866-0a294deedde4",
+      "canonical_id": "ff4e1ea516f781a6ef93323ba9dfac0a",
+      "target_source_sha256": "180fbf2069d11f7c5c107a7d8dec055e04d467489060fc8396530dd85eb8a674",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1133/T1133.yaml",
+        "test_name": "Running Chrome VPN Extensions via the Registry 2 vpn extension",
+        "technique": "T1133",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/ff4e1ea516f781a6ef93323ba9dfac0a.yml"
+      }
+    },
+    {
+      "alias_id": "562427b4-39ef-4e8c-af88-463a78e70b9c",
+      "canonical_id": "c2142dd412209d9c2b8f6f4d9c1aaa54",
+      "target_source_sha256": "bae3ae8ec802efc858d6c41795ae6a0c08befd1f69016f4f51a120d623f47472",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1055.012/T1055.012.yaml",
+        "test_name": "Process Hollowing using PowerShell",
+        "technique": "T1055.012",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/c2142dd412209d9c2b8f6f4d9c1aaa54.yml"
+      }
+    },
+    {
+      "alias_id": "578025d5-faa9-4f6d-8390-aae739d503e1",
+      "canonical_id": "ca6a3f579181ea47b7d95779e8d8a79b",
+      "target_source_sha256": "f6183c514a9ef92b228dc9062e60bd0909a4768fa846a6a32c4dc7da101706cd",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1055.002/T1055.002.yaml",
+        "test_name": "Portable Executable Injection",
+        "technique": "T1055.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/ca6a3f579181ea47b7d95779e8d8a79b.yml"
+      }
+    },
+    {
+      "alias_id": "59aa6f26-7620-417e-9318-589e0fb7a372",
+      "canonical_id": "c718b1860b3b1689beda518f39b4e90a",
+      "target_source_sha256": "d8931f7c5c149b09939a9cbf2de98275d8a60b1db1737f72fb862b8cc1b499dc",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1610/T1610.yaml",
+        "test_name": "Deploy Docker container",
+        "technique": "T1610",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/c718b1860b3b1689beda518f39b4e90a.yml"
+      }
+    },
+    {
+      "alias_id": "5cb87818-0d7c-4469-b7ef-9224107aebe8",
+      "canonical_id": "31fc81668b2e999296ea30ed199db10f",
+      "target_source_sha256": "1cc99164e9fb55277d2efa3c4a280ba05c3e647e55a9b2f2bf81a94265af537c",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1218.001/T1218.001.yaml",
+        "test_name": "Compiled HTML Help Local Payload",
+        "technique": "T1218.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/defense-evasion/31fc81668b2e999296ea30ed199db10f.yml"
+      }
+    },
+    {
+      "alias_id": "615bd568-2859-41b5-9aed-61f6a88e48dd",
+      "canonical_id": "358926f4adef63bf95d152e35df4dab3",
+      "target_source_sha256": "63bc45c2036db05c988943d4aa0973a650d9b4d31de5056188254377afdd1fdb",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1558.004/T1558.004.yaml",
+        "test_name": "Rubeus asreproast",
+        "technique": "T1558.004",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/358926f4adef63bf95d152e35df4dab3.yml"
+      }
+    },
+    {
+      "alias_id": "649349c7-9abf-493b-a7a2-b1aa4d141528",
+      "canonical_id": "d82ceb9939d3d920ee550187ad8235c8",
+      "target_source_sha256": "1af75cf844631e4028fcef3e7d3feb31c4c2f436f2976c657a825ce2f41c4859",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1486/T1486.yaml",
+        "test_name": "PureLocker Ransom Note",
+        "technique": "T1486",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/impact/d82ceb9939d3d920ee550187ad8235c8.yml"
+      }
+    },
+    {
+      "alias_id": "81c13829-f6c9-45b8-85a6-053366d55297",
+      "canonical_id": "ef2c951840423ba90c208867dcf89c87",
+      "target_source_sha256": "e741cf8d0e780697cb1a4e06d51daac7047fa57d5e43b4b7a1c26da54e9873d8",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1071.001/T1071.001.yaml",
+        "test_name": "Malicious User Agents - Powershell",
+        "technique": "T1071.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/command-and-control/ef2c951840423ba90c208867dcf89c87.yml"
+      }
+    },
+    {
+      "alias_id": "82a9f001-94c5-495e-9ed5-f530dbded5e2",
+      "canonical_id": "4f0c66956fc56e1ab11f4a1e394a4fd0",
+      "target_source_sha256": "b52386f7290a3687b2ba494cf616f4b51d2e73e82ef7bfc169fd72b7f96e179c",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1195/T1195.yaml",
+        "test_name": "Octopus Scanner Malware Open Source Supply Chain",
+        "technique": "T1195",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/initial-access/4f0c66956fc56e1ab11f4a1e394a4fd0.yml"
+      }
+    },
+    {
+      "alias_id": "8bebc690-18c7-4549-bc98-210f7019efff",
+      "canonical_id": "431121fe12b6fd82938a9a52526b3423",
+      "target_source_sha256": "854f08c80a28f2b997a2aaefc739f32f999d84347621789e2733c4c457c8c381",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1204.002/T1204.002.yaml",
+        "test_name": "OSTap Style Macro Execution",
+        "technique": "T1204.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/execution/431121fe12b6fd82938a9a52526b3423.yml"
+      }
+    },
+    {
+      "alias_id": "8c05b133-d438-47ca-a630-19cc464c4622",
+      "canonical_id": "0a8ba50ba9014596f83a65edb0c2b84f",
+      "target_source_sha256": "f63c0457f0e1019d179ca1ad1a932ebc2c1bed7aef693b5a4dd2e77f57ddef31",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1555.003/T1555.003.yaml",
+        "test_name": "Run Chrome-password Collector",
+        "technique": "T1555.003",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/0a8ba50ba9014596f83a65edb0c2b84f.yml"
+      }
+    },
+    {
+      "alias_id": "8f6c14d1-f13d-4616-b7fc-98cc69fe56ec",
+      "canonical_id": "6e75b8c8fa53103191e4ceee9ca42877",
+      "target_source_sha256": "fa9a8c03319cdba498544c599c4eb1427fd9bf9eef48a450408adc6c20ff264e",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1021.004/T1021.004.yaml",
+        "test_name": "ESXi - Enable SSH via PowerCLI",
+        "technique": "T1021.004",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/lateral-movement/6e75b8c8fa53103191e4ceee9ca42877.yml"
+      }
+    },
+    {
+      "alias_id": "90bc2e54-6c84-47a5-9439-0a2a92b4b175",
+      "canonical_id": "fa48e8c59b5e1f43e8f5e2927d560f8f",
+      "target_source_sha256": "7826283ef8fc30e5043cd40aaca8f928936d8874733d1f6bfb2f30abd08fb863",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1110.003/T1110.003.yaml",
+        "test_name": "Password Spray all Domain Users",
+        "technique": "T1110.003",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/fa48e8c59b5e1f43e8f5e2927d560f8f.yml"
+      }
+    },
+    {
+      "alias_id": "90db9e27-8e7c-4c04-b602-a45927884966",
+      "canonical_id": "d1bde9af5206152c9980a5b6adcc1813",
+      "target_source_sha256": "e86e365e692dadfef3fb48e8b38ed2c3e2c4b5389feb83241fe6151bb69dff0b",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1134.001/T1134.001.yaml",
+        "test_name": "Named pipe client impersonation",
+        "technique": "T1134.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/d1bde9af5206152c9980a5b6adcc1813.yml"
+      }
+    },
+    {
+      "alias_id": "96345bfc-8ae7-4b6a-80b7-223200f24ef9",
+      "canonical_id": "571872eefcba7a9007a6377ac0d3ba32",
+      "target_source_sha256": "7f8a785e694d3ae30f805afb8cfa2ae0cdf364622cff58d368d675030f98eac4",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1003/T1003.yaml",
+        "test_name": "Gsecdump",
+        "technique": "T1003",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/571872eefcba7a9007a6377ac0d3ba32.yml"
+      }
+    },
+    {
+      "alias_id": "9726592a-dabc-4d4d-81cd-44070008b3af",
+      "canonical_id": "6d0695f8f33776c82ad1294b6c6f02cd",
+      "target_source_sha256": "a85e473cfdb7a921a856d89c8c83ed63e7b7a3500845abda80c06d08ab384ad1",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1558.001/T1558.001.yaml",
+        "test_name": "Crafting Active Directory golden tickets with mimikatz",
+        "technique": "T1558.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/6d0695f8f33776c82ad1294b6c6f02cd.yml"
+      }
+    },
+    {
+      "alias_id": "979356b9-b588-4e49-bba4-c35517c484f5",
+      "canonical_id": "f1bd28014dc55d1849088a8e69a0b4ca",
+      "target_source_sha256": "ef3e04527416293251b3931fe3025393b5f9fa66aab8b7ef10b4771840f62fec",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1530/T1530.yaml",
+        "test_name": "AWS - Scan for Anonymous Access to S3",
+        "technique": "T1530",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/collection/f1bd28014dc55d1849088a8e69a0b4ca.yml"
+      }
+    },
+    {
+      "alias_id": "9a5352e4-56e5-45c2-9b3f-41a46d3b3a43",
+      "canonical_id": "7c6d8b0e8805f6e93134af818184f288",
+      "target_source_sha256": "79f8ee1bcacd4ab9d6ff2a54bcbd923f05e5105540163c8cce3ce52d850a2250",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1528/T1528.yaml",
+        "test_name": "Azure - Functions code upload - Functions code injection via Blob upload",
+        "technique": "T1528",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/7c6d8b0e8805f6e93134af818184f288.yml"
+      }
+    },
+    {
+      "alias_id": "9fdd83fd-bd53-46e5-a716-9dec89c8ae8e",
+      "canonical_id": "38f1011132e42b33da89db05482b4b3c",
+      "target_source_sha256": "489e7333d8a24c2820f30754e5c0bd92b9d168007300ba286a6a35b833d48aad",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1078.004/T1078.004.yaml",
+        "test_name": "Creating GCP Service Account and Service Account Key",
+        "technique": "T1078.004",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/38f1011132e42b33da89db05482b4b3c.yml"
+      }
+    },
+    {
+      "alias_id": "a37ac520-b911-458e-8aed-c5f1576d9f46",
+      "canonical_id": "831c7f8dda2eda2720f46aeba37cbe48",
+      "target_source_sha256": "3338bb6f7ee78db60a8141421378ffe0f8064f51a570b8a2b7f0c0ed31eaef83",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1563.002/T1563.002.yaml",
+        "test_name": "RDP hijacking",
+        "technique": "T1563.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/lateral-movement/831c7f8dda2eda2720f46aeba37cbe48.yml"
+      }
+    },
+    {
+      "alias_id": "a50d5a97-2531-499e-a1de-5544c74432c6",
+      "canonical_id": "b62952c5352ee68c1340feb08a5a02a1",
+      "target_source_sha256": "8adf2147d14b387e00d9beeba6dbb3830280b5724aa10599a7eaaa1e72598b1f",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1027/T1027.yaml",
+        "test_name": "Execute base64-encoded PowerShell",
+        "technique": "T1027",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/defense-evasion/b62952c5352ee68c1340feb08a5a02a1.yml"
+      }
+    },
+    {
+      "alias_id": "a9604672-cd46-493b-b58f-fd4124c22dd3",
+      "canonical_id": "235df62bdf6b88453e41748ab928a5f3",
+      "target_source_sha256": "683bbf9dace8977dea8444910d6ab004b31ef52549c08fa2cd8dea4bd2a5f2ee",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1195.002/T1195.002.yaml",
+        "test_name": "Simulate npm package installation on a Linux system",
+        "technique": "T1195.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/initial-access/235df62bdf6b88453e41748ab928a5f3.yml"
+      }
+    },
+    {
+      "alias_id": "a9b93f17-31cb-435d-a462-5e838a2a6026",
+      "canonical_id": "21a1cbf8dc2bdd79e8bce756ece9dde5",
+      "target_source_sha256": "c0be78775295dc1af9e052d680e594376923a59270d54c2cc8f6bdc8c11e0bef",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1059/T1059.yaml",
+        "test_name": "AutoIt Script Execution",
+        "technique": "T1059",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/execution/21a1cbf8dc2bdd79e8bce756ece9dde5.yml"
+      }
+    },
+    {
+      "alias_id": "aca9ae16-7425-4b6d-8c30-cad306fdbd5b",
+      "canonical_id": "2fc2b9c9b48990938653dbe8966d487d",
+      "target_source_sha256": "2ec16e27dd5a5d4fa5784d42e61c25c5d3d830eae8130ab87f2516de3350ed2f",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1546/T1546.yaml",
+        "test_name": "Persistence with Custom AutodialDLL",
+        "technique": "T1546",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/2fc2b9c9b48990938653dbe8966d487d.yml"
+      }
+    },
+    {
+      "alias_id": "ae9b2e3e-efa1-4483-86e2-fae529ab9fb6",
+      "canonical_id": "d27398e945aa13a0812450cd48815572",
+      "target_source_sha256": "14b792d9a3b904bf94c61253008d73656e1b3c29f873185b974150ce4e7526aa",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1552.005/T1552.005.yaml",
+        "test_name": "Azure - Search Azure AD User Attributes for Passwords",
+        "technique": "T1552.005",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/d27398e945aa13a0812450cd48815572.yml"
+      }
+    },
+    {
+      "alias_id": "b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c",
+      "canonical_id": "1f2da2639fcd636ef1c7ead72de4469f",
+      "target_source_sha256": "99415d40f32992076c44b486ff6d5898bb12463889a6e4711c682b24be32c6f0",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1070.006/T1070.006.yaml",
+        "test_name": "Windows - Modify file creation timestamp with PowerShell",
+        "technique": "T1070.006",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/defense-evasion/1f2da2639fcd636ef1c7ead72de4469f.yml"
+      }
+    },
+    {
+      "alias_id": "b4115c7a-0e92-47f0-a61e-17e7218b2435",
+      "canonical_id": "9d2e91b9241ae43b517be2be98bddfd9",
+      "target_source_sha256": "588486fb980c6a357e6eb408b52ca3504b6bd0f0fc7a3f021add17602ee00764",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1070/T1070.yaml",
+        "test_name": "Indicator Removal using FSUtil",
+        "technique": "T1070",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/defense-evasion/9d2e91b9241ae43b517be2be98bddfd9.yml"
+      }
+    },
+    {
+      "alias_id": "b8a49f03-e3c4-40f2-b7bb-9e8f8fdddbf1",
+      "canonical_id": "ce8d7c3f1fb96ea4e27d33a8e327fc5d",
+      "target_source_sha256": "ff97f77fbc70cf6bc08e99a723dce46e12afadb7db5efb6e3da9fe1dd8b24686",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1542.001/T1542.001.yaml",
+        "test_name": "UEFI Persistence via Wpbbin.exe File Creation",
+        "technique": "T1542.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/ce8d7c3f1fb96ea4e27d33a8e327fc5d.yml"
+      }
+    },
+    {
+      "alias_id": "b8e747c3-bdf7-4d71-bce2-f1df2a057406",
+      "canonical_id": "7d46c4731c7b6ade58e43877e4b7dc66",
+      "target_source_sha256": "c2a2da40dea322152bae96fd3103666569d09a6b6f986abae0de4d531db94e79",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1098.001/T1098.001.yaml",
+        "test_name": "Azure AD Application Hijacking - Service Principal",
+        "technique": "T1098.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/7d46c4731c7b6ade58e43877e4b7dc66.yml"
+      }
+    },
+    {
+      "alias_id": "bc177ef9-6a12-4ebc-a2ec-d41e19c2791d",
+      "canonical_id": "3322685a889bb005c20688f56ed022df",
+      "target_source_sha256": "37927edac73280c101be93b1c72189e1993a9a14eb2bb2d3207c8b4a91fb396e",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1566.002/T1566.002.yaml",
+        "test_name": "Paste and run technique",
+        "technique": "T1566.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/initial-access/3322685a889bb005c20688f56ed022df.yml"
+      }
+    },
+    {
+      "alias_id": "c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08",
+      "canonical_id": "5fd6b6b635191898a202dc7c21aa6068",
+      "target_source_sha256": "82cee50351c25b9223146f9c9199c2b26839c62d9f691e9c4e54dcc22e8fed2a",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1132.001/T1132.001.yaml",
+        "test_name": "XOR Encoded data.",
+        "technique": "T1132.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/command-and-control/5fd6b6b635191898a202dc7c21aa6068.yml"
+      }
+    },
+    {
+      "alias_id": "c426dacf-575d-4937-8611-a148a86a5e61",
+      "canonical_id": "c3553cab29e732b05f81acf3eccc8308",
+      "target_source_sha256": "8740a3c4d0199cb22d02fdb057e5e28653279ffe3b8ee57455ab2d107c97a46e",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1218/T1218.yaml",
+        "test_name": "mavinject - Inject DLL into running process",
+        "technique": "T1218",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/defense-evasion/c3553cab29e732b05f81acf3eccc8308.yml"
+      }
+    },
+    {
+      "alias_id": "c943d285-ada3-45ca-b3aa-7cd6500c6a48",
+      "canonical_id": "aaf0e56d89a095f70edda858346cda61",
+      "target_source_sha256": "3b6ea16b92d38174370df74a2703d1ef3ae27415b6c0ce34d19ef2cc9099f161",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1048/T1048.yaml",
+        "test_name": "DNSExfiltration (doh)",
+        "technique": "T1048",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/exfiltration/aaf0e56d89a095f70edda858346cda61.yml"
+      }
+    },
+    {
+      "alias_id": "cb01b3da-b0e7-4e24-bf6d-de5223526785",
+      "canonical_id": "5bf05600c43ae20df8e0723ce2c3c30b",
+      "target_source_sha256": "f805c912098b86d5094372956cc62061c038f909a50324f2879e5cb801d73a6e",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1547/T1547.yaml",
+        "test_name": "Add a driver",
+        "technique": "T1547",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/5bf05600c43ae20df8e0723ce2c3c30b.yml"
+      }
+    },
+    {
+      "alias_id": "d9b633ca-8efb-45e6-b838-70f595c6ae26",
+      "canonical_id": "a18a0e98b9566d92a1611a2da69b413b",
+      "target_source_sha256": "6e683c41fd9c7c0ed3bfa9ec00a3a8713f2833f50b3da01d693515866ae1677b",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1056.001/T1056.001.yaml",
+        "test_name": "Input Capture",
+        "technique": "T1056.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/a18a0e98b9566d92a1611a2da69b413b.yml"
+      }
+    },
+    {
+      "alias_id": "dbf38128-7ba7-4776-bedf-cc2eed432098",
+      "canonical_id": "cdb3eca96b0f352898a8822e109ef5b2",
+      "target_source_sha256": "d52618b054634ccca293e86d42340b45e6e025d0ec03996f806c0691e8f28320",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1550.003/T1550.003.yaml",
+        "test_name": "Mimikatz Kerberos Ticket Attack",
+        "technique": "T1550.003",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/cdb3eca96b0f352898a8822e109ef5b2.yml"
+      }
+    },
+    {
+      "alias_id": "dbf4f5a9-b8e0-46a3-9841-9ad71247239e",
+      "canonical_id": "163fd8a878476002c604d0fe4e32a419",
+      "target_source_sha256": "0515ddc9cebaf85d1cb56118b108bcc6ec937e3ed2c26b17c48ab55333b377e6",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1134.002/T1134.002.yaml",
+        "test_name": "Access Token Manipulation",
+        "technique": "T1134.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/163fd8a878476002c604d0fe4e32a419.yml"
+      }
+    },
+    {
+      "alias_id": "dc6fe391-69e6-4506-bd06-ea5eeb4082f8",
+      "canonical_id": "26c0843592bd870dab849c9f682b09da",
+      "target_source_sha256": "f82d8bebf9b2a280102633e5448e09d93b91eb6f28574115932b0059def3cf57",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1140/T1140.yaml",
+        "test_name": "Deobfuscate/Decode Files Or Information",
+        "technique": "T1140",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/defense-evasion/26c0843592bd870dab849c9f682b09da.yml"
+      }
+    },
+    {
+      "alias_id": "e55be3fd-3521-4610-9d1a-e210e42dcf05",
+      "canonical_id": "5503b4931592d3d01840133599b87893",
+      "target_source_sha256": "ebbdea6f1975dc930fe8d68abcf360637b8428ded9298f048015511275ff9ba7",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1547.001/T1547.001.yaml",
+        "test_name": "Reg Key Run",
+        "technique": "T1547.001",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/5503b4931592d3d01840133599b87893.yml"
+      }
+    },
+    {
+      "alias_id": "ec23cef9-27d9-46e4-a68d-6f75f7b86908",
+      "canonical_id": "ed508e035ded2716b4622276bc3da403",
+      "target_source_sha256": "26c46447ad494831c3df46170e98659262db60d0334879d3c2f9c17e8663dc22",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1550.002/T1550.002.yaml",
+        "test_name": "Mimikatz Pass the Hash",
+        "technique": "T1550.002",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/ed508e035ded2716b4622276bc3da403.yml"
+      }
+    },
+    {
+      "alias_id": "f9c3d0ab-479b-4019-945f-22ace2b1731a",
+      "canonical_id": "1026f4f4752ae0e22cd1e582960049bb",
+      "target_source_sha256": "459c98942a49c3d8de2b2248ea1e3dc1ebb9bbf70d7e0f77a09cd81277039e66",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1552/T1552.yaml",
+        "test_name": "Search for Passwords in Powershell History",
+        "technique": "T1552",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/credential-access/1026f4f4752ae0e22cd1e582960049bb.yml"
+      }
+    },
+    {
+      "alias_id": "fec27f65-db86-4c2d-b66c-61945aee87c2",
+      "canonical_id": "5db2884b6ca3ab932848f295a3896dc0",
+      "target_source_sha256": "616fdcf19cd5e82479c3e512bddcbea9d08357cc79773792493632eaa45855b4",
+      "reason": "Atomic test GUID to MD5 ID produced by installed CALDERA Atomic converter",
+      "evidence": {
+        "atomic_source": "/home/soc/atomic-red-team/atomics/T1053.005/T1053.005.yaml",
+        "test_name": "Scheduled Task Startup Script",
+        "technique": "T1053.005",
+        "converted_source": "/home/soc/caldera/plugins/atomic/data/abilities/multiple/5db2884b6ca3ab932848f295a3896dc0.yml"
+      }
+    },
+    {
+      "alias_id": "1c9ef3e6-bde6-402c-83bc-d89ea8bfd372",
+      "canonical_id": "16b654eac25996def01562179244e99c",
+      "target_source_sha256": "cbf4abfe22594d52393a8ac5331c175fd04e9cd6a48615e74f5b6a8b7e61ab4d",
+      "reason": "Upstream Atomic test converted offline with installed converter; declared elevation preserved",
+      "evidence": {
+        "atomic_source": "/home/soc/DA/input/knowledge base/upstream_atomic_sources/T1068.yaml",
+        "source_url": "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1068/T1068.yaml",
+        "test_name": "Scattered Spider BYOVD (CVE-2015-2291 for Intel Ethernet Diagnostics Driver)",
+        "technique": "T1068",
+        "converted_source": "/home/soc/DA/input/knowledge base/atomic_extra/abilities/privilege-escalation/16b654eac25996def01562179244e99c.yml"
+      }
+    },
+    {
+      "alias_id": "ec9ab81c-8053-4957-8c66-0218381ab564",
+      "canonical_id": "684de8827bcd48260b270d08c84f534c",
+      "target_source_sha256": "2d16ae6333967327fc4987a47e39b178412aa48001efb715dcf037742977869f",
+      "reason": "Upstream Atomic test converted offline with installed converter; declared elevation preserved",
+      "evidence": {
+        "atomic_source": "/home/soc/DA/input/knowledge base/upstream_atomic_sources/T1102.002.yaml",
+        "source_url": "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1102.002/T1102.002.yaml",
+        "test_name": "Bidirectional C2 Simulation via paste.rs (sh)",
+        "technique": "T1102.002",
+        "converted_source": "/home/soc/DA/input/knowledge base/atomic_extra/abilities/command-and-control/684de8827bcd48260b270d08c84f534c.yml"
+      }
+    }
+  ]
+}

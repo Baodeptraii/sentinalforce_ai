@@ -1,0 +1,25 @@
+- id: ransom-file-ops-000000000002
+  name: Simulated Ransomware File Operations in Lab Directory
+  description: >-
+    Appends data to a sample file, renames another and writes a clearly labelled simulated ransom note inside the lab directory, then prints after-mutation SHA256 hashes. No real encryption is performed.
+  technique_id: T1565.001
+  technique_name: Stored Data Manipulation
+  repeatable: false
+  executors:
+    - name: psh
+      platform: windows
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $ns = 'C:\SOC-Lab\EP02\demo'
+        if (-not (Test-Path "$ns\a_master.txt")) { Write-Output 'EP02_MUTATE_ERROR namespace_missing'; exit 1 }
+        Add-Content -LiteralPath "$ns\a_master.txt" -Value 'DEMO-APPENDED-LINE'
+        Rename-Item -LiteralPath "$ns\b_master.txt" -NewName 'b_renamed.txt'
+        Set-Content -LiteralPath "$ns\README_READ_ME.txt" -Value @(
+          '== SIMULATED RANSOM NOTE (TRAINING) ==',
+          'This is a demo marker only. No data was encrypted.',
+          'All sample files remain intact inside C:\SOC-Lab\EP02\demo.')
+        $hashes = Get-FileHash -Algorithm SHA256 -Path "$ns\*.txt"
+        Write-Output ("EP02_MUTATE_OK files=" + $hashes.Count)
+        $hashes | ForEach-Object { Write-Output ($_.Hash + '  ' + $_.Path) }
+        exit 0
+      timeout: 60

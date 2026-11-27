@@ -1,0 +1,8 @@
+- id: ransom-simulation-chain
+  name: Ransomware Behavior Simulation on Lab Directory
+  description: 'Simulates ransomware-style data manipulation inside a dedicated lab directory: baseline creation, append/rename/ransom-note operations clearly labelled as training, then scoped cleanup with removal verification. No real encryption is performed.'
+  atomic_ordering:
+    - lab-dir-baseline-000000000001
+    - ransom-file-ops-000000000002
+    - scoped-cleanup-000000000003
+  tags: [demo_fixed, endpoint, simulation]

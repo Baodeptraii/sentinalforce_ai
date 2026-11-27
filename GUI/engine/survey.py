@@ -62,7 +62,7 @@ def normalize_request(data, config):
     try:
         ip = ipaddress.ip_address(str(data.get('target_ip', '')).strip())
     except ValueError:
-        raise ValueError('Nhập địa chỉ IPv4 hợp lệ, ví dụ 192.0.2.13.') from None
+        raise ValueError('Nhập địa chỉ IPv4 hợp lệ, ví dụ 192.168.73.137.') from None
     if ip.version != 4 or ip.is_loopback or ip.is_unspecified or ip.is_multicast or ip.is_link_local:
         raise ValueError('Chỉ hỗ trợ IPv4 của endpoint trong mạng lab được cấu hình.')
     if not any(ip in ipaddress.ip_network(n) for n in config['allowed_networks']):

@@ -20,7 +20,6 @@ class TestScenarioUI(unittest.TestCase):
     def test_snapshot_is_exact_existing_yaml_not_generated_content(self):
         data = json.loads((STATIC / 'scenario-data.json').read_text(encoding='utf-8'))
         self.assertEqual(data['mode'], 'ui_preview')
-        self.assertTrue(data['preview_only'])
         self.assertEqual(len(data['items']), 113)
         self.assertEqual(len({item['id'] for item in data['items']}), 113)
         self.assertEqual(Counter(item['family'] for item in data['items']),

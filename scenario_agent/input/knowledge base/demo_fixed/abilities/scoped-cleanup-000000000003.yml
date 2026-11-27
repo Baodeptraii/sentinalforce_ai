@@ -1,0 +1,20 @@
+- id: scoped-cleanup-000000000003
+  name: Scoped Cleanup of Simulation Directory
+  description: >-
+    Lists the mutated files and removes only the lab directory created for the simulation, confirming its absence afterwards.
+  repeatable: false
+  executors:
+    - name: psh
+      platform: windows
+      command: |
+        $ErrorActionPreference = 'Stop'
+        $ns = 'C:\SOC-Lab\EP02\demo'
+        if (-not (Test-Path $ns)) { Write-Output 'EP02_CLEANUP_OK already_absent'; exit 0 }
+        $before = Get-ChildItem -LiteralPath $ns -File
+        Write-Output ("EP02_CLEANUP_LIST files=" + $before.Count)
+        $before | ForEach-Object { Write-Output ($_.Name + '  ' + $_.Length) }
+        Remove-Item -LiteralPath $ns -Recurse -Force
+        if (Test-Path $ns) { Write-Output 'EP02_CLEANUP_ERROR still_present'; exit 1 }
+        Write-Output 'EP02_CLEANUP_OK namespace_removed'
+        exit 0
+      timeout: 60

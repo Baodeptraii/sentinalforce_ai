@@ -5,6 +5,7 @@ import hashlib
 import ipaddress
 import json
 import re
+import socket
 import subprocess
 import threading
 import time
@@ -15,12 +16,12 @@ from urllib.error import HTTPError
 from urllib.parse import urlsplit, urlencode
 
 from . import scenario_bridge as bridge
-from .execution_context import is_inventory_command, is_reviewed_inventory, REVIEWED_INVENTORY
+from .execution_context import is_inventory_command, is_reviewed_inventory, is_reviewed_fixed, fixed_case_for_steps, REVIEWED_INVENTORY
+from .runtime_fixed_cases import CASE_SCOPE
 from .survey import api_for, now
 from .runner import save
 from .lifecycle import InstanceLock, pending_recovery, endpoint_activity_path, endpoint_runner_path
 from .llm import redact
-from .runtime_paths import resolve_runtime
 
 VERSION='caldera_execution_v1'
 LOCK=threading.RLock()
@@ -30,6 +31,161 @@ RECOVERY={'confirmed','registering','creating_operation','running','stop_request
 FILES={'execution_request.json','execution_preflight.json','execution_manifest.json','operation-summary.json','execution_result.json','execution_validation.json','execution_expected.json'}
 SECRET=re.compile(r'(?i)(password|passwd|secret|cookie|authorization|credential|api[_-]?key|access[_-]?token|session[_-]?(?:id|token))')
 COMPACT='include=id&include=name&include=state&include=group&include=host_group.paw'
+
+# Blockers that the reviewed fixed-case sources are known to carry from the
+# deterministic requirement assessment; the per-case runtime checks below
+# replace the generic command adapter for exactly these pinned sources.
+FIXED_BLOCKERS_EXACT = {
+    'Manual review source effects, baseline, health checks and cleanup/rollback; absence of cleanup commands is not proof none is needed',
+    'Required privilege is unspecified in catalog; manual review',
+    'Revalidate runner identity, executor availability and privilege before execution',
+}
+FIXED_BLOCKER_PREFIXES = {
+    'EP-01': (),
+    'EP-02': ('Required path was not surveyed: ',
+              'Verify filesystem existence/access and cleanup scope for source path '),
+    'EP-03': ('Required path was not surveyed: ',
+              'Verify filesystem existence/access and cleanup scope for source path ',
+              'Verify demo receiver availability, bounds and receipt capture at execution time',
+              'Resolve telemetry.network for ', 'Resolve telemetry.process for '),
+    'WEB-01': ('Resolve telemetry.web for ', 'Resolve telemetry.network for ',
+               'No application-attributed web telemetry observation',
+               'Application location has not been observed',
+               'Resolve application association before checking endpoint, method, parameters or authentication',
+               'Survey session is historical; obtain and verify execution session reference separately',
+               'Resolve and validate execution cookie/session file reference; no Survey secret is transferred',
+               'Verify application security level required by source: ',
+               'Module has no observed forms; review request method/parameters',
+               'Obtain fresh CSRF token through approved execution session; Survey stores names/presence only',
+               'Observed form action differs from source endpoint; verify routing before execution',
+               'Required path was not surveyed: ',
+               'Verify filesystem existence/access and cleanup scope for source path ',
+               ('Required module ', ' has no observed form contract')),
+    'WEB-02': ('Resolve telemetry.web for ', 'Resolve telemetry.network for ',
+               'No application-attributed web telemetry observation',
+               'Application location has not been observed',
+               'Resolve application association before checking endpoint, method, parameters or authentication',
+               'Survey session is historical; obtain and verify execution session reference separately',
+               'Resolve and validate execution cookie/session file reference; no Survey secret is transferred',
+               'Verify application security level required by source: ',
+               'Module has no observed forms; review request method/parameters',
+               'Obtain fresh CSRF token through approved execution session; Survey stores names/presence only',
+               'Observed form action differs from source endpoint; verify routing before execution',
+               'Required path was not surveyed: ',
+               'Verify filesystem existence/access and cleanup scope for source path ',
+               ('Required module ', ' has no observed form contract')),
+}
+SHARED_BLOCKER_PREFIXES = ('Resolve conflicting Survey evidence for ', 'Observation time unknown for ',
+                           'Review Survey stale/truncated/error gaps; unobserved is not absent',
+                           'Resolve telemetry.network for ', 'Resolve telemetry.process for ')
+
+
+def fixed_blockers_allowed(blockers, case):
+    rules = FIXED_BLOCKER_PREFIXES.get(case, ()) + SHARED_BLOCKER_PREFIXES
+    for blocker in blockers:
+        if blocker in FIXED_BLOCKERS_EXACT:
+            continue
+        if any((blocker.startswith(rule[0]) and blocker.endswith(rule[1])) if isinstance(rule, tuple)
+               else blocker.startswith(rule) for rule in rules):
+            continue
+        return False
+    return True
+
+
+def receiver_config(config):
+    """Typed receiver config; origin must be a LAN address of this host."""
+    value = config.get('demo_receiver') or {}
+    if not value.get('enabled'):
+        return None
+    try:
+        port = int(value['port'])
+        host = str(value['host'])
+        beacon = str(value['beacon_path'])
+        exfil = str(value['exfil_path'])
+        if not 1 <= port <= 65535 or ipaddress.ip_address(host).version != 4:
+            return None
+        if not all(path.startswith('/') and len(path) < 128 for path in (beacon, exfil)):
+            return None
+        origin = 'http://' + host + ':' + str(port)
+        return {'host': host, 'port': port, 'origin': origin, 'beacon_path': beacon, 'exfil_path': exfil,
+                'max_beacon': min(16, int(value.get('max_beacon', 8))),
+                'max_exfil': min(8, int(value.get('max_exfil', 3))),
+                'max_bytes': min(1_048_576, int(value.get('max_bytes', 65536)))}
+    except (KeyError, ValueError, TypeError):
+        return None
+
+
+def fixed_command_scope_ok(command, target, config, case):
+    """Per-case runtime scope checks on the pinned command text."""
+    lowered = command.casefold()
+    if re.search(r'(?i)(password|pwd)\s*[:=]\s*["\x27]?(?![$(])[A-Za-z0-9!@%^&*]{4,}', command):
+        return False  # no inline literal secret values, even in pinned sources
+    if case == 'EP-02':
+        paths = re.findall(r'[A-Za-z]:\\[^\s"\x27;|]+', command)
+        return bool(paths) and all(p.casefold().startswith('c:\\soc-lab\\ep02\\') for p in paths)
+    if case == 'EP-03':
+        rc = receiver_config(config)
+        if not rc:
+            return False
+        urls = re.findall(r'https?://[^\s"\x27<>]+', command)
+        if not urls:
+            return False
+        allowed = {rc['origin'] + rc['beacon_path'], rc['origin'] + rc['exfil_path']}
+        for url in urls:
+            if url.rstrip('.,;') not in allowed:
+                return False
+        if 'demo/beacon' in lowered and not (re.search(r'-le 5\b', command) and 'Start-Sleep -Seconds 3' in command):
+            return False
+        if 'demo/exfil' in lowered and not re.search(r'-gt 64KB', command):
+            return False
+        return True
+    if case in ('WEB-01', 'WEB-02'):
+        urls = re.findall(r'https?://[^\s"\x27<>]+', command)
+        if not urls:
+            return False
+        host = str(target).casefold()
+        scopes = {entry.get('port'): entry for entry in (config.get('web_scope_by_target') or {}).get(str(target), [])
+                  if str(entry.get('port', '')).isdigit()}
+        for url in urls:
+            u = urlsplit(url)
+            if (u.hostname or '').casefold() != host:
+                return False
+            if scopes and u.port not in scopes:
+                return False  # URL phải dùng đúng cổng web đã khai trong profile/scope
+            path = u.path.rstrip('/')
+            if not (path == '/dvwa' or path.startswith('/dvwa/')):
+                return False
+        for helper in re.findall(r'[A-Za-z]:\\[^\s"\x27;|]+', command):
+            if not helper.casefold().startswith('c:\\soc-lab\\'):
+                return False
+        return True
+    if case == 'EP-01':
+        return True
+    return False
+
+
+def receiver_bind_probe(config, attempts=9, delay=1.0):
+    """Bind-probe the receiver port; a previous run's listener shutdown may
+    briefly overlap this preview, so retry for a few seconds before failing."""
+    rc = receiver_config(config)
+    if not rc:
+        return 'demo_receiver chưa cấu hình hoặc tắt'
+    last = None
+    for _ in range(max(1, attempts)):
+        probe = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # Match the receiver server's allow_reuse_address semantics; a probe
+        # without SO_REUSEADDR false-fails on TIME_WAIT client sockets.
+        probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            probe.bind((rc['host'], rc['port']))
+            probe.listen(1)
+            return None
+        except OSError as error:
+            last = str(error)
+        finally:
+            probe.close()
+        time.sleep(delay)
+    return last or 'receiver bind thất bại'
 
 
 def sha(value):
@@ -93,8 +249,8 @@ def write(value):
         except (OSError,ValueError):
             value['audit_status']='unavailable'
             save(folder(value['id'])/'execution_result.json',{k:v for k,v in value.items() if k!='files'})
-        # Only new terminal transitions schedule collection; no dispatch and no historical replay.
-        if value.get('state') in TERMINAL and previous.get('state') not in TERMINAL and value.get('operation_id'):
+        # Open reporting at confirmation; reporting never dispatches an operation.
+        if (value.get('state') == 'confirmed' and previous.get('state') != 'confirmed') or (value.get('state') in TERMINAL and previous.get('state') not in TERMINAL and value.get('operation_id')):
             try:execution_telemetry.enqueue(value['id'])
             except (OSError,ValueError):pass
 
@@ -140,14 +296,14 @@ def initialize():
 def context_for(identifier,config):
     job=bridge.public(identifier)
     if job['status']!='completed':raise ValueError('Kịch bản chưa sinh hoàn tất.')
-    root, python = resolve_runtime(config)
+    root=Path(config.get('scenario_root') or '/home/soc/build_scenario_agent').resolve()
     src=bridge.directory(identifier)
     bridge.checked_download(src,'scenario_plan.yml')
     for path in src.rglob('*'):
         if path.is_symlink():raise ValueError('Input/artifact symlink refused.')
     if (src/'scenario_plan.yml').stat().st_size>2_000_000:raise ValueError('Plan quá lớn.')
     try:
-        result=subprocess.run([str(python),'-B',str(Path(__file__).with_name('execution_context.py')),str(root),str(src)],capture_output=True,timeout=25)
+        result=subprocess.run([str(root/'.venv/bin/python'),'-B',str(Path(__file__).with_name('execution_context.py')),str(root),str(src)],capture_output=True,timeout=25)
     except (OSError,subprocess.TimeoutExpired):
         raise ValueError('Không đọc/kiểm tra được Scenario runtime trong thời gian cho phép.') from None
     if result.returncode or len(result.stdout)>4_000_000:raise ValueError('Không kiểm tra được schema/hash/context của plan; cần tạo lại hoặc revalidation.')
@@ -169,9 +325,11 @@ def get_operation(api, identifier, *, reviewed_inventory=False):
     if reviewed_inventory:
         # This CALDERA API omits nested fields requested by dot-separated names.
         fields = 'include=id&include=name&include=state&include=group&include=host_group&include=adversary'
-    else:
-        fields = COMPACT + '&include=adversary.adversary_id&include=adversary.atomic_ordering'
-    return api.call('operations/' + identifier + '?' + fields)
+        return api.call('operations/' + identifier + '?' + fields)
+    # Fixed/reviewed-fixed cases validate host_group paws and adversary
+    # atomic_ordering; dot-separated includes are silently omitted by this
+    # CALDERA API, so fetch the full object for those runs.
+    return api.call('operations/' + identifier)
 
 
 def get_execution_operation(api, value):
@@ -231,6 +389,16 @@ def preflight(identifier,config,api=None,context=None,exclude=None):
     api.deadline=time.monotonic()+45
     plan=ctx['plan'];profile=ctx['profile'];target=profile['address'];scope=ctx['policy']['planning_scope']
     errors=list(ctx['blockers']);warnings=[];rows=[]
+    plan_case = fixed_case_for_steps(ctx['steps'])
+    receiver = None
+    if plan_case == 'EP-03':
+        receiver = receiver_config(config)
+        if not receiver:
+            errors.append('EP-03 cần cấu hình demo_receiver hợp lệ (origin LAN của .164).')
+        else:
+            probe = receiver_bind_probe(config)
+            if probe:
+                errors.append('Receiver demo chưa sẵn sàng: '+probe)
     if not any(ipaddress.ip_address(target) in ipaddress.ip_network(n) for n in config['allowed_networks']):errors.append('Target ngoài allowlist.')
     meta=plan['metadata']
     if not ctx['evidence'].get('verified'):errors.append('Thiếu evidence integrity Survey v2.')
@@ -264,11 +432,12 @@ def preflight(identifier,config,api=None,context=None,exclude=None):
     for item in ctx['steps']:
         step=item['step'];record=item['record'];ex=item['executor'];blocked=list(item['blockers'])
         reviewed_inventory = is_reviewed_inventory(record, ex)
+        reviewed_fixed = is_reviewed_fixed(record, ex)
         prerequisites = copy.deepcopy(step.get('prerequisites', []))
         runner_evidence = None
         if (record and ex and not item['blockers'] and ctx['evidence'].get('verified')
                 and agent and agent.get('trusted') is True and heartbeat_current
-                and (reviewed_inventory or is_inventory_command(ex.get('command')))
+                and (reviewed_inventory or reviewed_fixed or is_inventory_command(ex.get('command')))
                 and ex['platform'] == agent.get('platform')
                 and ex['name'] in agent.get('executors', [])):
             runner_evidence = {
@@ -286,13 +455,22 @@ def preflight(identifier,config,api=None,context=None,exclude=None):
         if step.get('parameters'):blocked.append('Tham số chưa có type/binding adapter được chứng minh; không chèn vào shell/facts.')
         if record and ex:
             ability=record['ability'];command=str(ex.get('command') or '')
-            if not reviewed_inventory:
+            receiver_urls = set()
+            if reviewed_fixed and plan_case == 'EP-03':
+                rc = receiver_config(config)
+                if rc:
+                    receiver_urls = {rc['origin']+rc['beacon_path'], rc['origin']+rc['exfil_path']}
+            if not reviewed_inventory and not reviewed_fixed:
                 blocked += command_blockers(command, target)
-            if re.search(r'https?://',command,re.I) and 'web' not in scope:blocked.append('Bước web ngoài planning scope.')
+            if reviewed_fixed and not fixed_command_scope_ok(command, target, config, plan_case):
+                blocked.append('Lệnh nguồn fixed case vượt phạm vi đã ghim của case '+str(plan_case)+'.')
+            if re.search(r'https?://',command,re.I) and 'web' not in scope and not receiver_urls:
+                blocked.append('Bước web ngoài planning scope.')
             observed=[s.get('url') for s in profile.get('services',[]) if s.get('url')]
             observed += [a.get('base_url') for s in profile.get('services',[]) for a in s.get('applications',[]) if a.get('base_url')]
             origins={(urlsplit(u).scheme,urlsplit(u).netloc) for u in observed}
             for u in re.findall(r'https?://[^\s\"\x27<>]+',command,re.I):
+                if receiver_urls and u.rstrip('.,;') in receiver_urls:continue
                 if (urlsplit(u).scheme,urlsplit(u).netloc) not in origins:blocked.append('Web origin/port chưa có trong profile Survey đã ghim.')
             if not re.search(r'https?://',command,re.I) and 'endpoint' not in scope:blocked.append('Bước endpoint ngoài planning scope.')
             if ex.get('code') or ex.get('language') or not command:blocked.append('Executor code/build chưa hỗ trợ.')
@@ -315,18 +493,27 @@ def preflight(identifier,config,api=None,context=None,exclude=None):
         required_privilege = ability.get('privilege')
         inventory_supported = (record and record['canonical_id'] not in REVIEWED_INVENTORY and is_inventory_command(command) and ex and ex.get('platform') == 'windows'
             and (ex.get('name') == 'psh' or (ex.get('name') == 'cmd' and not command.strip().lower().startswith('get-'))))
-        step_revalidated = (not blocked and not errors and (reviewed_inventory or inventory_supported)
+        fixed_ready = (reviewed_fixed and not blocked and not errors and plan_case is not None
+                and runner_evidence is not None
+                and str(runner_evidence['observed_privilege']).lower() == 'elevated'
+                and required_privilege is None
+                and step.get('readiness') in ('needs_information', 'ready')
+                and meta.get('readiness') in ('needs_information', 'ready')
+                and scope == CASE_SCOPE.get(plan_case, [])
+                and fixed_blockers_allowed(meta.get('blockers', []), plan_case))
+        step_revalidated = ((not blocked and not errors and (reviewed_inventory or inventory_supported)
                 and scope == ['endpoint'] and runner_evidence is not None
                 and str(runner_evidence['observed_privilege']).lower() == 'elevated'
                 and required_privilege is None
                 and step.get('readiness') in ('needs_information', 'ready')
                 and meta.get('readiness') in ('needs_information', 'ready')
-                and set(meta.get('blockers', [])) <= REVIEWED_INVENTORY_BLOCKERS)
+                and set(meta.get('blockers', [])) <= REVIEWED_INVENTORY_BLOCKERS) or fixed_ready)
         if step_revalidated:
             reviewed_count += 1
             # This is a conservative dispatch policy, separate from source metadata.
             required_privilege = 'Elevated'
-            runner_evidence['privilege_policy'] = 'reviewed_local_inventory'
+            runner_evidence['privilege_policy'] = ('reviewed_fixed_case' if fixed_ready
+                                                   else 'reviewed_local_inventory')
         if step.get('readiness') != 'ready' and not step_revalidated:
             blocked.append('Readiness riêng của bước chưa ready; cần revalidation nguồn, không đổi assumed thành verified.')
         for b in blocked:errors.append('Bước '+str(step['step_index'])+': '+b)
@@ -349,7 +536,8 @@ def preflight(identifier,config,api=None,context=None,exclude=None):
         'plan_sha256':next((x['sha256'] for x in ctx['artifacts'] if x['file']=='scenario_plan.yml'),sha(plan)),
         'binding_sha256':sha(binding),'survey':ctx['evidence'],'artifacts':ctx['artifacts'],'steps':rows,
         'planner':planner,'source_mode':'private_empty_no_inherited_facts','blockers':list(dict.fromkeys(errors)),
-        'warnings':warnings,'policy':rules,'detection':'unknown','behavior_evidence':'not_evaluated'})
+        'warnings':warnings,'policy':rules,'detection':'unknown','behavior_evidence':'not_evaluated',
+        'fixed_case':plan_case,'receiver':({'origin':receiver['origin'],'beacon_path':receiver['beacon_path'],'exfil_path':receiver['exfil_path'],'checked_at':now()} if receiver else None)})
 
 
 def preview(identifier,config,*,start_on_click=False):
@@ -541,7 +729,7 @@ def collect_results(api,value,links,config):
 
 
 def run(identifier,config):
-    value=read(identifier);api=api_for(config);held=False;operation_may_exist=False
+    value=read(identifier);api=api_for(config);held=False;operation_may_exist=False;receiver=None
     try:
         with InstanceLock(endpoint_activity_path(value['target']['ip'])), InstanceLock(endpoint_runner_path(value['target']['ip'])):
             held=True
@@ -551,6 +739,12 @@ def run(identifier,config):
             api.deadline=None
             if not fresh['ready'] or fresh['binding_sha256']!=value['preflight']['binding_sha256'] or age(value['created_at'])>fresh['policy']['preview_ttl_seconds']:
                 value.update(state='blocked',error='Preflight/hash/target đã đổi hoặc preview hết hạn; xem kiểm tra mới.',preflight=fresh);write(value);return
+            if fresh.get('fixed_case')=='EP-03':
+                try:
+                    from .demo_receiver import DemoReceiver
+                    receiver=DemoReceiver(config,folder(identifier));receiver.start()
+                except (OSError,ValueError) as error:
+                    value.update(state='failed',error='Không khởi động được demo receiver: '+redact(str(error)));write(value);return
             from .execution_contracts import verify_expected, expected
             contract_path=folder(identifier)/'execution_expected.json'
             if contract_path.exists():
@@ -639,6 +833,15 @@ def run(identifier,config):
                     'paw':value['target']['paw'],'steps':clean(value['steps']),'checked_at':now()})
                 write(value);time.sleep(backoff);backoff=min(5,backoff+1)
             else:raise TimeoutError('Hết thời gian theo dõi; cần dừng/đối soát lệnh đã dispatch.')
+            # Release the receiver port BEFORE the terminal state is written so
+            # a follow-up preview never races an in-flight listener shutdown.
+            if receiver is not None:
+                try:
+                    receipts=receiver.stop()
+                    save(folder(identifier)/'receiver_receipts.json',receipts)
+                    value['receiver_receipts']=receipts
+                except Exception:pass
+                receiver=None
             restore_group(api,value)
             save(folder(identifier)/'operation-summary.json',{'schema_version':VERSION,'id':op['id'],'operation_state':op['state'],'execution_state':value['state'],'command_status':value['command_status'],'steps':clean(value['steps']),'checked_at':now()})
             write(value)
@@ -653,4 +856,14 @@ def run(identifier,config):
             except Exception as e:value.update(state='recovery_required',error=redact(str(e)))
         write(value)
     finally:
+        if receiver is not None:
+            try:
+                receipts=receiver.stop()
+                existing=read(identifier).get('receiver_receipts')
+                if not existing:
+                    save(folder(identifier)/'receiver_receipts.json',receipts)
+                    value['receiver_receipts']=receipts
+                    write(value)
+            except Exception:
+                pass
         with LOCK:THREADS.pop(identifier,None)
